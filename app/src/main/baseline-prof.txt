@@ -1,0 +1,102 @@
+# Baseline Profile Rules for CodeAcademy
+# Ensures Ahead-Of-Time (AOT) pre-compilation of critical classes & composables on app install and process restore
+
+# Application & Activity Entry Points
+Lcom/example/CodeAcademyApplication;
+Lcom/example/MainActivity;
+Lcom/example/MainActivityKt;
+HSPLcom/example/MainActivity;-><init>()V
+HSPLcom/example/MainActivity;->onCreate(Landroid/os/Bundle;)V
+HSPLcom/example/MainActivityKt;->CodeAcademyApp(Lcom/example/ui/MainViewModel;Landroidx/navigation/NavHostController;Landroidx/compose/runtime/Composer;II)V
+
+# Navigation Components & Bottom Bar
+Landroidx/navigation/NavHostController;
+Landroidx/navigation/compose/NavHostKt;
+Lcom/example/NavigationTab;
+
+# State & Architecture
+Lcom/example/ui/MainViewModel;
+Lcom/example/ui/InitialDestination;
+HSPLcom/example/ui/MainViewModel;-><init>(Landroid/app/Application;)V
+HSPLcom/example/ui/MainViewModel;->prepareAppReadiness(Landroid/content/Context;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+HSPLcom/example/ui/MainViewModel;->checkInitialDestination(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+HSPLcom/example/data/CodeAcademyRepository;-><init>(Landroid/content/Context;)V
+HSPLcom/example/data/CodeAcademyRepository;->ensureInitialUserSeeded(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+HSPLcom/example/data/local/AppDatabase;->getDatabase(Landroid/content/Context;)Lcom/example/data/local/AppDatabase;
+HSPLcom/example/data/local/AppDatabase_Impl;-><init>()V
+HSPLcom/example/data/local/SessionManager;-><init>(Landroid/content/Context;)V
+HSPLcom/example/data/CourseCatalog;-><clinit>()V
+HSPLcom/example/data/CourseCatalog;->getAllCourses()Ljava/util/List;
+HSPLcom/example/data/CourseCatalog;->getAllTracks()Ljava/util/List;
+
+# Image Caching & Utilities
+Lcom/example/util/ImageCacheHelper;
+HSPLcom/example/util/ImageCacheHelper;->preloadAppImages(Landroid/content/Context;)V
+
+# Theme & Colors (Optimized instant tokens)
+Lcom/example/ui/theme/ThemeKt;
+Lcom/example/ui/theme/ColorKt;
+Lcom/example/ui/theme/TypeKt;
+Lcom/example/ui/theme/DimensKt;
+HSPLcom/example/ui/theme/ThemeKt;->CodeAcademyTheme(ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+
+# UI Screens & Composables - Cold Start & Hot Paths
+Lcom/example/ui/screens/SplashScreenKt;
+HSPLcom/example/ui/screens/SplashScreenKt;->SplashScreen(Ljava/lang/Boolean;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+
+# Home Tab & Child Sections
+Lcom/example/ui/screens/HomeTabScreenKt;
+Lcom/example/ui/screens/HomeScreenKt;
+Lcom/example/ui/screens/HomeScreenTopCarouselKt;
+Lcom/example/ui/screens/HomeScreenTrackListKt;
+Lcom/example/ui/screens/HomeScreenCourseListKt;
+HSPLcom/example/ui/screens/HomeTabScreenKt;->HomeTabScreen(Lcom/example/ui/MainViewModel;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+HSPLcom/example/ui/screens/HomeScreenKt;->HomeScreen(Lcom/example/ui/MainViewModel;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+HSPLcom/example/ui/screens/HomeScreenTopCarouselKt;->HomeScreenTopCarousel(IIIILkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+
+# Bottom Navigation Screens
+Lcom/example/ui/screens/CourseCatalogScreenKt;
+HSPLcom/example/ui/screens/CourseCatalogScreenKt;->CourseCatalogScreen(Lcom/example/ui/MainViewModel;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+
+Lcom/example/ui/screens/ProgressScreenKt;
+HSPLcom/example/ui/screens/ProgressScreenKt;->ProgressScreen(Lcom/example/ui/MainViewModel;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+
+Lcom/example/ui/screens/CommunityScreenKt;
+HSPLcom/example/ui/screens/CommunityScreenKt;->CommunityScreen(Lcom/example/ui/MainViewModel;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+
+Lcom/example/ui/screens/ProfileScreenKt;
+Lcom/example/ui/screens/ProfileHeaderSectionKt;
+Lcom/example/ui/screens/ProfileHeatmapSectionKt;
+Lcom/example/ui/screens/ProfileBadgesSectionKt;
+Lcom/example/ui/screens/ProfileSettingsSectionKt;
+HSPLcom/example/ui/screens/ProfileScreenKt;->ProfileScreen(Lcom/example/ui/MainViewModel;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+
+# Auth & Onboarding Paths
+Lcom/example/ui/screens/LoginScreenKt;
+Lcom/example/ui/screens/RegisterScreenKt;
+Lcom/example/ui/screens/AuthOnboardingScreenKt;
+
+# Core Reusable Components
+Lcom/example/ui/components/ComponentsKt;
+Lcom/example/ui/components/TopHeaderBarKt;
+Lcom/example/ui/components/DailyQuestCardKt;
+Lcom/example/ui/components/StreakFlameGridKt;
+
+# Compose Foundation & Material 3 Primitives
+Landroidx/compose/foundation/pager/HorizontalPagerKt;
+Landroidx/compose/foundation/pager/PagerState;
+Landroidx/compose/foundation/lazy/LazyColumnKt;
+Landroidx/compose/foundation/lazy/LazyRowKt;
+Landroidx/compose/material3/ScaffoldKt;
+Landroidx/compose/material3/NavigationBarKt;
+Landroidx/compose/material3/NavigationBarItemKt;
+Landroidx/compose/material3/CardKt;
+Landroidx/compose/material3/TextKt;
+Landroidx/compose/material3/IconKt;
+
+# Coil Image Loading System
+Lcoil/ImageLoader;
+Lcoil/compose/AsyncImageKt;
+Lcoil/compose/AsyncImagePainter;
+Lcoil/request/ImageRequest;
+Lcoil/memory/MemoryCache;

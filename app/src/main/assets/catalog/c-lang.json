@@ -1,0 +1,295 @@
+{
+  "id": "c-lang",
+  "name": "Bahasa C",
+  "description": "Pahami fondasi arsitektur komputer, alokasi memori, dan algoritma dasar sistem.",
+  "iconEmoji": "⚡",
+  "courses": [
+    {
+      "id": "c-fund-01",
+      "trackId": "c-lang",
+      "title": "C Fundamentals: Sintaks & Memori",
+      "level": "Pemula",
+      "durationMinutes": 153,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Kuasai fondasi komputasi tingkat rendah: tipe data primitif, pointer memori, struct, dan alokasi heap dinamis. Disajikan dengan metode baca & tebak output (mental execution) untuk melatih intuisi memori tanpa memerlukan compiler di aplikasi.",
+      "prerequisites": [
+        "Tidak ada prasyarat"
+      ],
+      "instructor": "Dr. Hendra Gunawan, Dosen Ilmu Komputer",
+      "contentPath": "content/c-fund-01",
+      "sectionTitles": {
+        "PERSIAPAN": "Persiapan",
+        "PENDAHULUAN": "Dasar-Dasar C",
+        "INTI": "Alur Program & Fungsi",
+        "LANJUTAN": "Pointer, Struct & Memori",
+        "EVALUASI": "Proyek & Evaluasi"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Format specifier apa yang digunakan dalam printf untuk mencetak bilangan bulat integer di C?",
+          "options": [
+            "%c",
+            "%s",
+            "%d",
+            "%f"
+          ],
+          "correctIndex": 2,
+          "explanation": "%d atau %i digunakan untuk format specifier angka bertipe int.",
+          "sourceModuleId": "c-pend-3"
+        },
+        {
+          "id": 2,
+          "question": "Apa nilai balik standar yang dikembalikan oleh fungsi main() saat program C selesai dieksekusi dengan sukses?",
+          "options": [
+            "return NULL;",
+            "return 1;",
+            "return -1;",
+            "return 0;"
+          ],
+          "correctIndex": 3,
+          "explanation": "return 0 menandakan ke sistem operasi bahwa program telah berhenti secara normal tanpa ada kegagalan.",
+          "sourceModuleId": "c-pend-2"
+        },
+        {
+          "id": 3,
+          "question": "Apa output dari kode C berikut?\nint a = 14;\nint b = 4;\nprintf(\"%d\", a / b);",
+          "options": [
+            "3",
+            "4",
+            "3.5",
+            "2"
+          ],
+          "correctIndex": 0,
+          "explanation": "Karena kedua operan bertipe int, operasi pembagian / adalah integer division yang membuang desimal sehingga menghasilkan 3.",
+          "sourceModuleId": "c-inti-2"
+        },
+        {
+          "id": 4,
+          "question": "Apa yang terjadi pada pemanggilan printf(\"%d %d\", x++, ++x); dengan variabel yang sama dimodifikasi berkali-kali?",
+          "options": [
+            "Otomatis memicu error kompilasi gcc",
+            "Selalu mencetak nilai berurutan",
+            "Menghasilkan Undefined Behavior dalam standar C",
+            "Nilai variabel direset ke 0"
+          ],
+          "correctIndex": 2,
+          "explanation": "Memodifikasi dan mengakses variabel yang sama lebih dari satu kali dalam argumen fungsi tanpa sequence point memicu Undefined Behavior.",
+          "sourceModuleId": "c-inti-2"
+        },
+        {
+          "id": 5,
+          "question": "Jika sebuah klausa case pada percabangan switch tidak diakhiri dengan statement break, apa dampaknya?",
+          "options": [
+            "Klausa default dipanggil secara instan melewati seluruh case di bawahnya",
+            "Terjadi fall-through di mana baris kode case berikutnya ikut dieksekusi",
+            "Program langsung crash seketika karena runtime segmentation fault",
+            "Kompiler menolak menghasilkan binary karena dianggap syntax error fatal"
+          ],
+          "correctIndex": 1,
+          "explanation": "Tanpa statement break, eksekusi kode akan terus merosot turun (fall-through) ke case berikutnya.",
+          "sourceModuleId": "c-inti-3"
+        },
+        {
+          "id": 6,
+          "question": "Berapa indeks elemen terakhir dari sebuah array berukuran 5 elemen: int skor[5];?",
+          "options": [
+            "5",
+            "4",
+            "0",
+            "6"
+          ],
+          "correctIndex": 1,
+          "explanation": "Array di bahasa C menggunakan indeks berbasis nol (zero-indexed), sehingga 5 elemen menempati indeks 0 hingga 4.",
+          "sourceModuleId": "c-inti-5"
+        },
+        {
+          "id": 7,
+          "question": "Karakter apa yang wajib menjadi penanda akhir (terminator) dari string di bahasa C?",
+          "options": [
+            "'\\n'",
+            "EOF",
+            "'\\0'",
+            "' '"
+          ],
+          "correctIndex": 2,
+          "explanation": "Null character ('\\0') dengan kode ASCII 0 adalah penanda akhir mutlak bagi setiap string char array di C.",
+          "sourceModuleId": "c-inti-6"
+        },
+        {
+          "id": 8,
+          "question": "Secara default, bagaimana mekanisme pengiriman argumen variabel biasa pada fungsi di bahasa C?",
+          "options": [
+            "Pass-by-pointer otomatis",
+            "Pass-by-reference",
+            "Pass-by-value (salinan nilai)",
+            "Shared variable di global"
+          ],
+          "correctIndex": 2,
+          "explanation": "Bahasa C murni bekerja dengan pass-by-value: isi variabel selalu disalin ke stack frame fungsi yang dipanggil.",
+          "sourceModuleId": "c-inti-7"
+        },
+        {
+          "id": 9,
+          "question": "Apa output dari baris kode berikut?\nint a = 10;\nint *p = &a;\n*p = 50;\nprintf(\"%d\", a);",
+          "options": [
+            "Alamat memori a",
+            "20",
+            "50",
+            "10"
+          ],
+          "correctIndex": 2,
+          "explanation": "*p melakukan dereferensi langsung ke lokasi memori a dan mengubah isinya menjadi 50.",
+          "sourceModuleId": "c-lanjutan-1"
+        },
+        {
+          "id": 10,
+          "question": "Apa fungsi dari operator ampersand (&) ketika diletakkan di depan variabel (misal: &angka)?",
+          "options": [
+            "Menghapus variabel dari stack",
+            "Mengambil alamat memori dari variabel tersebut",
+            "Mengalikan nilai variabel",
+            "Melakukan operasi bitwise AND mutlak"
+          ],
+          "correctIndex": 1,
+          "explanation": "Operator & adalah address-of operator yang mengembalikan nomor alamat memori tempat variabel tersebut bertempat di RAM.",
+          "sourceModuleId": "c-lanjutan-1"
+        },
+        {
+          "id": 11,
+          "question": "Jika int arr[] = {10, 20, 30}; dan int *ptr = arr;, berapakah nilai dari *(ptr + 1)?",
+          "options": [
+            "10",
+            "30",
+            "11",
+            "20"
+          ],
+          "correctIndex": 3,
+          "explanation": "ptr menunjuk ke elemen pertama arr[0]. ptr + 1 melangkah sejauh satu ukuran integer ke arr[1] yang bernilai 20.",
+          "sourceModuleId": "c-lanjutan-2"
+        },
+        {
+          "id": 12,
+          "question": "Untuk mengubah nilai variabel di fungsi pemanggil (pass-by-reference simulasi di C), apa yang harus dikirim ke fungsi?",
+          "options": [
+            "Alamat memori variabel menggunakan operator &",
+            "Nama variabel dalam tanda kutip",
+            "Tipe data variabel",
+            "Salinan nilainya langsung"
+          ],
+          "correctIndex": 0,
+          "explanation": "Dengan mengirimkan alamat memori (&variabel), fungsi penerima dengan parameter pointer dapat memanipulasi data aslinya.",
+          "sourceModuleId": "c-lanjutan-3"
+        },
+        {
+          "id": 13,
+          "question": "Operator apa yang digunakan untuk mengakses anggota struct jika variabel yang kita miliki berupa pointer ke struct?",
+          "options": [
+            ". (titik)",
+            "-> (panah)",
+            "# (tagar)",
+            ":: (titik dua ganda)"
+          ],
+          "correctIndex": 1,
+          "explanation": "Operator panah (->) adalah shorthand yang praktis untuk dereferensi pointer struct: (*ptr).member.",
+          "sourceModuleId": "c-lanjutan-4"
+        },
+        {
+          "id": 14,
+          "question": "Di area memori manakah alokasi yang dipesan oleh fungsi malloc() ditempatkan?",
+          "options": [
+            "Heap",
+            "CPU Register",
+            "Stack",
+            "Text / Code Segment"
+          ],
+          "correctIndex": 0,
+          "explanation": "malloc() mengalokasikan memori secara dinamis di area Heap yang berumur fleksibel sampai fungsi free() dipanggil.",
+          "sourceModuleId": "c-lanjutan-5"
+        },
+        {
+          "id": 15,
+          "question": "Apa nilai kembalian dari fungsi malloc() jika alokasi memori gagal karena keterbatasan memori RAM?",
+          "options": [
+            "NULL",
+            "Undefined",
+            "-1",
+            "0x0001"
+          ],
+          "correctIndex": 0,
+          "explanation": "Jika sistem gagal memesan memori heap yang diminta, malloc() akan mengembalikan pointer khusus NULL.",
+          "sourceModuleId": "c-lanjutan-5"
+        },
+        {
+          "id": 16,
+          "question": "Kondisi di mana program terus memesan memori heap dengan malloc() namun tidak pernah memanggil free() disebut:",
+          "options": [
+            "Memory leak",
+            "Null pointer exception",
+            "Buffer overflow",
+            "Dangling pointer"
+          ],
+          "correctIndex": 0,
+          "explanation": "Memory leak terjadi saat memori heap terus terkonsumsi dan terbuang sia-sia tanpa pernah dikembalikan ke OS.",
+          "sourceModuleId": "c-lanjutan-6"
+        },
+        {
+          "id": 17,
+          "question": "Apa definisi dari dangling pointer?",
+          "options": [
+            "Pointer yang belum selesai dialokasikan oleh kompiler saat kompilasi",
+            "Pointer yang sengaja diisi alamat kosong dengan nilai konstanta NULL",
+            "Pointer bertipe konstanta yang nilai alamatnya tidak dapat dimodifikasi",
+            "Pointer yang menunjuk ke alamat memori yang sudah dibebaskan (free)"
+          ],
+          "correctIndex": 3,
+          "explanation": "Dangling pointer adalah pointer yang mengarah ke alamat memori bekas yang sudah tidak lagi valid untuk digunakan.",
+          "sourceModuleId": "c-lanjutan-6"
+        },
+        {
+          "id": 18,
+          "question": "Mode apa pada fungsi fopen() yang digunakan untuk membaca isi file teks yang sudah ada?",
+          "options": [
+            "\"a\"",
+            "\"r\"",
+            "\"w\"",
+            "\"wb\""
+          ],
+          "correctIndex": 1,
+          "explanation": "Mode \"r\" (read) membuka file teks yang sudah ada. Jika file tidak ditemukan, fungsi akan mengembalikan NULL.",
+          "sourceModuleId": "c-lanjutan-7"
+        },
+        {
+          "id": 19,
+          "question": "Apa output dari kode C berikut?\nint x = 100;\nint *p = &x;\nint **pp = &p;\nprintf(\"%d\", **pp);",
+          "options": [
+            "Alamat memori dari p",
+            "Compiler error",
+            "Alamat memori dari x",
+            "100"
+          ],
+          "correctIndex": 3,
+          "explanation": "pp adalah pointer ganda yang menunjuk ke p. Dereferensi ganda **pp mengakses langsung nilai variabel x yaitu 100.",
+          "sourceModuleId": "c-lanjutan-8"
+        },
+        {
+          "id": 20,
+          "question": "Setelah memanggil fungsi free(ptr); langkah preventif terbaik apa yang harus dilakukan?",
+          "options": [
+            "delete ptr;",
+            "ptr = 0x01;",
+            "free(*ptr);",
+            "ptr = NULL;"
+          ],
+          "correctIndex": 3,
+          "explanation": "Mengatur ptr = NULL setelah free() memastikan pointer dinetralkan dan tidak menimbulkan celah dangling pointer.",
+          "sourceModuleId": "c-eval-2"
+        }
+      ],
+      "sectionQuizzes": [],
+      "cheatSheetMarkdown": null
+    }
+  ]
+}

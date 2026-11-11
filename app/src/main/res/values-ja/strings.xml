@@ -1,0 +1,1100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CodeAcademy</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home_label">ホーム</string>
+    <string name="nav_courses_label">コース</string>
+    <string name="nav_progress_label">進捗</string>
+    <string name="nav_leaderboard_label">ランキング</string>
+    <string name="nav_profile_label">マイページ</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title_text">アカウント設定</string>
+    <string name="profile_settings_title">設定と環境設定</string>
+    <string name="profile_language_title">アプリの言語</string>
+    <string name="profile_language_subtitle">インターフェースの表示言語を選択</string>
+    <string name="profile_language_dialog_title">表示言語を選択</string>
+    <string name="profile_language_dialog_subtitle">選択した言語は、アプリ内のインターフェース全体に即座に反映されます。</string>
+    <string name="profile_dark_mode_title">ダークモード</string>
+    <string name="profile_dark_mode_active">ダークテーマ有効</string>
+    <string name="profile_light_mode_active">ライトテーマ有効</string>
+    <string name="profile_notifications_title">通知と学習リマインダー</string>
+    <string name="profile_notifications_subtitle">毎日の連続学習と新着教材のお知らせ</string>
+    <string name="profile_restart_onboarding_title">コース診断をやり直す</string>
+    <string name="profile_restart_onboarding_subtitle">学習目標と希望トラックを再設定</string>
+    <string name="profile_logout_title">ログアウト</string>
+    <string name="profile_logout_subtitle">ローカルアカウントからログアウト</string>
+    <string name="profile_logout_confirm_title">ログアウトの確認</string>
+    <string name="profile_logout_confirm_message">本当にログアウトしますか？学習進捗と獲得XPはこの端末に安全に保持されます。</string>
+    <string name="profile_edit_title">プロフィールの編集</string>
+    <string name="profile_edit_name_label">氏名</string>
+    <string name="profile_edit_bio_label">自己紹介</string>
+    <string name="profile_achievements_title">学習実績</string>
+    <string name="profile_certificates_title">修了証書</string>
+    <string name="profile_certificates_subtitle">合格したコースの修了証を確認する</string>
+    <string name="profile_bookmarks_title">保存した教材</string>
+    <string name="profile_bookmarks_subtitle">お気に入りの教材やコースへ素早くアクセス</string>
+    <string name="profile_badge_collection_title">獲得バッジ一覧</string>
+    <string name="profile_see_all_badges">すべて見る</string>
+    <string name="profile_badge_earned_status">獲得済み</string>
+    <string name="profile_badge_locked_status">未獲得</string>
+    <string name="profile_streak_label">日連続</string>
+    <string name="profile_total_xp_label">合計XP</string>
+    <string name="profile_certs_count_label">修了証</string>
+    <string name="profile_flame_heatmap_title">学習アクティビティ</string>
+
+    <!-- Home Screen -->
+    <string name="home_greeting_text">こんにちは</string>
+    <string name="home_search_placeholder">コース、言語、トピックを検索...</string>
+    <string name="home_continue_learning_title">学習を再開する</string>
+    <string name="home_explore_tracks_title">おすすめ学習トラック</string>
+    <string name="home_popular_courses_title">人気のコース</string>
+    <string name="home_start_learning_button">学習を始める</string>
+    <string name="home_continue_button">続ける</string>
+    <string name="home_ai_tutor_banner_title">AIチューターに質問</string>
+    <string name="home_ai_tutor_banner_desc">コードの疑問も安心！AI家庭教師が24時間サポートします。</string>
+    <string name="home_daily_quest_title">デイリーミッション</string>
+
+    <!-- Course & Catalog -->
+    <string name="course_all_title">すべてのコース</string>
+    <string name="course_modules_count_suffix">レッスン</string>
+    <string name="course_minutes_suffix">分</string>
+    <string name="course_level_beginner">初級</string>
+    <string name="course_level_intermediate">中級</string>
+    <string name="course_level_advanced">上級</string>
+    <string name="course_detail_about_title">このコースについて</string>
+    <string name="course_detail_modules_title">カリキュラム一覧</string>
+    <string name="course_try_playground_button">プレイグラウンドで試す</string>
+    <string name="course_copy_code_button">コピー</string>
+    <string name="course_code_copied_toast">コードをクリップボードにコピーしました</string>
+
+    <!-- Progress Screen -->
+    <string name="progress_title">学習進捗</string>
+    <string name="progress_overall_performance">総合スコア</string>
+    <string name="progress_next_target">次の学習目標</string>
+    <string name="progress_view_certificates">修了証をすべて見る</string>
+    <string name="progress_completed_label">修了</string>
+
+    <!-- Leaderboard / Community -->
+    <string name="leaderboard_title">ランキング＆コミュニティ</string>
+    <string name="leaderboard_your_rank">あなたの順位</string>
+    <string name="leaderboard_top_learners">トップ学習者ランキング</string>
+    <string name="leaderboard_weekly_challenge">ウィークリーチャレンジ</string>
+
+    <!-- Common -->
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_save">保存</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_confirm">はい、続ける</string>
+    <string name="common_apply">適用する</string>
+    <string name="common_loading">読み込み中...</string>
+    <string name="common_success">完了</string>
+
+    <!-- Help & FAQ -->
+    <string name="help_title">ヘルプ＆よくある質問</string>
+    <string name="help_tab_faq">FAQ</string>
+    <string name="help_tab_privacy">プライバシー規約</string>
+    <string name="help_tab_feedback">お問い合わせ・版</string>
+    <string name="help_contact_title">フィードバック・サポート</string>
+    <!-- AI Tutor -->
+    <string name="ai_tutor_title">CodeAcademy AI チューター</string>
+    <string name="ai_tutor_subtitle">Gemini AI 搭載 • コーディングをサポート</string>
+    <string name="ai_tutor_placeholder">コーディングについて何でも質問してください...</string>
+    <string name="ai_tutor_thinking">AI チューターが入力中...</string>
+    <string name="ai_tutor_send_button">送信</string>
+    <string name="ai_tutor_attach_code">コードを添付</string>
+    <string name="ai_tutor_code_attached">コードを添付済 (%1$d 行)</string>
+    <string name="ai_tutor_error_communication">申し訳ありません。AI チューターへの接続中にエラーが発生しました (%1$s)。メッセージを再送信してください。</string>
+    <string name="ai_tutor_welcome_title">CodeAcademy AI チューター</string>
+    <string name="ai_tutor_welcome_desc">こんにちは！あなたの専属 AI チューターです。Web 開発、Python、C、C++ でお困りですか？質問するかコードを貼り付けてください！</string>
+
+    <!-- Materi Content Localization Notice -->
+    <string name="materi_content_id_only">レッスン内容は現在インドネシア語でのみ提供されています</string>
+
+    <!-- TODO terjemahan -->
+    <string name="help_send_feedback_button">Send Email Support</string>
+    <!-- TODO terjemahan -->
+    <string name="help_app_version_label">App Version</string>
+    <!-- TODO terjemahan -->
+    <string name="login_error_empty_fields">Email and password are required.</string>
+    <!-- TODO terjemahan -->
+    <string name="login_error_invalid_email">Invalid email format.</string>
+    <!-- TODO terjemahan -->
+    <string name="login_error_password_min_length">Password must be at least 6 characters.</string>
+    <!-- TODO terjemahan -->
+    <string name="login_error_default_failure">Sign in failed. Please check your account.</string>
+    <!-- TODO terjemahan -->
+    <string name="login_headline_prefix">Continue your\n</string>
+    <!-- TODO terjemahan -->
+    <string name="login_headline_highlight">learning progress.</string>
+    <!-- TODO terjemahan -->
+    <string name="login_subtitle">Sign in to your account to continue today\'s lessons and coding practice</string>
+    <!-- TODO terjemahan -->
+    <string name="login_badge_mobile_dev">Mobile Dev</string>
+    <!-- TODO terjemahan -->
+    <string name="login_email_label">Email</string>
+    <!-- TODO terjemahan -->
+    <string name="login_email_placeholder">name@email.com</string>
+    <!-- TODO terjemahan -->
+    <string name="login_password_label">Password</string>
+    <!-- TODO terjemahan -->
+    <string name="login_password_placeholder">Minimum 6 characters</string>
+    <!-- TODO terjemahan -->
+    <string name="login_hide_password">Hide password</string>
+    <!-- TODO terjemahan -->
+    <string name="login_show_password">Show password</string>
+    <!-- TODO terjemahan -->
+    <string name="login_forgot_password">Forgot Password?</string>
+    <!-- TODO terjemahan -->
+    <string name="login_submit_button">Sign In</string>
+    <!-- TODO terjemahan -->
+    <string name="login_divider_or">or</string>
+    <!-- TODO terjemahan -->
+    <string name="login_google_signin">Sign in with Google</string>
+    <!-- TODO terjemahan -->
+    <string name="login_footer_no_account">Don\'t have an account?</string>
+    <!-- TODO terjemahan -->
+    <string name="login_footer_register_now">Register Now</string>
+    <!-- TODO terjemahan -->
+    <string name="register_error_empty_fields">All fields are required.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_error_name_min_length">Full name must be at least 2 characters.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_error_invalid_email">Invalid email format.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_error_password_min_length">Password must be at least 6 characters.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_error_password_mismatch">Password confirmation does not match.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_error_default_failure">Registration failed. Please try again.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_headline_prefix">Start your\n</string>
+    <!-- TODO terjemahan -->
+    <string name="register_headline_highlight">coding journey.</string>
+    <!-- TODO terjemahan -->
+    <string name="register_subtitle">Register a free account and build programming skills from scratch now</string>
+    <!-- TODO terjemahan -->
+    <string name="register_badge_new_account">New Account</string>
+    <!-- TODO terjemahan -->
+    <string name="register_name_label">Full Name</string>
+    <!-- TODO terjemahan -->
+    <string name="register_name_placeholder">Enter full name</string>
+    <!-- TODO terjemahan -->
+    <string name="register_email_label">Email</string>
+    <!-- TODO terjemahan -->
+    <string name="register_email_placeholder">name@email.com</string>
+    <!-- TODO terjemahan -->
+    <string name="register_password_label">Password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_password_placeholder">Minimum 6 characters</string>
+    <!-- TODO terjemahan -->
+    <string name="register_hide_password">Hide password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_show_password">Show password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_confirm_password_label">Confirm Password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_confirm_password_placeholder">Repeat password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_confirm_hide_password">Hide password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_confirm_show_password">Show password</string>
+    <!-- TODO terjemahan -->
+    <string name="register_submit_button">Register Account</string>
+    <!-- TODO terjemahan -->
+    <string name="register_footer_has_account">Already have an account?</string>
+    <!-- TODO terjemahan -->
+    <string name="register_footer_login_link">Sign In</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_error_empty_fields">All fields are required.</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_error_min_length">New password must be at least 6 characters.</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_error_mismatch">Password confirmation does not match.</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_success_message">New password successfully saved! Redirecting to sign in...</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_error_default_failure">Failed to reset password.</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_back_button_desc">Back to Sign In</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_headline_prefix">Forgot your\n</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_headline_highlight">password?</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_subtitle">Enter your account email and full name to create a new password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_badge_secure_account">Secure Account</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_email_label">Account Email</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_email_placeholder">name@email.com</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_name_label">Full Name</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_name_placeholder">Name according to account profile</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_new_password_label">New Password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_new_password_placeholder">Minimum 6 characters</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_hide_password">Hide password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_show_password">Show password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_confirm_password_label">Confirm New Password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_confirm_password_placeholder">Repeat new password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_confirm_hide_password">Hide password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_confirm_show_password">Show password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_submit_button">Save New Password</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_footer_remember">Remember your account password?</string>
+    <!-- TODO terjemahan -->
+    <string name="forgot_password_footer_login_link">Sign In</string>
+    <!-- TODO terjemahan -->
+    <string name="course_level_all">All</string>
+    <!-- TODO terjemahan -->
+    <string name="course_level_orientation">Orientation</string>
+    <!-- TODO terjemahan -->
+    <string name="course_level_beginner_intermediate">Beginner-Intermediate</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_1_name">Code Newbie</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_2_name">Code Explorer</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_3_name">Code Learner</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_4_name">Code Builder</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_5_name">Code Apprentice</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_6_name">Code Crafter</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_7_name">Code Developer</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_8_name">Code Engineer</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_9_name">Code Architect</string>
+    <!-- TODO terjemahan -->
+    <string name="xp_level_10_name">Code Master</string>
+    <!-- TODO terjemahan -->
+    <string name="level_tier_master">Master</string>
+    <!-- TODO terjemahan -->
+    <string name="level_tier_advanced">Advanced</string>
+    <!-- TODO terjemahan -->
+    <string name="level_tier_learner">Learner</string>
+    <!-- TODO terjemahan -->
+    <string name="level_tier_beginner">Beginner</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b1_name">First Step</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b1_desc">Complete your first learning module</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b2_name">New Learner</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b2_desc">Complete your first course thoroughly</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b3_name">Consistent</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b3_desc">Maintain a 7-day learning streak</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b4_name">Eternal Flame</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b4_desc">Maintain a 30-day consecutive learning streak</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b5_name">Adventurer</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b5_desc">Enroll and follow 3 different learning tracks</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b6_name">Master Tester</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b6_desc">Pass the assessment with a perfect score of 100%</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b7_name">Mission Warrior</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b7_desc">Complete daily quests for 7 days</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b8_name">Code Master</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b8_desc">Reach Level 10 (Code Master)</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b9_name">Collector</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b9_desc">Earn at least 3 completion certificates</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b10_name">AI Enthusiast</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b10_desc">Ask at least 10 questions to AI Tutor</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b11_name">Bookmarker</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b11_desc">Save a module or course to your Bookmarks</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b12_name">Full-Stack Hero</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_b12_desc">Complete modules from both Front-End and Back-End tracks</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_status_unlocked">Unlocked</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_status_locked">Locked</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_status_earned_congrats">Achievement Unlocked!</string>
+    <!-- TODO terjemahan -->
+    <string name="badge_status_not_yet_unlocked">Locked</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_mod_title">Complete 1 Module</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_mod_desc">Read and understand at least 1 module today</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_quiz_title">Take 1 Quiz</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_quiz_desc">Test your understanding by taking 1 quiz</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_ai_title">Ask AI Tutor</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_ai_desc">Discuss a coding concept with AI Tutor</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_play_title">Run Playground</string>
+    <!-- TODO terjemahan -->
+    <string name="quest_play_desc">Test HTML, CSS, or JS in interactive playground</string>
+    <!-- TODO terjemahan -->
+    <string name="track_front_end_name">Front-End Development</string>
+    <!-- TODO terjemahan -->
+    <string name="track_front_end_desc">Learn how to build attractive, responsive, and interactive web interfaces from scratch.</string>
+    <!-- TODO terjemahan -->
+    <string name="track_back_end_name">Back-End Development</string>
+    <!-- TODO terjemahan -->
+    <string name="track_back_end_desc">Build reliable servers, REST APIs, and manage databases that power modern web applications.</string>
+    <!-- TODO terjemahan -->
+    <string name="track_python_name">Python Programming</string>
+    <!-- TODO terjemahan -->
+    <string name="track_python_desc">Master Python for automation, data analysis, web backend, and beginner machine learning.</string>
+    <!-- TODO terjemahan -->
+    <string name="track_c_lang_name">C Language</string>
+    <!-- TODO terjemahan -->
+    <string name="track_c_lang_desc">Understand computer architecture foundations, memory allocation, and basic systems algorithms.</string>
+    <!-- TODO terjemahan -->
+    <string name="track_cpp_lang_name">C++ Language</string>
+    <!-- TODO terjemahan -->
+    <string name="track_cpp_lang_desc">Learn object-oriented programming (OOP), STL, and high-performance applications.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_fe_web_foundation_00_title">Web Foundations: From Zero to Your First Line of Code</string>
+    <!-- TODO terjemahan -->
+    <string name="course_fe_web_foundation_00_desc">Learn complete HTML structure and CSS styling from basics to positioning &amp; float techniques. This class is the foundation before moving to modern Flexbox and Grid layouts.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_fe_css_02_title">Modern CSS Layouts: Flexbox &amp; Grid</string>
+    <!-- TODO terjemahan -->
+    <string name="course_fe_css_02_desc">Master modern web layout techniques using one-dimensional CSS Flexbox and two-dimensional CSS Grid to build flexible, responsive, and professional web interfaces.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_fe_js_03_title">JavaScript Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="course_fe_js_03_desc">Master modern web programming logic (ES2015+): let/const variables, data types, operators, if/else flows and loops, arrays &amp; objects, arrow functions, DOM manipulation &amp; event listeners, and introduction to asynchronous concepts through an interactive to-do list project.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_be_node_01_title">Node.js Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="course_be_node_01_desc">Master server-side programming with Node.js runtime: event loop architecture, non-blocking I/O, module systems (CommonJS &amp; ESM), file manipulation, and building HTTP servers &amp; REST APIs. Based on read &amp; predict output method (mental execution) without requiring a compiler in the app.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_py_fund_01_title">Python Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="course_py_fund_01_desc">Learn the programming language with the cleanest syntax. Perfect for data science, scripting automation, and web development.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_c_fund_01_title">C Fundamentals: Syntax &amp; Memory</string>
+    <!-- TODO terjemahan -->
+    <string name="course_c_fund_01_desc">Master low-level computing foundations: primitive data types, memory pointers, structs, and dynamic heap allocation. Presented with the read &amp; predict output method (mental execution) to build memory intuition without requiring a compiler in the app.</string>
+    <!-- TODO terjemahan -->
+    <string name="course_cpp_fund_01_title">C++ Fundamentals: From C to OOP</string>
+    <!-- TODO terjemahan -->
+    <string name="course_cpp_fund_01_desc">Master Object-Oriented Programming (OOP) and modern C++ features: references, STL vector &amp; string, classes, RAII constructors/destructors, inheritance, virtual polymorphism, templates, and smart pointers. Based on the read &amp; predict output method (mental execution) without requiring a compiler in the app.</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_persiapan">Preparation</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_pendahuluan">Introduction</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_inti">Core Material</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_lanjutan">Advanced Material</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_css_dasar">CSS Basics</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_pendalaman_css">Deep Dive into CSS</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_evaluasi">Evaluation</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_persiapan_tools">Preparation &amp; Tool Setup</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_pengantar_silabus">Introductory Material &amp; Syllabus</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_inti_praktik">Core Material &amp; Practice</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_variasi_elemen">Element Variations &amp; Advanced Practice</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_variasi_styling">Styling Variations &amp; CSS Rules</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_selector_box_model">Selectors, Text Formatting, Box Model &amp; Layout</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_evaluasi_sertifikat">Comprehensive test to claim your certificate</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_penerapan_lanjutan">Advanced Application &amp; Case Studies</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_styling_desain">Styling &amp; Design Material</string>
+    <!-- TODO terjemahan -->
+    <string name="section_sub_tata_letak_lanjutan">Layout &amp; Advanced Styling</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_intro_html">Introduction to HTML</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_deep_html">Deep Dive into HTML</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_why_modern">Why Modern Layouts</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_flexbox">Flexbox</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_grid">CSS Grid</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_js_basics">JavaScript Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_js_logic">Logic &amp; Program Flow</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_fe_js_functions">Functions, Objects &amp; DOM</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_be_understand_node">Understanding Node.js</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_be_modules_async">Modules, Files &amp; Async</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_be_server_npm">Server &amp; npm</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_py_basics">Python Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_py_flow">Program Flow &amp; Loops</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_py_structs">Data Structures &amp; Functions</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_c_basics">C Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_c_flow">Program Flow &amp; Functions</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_c_pointers">Pointers, Structs &amp; Memory</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_cpp_basics">C++ Fundamentals</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_cpp_stl">Functions, STL &amp; Classes</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_cpp_oop">OOP &amp; Modern Features</string>
+    <!-- TODO terjemahan -->
+    <string name="section_title_proyek_evaluasi">Project &amp; Evaluation</string>
+
+    <!-- Tahap 2B: Home & Navigation Drawer -->
+    <!-- TODO terjemahan -->
+    <string name="home_top_header_default_user">CodeAcademy Student</string>
+    <!-- TODO terjemahan -->
+    <string name="home_default_user">Student</string>
+    <!-- TODO terjemahan -->
+    <string name="home_coachmark_intro">Tap the ☰ menu icon on the top left to access Search Modules, Saved, Playground, and all other features!</string>
+    <!-- TODO terjemahan -->
+    <string name="home_coachmark_quest_intro">Complete your Daily Quest to maintain your streak and check your XP standing on the Student Leaderboard!</string>
+    <!-- TODO terjemahan -->
+    <string name="home_leaderboard_banner_title">Student Leaderboard</string>
+    <!-- TODO terjemahan -->
+    <string name="home_leaderboard_banner_top50">TOP 50</string>
+    <!-- TODO terjemahan -->
+    <string name="home_leaderboard_banner_desc">Compete for XP with other learners!</string>
+    <!-- TODO terjemahan -->
+    <string name="home_leaderboard_banner_cd">Open Leaderboard</string>
+    <!-- TODO terjemahan -->
+    <string name="home_see_all">View All</string>
+    <!-- TODO terjemahan -->
+    <string name="home_course_open_cd">Open</string>
+    <!-- TODO terjemahan -->
+    <string name="home_course_modules_and_duration">%1$d Modules • %2$d Minutes</string>
+
+    <!-- Carousel Slide 0: Promo Hero -->
+    <!-- TODO terjemahan -->
+    <string name="carousel_hero_cd">CodeAcademy Hero</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_hero_badge">MOBILE-FIRST CODING</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_hero_title">Practical Daily Coding\nRight on Your Smartphone</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_hero_btn_start">Start Learning</string>
+
+    <!-- Carousel Slide 1: Weekly XP -->
+    <!-- TODO terjemahan -->
+    <string name="carousel_weekly_xp_badge">THIS WEEK\'S EARNED XP</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_weekly_xp_level">Level %1$d</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_weekly_xp_plus_format">+%1$d XP</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_weekly_xp_account_total">Total %1$d account XP earned</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_weekly_xp_target_goal">Weekly target: %1$d XP</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_weekly_xp_percent">%1$d%%</string>
+
+    <!-- Carousel Slide 2: Recommended Course -->
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_badge">RECOMMENDED LEARNING</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_reward">+%1$d XP</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_duration">⏱️ ~%1$d min</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_hands_on">Instant Practice</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_btn_start">Start</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_default_title">CSS Flexbox &amp; Modern Layout</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_recommended_default_desc">Master 2-dimensional responsive layout right on your smartphone with instant hands-on practice.</string>
+
+    <!-- Carousel Slide Streak (Fallback) -->
+    <!-- TODO terjemahan -->
+    <string name="carousel_streak_badge">LEARNING CONSISTENCY</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_streak_rate">+20 XP/Day</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_streak_days_count">%1$d Day Streak</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_streak_best_record">Your best record: %1$d days</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_streak_active_msg">Active streak! Finish today\'s lesson to keep it going.</string>
+    <!-- TODO terjemahan -->
+    <string name="carousel_streak_inactive_msg">Learn today\'s lesson to start your new streak.</string>
+
+    <!-- Tracks List -->
+    <!-- TODO terjemahan -->
+    <string name="home_track_courses_count">%1$d Courses</string>
+    <!-- TODO terjemahan -->
+    <string name="home_track_progress_label">Progress</string>
+    <!-- TODO terjemahan -->
+    <string name="home_track_progress_percent">%1$d%%</string>
+    <!-- TODO terjemahan -->
+    <string name="home_track_interactive_specializations">%1$d interactive specializations</string>
+    <!-- TODO terjemahan -->
+    <string name="track_specialization_pill">Specialization</string>
+
+    <!-- App Navigation Drawer -->
+    <!-- TODO terjemahan -->
+    <string name="drawer_close_cd">Close menu</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_user_level_xp">Lv. %1$d · %2$d XP</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_greeting_pagi">Good morning, %1$s</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_greeting_siang">Good afternoon, %1$s</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_greeting_sore">Good afternoon, %1$s</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_greeting_malam">Good evening, %1$s</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_home">Home</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_search">Search Modules</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_progress">Learning Progress</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_section_activity">Activities</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_notifications">Notifications</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_certificates">My Certificates</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_bookmarks">Saved Modules</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_diskusi_hangat">Trending Discussions</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_section_tools">Tools</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_playground">Playground</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_ai_tutor">Ask AI Tutor</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_section_other">More</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_settings">Settings</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_help">Help &amp; FAQ</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_menu_logout">Sign Out</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_logout_dialog_title">Sign Out of Account?</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_logout_dialog_message">Your progress remains saved. You can sign in again anytime.</string>
+    <!-- TODO terjemahan -->
+    <string name="drawer_logout_dialog_confirm">Sign Out</string>
+
+    <!-- Search Screen -->
+    <!-- TODO terjemahan -->
+    <string name="search_back_cd">Back</string>
+    <!-- TODO terjemahan -->
+    <string name="search_input_placeholder">Search modules, topics, or syntax...</string>
+    <!-- TODO terjemahan -->
+    <string name="search_clear_cd">Clear text</string>
+    <!-- TODO terjemahan -->
+    <string name="search_loading_title">Loading learning materials...</string>
+    <!-- TODO terjemahan -->
+    <string name="search_loading_desc">Preparing module index across all courses</string>
+    <!-- TODO terjemahan -->
+    <string name="search_intro_title">Search Across Courses</string>
+    <!-- TODO terjemahan -->
+    <string name="search_intro_desc">Type title or content keywords to instantly find the module you are looking for.</string>
+    <!-- TODO terjemahan -->
+    <string name="search_popular_topics_title">Popular Topics &amp; Keywords</string>
+    <!-- TODO terjemahan -->
+    <string name="search_empty_title">No Results Found</string>
+    <!-- TODO terjemahan -->
+    <string name="search_empty_desc">No modules or lessons found matching \"%1$s\". Check your spelling or try broader keywords.</string>
+    <!-- TODO terjemahan -->
+    <string name="search_found_results">%1$d lessons found</string>
+    <!-- TODO terjemahan -->
+    <string name="search_keyword_label">Keyword: \"%1$s\"</string>
+    <!-- TODO terjemahan -->
+    <string name="search_open_module_cd">Open Module</string>
+
+    <!-- ClassDetailScreen -->
+    <string name="class_detail_title">コース詳細</string>
+    <string name="class_detail_back_cd">戻る</string>
+    <string name="class_detail_cheatsheet_cd">構文チートシート</string>
+    <string name="class_detail_forum_cd">コースディスカッションフォーラム</string>
+    <string name="class_detail_bookmark_cd">保存</string>
+    <string name="class_detail_completed_label">コース完了</string>
+    <string name="class_detail_modules_progress_format">%1$d / %2$d モジュール</string>
+    <string name="class_detail_percent_completed_format">%1$d%% 完了</string>
+    <string name="class_detail_students_count_format">(%1$d 人の受講生)</string>
+    <string name="class_detail_learning_progress_label">学習の進捗</string>
+    <string name="class_detail_modules_fraction_percent_format">%1$d/%2$d モジュール (%3$d%%)</string>
+    <string name="class_detail_instructor_label">講師</string>
+    <string name="class_detail_placement_title">基礎はすでに理解していますか？</string>
+    <string name="class_detail_placement_desc">プレースメントテストを受けて習得済みのモジュールをスキップし、ボーナスXPを獲得しましょう！</string>
+    <string name="class_detail_placement_start_cd">テスト開始</string>
+    <string name="class_detail_forum_title">コースディスカッションフォーラム</string>
+    <string name="class_detail_forum_desc">クラスメートと教材や課題の解法について質問・議論しましょう</string>
+    <string name="class_detail_forum_open_cd">フォーラムを開く</string>
+    <string name="class_detail_pill_prep">準備</string>
+    <string name="class_detail_pill_intro">入門</string>
+    <string name="class_detail_est_minutes_format">⏱️ 約%1$d分</string>
+    <string name="class_detail_eval_section_title">最終評価・プロジェクト・認定証</string>
+    <string name="class_detail_eval_section_subtitle">最終クイズと最終プロジェクトに合格して修了証を取得しましょう</string>
+    <string name="class_detail_toast_complete_modules_first">先にすべてのモジュールを完了してください</string>
+    <string name="class_detail_final_quiz_title">コース最終評価クイズ</string>
+    <string name="class_detail_final_quiz_locked_hint">すべてのモジュールを完了すると最終評価が解放されます</string>
+    <string name="class_detail_final_quiz_info_format">選択問題 %1$d問 • 合格基準 70%%</string>
+    <string name="class_detail_final_quiz_passed_format">✓ 評価合格 (%1$d%%) • 再受験可能</string>
+    <string name="class_detail_btn_start">開始</string>
+    <string name="class_detail_btn_retake">再挑戦</string>
+    <string name="class_detail_btn_open">開く</string>
+    <string name="class_detail_cert_title">公式修了証明書</string>
+    <string name="class_detail_cert_desc">すべての教材を完了し、最終評価に合格し、最終プロジェクトがファシリテーターに承認されるとデジタル証明書を取得できます。</string>
+    <string name="class_detail_cert_ready_desc">おめでとうございます！公式修了証明書が発行され、閲覧・共有が可能です。</string>
+    <string name="class_detail_cert_view_btn">証明書を見る</string>
+    <string name="class_detail_section_quiz_toast_locked">先に %1$s のすべての教材を完了してください</string>
+    <string name="class_detail_section_quiz_locked_hint">%1$s のすべての教材を完了すると解放されます</string>
+    <string name="class_detail_section_quiz_passed_label">✓ 合格 • いつでも再挑戦可能</string>
+    <string name="class_detail_section_quiz_info_format">ランダム%1$d問 • 合格 %2$d%% • %3$d分</string>
+    <string name="class_detail_module_toast_locked">前のモジュールを先に完了してください</string>
+    <string name="class_detail_module_locked_req_format">\'%1$s\' を完了すると解放されます</string>
+    <string name="class_detail_module_intro_read_format">読了約%1$d分 • 導入モジュール</string>
+    <string name="class_detail_module_read_format">読了約%1$d分</string>
+
+    <!-- HasilEvaluasiScreen -->
+    <string name="eval_result_passed_title">おめでとうございます！評価クイズ合格です！ 🎉</string>
+    <string name="eval_result_failed_title">合格基準に達していません</string>
+    <string name="eval_result_xp_awarded_format">+%1$d XP 獲得</string>
+    <string name="eval_result_btn_retake">再評価する</string>
+    <string name="eval_result_btn_open_project">最終プロジェクトへ進む</string>
+    <string name="eval_result_btn_view_cert">証明書を受け取る</string>
+    <string name="eval_result_btn_study_again">復習する</string>
+    <string name="eval_result_next_step_project_title">証明書への最終ステップ：最終プロジェクト</string>
+    <string name="eval_result_next_step_project_desc">評価クイズに合格しました！修了証明書を発行するために、このコースの最終プロジェクトを提出してファシリテーターの審査を受けましょう。</string>
+    <string name="eval_result_answer_key_title">解答と解説</string>
+    <string name="eval_result_question_item_format">**問題 %1$d:** %2$s</string>
+    <string name="eval_result_correct_cd">正解</string>
+    <string name="eval_result_correct_answer_format">**正解:** %1$s</string>
+    <string name="eval_result_explanation_format">💡 **解説:** %1$s</string>
+
+    <!-- FinalProjectSubmissionScreen & Card -->
+    <string name="final_project_screen_title">最終プロジェクト提出</string>
+    <string name="final_project_card_title">コース最終プロジェクト提出</string>
+    <string name="final_project_card_locked_hint">コース最終評価クイズ（70%%以上）に合格すると解放されます</string>
+    <string name="final_project_card_ready_desc">解放済み • 最終プロジェクトを作成してファシリテーター審査に提出</string>
+    <string name="final_project_card_pending_desc">⏳ ファシリテーター審査待ち（提出 #%1$d）</string>
+    <string name="final_project_card_revision_desc">📝 ファシリテーターからの修正依頼 • 現在のスコア: %1$d/100</string>
+    <string name="final_project_card_approved_desc">✅ ファシリテーター承認済み (%1$d/100) • 証明書発行済み</string>
+    <string name="final_project_status_locked">ロック中</string>
+    <string name="final_project_status_draft">下書き</string>
+    <string name="final_project_status_pending">ファシリテーター審査待ち</string>
+    <string name="final_project_status_revision">要修正</string>
+    <string name="final_project_status_approved">承認・合格</string>
+    <string name="final_project_attempt_badge">提出 #%1$d • 合格基準 %2$d/100 • +%3$d XP</string>
+    <string name="final_project_quiz_score_summary">評価クイズ: %1$d%% (40%%) • プロジェクト評価: %2$s (60%%)</string>
+    <string name="final_project_scenario_header">ケーススタディと課題仕様</string>
+    <string name="final_project_rubric_header">自己チェックと採点ルーブリック</string>
+    <string name="final_project_rubric_subtitle">提出前に実装したすべての項目にチェックを入れてください：</string>
+    <string name="final_project_rubric_weight_format">配点 %1$d%%</string>
+    <string name="final_project_workspace_header">1. プロジェクトコード (Workspace Editor)</string>
+    <string name="final_project_workspace_subtitle">ここに最終プロジェクトのコードを入力するか、Playgroundの下書きを読み込みます。</string>
+    <string name="final_project_btn_load_playground">Playground下書きを読込</string>
+    <string name="final_project_btn_load_starter">スターターコードを読込</string>
+    <string name="final_project_code_placeholder">最終プロジェクトのコードをここに入力してください...</string>
+    <string name="final_project_url_header">2. プロジェクト / リポジトリURL (任意)</string>
+    <string name="final_project_url_placeholder">https://github.com/username/final-project または Gist/Drive URL</string>
+    <string name="final_project_notes_header">3. ファシリテーターへのメモ</string>
+    <string name="final_project_notes_placeholder">作成した機能や実行方法、アピールポイントを記入してください...</string>
+    <string name="final_project_btn_save_draft">下書き保存</string>
+    <string name="final_project_btn_submit">ファシリテーターに提出</string>
+    <string name="final_project_btn_resubmit">修正版を再提出</string>
+    <string name="final_project_toast_draft_saved">プロジェクトの下書きを保存しました</string>
+    <string name="final_project_toast_check_all_rubrics">すべてのルーブリック項目にチェックし、コードまたはURLを入力してください</string>
+    <string name="final_project_toast_submitted">最終プロジェクトを提出しました！ファシリテーターの審査をお待ちください。</string>
+    <string name="final_project_pending_banner_title">ファシリテーター審査中</string>
+    <string name="final_project_pending_banner_desc">提出データはファシリテーターWeb審査キューに同期されました。採点が完了すると通知されます。</string>
+    <string name="final_project_feedback_card_title">ファシリテーター評価とフィードバック</string>
+    <string name="final_project_feedback_reviewer_format">審査担当: %1$s</string>
+    <string name="final_project_feedback_score_format">プロジェクトスコア: %1$d/100</string>
+    <string name="final_project_feedback_empty">追加のコメントはありません。</string>
+    <string name="final_project_simulator_title">🧪 ファシリテーター審査シミュレーター (Web連携テスト)</string>
+    <string name="final_project_simulator_desc">ファシリテーターWebダッシュボードの審査結果（承認/修正依頼）と証明書発行をアプリ内で直接テストできます。</string>
+    <string name="final_project_simulator_score_label">シミュレートスコア: %1$d/100</string>
+    <string name="final_project_simulator_feedback_label">ファシリテーターフィードバック</string>
+    <string name="final_project_simulator_default_pass_feedback">素晴らしい成果です！コード構造が整理されており、すべてのルーブリック基準を満たしています。</string>
+    <string name="final_project_simulator_default_rev_feedback">基本実装は良好ですが、ルーブリック項目3と4に従ってエッジケース処理とモジュール構造を改善してください。</string>
+    <string name="final_project_simulator_btn_revision">修正依頼をシミュレート</string>
+    <string name="final_project_simulator_btn_approve">承認（合格）をシミュレート</string>
+
+    <!-- MainActivity Level Up & Bookmark -->
+    <string name="course_bookmark_subtitle_format">%1$d モジュール • %2$s</string>
+    <string name="level_up_dialog_title">🎉 レベルアップ！</string>
+    <string name="level_up_dialog_subtitle">おめでとうございます！到達したレベル:</string>
+    <string name="level_up_dialog_badge_format">レベル %1$d • %2$s</string>
+    <string name="level_up_dialog_desc">学習ストリークを維持して、次のモジュールを攻略しましょう！</string>
+    <string name="level_up_dialog_btn_continue">学習を続ける</string>
+    <string name="ai_tutor_playground_prompt_prefix">AIチューターへ、以下のPlaygroundコードの説明とレビューをお願いします:</string>
+
+    <!-- QuizScreen -->
+    <string name="quiz_screen_top_title">コース最終評価</string>
+    <string name="quiz_screen_back_cd">戻る</string>
+    <string name="quiz_screen_empty">評価問題はまだありません。</string>
+    <string name="quiz_screen_question_progress_format">問題 %1$d / %2$d</string>
+    <string name="quiz_screen_answered_count_format">%1$d/%2$d 回答済み</string>
+    <string name="quiz_screen_explanation_title">💡 解答の解説:</string>
+    <string name="quiz_screen_btn_prev">前へ</string>
+    <string name="quiz_screen_btn_next">次へ</string>
+    <string name="quiz_screen_btn_submit">完了してスコアを見る</string>
+
+    <!-- CertificateListScreen -->
+    <string name="cert_list_top_title">修了証明書</string>
+    <string name="cert_list_back_cd">戻る</string>
+    <string name="cert_list_header_badge_format">%1$d 件の証明書</string>
+    <string name="cert_list_empty_title">証明書がまだありません</string>
+    <string name="cert_list_empty_desc">すべてのモジュールを完了し、最終クイズ（70%以上）に合格し、ファシリテーターから最終プロジェクトの承認を受けると公式証明書が発行されます。</string>
+    <string name="cert_list_btn_explore">コースを探す</string>
+    <string name="cert_list_summary_title">公式証明書ポートフォリオ</string>
+    <string name="cert_list_summary_desc">各証明書は固有のIDで検証され、最終評価と最終プロジェクトのスコアが反映されます。</string>
+    <string name="cert_list_card_badge">認証済み</string>
+    <string name="cert_list_card_recipient_format">受賞者: %1$s</string>
+    <string name="cert_list_card_score_format">スコア: %1$d%%</string>
+    <string name="cert_list_card_id_format">ID: %1$s</string>
+    <string name="cert_list_card_btn_view">証明書を見る</string>
+
+    <!-- CertificateScreen -->
+    <string name="cert_view_top_title">公式修了証明書</string>
+    <string name="cert_view_back_cd">戻る</string>
+    <string name="cert_view_share_cd">証明書を共有</string>
+    <string name="cert_view_not_found">証明書データが見つかりません。</string>
+    <string name="cert_view_header_org">NGODINGYUK ACADEMY</string>
+    <string name="cert_view_header_title">CERTIFICATE OF COMPLETION</string>
+    <string name="cert_view_awarded_to">以下の方に授与します:</string>
+    <string name="cert_view_completion_desc">次のコースにおいて全モジュール、最終評価クイズ、およびファシリテーター承認の最終プロジェクトを修了したことを証します:</string>
+    <string name="cert_view_label_score">最終スコア</string>
+    <string name="cert_view_label_date">発行日</string>
+    <string name="cert_view_label_id">証明書ID</string>
+    <string name="cert_view_verified_stamp">合格・認証済み</string>
+    <string name="cert_view_btn_share">証明書を共有・エクスポート</string>
+    <string name="cert_view_btn_saving">画像を準備中...</string>
+    <string name="cert_view_share_chooser_title">修了証明書を共有</string>
+    <string name="cert_view_share_error_toast">証明書の共有に失敗しました</string>
+
+    <!-- PlacementTestScreen -->
+    <string name="placement_top_title">プレースメントテスト</string>
+    <string name="placement_back_cd">戻る</string>
+    <string name="placement_intro_badge">任意 • 時間短縮</string>
+    <string name="placement_intro_title">事前知識をチェック</string>
+    <string name="placement_intro_desc_format">%1$d 問の短い問題に答えて、%2$s の既に習得済みの基礎セクションをスキップしましょう。</string>
+    <string name="placement_intro_rule_1">セクションごとに80%以上のスコアでスキップが解除されます。</string>
+    <string name="placement_intro_rule_2">不合格でもXPペナルティはありません。</string>
+    <string name="placement_intro_rule_3">修了証明書の取得には最終プロジェクトの提出が必須です。</string>
+    <string name="placement_btn_start">テストを開始</string>
+    <string name="placement_question_counter_format">問題 %1$d / %2$d</string>
+    <string name="placement_btn_prev">前へ</string>
+    <string name="placement_btn_next">次へ</string>
+    <string name="placement_btn_submit">完了して採点</string>
+    <string name="placement_result_pass_title">素晴らしい！セクションスキップ有効</string>
+    <string name="placement_result_fail_title">基礎から始めましょう</string>
+    <string name="placement_result_score_format">テストスコア: %1$d%% (%2$d/%3$d 正解)</string>
+    <string name="placement_result_pass_desc_format">最初の %1$d セクションが解除されました！応用トピックに直接進めます。</string>
+    <string name="placement_result_fail_desc">スキップされたセクションはありません。基礎を固めるために順番に学習しましょう！</string>
+    <string name="placement_result_btn_continue">コース詳細に戻る</string>
+
+    <!-- SectionQuizRulesScreen -->
+    <string name="section_quiz_rules_top_title">セクションクイズのルール</string>
+    <string name="section_quiz_rules_back_cd">戻る</string>
+    <string name="section_quiz_rules_badge">セクション評価</string>
+    <string name="section_quiz_rules_subtitle">このセクションのクイズを始める前に準備を確認してください。</string>
+    <string name="section_quiz_rules_stat_questions_label">問題数</string>
+    <string name="section_quiz_rules_stat_questions_value_format">%1$d 問</string>
+    <string name="section_quiz_rules_stat_pass_label">合格基準</string>
+    <string name="section_quiz_rules_stat_duration_label">制限時間</string>
+    <string name="section_quiz_rules_stat_duration_value_format">%1$d 分</string>
+    <string name="section_quiz_rules_card_title">受験ガイドライン</string>
+    <string name="section_quiz_rules_item_1">合格基準スコアに達すると、次のセクションがロック解除されます。</string>
+    <string name="section_quiz_rules_item_2">開始と同時にタイマーが作動し、時間切れになると自動提出されます。</string>
+    <string name="section_quiz_rules_item_3">合格基準に達しなかった場合は何度でも再挑戦できます。</string>
+    <string name="section_quiz_rules_history_title">過去の受験履歴</string>
+    <string name="section_quiz_rules_history_passed">合格</string>
+    <string name="section_quiz_rules_history_failed">不合格</string>
+    <string name="section_quiz_rules_btn_start">クイズを開始</string>
+
+    <!-- SectionQuizScreen -->
+    <string name="section_quiz_exit_dialog_title">クイズを終了しますか？</string>
+    <string name="section_quiz_exit_dialog_desc">今終了すると、回答中の進捗は保存されません。</string>
+    <string name="section_quiz_exit_dialog_confirm">終了する</string>
+    <string name="section_quiz_exit_dialog_cancel">回答を続ける</string>
+    <string name="section_quiz_submit_dialog_title">回答を提出しますか？</string>
+    <string name="section_quiz_submit_dialog_all_answered_format">全 %1$d 問に回答済みです。提出してもよろしいですか？</string>
+    <string name="section_quiz_submit_dialog_unanswered_format">未回答の問題が %1$d 問あります。このまま提出しますか？</string>
+    <string name="section_quiz_submit_dialog_confirm">はい、提出する</string>
+    <string name="section_quiz_submit_dialog_cancel">見直す</string>
+    <string name="section_quiz_question_number_format">問題 %1$d / %2$d</string>
+    <string name="section_quiz_btn_prev">前へ</string>
+    <string name="section_quiz_btn_next">次へ</string>
+    <string name="section_quiz_btn_submit">提出する</string>
+
+    <!-- SectionQuizResultScreen -->
+    <string name="section_quiz_result_top_title">セクションクイズ結果</string>
+    <string name="section_quiz_result_passed_badge">セクション合格</string>
+    <string name="section_quiz_result_failed_badge">再挑戦が必要</string>
+    <string name="section_quiz_result_passed_title">おめでとうございます！合格です</string>
+    <string name="section_quiz_result_failed_title">あきらめずにもう一度挑戦しましょう</string>
+    <string name="section_quiz_result_passed_desc">次のセクションがロック解除されました。この調子で進めましょう！</string>
+    <string name="section_quiz_result_failed_desc_format">合格には最低 %1$d%% 必要です。下の解説を確認してから再挑戦してください。</string>
+    <string name="section_quiz_result_stat_correct">正解</string>
+    <string name="section_quiz_result_stat_total">問題数</string>
+    <string name="section_quiz_result_stat_min_score">合格ライン</string>
+    <string name="section_quiz_result_review_title">解答と解説</string>
+    <string name="section_quiz_result_your_answer_format">あなたの回答: %1$s</string>
+    <string name="section_quiz_result_unanswered">未回答</string>
+    <string name="section_quiz_result_correct_answer_format">正解: %1$s</string>
+    <string name="section_quiz_result_btn_retry">もう一度挑戦</string>
+    <string name="section_quiz_result_btn_back_course">コースに戻る</string>
+
+    <!-- CheatSheetScreen -->
+    <string name="cheatsheet_search_placeholder">構文、タグ、関数を検索...</string>
+    <string name="cheatsheet_items_count_format">%1$d 件</string>
+    <string name="cheatsheet_empty_title">構文が見つかりません</string>
+    <string name="cheatsheet_empty_subtitle">別のキーワードを試すか、「すべて」カテゴリを選択してください。</string>
+
+    <!-- CourseDetailScreen -->
+    <string name="course_detail_not_found">コースが見つかりません</string>
+    <string name="course_detail_top_title">コース詳細</string>
+    <string name="course_detail_stat_modules">モジュール</string>
+    <string name="course_detail_stat_quizzes">クイズ</string>
+    <string name="course_detail_stat_duration">所要時間</string>
+    <string name="course_detail_stat_xp">合計 XP</string>
+    <string name="course_detail_progress_title">学習の進捗</string>
+    <string name="course_detail_progress_modules_format">%2$d モジュール中 %1$d 完了</string>
+    <string name="course_detail_syllabus_title">カリキュラム</string>
+    <string name="course_detail_module_locked">ロック中</string>
+    <string name="course_detail_module_completed">完了</string>
+    <string name="course_detail_eval_card_title">コース最終評価</string>
+    <string name="course_detail_eval_passed_format">合格 • 最高スコア: %1$d%%</string>
+    <string name="course_detail_eval_ready_format">%1$d 問 • 合格ライン 70%%</string>
+    <string name="course_detail_eval_locked_desc">すべてのモジュールを完了すると最終評価がロック解除されます</string>
+    <string name="course_detail_btn_start">学習を始める</string>
+    <string name="course_detail_btn_continue">学習を続ける</string>
+    <string name="course_detail_btn_start_eval">最終評価を開始</string>
+
+    <!-- CourseCatalogScreen -->
+    <string name="catalog_top_title">コースカタログ</string>
+    <string name="catalog_header_subtitle">基礎から応用まで体系的な学習パスを選択しましょう</string>
+    <string name="catalog_search_placeholder">コースやプログラミングトピックを検索...</string>
+    <string name="catalog_clear_search_cd">検索をクリア</string>
+    <string name="catalog_filter_all">すべて</string>
+    <string name="catalog_filter_in_progress">学習中</string>
+    <string name="catalog_filter_completed">完了</string>
+    <string name="catalog_level_all">全レベル</string>
+    <string name="catalog_courses_count_format">%1$d コース利用可能</string>
+    <string name="catalog_empty_title">コースが見つかりません</string>
+    <string name="catalog_empty_subtitle">検索キーワードを変更するか、カテゴリフィルターをリセットしてみてください。</string>
+    <string name="catalog_reset_filter">フィルターをリセット</string>
+    <string name="catalog_prereq_locked_format">前提コースを完了してください: %1$s</string>
+    <string name="catalog_modules_count_format">%1$d モジュール</string>
+    <string name="catalog_progress_completed">100% 完了</string>
+    <string name="catalog_progress_modules_format">%1$d/%2$d モジュール</string>
+    <string name="catalog_btn_locked">ロック中</string>
+    <string name="catalog_btn_review">復習する</string>
+    <string name="catalog_btn_continue">続ける</string>
+    <string name="catalog_btn_start">コースを開始</string>
+
+    <!-- MateriScreen -->
+    <string name="materi_not_found">レッスンが見つかりません</string>
+    <string name="materi_module_step_format">モジュール %1$d / %2$d</string>
+    <string name="materi_bookmark_remove_cd">ブックマークを解除</string>
+    <string name="materi_bookmark_add_cd">ブックマークに追加</string>
+    <string name="materi_bookmark_removed_toast">ブックマークから削除しました</string>
+    <string name="materi_bookmark_added_toast">ブックマークに保存しました</string>
+    <string name="materi_ai_tutor_cd">AIチューターに質問</string>
+    <string name="materi_ai_tutor_label">AIに質問</string>
+    <string name="materi_key_takeaways_title">重要ポイント (Key Takeaways)</string>
+    <string name="materi_interactive_code_title">インタラクティブコード例</string>
+    <string name="materi_interactive_code_subtitle">下の構文を学び、Playgroundで直接試してみましょう</string>
+    <string name="materi_challenge_badge">実践チャレンジ</string>
+    <string name="materi_challenge_completed">チャレンジ完了</string>
+    <string name="materi_challenge_criteria_title">完了条件:</string>
+    <string name="materi_challenge_btn_solve">Playgroundで解く</string>
+    <string name="materi_challenge_btn_review">Playgroundで再試行</string>
+    <string name="materi_challenge_required_hint">このモジュールを完了にするには、上の実践チャレンジを先にクリアしてください。</string>
+    <string name="materi_btn_prev">前へ</string>
+    <string name="materi_btn_next">次へ</string>
+    <string name="materi_btn_section_quiz">セクションクイズへ</string>
+    <string name="materi_btn_final_quiz">最終評価へ</string>
+    <string name="materi_btn_finish_module">完了して戻る</string>
+
+    <!-- PlaygroundScreen -->
+    <string name="playground_top_title_challenge">コードチャレンジ</string>
+    <string name="playground_top_title_default">コードプレイグラウンド</string>
+    <string name="playground_ai_review_cd">AIレビューを依頼</string>
+    <string name="playground_reset_cd">コードをリセット</string>
+    <string name="playground_reset_dialog_title">コードを初期状態にリセットしますか？</string>
+    <string name="playground_reset_dialog_desc">このセッションで記述したすべてのコード変更が初期テンプレートに戻ります。</string>
+    <string name="playground_reset_dialog_confirm">リセットする</string>
+    <string name="playground_reset_toast">コードを初期状態に戻しました</string>
+    <string name="playground_challenge_hide_cd">手順を隠す</string>
+    <string name="playground_challenge_show_cd">手順を表示</string>
+    <string name="playground_challenge_passed_badge">合格</string>
+    <string name="playground_challenge_instruction_label">チャレンジの手順</string>
+    <string name="playground_challenge_hint_hide">ヒントを隠す</string>
+    <string name="playground_challenge_hint_show">ヒントを見る</string>
+    <string name="playground_tab_editor">コードエディタ</string>
+    <string name="playground_tab_output">出力とプレビュー</string>
+    <string name="playground_editor_lines_chars_format">%1$d 行 • %2$d 文字</string>
+    <string name="playground_copy_cd">コードをコピー</string>
+    <string name="playground_copy_toast">コードをクリップボードにコピーしました</string>
+    <string name="playground_btn_running">実行中...</string>
+    <string name="playground_btn_run_verify">実行して検証</string>
+    <string name="playground_btn_run_code">コードを実行</string>
+    <string name="playground_challenge_all_passed_title">おめでとうございます！チャレンジ達成 🎉</string>
+    <string name="playground_challenge_some_failed_title">一部の条件が未達成です</string>
+    <string name="playground_challenge_btn_continue_module">レッスンを続ける</string>
+    <string name="playground_output_web_preview">ライブWebプレビュー</string>
+    <string name="playground_output_console_title">ターミナル / コンソール出力</string>
+    <string name="playground_output_clear">クリア</string>
+    <string name="playground_output_running_msg">サンドボックス環境でコードを実行中...</string>
+    <string name="playground_output_empty_msg">出力はまだありません。「コードを実行」を押して結果を確認してください。</string>
+
+    <!-- Shared Components & MarkdownView -->
+    <string name="comp_back_cd">戻る</string>
+    <string name="comp_try_in_playground">Playgroundで試す</string>
+    <string name="comp_copy">コピー</string>
+    <string name="comp_code_copied_toast">コードをコピーしました！</string>
+    <string name="comp_lang_code_copied_toast_format">%1$s コードをコピーしました！</string>
+    <string name="comp_cancel">キャンセル</string>
+    <string name="comp_search_clear_cd">クリア</string>
+    <string name="comp_error_default_title">エラーが発生しました</string>
+    <string name="comp_error_retry">再試行</string>
+    <string name="comp_locked_badge">ロック中</string>
+    <string name="comp_completed_badge">完了</string>
+    <string name="comp_course_card_modules_format">%1$d モジュール</string>
+    <string name="comp_course_card_progress_format">%1$d/%2$d モジュール (%3$d%%)</string>
+    <string name="markdown_glossary_cd">用語集</string>
+    <string name="markdown_glossary_header">用語集</string>
+    <string name="markdown_close">閉じる</string>
+    <string name="markdown_image_default_title">レッスン図解</string>
+    <string name="markdown_image_asset_format">アセット: %1$s</string>
+    <string name="markdown_image_preparing_desc">このレッスンの概念図解を準備中です。</string>
+    <string name="markdown_image_cd">レッスン画像</string>
+    <string name="markdown_video_play_cd_format">動画を再生: %1$s</string>
+    <string name="markdown_video_default_title">レッスン動画を見る</string>
+    <string name="markdown_callout_tips">ヒント</string>
+    <string name="markdown_callout_warning">警告</string>
+    <string name="markdown_callout_info">情報</string>
+    <string name="markdown_callout_note">ノート</string>
+    <string name="markdown_callout_important">重要</string>
+
+    <!-- Batch B Additional Keys -->
+    <string name="cheatsheet_top_title">構文チートシート</string>
+    <string name="cheatsheet_unavailable_desc">このコースの構文チートシートはまだ利用できません。</string>
+    <string name="course_detail_curriculum_format">カリキュラム (%1$d レッスン)</string>
+    <string name="course_detail_enrolled_format">%1$d 人が受講中</string>
+    <string name="course_detail_rating_cd">評価</string>
+    <string name="course_detail_duration_min_format">%1$d 分</string>
+    <string name="course_detail_progress_percent_format">%1$d%% (%2$d/%3$d)</string>
+    <string name="course_detail_lesson_meta_format">%1$d 分  •  +%2$d XP</string>
+    <string name="course_detail_open_lesson_cd">レッスンを開く</string>
+    <string name="course_detail_lesson_header_format">レッスン %1$d: %2$s</string>
+    <string name="course_detail_xp_reward_format">+%1$d XP 報酬</string>
+    <string name="course_detail_terminal_cd">ターミナル</string>
+    <string name="course_detail_btn_complete_claim">完了して獲得</string>
+    <string name="catalog_nav_menu_cd">ナビゲーションメニュー</string>
+    <string name="catalog_explore_title">コースを探す</string>
+    <string name="catalog_search_cd">検索</string>
+    <string name="catalog_all_tracks">すべてのトラック</string>
+    <string name="catalog_bookmark_course_cd">コースを保存</string>
+    <string name="materi_locked_title">モジュールがロックされています</string>
+    <string name="materi_locked_req_format">「%1$s」を完了するとこのモジュールがロック解除されます。</string>
+    <string name="materi_locked_prev_desc">前のモジュールを先に完了してください</string>
+    <string name="materi_locked_btn_back">コース詳細に戻る</string>
+    <string name="materi_drawer_title">モジュール一覧</string>
+    <string name="materi_drawer_cd">モジュール一覧 (サイドバー)</string>
+    <string name="materi_reading_min_short_format">読了約 %1$d 分</string>
+    <string name="materi_reading_min_long_format">⏱️ 読了約 %1$d 分</string>
+    <string name="materi_verify_rule_notice_format">先にPlaygroundで記述してください: %1$s</string>
+    <string name="materi_btn_open_playground">Playgroundを開く</string>
+    <string name="materi_btn_finish_and_next">完了して次へ</string>
+    <string name="materi_btn_finish_course">コースを完了</string>
+    <string name="materi_objectives_title">このモジュールを終えると次のことができます:</string>
+    <string name="materi_code_example_title">実践コード例:</string>
+    <string name="materi_callout_verify_desc">このモジュールには実践課題があります。上のPlaygroundを開いてコード課題を達成すると、次へ進むボタンがロック解除されます。</string>
+    <string name="materi_callout_tip_desc">ヒント: 上のPlaygroundボタンをタップしてコードを直接試してみましょう。</string>
+    <string name="playground_top_title_python">Python プレイグラウンド</string>
+    <string name="playground_reset_module_cd">このモジュールの例にリセット</string>
+    <string name="playground_coach_mark_msg">ここにコードを入力し、「実行」を押して結果を確認しましょう！</string>
+    <string name="playground_pyodide_loading">エンジン読込中...</string>
+    <string name="playground_clear_terminal_cd">ターミナルをクリア</string>
+    <string name="playground_task_title">モジュール実践チャレンジ</string>
+    <string name="playground_max_time_hint">(最大 5 秒)</string>
+    <string name="playground_python_error_title">Pythonエンジンの読み込みに失敗しました</string>
+    <string name="playground_python_error_desc">初回Pyodide読み込み時はインターネット接続を確認してください。</string>
+    <string name="playground_python_preparing_msg">Pythonランタイム (Pyodide v0.26.4) を準備中...</string>
+    <string name="playground_python_empty_msg">&gt;&gt;&gt; 「実行」ボタンを押すとPythonコードが実行され、ここに出力が表示されます。</string>
+    <string name="playground_verify_done_format">課題クリア！ (%1$d/%2$d)</string>
+    <string name="playground_verify_target_format">実践目標 (%1$d/%2$d)</string>
+    <string name="playground_verify_ready_badge">準備完了 ✓</string>
+    <string name="playground_verify_contains_format">次を含む: \"%1$s\"</string>
+    <string name="playground_console_header_format">コンソール出力 (%1$d)</string>
+    <string name="playground_console_close">閉じる ▼</string>
+    <string name="playground_console_open">開く ▲</string>
+    <string name="playground_console_empty_msg">コンソール出力はまだありません。コードを実行してconsole.log()の結果を確認してください。</string>
+    <string name="comp_open_profile_label">プロフィールを開く</string>
+    <string name="comp_welcome_greeting">ようこそ、</string>
+    <string name="comp_notifications_cd">通知</string>
+    <string name="comp_streak_days_format">%1$d 日連続</string>
+    <string name="comp_streak_best_format">自己ベスト: %1$d 日</string>
+    <string name="comp_daily_quest_label">デイリークエスト</string>
+    <string name="comp_daily_quest_do">挑戦する</string>
+    <string name="comp_carousel_streak_title">今日のストリーク</string>
+    <string name="comp_carousel_study_title">今週の学習時間</string>
+    <string name="comp_carousel_study_val_format">%1$d 分</string>
+    <string name="comp_carousel_xp_title">今週の獲得 XP</string>
+    <string name="comp_xp_level_student_format">レベル %1$d 学習者</string>
+    <string name="comp_xp_total_collected_format">累計 %1$d XP 獲得</string>
+    <string name="comp_xp_to_next_level_format">L%2$d まであと %1$d XP</string>
+    <string name="comp_students_count_format">受講生 %1$d 人</string>
+    <string name="comp_progress_percent_format">進捗 %1$d%%</string>
+    <string name="comp_completed_percent_format">%1$d%% 完了</string>
+    <string name="comp_lessons_progress_format">%1$d/%2$d レッスン</string>
+    <string name="comp_lessons_duration_format">%1$d レッスン  •  %2$d 分</string>
+</resources>

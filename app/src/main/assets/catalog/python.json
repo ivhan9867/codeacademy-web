@@ -1,0 +1,269 @@
+{
+  "id": "python",
+  "name": "Python Programming",
+  "description": "Kuasai Python untuk otomasi, analisis data, backend web, dan machine learning pemula.",
+  "iconEmoji": "🐍",
+  "courses": [
+    {
+      "id": "py-fund-01",
+      "trackId": "python",
+      "title": "Python Fundamentals",
+      "level": "Pemula",
+      "durationMinutes": 127,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Pelajari bahasa pemrograman dengan sintaks terbersih. Cocok untuk data science, otomatisasi script, dan web development.",
+      "prerequisites": [
+        "Tidak ada prasyarat (Ramah Pemula)"
+      ],
+      "instructor": "Dewi Lestari, Data Scientist & AI Educator",
+      "contentPath": "content/py-fund-01",
+      "sectionTitles": {
+        "PERSIAPAN": "Persiapan",
+        "PENDAHULUAN": "Dasar-Dasar Python",
+        "INTI": "Alur Program & Perulangan",
+        "LANJUTAN": "Struktur Data & Fungsi",
+        "EVALUASI": "Proyek & Evaluasi"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Ketika kode Python gagal dijalankan, apa fungsi utama dari pesan Traceback?",
+          "options": [
+            "Memberikan petunjuk nomor baris dan tipe kesalahan untuk mempermudah debugging",
+            "Menghapus berkas kode yang bermasalah secara otomatis",
+            "Menerjemahkan kode ke bahasa mesin biner",
+            "Mengirimkan laporan error ke pusat pengembang Python secara online"
+          ],
+          "correctIndex": 0,
+          "explanation": "Traceback memberi tahu lokasi file, nomor baris, dan tipe kesalahan spesifik sehingga pemrogram dapat melacak dan memperbaiki bug dengan cepat.",
+          "sourceModuleId": "py-fund-persiapan-4"
+        },
+        {
+          "id": 2,
+          "question": "Apa output dari perintah print('Halo', 'Dunia', 2026)?",
+          "options": [
+            "Halo Dunia 2026",
+            "TypeError: print only accepts single string",
+            "('Halo', 'Dunia', 2026)",
+            "HaloDunia2026"
+          ],
+          "correctIndex": 0,
+          "explanation": "Argumen yang dipisahkan oleh tanda koma pada fungsi print() secara bawaan akan dicetak dengan pemisah spasi tunggal di antara setiap nilai.",
+          "sourceModuleId": "py-fund-pendahuluan-2"
+        },
+        {
+          "id": 3,
+          "question": "Manakah pernyataan yang BENAR mengenai simbol sama dengan tunggal (=) di Python?",
+          "options": [
+            "Operator relasional untuk membandingkan kesetaraan nilai antar dua ekspresi",
+            "Operator penugasan yang menyimpan nilai sebelah kanan ke variabel sebelah kiri",
+            "Kata kunci khusus untuk mendeklarasikan fungsi baru beserta parameter masuk",
+            "Perintah bawaan sistem untuk menghapus variabel dan mengosongkan memori RAM"
+          ],
+          "correctIndex": 1,
+          "explanation": "Tanda '=' adalah operator penugasan (assignment operator), sedangkan operator pembanding kesetaraan ditulis dengan tanda ganda '=='.",
+          "sourceModuleId": "py-fund-pendahuluan-3"
+        },
+        {
+          "id": 4,
+          "question": "Menurut konvensi penamaan standar Python (PEP 8), manakah nama variabel yang paling tepat?",
+          "options": [
+            "1_total_harga",
+            "total_harga_belanja",
+            "total-harga",
+            "Total$Harga"
+          ],
+          "correctIndex": 1,
+          "explanation": "Python menggunakan gaya snake_case: huruf kecil semua dan dipisahkan dengan garis bawah (_). Variabel juga tidak boleh diawali angka atau mengandung simbol spesial seperti - atau $.",
+          "sourceModuleId": "py-fund-pendahuluan-4"
+        },
+        {
+          "id": 5,
+          "question": "Jika variabel x bernilai '150', apa tipe data dari x?",
+          "options": [
+            "bool",
+            "int",
+            "str",
+            "float"
+          ],
+          "correctIndex": 2,
+          "explanation": "Karakter apa pun yang diapit oleh tanda petik tunggal atau ganda dianggap sebagai teks (string/str) oleh Python, meskipun isinya berupa deretan angka.",
+          "sourceModuleId": "py-fund-pendahuluan-5"
+        },
+        {
+          "id": 6,
+          "question": "Berapakah hasil evaluasi dari ekspresi Python 17 % 5?",
+          "options": [
+            "2",
+            "3",
+            "3.4",
+            "1"
+          ],
+          "correctIndex": 0,
+          "explanation": "Operator modulo (%) menghasilkan sisa pembagian. 17 dibagi 5 menghasilkan 3 dengan sisa 2 (karena 5 x 3 = 15, dan 17 - 15 = 2).",
+          "sourceModuleId": "py-fund-inti-1"
+        },
+        {
+          "id": 7,
+          "question": "Diberikan nama = 'Dewi' dan nilai = 90. Cara manakah yang merupakan sintaks f-string yang valid?",
+          "options": [
+            "f('Selamat %nama, skor kamu %nilai')",
+            "format('Selamat ' + nama + ', skor kamu ' + nilai)",
+            "f'Selamat {nama}, skor kamu {nilai}!'",
+            "'Selamat {nama}, skor kamu {nilai}!'"
+          ],
+          "correctIndex": 2,
+          "explanation": "f-string diawali dengan huruf f sebelum tanda petik pembuka dan menyisipkan variabel atau ekspresi langsung di dalam kurung kurawal {}.",
+          "sourceModuleId": "py-fund-inti-2"
+        },
+        {
+          "id": 8,
+          "question": "Kapan operator logika 'and' menghasilkan nilai True?",
+          "options": [
+            "Jika setidaknya salah satu kondisi bernilai True",
+            "Hanya jika seluruh kondisi yang diuji bernilai True",
+            "Hanya jika kondisi pertama bernilai False",
+            "Jika kedua kondisi bernilai False"
+          ],
+          "correctIndex": 1,
+          "explanation": "Operator 'and' mensyaratkan kedua belah operand bernilai True agar hasil evaluasi akhirnya menjadi True.",
+          "sourceModuleId": "py-fund-inti-3"
+        },
+        {
+          "id": 9,
+          "question": "Bagaimana cara Python mengenali bahwa sekumpulan baris kode berada di dalam blok pernyataan if?",
+          "options": [
+            "Menggunakan kata kunci 'begin' dan 'end'",
+            "Mengapit baris kode dengan tanda kurung kurawal { ... }",
+            "Menutup setiap baris pernyataan dengan tanda titik koma (;)",
+            "Menjorokkan baris kode dengan spasi indentasi yang konsisten"
+          ],
+          "correctIndex": 3,
+          "explanation": "Python mengandalkan spasi indentasi (umumnya 4 spasi) setelah tanda titik dua (:) untuk mendefinisikan cakupan blok kode.",
+          "sourceModuleId": "py-fund-inti-4"
+        },
+        {
+          "id": 10,
+          "question": "Pada struktur if - elif - else, apa yang terjadi setelah satu kondisi elif bernilai True dan dieksekusi?",
+          "options": [
+            "Program langsung menghentikan proses eksekusi dan menutup jendela terminal aktif",
+            "Python tetap melanjutkan evaluasi terhadap semua kondisi percabangan di bawahnya",
+            "Python memunculkan pesan peringatan runtime ke konsol sebelum memeriksa kondisi",
+            "Python langsung melompati sisa rantai percabangan tanpa menguji kondisi di bawah"
+          ],
+          "correctIndex": 3,
+          "explanation": "Pada percabangan bertingkat if-elif-else, evaluasi berhenti begitu satu kondisi bernilai True; cabang berikutnya tidak akan diperiksa lagi.",
+          "sourceModuleId": "py-fund-inti-5"
+        },
+        {
+          "id": 11,
+          "question": "Diberikan angka = [10, 20, 30, 40]. Berapakah nilai dari angka[-1]?",
+          "options": [
+            "40",
+            "IndexError",
+            "10",
+            "30"
+          ],
+          "correctIndex": 0,
+          "explanation": "Indeks negatif pada Python menghitung elemen dari urutan paling akhir. Indeks -1 selalu menunjuk ke elemen paling terakhir dalam list.",
+          "sourceModuleId": "py-fund-inti-6"
+        },
+        {
+          "id": 12,
+          "question": "Berapa kali perulangan 'for i in range(1, 5):' akan dieksekusi?",
+          "options": [
+            "4 kali (nilai i adalah 1, 2, 3, 4)",
+            "5 kali (nilai i adalah 1, 2, 3, 4, 5)",
+            "Tidak pernah dieksekusi",
+            "6 kali"
+          ],
+          "correctIndex": 0,
+          "explanation": "Fungsi range(start, stop) berhenti sebelum mencapai nilai stop. Jadi range(1, 5) menghasilkan 1, 2, 3, 4 (tepat 4 iterasi).",
+          "sourceModuleId": "py-fund-inti-7"
+        },
+        {
+          "id": 13,
+          "question": "Apa fungsi kata kunci 'break' di dalam sebuah loop (for atau while)?",
+          "options": [
+            "Melewatkan iterasi saat ini dan lanjut ke iterasi berikutnya",
+            "Mengulang perulangan dari awal",
+            "Menghentikan dan keluar dari perulangan seketika itu juga",
+            "Menjeda perulangan selama 5 detik"
+          ],
+          "correctIndex": 2,
+          "explanation": "Kata kunci 'break' langsung mengakhiri eksekusi perulangan dan memindahkan kendali program ke baris di luar blok loop.",
+          "sourceModuleId": "py-fund-inti-8"
+        },
+        {
+          "id": 14,
+          "question": "Mengapa metode profil.get('alamat', 'Tidak ada') lebih aman dibanding profil['alamat'] pada Dictionary?",
+          "options": [
+            "Metode .get() otomatis mengenkripsi nilai data yang tersimpan di dalam dictionary",
+            "Sintaks kurung siku [] telah dihapus dan tidak lagi didukung pada versi Python 3",
+            "Jika kunci tidak ditemukan, .get() mengembalikan default tanpa memicu KeyError",
+            "Metode .get() memvalidasi tipe data masukan secara otomatis saat program berjalan"
+          ],
+          "correctIndex": 2,
+          "explanation": "Mengakses kunci yang tidak ada dengan kurung siku [] akan menyebabkan KeyError fatal, sedangkan metode .get() mengembalikan nilai default fallback secara aman.",
+          "sourceModuleId": "py-fund-lanjutan-1"
+        },
+        {
+          "id": 15,
+          "question": "Tipe struktur data Python mana yang nilainya tidak dapat diubah (immutable) setelah didefinisikan?",
+          "options": [
+            "List",
+            "Dictionary",
+            "Set",
+            "Tuple"
+          ],
+          "correctIndex": 3,
+          "explanation": "Tuple didefinisikan dengan tanda kurung () dan bersifat immutable, artinya elemen di dalamnya tidak dapat ditambah, dihapus, atau diubah.",
+          "sourceModuleId": "py-fund-lanjutan-2"
+        },
+        {
+          "id": 16,
+          "question": "Apa peran kata kunci 'return' di dalam definisi sebuah fungsi Python?",
+          "options": [
+            "Menghapus seluruh variabel lokal dari ruang alokasi memori fungsi",
+            "Mengirim nilai hasil kembali ke pemanggil dan mengakhiri fungsi",
+            "Mengulang kembali eksekusi blok kode fungsi dari baris pertama",
+            "Mencetak teks hasil operasi fungsi ke layar terminal konsol"
+          ],
+          "correctIndex": 1,
+          "explanation": "Kata kunci 'return' bertugas menyerahkan nilai hasil dari dalam fungsi kembali ke baris kode yang memanggilnya dan mengakhiri eksekusi fungsi tersebut.",
+          "sourceModuleId": "py-fund-lanjutan-3"
+        },
+        {
+          "id": 17,
+          "question": "Apa yang terjadi jika kamu mencoba membaca variabel lokal dari luar fungsi tempat variabel itu dibuat?",
+          "options": [
+            "Nilai variabel dibaca sebagai angka 0 atau string kosong secara default",
+            "Python memunculkan NameError karena variabel tidak ada di scope luar",
+            "Variabel dibaca dengan nilai None tanpa memunculkan pesan kesalahan",
+            "Variabel tersebut otomatis dinaikkan derajatnya menjadi variabel global"
+          ],
+          "correctIndex": 1,
+          "explanation": "Variabel lokal hanya hidup di dalam ruang lingkup fungsi tempat ia diciptakan. Mengaksesnya dari luar akan memicu NameError.",
+          "sourceModuleId": "py-fund-lanjutan-4"
+        },
+        {
+          "id": 18,
+          "question": "Apa tujuan utama penanganan error menggunakan konstruksi blok 'try - except'?",
+          "options": [
+            "Mencegah konsumsi memori berlebih saat runtime memproses data",
+            "Memperbaiki kesalahan pengetikan sintaks kode secara otomatis",
+            "Mempercepat waktu pemrosesan kode komputasi secara signifikan",
+            "Menangkap exception agar program tidak crash dan dapat ditangani"
+          ],
+          "correctIndex": 3,
+          "explanation": "Konstruksi try-except memungkinkan program menangkap exception saat runtime (seperti ZeroDivisionError atau ValueError) dan mengeksekusi logika alternatif agar aplikasi tetap stabil.",
+          "sourceModuleId": "py-fund-lanjutan-5"
+        }
+      ],
+      "sectionQuizzes": [],
+      "cheatSheetMarkdown": null
+    }
+  ]
+}

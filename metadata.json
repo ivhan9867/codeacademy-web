@@ -1,0 +1,8 @@
+{
+  "name": "CodeAcademy",
+  "description": "Platform pembelajaran web development dan coding mobile-first dengan kurikulum terstruktur, gamifikasi, forum diskusi kelas, leaderboard global, AI Tutor, dan playground interaktif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

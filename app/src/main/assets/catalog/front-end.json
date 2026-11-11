@@ -1,0 +1,2306 @@
+{
+  "id": "front-end",
+  "name": "Front-End Development",
+  "description": "Pelajari cara membangun antarmuka web yang menarik, responsif, dan interaktif dari nol.",
+  "iconEmoji": "🌐",
+  "courses": [
+    {
+      "id": "fe-web-foundation-00",
+      "trackId": "front-end",
+      "title": "Fondasi Web: Dari Nol ke Baris Kode Pertama",
+      "level": "Orientasi",
+      "durationMinutes": 573,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Pelajari struktur HTML lengkap dan styling CSS dari dasar hingga teknik positioning & float. Kelas ini menjadi fondasi sebelum melangkah ke layout modern Flexbox dan Grid.",
+      "prerequisites": [
+        "Tidak ada prasyarat (Ramah Pemula)"
+      ],
+      "instructor": "Budi Santoso, Senior Front-End Engineer",
+      "contentPath": "content/fe-web-foundation-00",
+      "sectionTitles": {
+        "PERSIAPAN": "Persiapan",
+        "PENDAHULUAN": "Pendahuluan",
+        "INTI": "Pengenalan HTML",
+        "LANJUTAN": "Pendalaman HTML",
+        "CSS_DASAR": "Dasar CSS",
+        "PENDALAMAN_CSS": "Pendalaman CSS",
+        "EVALUASI": "Evaluasi"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Apa fungsi utama HTML dalam pembangunan sebuah halaman web?",
+          "options": [
+            "Menghubungkan browser dengan server DNS",
+            "Menentukan kerangka dan struktur isi halaman",
+            "Mengatur warna, tipografi, dan tata letak halaman",
+            "Menjalankan logika interaktif dan animasi di browser"
+          ],
+          "correctIndex": 1,
+          "explanation": "HTML berfungsi menyusun kerangka dan struktur halaman web (apa saja isi halaman), sedangkan tampilan diatur oleh CSS dan interaktivitas oleh JavaScript.",
+          "sourceModuleId": "web-foundation-inti-1"
+        },
+        {
+          "id": 2,
+          "question": "Bagaimana browser memperlakukan teks biasa (plain text) tanpa elemen penanda HTML?",
+          "options": [
+            "Browser menolak menampilkan halaman dan menghasilkan error 404",
+            "Browser otomatis menambahkan tag <h1> pada kalimat pertama",
+            "Browser otomatis memberi format judul dan jarak antarparagraf",
+            "Browser mengabaikan spasi berlebih serta baris kosong dan menggabungkan teks menjadi satu aliran"
+          ],
+          "correctIndex": 3,
+          "explanation": "Browser membaca HTML dengan aturan whitespace collapsing: spasi berlebih dan enter diabaikan, lalu teks disatukan menjadi satu baris/aliran kontinu kecuali ditandai dengan elemen.",
+          "sourceModuleId": "web-foundation-inti-2"
+        },
+        {
+          "id": 3,
+          "question": "Mengapa sebuah website umumnya memiliki berkas bernama index.html di folder utamanya?",
+          "options": [
+            "Karena peramban menolak memproses HTML bila berkas tidak bernama index",
+            "Karena peramban mewajibkan berkas utama memiliki ukuran paling ringkas",
+            "Karena server otomatis memuat berkas index.html saat domain dikunjungi",
+            "Karena protokol web membatasi akses publik hanya pada satu berkas ini"
+          ],
+          "correctIndex": 2,
+          "explanation": "Secara konvensi web server, ketika URL tidak mencantumkan nama berkas spesifik (misal https://contoh.com), server akan mencari dan menyajikan index.html secara default.",
+          "sourceModuleId": "web-foundation-inti-3"
+        },
+        {
+          "id": 4,
+          "question": "Manakah penulisan elemen HTML bersarang (nested element) yang memenuhi aturan yang benar?",
+          "options": [
+            "<strong><p>Belajar HTML</strong></p>",
+            "<p>Belajar <strong>HTML</p></strong>",
+            "<p>Belajar <strong>HTML</strong></p>",
+            "<p><strong>Belajar HTML</p>"
+          ],
+          "correctIndex": 2,
+          "explanation": "Elemen yang dibuka belakangan harus ditutup lebih dulu (LIFO). Dalam kasus ini, <strong> dibuka setelah <p>, sehingga <strong> harus ditutup sebelum </p>.",
+          "sourceModuleId": "web-foundation-inti-5"
+        },
+        {
+          "id": 5,
+          "question": "Di bagian mana atribut HTML harus dituliskan dan bagaimana format dasarnya?",
+          "options": [
+            "Di antara tag pembuka dan tag penutup dengan format (nama, nilai)",
+            "Boleh di tag pembuka maupun penutup dengan format [nama=nilai]",
+            "Di tag pembuka saja dengan format nama=\"nilai\"",
+            "Di tag penutup dengan format nama: nilai;"
+          ],
+          "correctIndex": 2,
+          "explanation": "Atribut selalu diletakkan pada tag pembuka, dipisahkan spasi setelah nama tag, dengan sintaksis nama=\"nilai\".",
+          "sourceModuleId": "web-foundation-inti-5"
+        },
+        {
+          "id": 6,
+          "question": "Apa perbedaan mendasar antara atribut id dan class dalam dokumen HTML?",
+          "options": [
+            "class wajib bernilai unik per halaman, sedangkan atribut id boleh duplikat",
+            "id ditulis pada tag penutup, sedangkan class wajib ditulis pada tag pembuka",
+            "id hanya digunakan untuk skrip, sedangkan class hanya untuk styling warna",
+            "id harus unik per elemen, sedangkan class boleh dipakai bersama banyak elemen"
+          ],
+          "correctIndex": 3,
+          "explanation": "Atribut id adalah pengenal unik (hanya satu elemen per id dalam satu dokumen), sedangkan class adalah penanda kelompok yang dapat disematkan ke banyak elemen.",
+          "sourceModuleId": "web-foundation-inti-6"
+        },
+        {
+          "id": 7,
+          "question": "Mengapa deklarasi <!DOCTYPE html> wajib diletakkan di baris paling awal dokumen HTML?",
+          "options": [
+            "Agar peramban menerapkan standar HTML modern dan mencegah quirks mode",
+            "Agar seluruh teks di dalam dokumen otomatis dirender dalam ukuran besar",
+            "Untuk memuat pustaka fungsi JavaScript dasar ke dalam halaman peramban",
+            "Untuk mengaktifkan koneksi jaringan internet bagi seluruh konten dokumen"
+          ],
+          "correctIndex": 0,
+          "explanation": "<!DOCTYPE html> memberi instruksi pada peramban (browser) untuk merender halaman menggunakan standar HTML modern (standard mode) dan menghindari quirks mode lawas.",
+          "sourceModuleId": "web-foundation-inti-7"
+        },
+        {
+          "id": 8,
+          "question": "Apa fungsi utama elemen <head> pada dokumen HTML?",
+          "options": [
+            "Menampilkan judul artikel terbesar di tengah halaman secara otomatis",
+            "Menyimpan metadata dokumen yang tidak tampil langsung di badan halaman web",
+            "Menampilkan logo dan baris navigasi utama di bagian teratas layar peramban",
+            "Menampung seluruh teks artikel, formulir interaktif, dan gambar konten"
+          ],
+          "correctIndex": 1,
+          "explanation": "Elemen <head> adalah wadah untuk metadata dokumen (judul tab <title>, charset, link CSS, script) dan isinya tidak dirender sebagai konten visual halaman.",
+          "sourceModuleId": "web-foundation-inti-7"
+        },
+        {
+          "id": 9,
+          "question": "Struktur pohon hierarki elemen HTML yang tersimpan di memori browser saat membaca dokumen disebut...",
+          "options": [
+            "DOM Tree (Document Object Model)",
+            "DNS Tree",
+            "URL Scheme",
+            "HTTP Pipeline"
+          ],
+          "correctIndex": 0,
+          "explanation": "DOM (Document Object Model) Tree menggambarkan hubungan bertingkat induk (parent), anak (child), dan saudara (sibling) dari semua elemen dalam dokumen web.",
+          "sourceModuleId": "web-foundation-inti-7"
+        },
+        {
+          "id": 10,
+          "question": "Perhatikan URL https://contoh.com/artikel/belajar-html. Komponen protocol dan domain name secara berturut-turut adalah...",
+          "options": [
+            "https dan /artikel",
+            "/artikel/belajar-html dan contoh.com",
+            "https dan contoh.com",
+            "contoh.com dan https"
+          ],
+          "correctIndex": 2,
+          "explanation": "Komponen URL: protocol adalah 'https', domain name adalah 'contoh.com', dan path adalah '/artikel/belajar-html'.",
+          "sourceModuleId": "web-foundation-pend-3"
+        },
+        {
+          "id": 16,
+          "question": "Elemen mana yang tepat untuk daftar instruksi langkah demi langkah yang urutannya penting?",
+          "options": [
+            "<dl>",
+            "<span>",
+            "<ul>",
+            "<ol>"
+          ],
+          "correctIndex": 3,
+          "explanation": "Ordered list (ol) dipakai saat urutan tiap item penting, ditampilkan dengan penomoran otomatis.",
+          "sourceModuleId": "web-foundation-lanjutan-4"
+        },
+        {
+          "id": 17,
+          "question": "Atribut wajib pada <img> yang menentukan sumber gambarnya adalah...",
+          "options": [
+            "href",
+            "src",
+            "alt",
+            "title"
+          ],
+          "correctIndex": 1,
+          "explanation": "src menentukan sumber gambar. alt adalah teks alternatif, bukan sumber gambarnya.",
+          "sourceModuleId": "web-foundation-lanjutan-6"
+        },
+        {
+          "id": 18,
+          "question": "Elemen apa yang dipakai untuk kutipan panjang yang berdiri sendiri sebagai blok?",
+          "options": [
+            "<q>",
+            "<mark>",
+            "<cite>",
+            "<blockquote>"
+          ],
+          "correctIndex": 3,
+          "explanation": "blockquote dipakai untuk kutipan panjang yang bersifat block, berbeda dari q yang bersifat inline untuk kutipan pendek.",
+          "sourceModuleId": "web-foundation-lanjutan-8"
+        },
+        {
+          "id": 19,
+          "question": "Berapa banyak elemen <main> yang boleh ada dalam satu halaman HTML?",
+          "options": [
+            "Maksimal tiga",
+            "Tidak dibatasi",
+            "Maksimal satu",
+            "Harus sama dengan jumlah section"
+          ],
+          "correctIndex": 2,
+          "explanation": "Hanya boleh ada satu main per halaman, karena ia mewakili konten utama tunggal halaman tersebut.",
+          "sourceModuleId": "web-foundation-lanjutan-13"
+        },
+        {
+          "id": 20,
+          "question": "Kenapa <div class=\"header\"> dianggap kurang baik dibanding <header>?",
+          "options": [
+            "Browser dan mesin pencari sulit mengenali perannya secara semantik",
+            "Elemen div dilarang memiliki class styling menurut spesifikasi HTML5",
+            "div hanya dirancang untuk membungkus potongan teks inline berukuran pendek",
+            "header menggunakan kompresi bawaan sehingga jauh lebih cepat dirender"
+          ],
+          "correctIndex": 0,
+          "explanation": "div adalah elemen generic tanpa makna semantik, sedangkan header sudah menyatakan perannya sendiri.",
+          "sourceModuleId": "web-foundation-lanjutan-12"
+        },
+        {
+          "id": 21,
+          "question": "Tiga elemen dasar penyusun tabel HTML adalah...",
+          "options": [
+            "table, tr, dan td atau th",
+            "table, thead, tfoot",
+            "table, section, item",
+            "table, row, column"
+          ],
+          "correctIndex": 0,
+          "explanation": "table sebagai pembungkus, tr untuk baris, dan td/th untuk sel data atau header di dalam baris itu.",
+          "sourceModuleId": "web-foundation-lanjutan-18"
+        },
+        {
+          "id": 22,
+          "question": "Atribut apa yang membuat satu sel tabel menjangkau beberapa kolom sekaligus?",
+          "options": [
+            "colspan",
+            "rowspan",
+            "width",
+            "span"
+          ],
+          "correctIndex": 0,
+          "explanation": "colspan merentangkan sel secara horizontal, menjangkau beberapa kolom sekaligus.",
+          "sourceModuleId": "web-foundation-lanjutan-19"
+        },
+        {
+          "id": 23,
+          "question": "Apa akibatnya jika sebuah <input> di dalam form tidak diberi atribut name?",
+          "options": [
+            "Formulir gagal ditampilkan",
+            "Data dari input itu tidak ikut terkirim saat form disubmit",
+            "Data tetap terkirim dengan nama otomatis",
+            "Browser menampilkan error"
+          ],
+          "correctIndex": 1,
+          "explanation": "name adalah key yang dipasangkan dengan value saat data dikirim. Tanpa name, data itu tidak ikut terkirim.",
+          "sourceModuleId": "web-foundation-lanjutan-23"
+        },
+        {
+          "id": 24,
+          "question": "Perbedaan utama metode GET dan POST pada elemen form adalah...",
+          "options": [
+            "GET tidak bisa dipakai untuk mengirim data sama sekali",
+            "Keduanya sama persis",
+            "POST hanya untuk formulir pencarian",
+            "GET menaruh data di URL, POST menaruh data di body request"
+          ],
+          "correctIndex": 3,
+          "explanation": "GET menyertakan data sebagai parameter di URL, sedangkan POST menaruh data di body request sehingga tidak terlihat di URL.",
+          "sourceModuleId": "web-foundation-lanjutan-24"
+        },
+        {
+          "id": 25,
+          "question": "Manakah character reference yang benar untuk tanda '<' agar tidak dibaca sebagai awal tag?",
+          "options": [
+            "&copy;",
+            "&lt;",
+            "&amp;",
+            "&gt;"
+          ],
+          "correctIndex": 1,
+          "explanation": "&lt; adalah named entity untuk tanda <. &gt; adalah untuk tanda >, bukan untuk <.",
+          "sourceModuleId": "web-foundation-lanjutan-25"
+        }
+      ],
+      "sectionQuizzes": [
+        {
+          "id": "web-foundation-quiz-pend",
+          "courseId": "fe-web-foundation-00",
+          "section": "PENDAHULUAN",
+          "title": "Kuis Pendahuluan",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Apa fungsi utama network switch dalam sebuah jaringan?",
+              "options": [
+                "Menghubungkan banyak komputer dan meneruskan data ke target yang tepat",
+                "Menerjemahkan nama domain situs web menjadi alamat IP tujuan pengirim",
+                "Menampilkan antarmuka visual halaman web langsung pada monitor pengguna",
+                "Menyimpan berkas basis data dan aset multimedia situs web secara aman"
+              ],
+              "correctIndex": 0,
+              "explanation": "Switch menjadi titik pusat yang menyambungkan banyak perangkat, sehingga kamu tidak perlu menarik jalur terpisah ke setiap komputer.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 2,
+              "question": "Istilah \"internet\" paling tepat menggambarkan...",
+              "options": [
+                "Website terbesar di dunia",
+                "Satu komputer raksasa yang menyimpan semua website",
+                "Jaringan dari banyak jaringan yang saling terhubung",
+                "Program untuk membuka halaman web"
+              ],
+              "correctIndex": 2,
+              "explanation": "Internet berasal dari gagasan interconnected network: jaringan-jaringan kecil yang disambungkan menjadi satu jaringan global.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 3,
+              "question": "Perusahaan yang mengoperasikan router dan menyambungkan jaringan rumahmu ke jaringan di seluruh dunia disebut...",
+              "options": [
+                "Web browser",
+                "ISP (Internet Service Provider)",
+                "Web server",
+                "Hyperlink"
+              ],
+              "correctIndex": 1,
+              "explanation": "ISP mengelola router yang saling terhubung dengan router ISP lain, sehingga data bisa menjangkau berbagai belahan dunia.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 4,
+              "question": "Pernyataan manakah yang paling tepat tentang perbedaan website dan halaman web?",
+              "options": [
+                "Halaman web adalah satu halaman tunggal, sedangkan website adalah kumpulan halaman web yang saling terhubung",
+                "Website hanya bisa dibuka lewat aplikasi, sedangkan halaman web lewat browser",
+                "Keduanya sama persis dan hanya berbeda cara penulisan",
+                "Halaman web selalu berisi video, sedangkan website hanya berisi teks"
+              ],
+              "correctIndex": 0,
+              "explanation": "Halaman web ibarat selembar halaman, sedangkan website adalah \"bukunya\", yaitu kumpulan halaman yang saling tertaut.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 5,
+              "question": "Apa yang menghubungkan satu halaman web dengan halaman web lain dalam sebuah website?",
+              "options": [
+                "Network switch",
+                "Modem",
+                "Hyperlink (hipertaut)",
+                "DNS cache"
+              ],
+              "correctIndex": 2,
+              "explanation": "Hyperlink memungkinkan kamu berpindah antarhalaman, baik dalam domain yang sama maupun domain yang berbeda.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 6,
+              "question": "Siapa ilmuwan Inggris yang mengusulkan gagasan World Wide Web saat bekerja di CERN?",
+              "options": [
+                "Linus Torvalds",
+                "Steve Jobs",
+                "Tim Berners-Lee",
+                "Alan Turing"
+              ],
+              "correctIndex": 2,
+              "explanation": "Tim Berners-Lee mengusulkan WWW pada 1989 untuk memudahkan para ilmuwan berbagi informasi.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 7,
+              "question": "Manakah pernyataan yang benar mengenai hubungan internet dan web?",
+              "options": [
+                "Web adalah salah satu layanan yang berjalan di atas infrastruktur internet",
+                "Internet hanya bisa dipakai untuk membuka website",
+                "Web adalah infrastruktur jaringan, sedangkan internet adalah salah satu websitenya",
+                "Internet dan web adalah dua nama untuk hal yang sama"
+              ],
+              "correctIndex": 0,
+              "explanation": "Internet ibarat jalan raya, web adalah salah satu \"kendaraan\" di atasnya. Layanan lain seperti email dan game online juga memakai internet.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 8,
+              "question": "Dalam siklus request-response, pihak yang mengirim request ke server disebut...",
+              "options": [
+                "Protokol",
+                "Domain",
+                "Router",
+                "Client (browser)"
+              ],
+              "correctIndex": 3,
+              "explanation": "Browser bertindak sebagai client karena dialah yang meminta data, sedangkan server yang menanggapinya.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 9,
+              "question": "Manakah pernyataan yang benar tentang web server?",
+              "options": [
+                "Bisa berarti komputer (hardware) sekaligus perangkat lunak yang melayani permintaan lewat HTTP",
+                "Hanya berupa kabel yang menghubungkan browser ke internet",
+                "Selalu berupa komputer berukuran besar dengan performa sangat tinggi",
+                "Hanya berupa program yang berjalan di HP pengguna"
+              ],
+              "correctIndex": 0,
+              "explanation": "Web server mencakup sisi hardware (komputer) dan sisi software (program penerima request) yang bekerja sama.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 10,
+              "question": "Manakah yang merupakan contoh perangkat lunak web server?",
+              "options": [
+                "Figma",
+                "Firefox",
+                "Microsoft Excel",
+                "NGINX"
+              ],
+              "correctIndex": 3,
+              "explanation": "NGINX dan Apache adalah contoh web server. Firefox adalah browser.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 11,
+              "question": "Apa tugas utama DNS server?",
+              "options": [
+                "Menampilkan halaman web di layar pengguna",
+                "Memberi tahu alamat IP yang sesuai dengan sebuah nama domain",
+                "Menyimpan berkas HTML dan CSS milik website",
+                "Mengenkripsi seluruh data yang dikirim browser"
+              ],
+              "correctIndex": 1,
+              "explanation": "DNS ibarat buku telepon internet: mengubah nama domain yang mudah diingat menjadi alamat IP yang dipakai komputer.",
+              "sourceModuleId": "web-foundation-pend-5"
+            },
+            {
+              "id": 12,
+              "question": "Sebelum bertanya ke DNS server, browser lebih dulu memeriksa...",
+              "options": [
+                "Isi berkas konfigurasi JavaScript milik situs web",
+                "DNS cache lokal berisi catatan alamat IP sebelumnya",
+                "Kapasitas sisa ruang penyimpanan hard drive server",
+                "Daftar seluruh penyedia layanan internet di dunia"
+              ],
+              "correctIndex": 1,
+              "explanation": "Kalau alamat IP sudah ada di DNS cache, browser tidak perlu bertanya ke DNS server, sehingga prosesnya lebih cepat.",
+              "sourceModuleId": "web-foundation-pend-5"
+            },
+            {
+              "id": 13,
+              "question": "Mengapa kita memakai nama domain, padahal komputer mengakses website lewat alamat IP?",
+              "options": [
+                "Karena domain mudah diingat manusia, sementara mesin memakai IP di belakang",
+                "Karena format alamat IP numerik sudah usang dan ditinggalkan secara global",
+                "Karena nama domain sepenuhnya menonaktifkan kebutuhan alamat IP pada server",
+                "Karena peramban memproses nama teks domain jauh lebih cepat dibanding angka"
+              ],
+              "correctIndex": 0,
+              "explanation": "Nama domain hanya memudahkan manusia. Komputer tetap memakai alamat IP, dan DNS yang menerjemahkan keduanya.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 14,
+              "question": "Pada URL https://contoh.com/belajar/html, bagian contoh.com disebut...",
+              "options": [
+                "Path",
+                "Domain name",
+                "Status code",
+                "Protocol"
+              ],
+              "correctIndex": 1,
+              "explanation": "Protocol = https, domain name = contoh.com, path = /belajar/html.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 15,
+              "question": "Protokol standar yang dipakai browser dan web server untuk bertukar data adalah...",
+              "options": [
+                "Bluetooth",
+                "HTML",
+                "HTTP",
+                "SMTP"
+              ],
+              "correctIndex": 2,
+              "explanation": "HTTP adalah protokol pertukaran data di web. HTML adalah bahasa markup untuk struktur halaman, jadi jangan sampai tertukar.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 16,
+              "question": "Browser menerima response dengan kode status 404. Apa artinya?",
+              "options": [
+                "Permintaan berhasil diproses",
+                "Server sedang mengalami gangguan internal",
+                "Koneksi internet pengguna terputus",
+                "Halaman atau sumber daya yang diminta tidak ditemukan"
+              ],
+              "correctIndex": 3,
+              "explanation": "200 berarti berhasil, 404 berarti tidak ditemukan, dan 500 berarti server mengalami masalah.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 17,
+              "question": "Apa peran HTML dalam sebuah halaman web?",
+              "options": [
+                "Menghubungkan browser dengan DNS server",
+                "Menambah interaktivitas melalui logika pemrograman",
+                "Mengatur warna dan tata letak",
+                "Menentukan struktur atau kerangka isi halaman"
+              ],
+              "correctIndex": 3,
+              "explanation": "HTML adalah kerangka halaman. Warna dan tata letak diatur CSS, interaksi ditangani JavaScript.",
+              "sourceModuleId": "web-foundation-pend-6"
+            },
+            {
+              "id": 18,
+              "question": "Untuk mengubah warna huruf dan jarak antar elemen, kamu memakai...",
+              "options": [
+                "HTTP",
+                "HTML",
+                "CSS",
+                "JavaScript"
+              ],
+              "correctIndex": 2,
+              "explanation": "CSS bertugas mengatur tampilan: warna, ukuran huruf, jarak, dan tata letak.",
+              "sourceModuleId": "web-foundation-pend-6"
+            },
+            {
+              "id": 19,
+              "question": "Sebuah tombol menampilkan pesan saat diklik. Teknologi apa yang paling berperan membuat interaksi itu?",
+              "options": [
+                "CSS",
+                "JavaScript",
+                "DNS",
+                "HTTPS"
+              ],
+              "correctIndex": 1,
+              "explanation": "JavaScript membuat halaman bereaksi terhadap aksi pengguna, seperti klik tombol.",
+              "sourceModuleId": "web-foundation-pend-6"
+            },
+            {
+              "id": 20,
+              "question": "Sebuah halaman tampil dengan teks dan gambar lengkap, tetapi tanpa warna, jarak, dan tata letak yang rapi. Bagian mana yang kemungkinan tidak dimuat?",
+              "options": [
+                "HTML",
+                "Web server",
+                "Alamat IP",
+                "CSS"
+              ],
+              "correctIndex": 3,
+              "explanation": "HTML sudah menyediakan isi halaman. Tampilan polos seperti itu menandakan CSS tidak dipakai atau tidak berhasil dimuat.",
+              "sourceModuleId": "web-foundation-pend-6"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-inti",
+          "courseId": "fe-web-foundation-00",
+          "section": "INTI",
+          "title": "Kuis Pengenalan HTML",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "HTML merupakan singkatan dari...",
+              "options": [
+                "Hyperlink and Text Management Language",
+                "HyperText Markup Language",
+                "HighText Machine Language",
+                "Home Tool Markup Language"
+              ],
+              "correctIndex": 1,
+              "explanation": "HTML adalah HyperText Markup Language, bahasa standar untuk menyusun struktur dokumen dan halaman web.",
+              "sourceModuleId": "web-foundation-inti-1"
+            },
+            {
+              "id": 2,
+              "question": "Mengapa HTML dikategorikan sebagai bahasa markup dan bukan bahasa pemrograman?",
+              "options": [
+                "Karena HTML menyusun struktur konten tanpa logika komputasi percabangan",
+                "Karena HTML hanya terbatas untuk merancang tabel data dan elemen formulir",
+                "Karena berkas HTML tidak memerlukan proses kompilasi sebelum dijalankan",
+                "Karena kode HTML tidak dapat diproses secara langsung oleh peramban modern"
+              ],
+              "correctIndex": 0,
+              "explanation": "HTML adalah bahasa markup (penandaan): ia mendefinisikan mana judul, paragraf, gambar, atau tautan, tanpa memiliki logika algoritma atau kondisi seperti if/else.",
+              "sourceModuleId": "web-foundation-inti-1"
+            },
+            {
+              "id": 3,
+              "question": "Dalam analogi pembuatan website, peran HTML paling tepat diibaratkan sebagai...",
+              "options": [
+                "Instalasi listrik dan saklar otomatis",
+                "Kerangka dan dinding sebuah rumah",
+                "Cat dan warna lantai sebuah rumah",
+                "Pagar pelindung keamanan rumah"
+              ],
+              "correctIndex": 1,
+              "explanation": "HTML adalah kerangka fisik (struktur), CSS adalah polesan tampilan estetika (cat/dekorasi), dan JavaScript adalah interaktivitas (kelistrikan).",
+              "sourceModuleId": "web-foundation-inti-1"
+            },
+            {
+              "id": 4,
+              "question": "Saat kamu mengetik teks dengan banyak spasi dan baris baru di file HTML tanpa tag penanda, mengapa browser menggabungkannya menjadi satu?",
+              "options": [
+                "Karena browser menerapkan aturan pemadatan spasi (whitespace collapsing)",
+                "Karena berkas HTML belum dikompresi dengan algoritma pengecilan ukuran",
+                "Karena mesin parser peramban mengalami kegagalan membaca karakter spasi",
+                "Karena peramban mewajibkan setiap spasi ditulis dalam format heksadesimal"
+              ],
+              "correctIndex": 0,
+              "explanation": "Aturan rendering browser mengabaikan spasi berlebih dan enter pada plain text; struktur harus dinyatakan secara eksplisit menggunakan tag HTML.",
+              "sourceModuleId": "web-foundation-inti-2"
+            },
+            {
+              "id": 5,
+              "question": "Dalam sebuah folder proyek website, berkas utama yang akan otomatis dikirimkan server secara default bernama...",
+              "options": [
+                "index.html",
+                "root.html",
+                "home.html",
+                "main.html"
+              ],
+              "correctIndex": 0,
+              "explanation": "Konvensi standar web server adalah menyajikan 'index.html' secara otomatis bila URL yang diminta adalah direktori utama tanpa menyebutkan nama berkas.",
+              "sourceModuleId": "web-foundation-inti-3"
+            },
+            {
+              "id": 6,
+              "question": "Apa perbedaan membuka berkas HTML dengan awalan 'file://' dibanding 'https://'?",
+              "options": [
+                "file:// membuka langsung dari penyimpanan lokal perangkat tanpa server internet",
+                "Tidak ada perbedaan, keduanya selalu mengambil berkas dari cloud server",
+                "https:// hanya bisa dibuka jika komputer tidak memiliki browser",
+                "file:// memerlukan koneksi internet berkecepatan tinggi"
+              ],
+              "correctIndex": 0,
+              "explanation": "Skema URI 'file://' membaca berkas langsung dari media penyimpanan lokal komputer, sedangkan 'https://' meminta berkas ke web server melalui jaringan internet.",
+              "sourceModuleId": "web-foundation-inti-3"
+            },
+            {
+              "id": 7,
+              "question": "Tiga bagian penyusun sebuah elemen HTML yang lengkap adalah...",
+              "options": [
+                "Class, ID, dan Style",
+                "Nama domain, protokol, dan kode status",
+                "Header, footer, dan sidebar",
+                "Tag pembuka, konten, dan tag penutup"
+              ],
+              "correctIndex": 3,
+              "explanation": "Elemen HTML tersusun atas tag pembuka (misal <p>), isi/konten (teks atau child-element), dan tag penutup (misal </p>).",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 8,
+              "question": "Ciri utama penulisan tag penutup dalam HTML adalah...",
+              "options": [
+                "Menggunakan tanda seru setelah kurung siku (!p>)",
+                "Mengulang nama elemen dua kali (<pp>)",
+                "Menggunakan tanda hubung di akhir nama elemen (<p->)",
+                "Menggunakan garis miring sebelum nama elemen (</p>)"
+              ],
+              "correctIndex": 3,
+              "explanation": "Tag penutup selalu ditandai dengan karakter garis miring '/' sebelum nama elemen di dalam kurung sudut, seperti </p> atau </h1>.",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 9,
+              "question": "Apa yang terjadi jika kamu lupa menulis tag penutup pada sebuah elemen?",
+              "options": [
+                "Teks pada seluruh dokumen akan otomatis dibalik orientasinya ke kanan",
+                "Sistem operasi otomatis membatalkan pembacaan seluruh berkas dalam folder",
+                "Peramban menebak batas elemen sehingga pembungkusan konten bisa keliru",
+                "Peramban akan langsung memunculkan pesan galat fatal dan menutup halaman"
+              ],
+              "correctIndex": 2,
+              "explanation": "Browser memiliki mekanisme penanganan kesalahan (error tolerance), tetapi tebakannya kerap mengakibatkan konten sesudahnya ikut terformat secara tidak diinginkan.",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 10,
+              "question": "Manakah hierarki penggunaan tag heading (h1-h6) yang benar secara semantik?",
+              "options": [
+                "Gunakan <h1> sebanyak mungkin di setiap paragraf",
+                "Urutan tingkat heading tidak memiliki arti semantik apapun",
+                "Gunakan <h3> untuk judul utama jika ingin hurufnya tidak terlalu besar",
+                "Gunakan <h1> untuk judul utama halaman, lalu <h2> untuk sub-bagian besar di bawahnya"
+              ],
+              "correctIndex": 3,
+              "explanation": "Heading mencerminkan hierarki dokumen: <h1> adalah topik utama dokumen, <h2> adalah subtopik, dan seterusnya. Ukuran huruf diatur oleh CSS, bukan dengan mengganti tingkat heading sembarangan.",
+              "sourceModuleId": "web-foundation-inti-4"
+            },
+            {
+              "id": 11,
+              "question": "Manakah dari elemen berikut yang merupakan elemen tanpa tag penutup (empty/void element)?",
+              "options": [
+                "<h1>",
+                "<strong>",
+                "<br>",
+                "<p>"
+              ],
+              "correctIndex": 2,
+              "explanation": "<br> (line break) dan <img> adalah contoh void element dalam HTML yang tidak memiliki konten teks di dalamnya sehingga tidak membutuhkan tag penutup.",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 12,
+              "question": "Di manakah posisi penulisan atribut HTML yang benar?",
+              "options": [
+                "Di antara konten teks elemen dan tanda awal tag penutup dokumen",
+                "Di dalam tag penutup, diletakkan tepat sebelum garis miring penutup",
+                "Di dalam tag pembuka, setelah nama elemen dan dipisahkan spasi",
+                "Di luar tanda kurung sudut, tepat sebelum karakter awal tag elemen"
+              ],
+              "correctIndex": 2,
+              "explanation": "Atribut selalu diletakkan di dalam tag pembuka (opening tag) setelah nama tag, dipisahkan oleh karakter spasi.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 13,
+              "question": "Perhatikan kode berikut: <p id=\"pesan\" class=\"catatan\">Halo</p>. Manakah pernyataan yang BENAR?",
+              "options": [
+                "Penulisan dua atribut sekaligus dalam satu tag adalah kesalahan sintaksis",
+                "Atribut id boleh digunakan berulang kali pada elemen paragraf lain",
+                "Atribut id bernilai 'pesan' harus unik dalam dokumen tersebut",
+                "Atribut class harus memiliki nilai unik di seluruh dokumen"
+              ],
+              "correctIndex": 2,
+              "explanation": "Nilai atribut id wajib unik dalam satu dokumen halaman web, sedangkan nama class boleh digunakan oleh banyak elemen berbeda.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 14,
+              "question": "Atribut alt pada elemen gambar <img src=\"foto.jpg\" alt=\"...\"> berfungsi untuk...",
+              "options": [
+                "Menentukan efek filter warna pada foto",
+                "Menyimpan gambar cadangan di server lain",
+                "Mengubah ukuran tinggi dan lebar gambar secara otomatis",
+                "Menyediakan teks pengganti bagi screen reader atau jika gambar gagal dimuat"
+              ],
+              "correctIndex": 3,
+              "explanation": "Atribut alt (alternative text) sangat penting untuk aksesibilitas pembaca layar dan sebagai teks pengganti ketika gambar tidak berhasil ditampilkan.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 15,
+              "question": "Atribut global manakah yang dapat membuat pengunjung dapat mengedit teks langsung di browser?",
+              "options": [
+                "hidden=\"true\"",
+                "draggable=\"true\"",
+                "tabindex=\"1\"",
+                "contenteditable=\"true\""
+              ],
+              "correctIndex": 3,
+              "explanation": "Atribut global contenteditable=\"true\" menjadikan konten teks elemen dapat diedit secara langsung oleh pengguna di browser.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 16,
+              "question": "Deklarasi <!DOCTYPE html> ditempatkan pada...",
+              "options": [
+                "Baris paling pertama dari seluruh berkas dokumen HTML",
+                "Di akhir dokumen setelah tag </html>",
+                "Di dalam tag <body> paling bawah",
+                "Di dalam tag <head> setelah tag <title>"
+              ],
+              "correctIndex": 0,
+              "explanation": "<!DOCTYPE html> wajib diletakkan di baris pertama paling atas sebelum tag pembuka <html> agar browser merender dalam mode standar.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 17,
+              "question": "Elemen manakah yang menjadi akar (root element) dari keseluruhan pohon dokumen HTML?",
+              "options": [
+                "<title>",
+                "<html>",
+                "<head>",
+                "<body>"
+              ],
+              "correctIndex": 1,
+              "explanation": "Elemen <html> membungkus seluruh isi halaman web dan menjadi simpul akar (root) dalam DOM tree.",
+              "sourceModuleId": "web-foundation-inti-7"
+            },
+            {
+              "id": 18,
+              "question": "Manakah konten yang tepat diletakkan di dalam elemen <head>?",
+              "options": [
+                "Paragraf artikel dan gambar ilustrasi",
+                "Tag <meta charset=\"utf-8\"> dan tag <title>",
+                "Tombol klik dan formulir pendaftaran",
+                "Judul <h1> utama website"
+              ],
+              "correctIndex": 1,
+              "explanation": "Elemen <head> berisi instruksi metadata dan judul dokumen peramban (<title>), bukan konten visual yang dirender di layar utama.",
+              "sourceModuleId": "web-foundation-inti-7"
+            },
+            {
+              "id": 19,
+              "question": "Elemen manakah yang menampung seluruh konten visual yang tampil di jendela peramban pengguna?",
+              "options": [
+                "<meta>",
+                "<body>",
+                "<base>",
+                "<head>"
+              ],
+              "correctIndex": 1,
+              "explanation": "Semua elemen yang ingin dilihat dan diinteraksikan pengguna (teks, gambar, tombol, video) harus ditempatkan di dalam tag <body>.",
+              "sourceModuleId": "web-foundation-inti-7"
+            },
+            {
+              "id": 20,
+              "question": "Dalam konsep pohon dokumen (DOM), hubungan antara elemen <head> dan <body> terhadap elemen <html> adalah...",
+              "options": [
+                "Ketiganya berada pada tingkat hierarki yang sama tanpa relasi induk-anak",
+                "<body> bertindak sebagai induk utama dari elemen <head> dan elemen <html>",
+                "<head> dan <body> adalah anak dari <html> dan saling bersaudara (siblings)",
+                "<html> adalah elemen anak dari <head>, sedangkan <body> elemen luarnya"
+              ],
+              "correctIndex": 2,
+              "explanation": "Elemen <html> adalah induk (parent), sedangkan <head> dan <body> adalah elemen anak langsung dari <html> yang berstatus setara/bersaudara.",
+              "sourceModuleId": "web-foundation-inti-7"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-lanjutan",
+          "courseId": "fe-web-foundation-00",
+          "section": "LANJUTAN",
+          "title": "Kuis Pendalaman HTML",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Elemen apa yang tepat untuk daftar instruksi langkah demi langkah yang urutannya penting?",
+              "options": [
+                "<dl>",
+                "<ol>",
+                "<ul>",
+                "<li>"
+              ],
+              "correctIndex": 1,
+              "explanation": "Ordered list (<ol>) dipakai untuk daftar yang urutannya penting, ditampilkan dengan penomoran otomatis.",
+              "sourceModuleId": "web-foundation-lanjutan-4"
+            },
+            {
+              "id": 2,
+              "question": "Pada elemen <dl>, apa fungsi <dt>?",
+              "options": [
+                "Menampilkan istilah yang akan dijelaskan",
+                "Menandai daftar berurutan",
+                "Membungkus seluruh daftar",
+                "Menampilkan penjelasan istilah"
+              ],
+              "correctIndex": 0,
+              "explanation": "<dt> (description term) berisi istilahnya, sedangkan <dd> (description details) berisi penjelasannya.",
+              "sourceModuleId": "web-foundation-lanjutan-4"
+            },
+            {
+              "id": 3,
+              "question": "Kamu mengisi width dan height pada <img> dengan rasio yang tidak sesuai gambar aslinya. Apa akibatnya?",
+              "options": [
+                "Browser menolak menampilkan gambar",
+                "Tidak ada efek apa pun",
+                "Gambar otomatis dipotong",
+                "Gambar tampil gepeng atau melar, tidak proporsional"
+              ],
+              "correctIndex": 3,
+              "explanation": "Mengisi width dan height sekaligus dengan rasio yang salah membuat gambar tampil tidak proporsional. Sebaiknya isi salah satu saja.",
+              "sourceModuleId": "web-foundation-lanjutan-6"
+            },
+            {
+              "id": 4,
+              "question": "Elemen mana yang mempertahankan spasi dan baris baru persis seperti yang ditulis di kode sumber?",
+              "options": [
+                "<figure>",
+                "<mark>",
+                "<blockquote>",
+                "<pre>"
+              ],
+              "correctIndex": 3,
+              "explanation": "<pre> menampilkan isinya apa adanya, termasuk spasi berlebih dan baris baru yang biasanya diabaikan browser.",
+              "sourceModuleId": "web-foundation-lanjutan-8"
+            },
+            {
+              "id": 5,
+              "question": "Perbedaan utama <blockquote> dan <q> adalah...",
+              "options": [
+                "Keduanya identik dalam tampilan dan semantik, hanya berbeda nama elemen",
+                "<q> khusus kutipan judul buku, <blockquote> untuk kutipan percakapan lisan",
+                "<blockquote> memformat teks miring, <q> memformat teks menjadi tebal",
+                "<blockquote> untuk kutipan blok panjang, <q> untuk kutipan inline pendek"
+              ],
+              "correctIndex": 3,
+              "explanation": "blockquote bersifat block untuk kutipan panjang yang berdiri sendiri, sedangkan q bersifat inline untuk kutipan pendek di tengah kalimat.",
+              "sourceModuleId": "web-foundation-lanjutan-8"
+            },
+            {
+              "id": 6,
+              "question": "Atribut wajib pada elemen <a> agar tautan berfungsi adalah...",
+              "options": [
+                "download",
+                "target",
+                "href",
+                "rel"
+              ],
+              "correctIndex": 2,
+              "explanation": "href menentukan tujuan tautan. Tanpa href, elemen a tidak mengarah ke mana pun.",
+              "sourceModuleId": "web-foundation-lanjutan-9"
+            },
+            {
+              "id": 7,
+              "question": "Elemen apa yang dipakai untuk menandai kata yang perlu penekanan nada bicara, dan bawaannya tampil miring?",
+              "options": [
+                "<mark>",
+                "<em>",
+                "<strong>",
+                "<cite>"
+              ],
+              "correctIndex": 1,
+              "explanation": "em (emphasis) menandai penekanan nada, tampil miring secara bawaan. strong menandai kepentingan, tampil tebal.",
+              "sourceModuleId": "web-foundation-lanjutan-9"
+            },
+            {
+              "id": 8,
+              "question": "Kamu ingin menautkan navigasi ke bagian lain dalam halaman yang sama, dengan id=\"hobi\" pada elemen tujuannya. Bagaimana penulisan href yang benar?",
+              "options": [
+                "href=\"#hobi\"",
+                "href=\"*hobi\"",
+                "href=\"hobi\"",
+                "href=\"id:hobi\""
+              ],
+              "correctIndex": 0,
+              "explanation": "Tanda pagar diikuti nama id (contoh: #hobi) memberi tahu browser untuk melompat ke elemen dengan id tersebut di halaman yang sama.",
+              "sourceModuleId": "web-foundation-lanjutan-11"
+            },
+            {
+              "id": 9,
+              "question": "Manakah yang merupakan pasangan elemen dan fungsi yang benar?",
+              "options": [
+                "<br> membutuhkan tag penutup",
+                "<mark> menyorot teks dengan latar kuning secara bawaan",
+                "<sup> menampilkan teks lebih kecil di bawah baris",
+                "<sub> menampilkan teks lebih besar di atas baris"
+              ],
+              "correctIndex": 1,
+              "explanation": "mark menyorot teks, bawaannya latar kuning teks hitam. sub ada di bawah baris, sup ada di atas baris, keduanya kecil. br tidak butuh tag penutup.",
+              "sourceModuleId": "web-foundation-lanjutan-10"
+            },
+            {
+              "id": 10,
+              "question": "Kenapa mengelompokkan konten hanya dengan <div class=\"header\"> dianggap 'semantic meaningless'?",
+              "options": [
+                "Karena peramban melarang pemberian nama class header pada elemen generik div",
+                "Karena browser dan pembaca layar tidak paham artinya tanpa membaca nama class",
+                "Karena elemen div otomatis memicu peringatan validasi pada standar web HTML5",
+                "Karena elemen div hanya boleh digunakan maksimal satu kali dalam satu berkas"
+              ],
+              "correctIndex": 1,
+              "explanation": "div adalah elemen generic tanpa makna. Nama class hanyalah label untuk manusia, bukan informasi yang dipahami browser atau mesin pencari sebagai peran struktural.",
+              "sourceModuleId": "web-foundation-lanjutan-12"
+            },
+            {
+              "id": 11,
+              "question": "Berapa banyak elemen <main> yang boleh ada dalam satu halaman?",
+              "options": [
+                "Maksimal satu",
+                "Sebanyak jumlah section",
+                "Tidak dibatasi",
+                "Harus sama dengan jumlah artikel"
+              ],
+              "correctIndex": 0,
+              "explanation": "Hanya boleh ada satu elemen main dalam satu halaman, karena ia mewakili konten utama tunggal halaman itu.",
+              "sourceModuleId": "web-foundation-lanjutan-13"
+            },
+            {
+              "id": 12,
+              "question": "Sebuah <aside> diletakkan di dalam <article>. Apa maknanya?",
+              "options": [
+                "Berisi info terkait artikel itu, tapi bukan bagian inti isinya",
+                "Menggantikan fungsi header artikel",
+                "Berisi info terkait halaman secara keseluruhan",
+                "Menjadi judul utama artikel"
+              ],
+              "correctIndex": 0,
+              "explanation": "aside di dalam article berisi info pendukung artikel tersebut. Di luar article, aside berisi info terkait keseluruhan halaman.",
+              "sourceModuleId": "web-foundation-lanjutan-14"
+            },
+            {
+              "id": 13,
+              "question": "Elemen apa yang sebaiknya diawali sebuah heading sebagai elemen pertamanya?",
+              "options": [
+                "<section>",
+                "<div>",
+                "<aside>",
+                "<span>"
+              ],
+              "correctIndex": 0,
+              "explanation": "section dipakai untuk mengelompokkan konten bertema sama, dan sebaiknya diawali heading yang menjadi judul bagian itu.",
+              "sourceModuleId": "web-foundation-lanjutan-14"
+            },
+            {
+              "id": 14,
+              "question": "Kapan sebaiknya memakai <div> dibanding elemen semantik seperti <article> atau <section>?",
+              "options": [
+                "Hanya untuk teks di tengah kalimat",
+                "Selalu, div lebih aman dipakai di mana saja",
+                "Saat tidak ada elemen semantik yang maknanya cocok untuk konten itu",
+                "div tidak pernah boleh dipakai lagi sejak HTML5"
+              ],
+              "correctIndex": 2,
+              "explanation": "div dipakai kalau memang tidak ada elemen semantik yang sesuai, murni untuk kebutuhan pengelompokan atau styling.",
+              "sourceModuleId": "web-foundation-lanjutan-15"
+            },
+            {
+              "id": 15,
+              "question": "Perbedaan <div> dan <span> adalah...",
+              "options": [
+                "div bersifat inline, span bersifat block",
+                "span hanya bisa dipakai di dalam table",
+                "Keduanya sama-sama block",
+                "div bersifat block, span bersifat inline"
+              ],
+              "correctIndex": 3,
+              "explanation": "div adalah container generic bersifat block, span adalah versi inline-nya, dipakai untuk sebagian kecil teks di tengah kalimat.",
+              "sourceModuleId": "web-foundation-lanjutan-15"
+            },
+            {
+              "id": 16,
+              "question": "Tiga elemen dasar penyusun tabel HTML adalah...",
+              "options": [
+                "table, list, item",
+                "table, tr, dan td atau th",
+                "table, thead, tfoot",
+                "table, row, column"
+              ],
+              "correctIndex": 1,
+              "explanation": "table sebagai pembungkus, tr untuk baris, dan td atau th untuk sel di dalam baris itu.",
+              "sourceModuleId": "web-foundation-lanjutan-18"
+            },
+            {
+              "id": 17,
+              "question": "Atribut apa yang membuat satu sel tabel menjangkau beberapa kolom sekaligus?",
+              "options": [
+                "rowspan",
+                "merge",
+                "colspan",
+                "span"
+              ],
+              "correctIndex": 2,
+              "explanation": "colspan merentangkan sel secara horizontal (menjangkau beberapa kolom). rowspan merentangkan secara vertikal.",
+              "sourceModuleId": "web-foundation-lanjutan-19"
+            },
+            {
+              "id": 18,
+              "question": "Elemen tabel apa yang berfungsi sebagai judul keseluruhan tabel?",
+              "options": [
+                "<caption>",
+                "<thead>",
+                "<th>",
+                "<colgroup>"
+              ],
+              "correctIndex": 0,
+              "explanation": "caption adalah judul untuk keseluruhan tabel, ditulis tepat setelah tag pembuka table.",
+              "sourceModuleId": "web-foundation-lanjutan-20"
+            },
+            {
+              "id": 19,
+              "question": "Tipe input apa yang bawaannya menyembunyikan karakter yang diketik sebagai bintang?",
+              "options": [
+                "hidden",
+                "password",
+                "text",
+                "search"
+              ],
+              "correctIndex": 1,
+              "explanation": "type=\"password\" menampilkan setiap karakter sebagai bintang atau titik, menyembunyikan isian dari tampilan layar.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 20,
+              "question": "Apa yang terjadi kalau sebuah <input> tidak diberi atribut name saat formulir dikirim?",
+              "options": [
+                "Formulir gagal total dan tidak bisa disubmit",
+                "Browser akan menambahkan name secara acak",
+                "Data dari input itu tidak ikut terkirim",
+                "Data tetap terkirim dengan nama otomatis"
+              ],
+              "correctIndex": 2,
+              "explanation": "name adalah key yang dipasangkan dengan value saat data dikirim. Tanpa name, data input itu tidak ikut terkirim.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 21,
+              "question": "Elemen apa yang dipakai untuk input teks panjang beberapa baris, seperti kolom komentar?",
+              "options": [
+                "<pre>",
+                "<input type=\"text\">",
+                "<textarea>",
+                "<label>"
+              ],
+              "correctIndex": 2,
+              "explanation": "textarea dirancang khusus untuk teks panjang beberapa baris, berbeda dari input yang selalu satu baris.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 22,
+              "question": "Bagaimana cara menghubungkan <label> dengan input pasangannya?",
+              "options": [
+                "Menetapkan atribut name yang bernilai sama pada label maupun input",
+                "Mengandalkan peramban untuk otomatis menautkan ke input paling dekat",
+                "Menempatkan elemen label tepat di atas input tanpa atribut tambahan",
+                "Memberi id pada input dan for pada label dengan nilai yang identik"
+              ],
+              "correctIndex": 3,
+              "explanation": "Atribut for pada label harus bernilai sama persis dengan id pada input yang dimaksud.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 23,
+              "question": "Perbedaan utama metode GET dan POST pada form adalah...",
+              "options": [
+                "GET menaruh data di URL, POST menaruh data di body request",
+                "POST lebih lambat karena data lebih besar",
+                "Keduanya identik, tidak ada perbedaan",
+                "GET hanya untuk formulir login"
+              ],
+              "correctIndex": 0,
+              "explanation": "GET menyertakan data sebagai parameter di URL, sedangkan POST menaruh data di body request sehingga tidak terlihat di URL.",
+              "sourceModuleId": "web-foundation-lanjutan-24"
+            },
+            {
+              "id": 24,
+              "question": "Kenapa tanda '<' tidak bisa ditulis langsung sebagai bagian dari teks konten HTML?",
+              "options": [
+                "Karena tanda itu tidak ada di keyboard",
+                "Karena hanya boleh dipakai di dalam atribut",
+                "Karena browser akan mengiranya sebagai awal sebuah tag",
+                "Karena huruf kecil dilarang di HTML"
+              ],
+              "correctIndex": 2,
+              "explanation": "Tanda < punya arti khusus sebagai awal tag di HTML, sehingga untuk menampilkannya sebagai teks biasa perlu character reference seperti &lt;.",
+              "sourceModuleId": "web-foundation-lanjutan-25"
+            },
+            {
+              "id": 25,
+              "question": "Manakah character reference yang benar untuk simbol hak cipta (©)?",
+              "options": [
+                "&c;",
+                "&copyright;",
+                "&cr;",
+                "&copy;"
+              ],
+              "correctIndex": 3,
+              "explanation": "&copy; adalah named entity untuk simbol hak cipta. Alternatifnya, numeric entity &#169; menghasilkan tampilan yang sama.",
+              "sourceModuleId": "web-foundation-lanjutan-25"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-css-dasar",
+          "courseId": "fe-web-foundation-00",
+          "section": "CSS_DASAR",
+          "title": "Kuis Dasar CSS",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Mengapa CSS disebut sebagai bahasa deklaratif dan bukan bahasa pemrograman?",
+              "options": [
+                "Karena CSS memerlukan database untuk menyimpan aturan styling",
+                "Karena CSS hanya berjalan di sisi server tanpa interaksi dengan browser",
+                "Karena CSS harus dikompilasi terlebih dahulu sebelum bisa dibaca oleh browser",
+                "Karena CSS hanya menyatakan tampilan yang diinginkan tanpa memiliki logika seperti percabangan atau perulangan"
+              ],
+              "correctIndex": 3,
+              "explanation": "CSS bersifat deklaratif karena developer cukup mendeklarasikan properti tampilan yang diinginkan (misalnya warna atau ukuran), dan browser yang mengeksekusinya tanpa membutuhkan logika pemrograman seperti if-else atau perulangan.",
+              "sourceModuleId": "web-foundation-css-1"
+            },
+            {
+              "id": 2,
+              "question": "Apa kepanjangan resmi dari singkatan CSS?",
+              "options": [
+                "Computer Style System",
+                "Colorful Screen Standard",
+                "Cascading Style Sheet",
+                "Creative Styling Sheet"
+              ],
+              "correctIndex": 2,
+              "explanation": "CSS merupakan singkatan dari Cascading Style Sheet, standar resmi web untuk mengatur presentasi dan tampilan dokumen HTML.",
+              "sourceModuleId": "web-foundation-css-1"
+            },
+            {
+              "id": 3,
+              "question": "Salah satu keuntungan utama memisahkan styling menggunakan CSS dibandingkan mengatur tampilan langsung di struktur HTML adalah...",
+              "options": [
+                "CSS menghapus kebutuhan tag HTML pada sebuah dokumen",
+                "File CSS dapat menggantikan fungsi server web secara penuh",
+                "CSS otomatis membuat website memiliki fitur login dan autentikasi",
+                "Satu berkas CSS dapat digunakan bersama oleh banyak halaman HTML sekaligus"
+              ],
+              "correctIndex": 3,
+              "explanation": "Dengan CSS eksternal, satu file stylesheet dapat ditautkan ke berbagai halaman HTML, sehingga perubahan styling cukup dilakukan di satu tempat tanpa mengedit ulang tiap halaman.",
+              "sourceModuleId": "web-foundation-css-1"
+            },
+            {
+              "id": 4,
+              "question": "Sebuah CSS rule terdiri dari dua bagian utama, yaitu...",
+              "options": [
+                "Function dan parameter",
+                "Tag dan atribut",
+                "Variabel dan kondisi",
+                "Selector dan declaration block"
+              ],
+              "correctIndex": 3,
+              "explanation": "Struktur dasar CSS rule selalu diawali dengan selector (elemen HTML sasaran) yang diikuti oleh declaration block di dalam kurung kurawal { }.",
+              "sourceModuleId": "web-foundation-css-2"
+            },
+            {
+              "id": 5,
+              "question": "Di antara penulisan declaration CSS berikut, manakah yang dianggap TIDAK valid oleh browser?",
+              "options": [
+                "color: green;",
+                "margin: 20px;",
+                "margin: 2 em;",
+                "font-size: small;"
+              ],
+              "correctIndex": 2,
+              "explanation": "Pada nilai berukuran di CSS, tidak boleh ada spasi antara angka dan satuannya. Penulisan 'margin: 2 em;' tidak valid dan akan diabaikan oleh browser, bentuk yang benar adalah 'margin: 2em;'.",
+              "sourceModuleId": "web-foundation-css-2"
+            },
+            {
+              "id": 6,
+              "question": "Bagaimanakah sintaks yang benar untuk menuliskan komentar di dalam file CSS?",
+              "options": [
+                "/* Ini komentar */",
+                "// Ini komentar",
+                "# Ini komentar",
+                "<!-- Ini komentar -->"
+              ],
+              "correctIndex": 0,
+              "explanation": "Komentar di CSS ditulis menggunakan format /* ... */. Format <!-- ... --> adalah komentar HTML, sedangkan // dan # bukan sintaks komentar resmi di CSS standar.",
+              "sourceModuleId": "web-foundation-css-2"
+            },
+            {
+              "id": 7,
+              "question": "Di manakah cara paling tepat untuk melampirkan External Style Sheet ke dalam dokumen HTML?",
+              "options": [
+                "Menggunakan tag <link rel=\"stylesheet\" href=\"style.css\"> di dalam tag <head>",
+                "Menggunakan tag <meta css=\"style.css\"> di tag <html>",
+                "Menggunakan tag <script src=\"style.css\"> di akhir tag <body>",
+                "Menggunakan tag <style href=\"style.css\"> di dalam tag <footer>"
+              ],
+              "correctIndex": 0,
+              "explanation": "External Style Sheet disambungkan menggunakan elemen <link rel=\"stylesheet\" href=\"...\"> yang ditempatkan di bagian <head> dokumen HTML.",
+              "sourceModuleId": "web-foundation-css-3"
+            },
+            {
+              "id": 8,
+              "question": "Karakteristik utama dari Embedded (Internal) Style Sheet adalah...",
+              "options": [
+                "Dapat digunakan otomatis oleh seluruh website tanpa perlu ditautkan",
+                "Aturan CSS ditulis di dalam tag <style> dan hanya berlaku untuk satu dokumen HTML tersebut",
+                "Aturan CSS ditulis di file .js terpisah",
+                "Styling diterapkan langsung pada atribut elemen tanpa menggunakan selector"
+              ],
+              "correctIndex": 1,
+              "explanation": "Embedded Style Sheet diletakkan di dalam tag <style> (biasanya di dalam <head>) dan cakupannya terbatas hanya pada file HTML tempat tag tersebut berada.",
+              "sourceModuleId": "web-foundation-css-3"
+            },
+            {
+              "id": 9,
+              "question": "Mengapa penggunaan Inline Style (<tag style='...'>) umumnya TIDAK disarankan untuk proyek berskala besar?",
+              "options": [
+                "Karena inline style hanya bisa menampilkan warna hitam dan putih",
+                "Karena inline style otomatis mematikan semua link hyperlink di halaman",
+                "Karena browser modern sudah tidak mendukung atribut style",
+                "Karena mencampur struktur konten dengan presentasi styling sehingga sulit dirawat dan tidak bisa digunakan ulang"
+              ],
+              "correctIndex": 3,
+              "explanation": "Inline style menempelkan styling langsung ke tag individu, mencampur aduk HTML dan CSS serta membuat pemeliharaan kode menjadi sangat rumit ketika ada perubahan desain seragam.",
+              "sourceModuleId": "web-foundation-css-3"
+            },
+            {
+              "id": 10,
+              "question": "Perhatikan aturan CSS berikut:\n\nh2, h3 {\n  color: #00a2c6;\n}\n\nTeknik penulisan selector di atas disebut...",
+              "options": [
+                "Universal selector",
+                "Group selector",
+                "Nested selector",
+                "Pseudo-class selector"
+              ],
+              "correctIndex": 1,
+              "explanation": "Group selector memungkinkan penggabungan beberapa selector menggunakan koma agar declaration block yang sama dapat diterapkan ke semua elemen tersebut secara ringkas.",
+              "sourceModuleId": "web-foundation-css-4"
+            },
+            {
+              "id": 11,
+              "question": "Kamu sudah menulis kode CSS dengan benar di file style.css, tetapi saat membuka index.html di browser, tampilannya masih polos tanpa styling. Apa kemungkinan penyebab paling sering dari masalah ini?",
+              "options": [
+                "Tidak menyertakan elemen gambar grafis <canvas> di dalam struktur dokumen",
+                "Berkas HTML belum memuat elemen judul <h1> di dalam penanda tubuh halaman",
+                "Belum menyertakan tag <link rel=\"stylesheet\"> di bagian <head> berkas HTML",
+                "Peramban web belum mengaktifkan dukungan pemrosesan bahasa JavaScript"
+              ],
+              "correctIndex": 2,
+              "explanation": "File CSS eksternal tidak akan diterapkan ke halaman HTML jika tidak disambungkan secara eksplisit menggunakan tag <link rel=\"stylesheet\" href=\"...\"> di dalam <head>.",
+              "sourceModuleId": "web-foundation-css-4"
+            },
+            {
+              "id": 12,
+              "question": "Properti CSS apa yang digunakan untuk mengatur warna latar belakang pada elemen seperti <footer>?",
+              "options": [
+                "font-color",
+                "color",
+                "background-color",
+                "text-background"
+              ],
+              "correctIndex": 2,
+              "explanation": "Properti 'background-color' mengatur warna latar belakang elemen, sedangkan 'color' digunakan untuk warna teks.",
+              "sourceModuleId": "web-foundation-css-4"
+            },
+            {
+              "id": 13,
+              "question": "Bagaimana konsep inheritance (pewarisan) bekerja dalam CSS?",
+              "options": [
+                "Semua selector CSS otomatis mewarisi fungsi JavaScript",
+                "Beberapa properti styling dari elemen induk otomatis diturunkan ke elemen-elemen di dalamnya",
+                "File HTML anak otomatis menyalin seluruh kode HTML induknya",
+                "Browser otomatis menghapus styling dari elemen luar"
+              ],
+              "correctIndex": 1,
+              "explanation": "Inheritance dalam CSS berarti elemen turunan (child) mewarisi nilai properti tertentu (seperti color dan font-family) dari elemen pembungkusnya (parent).",
+              "sourceModuleId": "web-foundation-css-5"
+            },
+            {
+              "id": 14,
+              "question": "Jika terdapat dua aturan untuk elemen yang sama (misal 'p { color: blue; }' lalu di baris berikutnya 'p { color: green; }'), warna apakah yang akan tampil pada teks <p>, dan mengapa?",
+              "options": [
+                "Biru, karena deklarasi yang ditulis pertama kali selalu diprioritaskan",
+                "Campuran warna toska, karena peramban menggabungkan kedua nilai pigmen",
+                "Hijau, karena aturan cascading memenangkan aturan urutan paling akhir",
+                "Hitam, karena benturan dua nilai warna memicu pembatalan gaya peramban"
+              ],
+              "correctIndex": 2,
+              "explanation": "Prinsip cascading membaca CSS dari atas ke bawah. Bila ada dua aturan dengan spesifisitas yang sama pada elemen yang sama, aturan yang ditulis paling bawah/terakhir yang diterapkan.",
+              "sourceModuleId": "web-foundation-css-5"
+            },
+            {
+              "id": 15,
+              "question": "Apa fungsi dari penambahan deklarasi '!important' pada aturan CSS (contoh: 'color: red !important;')?",
+              "options": [
+                "Menandai bahwa properti tersebut hanya berlaku pada mode offline",
+                "Mempercepat proses unduh file CSS oleh browser",
+                "Mengubah teks menjadi huruf tebal dan berkedip",
+                "Memaksa deklarasi tersebut menang dan mengabaikan urutan pembacaan rule normal"
+              ],
+              "correctIndex": 3,
+              "explanation": "!important memberikan prioritas tertinggi pada sebuah declaration, sehingga mengesampingkan urutan cascading normal. Penggunaannya harus bijak karena menyulitkan debugging.",
+              "sourceModuleId": "web-foundation-css-5"
+            },
+            {
+              "id": 16,
+              "question": "Manakah perbedaan utama antara penulisan warna menggunakan nama warna (color keyword) dan kode hex di CSS?",
+              "options": [
+                "Nama warna hanya untuk inline style, sedangkan kode hex untuk berkas external",
+                "Kode hex menyediakan jutaan variasi warna, sedangkan nama warna opsi terbatas",
+                "Nama warna sudah usang dan tidak didukung lagi oleh peramban modern saat ini",
+                "Kode hex hanya bisa digunakan untuk warna teks, bukan untuk latar belakang"
+              ],
+              "correctIndex": 1,
+              "explanation": "Nama warna (seperti red, blue) terbatas pada daftar kata kunci standar, sedangkan kode hex (#RRGGBB) memberikan fleksibilitas menghasilkan lebih dari 16 juta kombinasi warna.",
+              "sourceModuleId": "web-foundation-css-6"
+            },
+            {
+              "id": 17,
+              "question": "Manakah contoh penulisan kode hex yang valid untuk properti color di CSS?",
+              "options": [
+                "color: #1E90FF;",
+                "color: @1E90FF;",
+                "color: hex(1E90FF);",
+                "color: &1E90FF;"
+              ],
+              "correctIndex": 0,
+              "explanation": "Kode heksadesimal di CSS wajib diawali tanda pagar (#) diikuti kombinasi angka dan huruf (misalnya #1E90FF).",
+              "sourceModuleId": "web-foundation-css-6"
+            },
+            {
+              "id": 18,
+              "question": "Properti CSS apa yang digunakan secara spesifik untuk mengubah warna teks pada suatu elemen?",
+              "options": [
+                "color",
+                "font-color",
+                "text-style",
+                "content-color"
+              ],
+              "correctIndex": 0,
+              "explanation": "Dalam standar CSS, properti untuk mewarnai teks adalah 'color', bukan 'font-color' atau 'text-color'.",
+              "sourceModuleId": "web-foundation-css-6"
+            },
+            {
+              "id": 19,
+              "question": "Berdasarkan rangkuman dasar CSS, manakah pernyataan berikut yang PALING BENAR?",
+              "options": [
+                "CSS adalah bahasa deklaratif yang mengatur presentasi visual, di mana elemen anak dapat mewarisi style induknya",
+                "Aturan CSS dibaca secara acak tanpa memperhatikan urutan baris kode",
+                "Inline style adalah metode yang paling direkomendasikan untuk pengembangan web standar industri",
+                "CSS bertugas mengatur logika alur data dan penyimpanan database"
+              ],
+              "correctIndex": 0,
+              "explanation": "CSS berfungsi khusus untuk presentasi visual secara deklaratif, memanfaatkan inheritance dari elemen induk, dan dibaca secara teratur sesuai aturan cascading.",
+              "sourceModuleId": "web-foundation-css-7"
+            },
+            {
+              "id": 20,
+              "question": "Setelah memahami dasar-dasar CSS (syntax, selektor, dan pewarnaan), topik apakah yang lazim dipelajari pada tahap berikutnya untuk mengatur susunan halaman web?",
+              "options": [
+                "Koneksi database SQL dan query server",
+                "Box model, layout (seperti flexbox/grid), dan responsive design",
+                "Pemrograman mikrokontroler dan perakitan hardware",
+                "Enkripsi password dan sertifikat SSL"
+              ],
+              "correctIndex": 1,
+              "explanation": "Setelah menguasai styling dasar, langkah berikutnya dalam CSS adalah mempelajari box model, tata letak (layout/positioning), dan responsive design untuk berbagai ukuran layar.",
+              "sourceModuleId": "web-foundation-css-7"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-pcss",
+          "courseId": "fe-web-foundation-00",
+          "section": "PENDALAMAN_CSS",
+          "title": "Kuis Pendalaman CSS",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Selector manakah yang bisa dipakai di banyak elemen berjenis berbeda sekaligus (shareable), berbeda dengan selector id yang harus unik?",
+              "options": [
+                "Type selector",
+                "Universal selector",
+                "ID selector",
+                "Class selector"
+              ],
+              "correctIndex": 3,
+              "explanation": "Class selector bersifat shareable: satu nama class boleh dipakai di banyak elemen, bahkan dengan jenis tag yang berbeda-beda. ID harus unik di seluruh dokumen.",
+              "sourceModuleId": "web-foundation-pcss-2"
+            },
+            {
+              "id": 2,
+              "question": "Perhatikan selector: img[alt]. Elemen manakah yang akan terkena rule ini?",
+              "options": [
+                "Hanya elemen img dengan alt bernilai kosong",
+                "Hanya elemen img yang memiliki atribut alt, berapa pun nilainya",
+                "Semua elemen img, apa pun atributnya",
+                "Semua elemen yang memiliki atribut apa pun"
+              ],
+              "correctIndex": 1,
+              "explanation": "Bentuk [attr] pada attribute selector menargetkan elemen yang memiliki atribut tersebut, tanpa memandang nilainya.",
+              "sourceModuleId": "web-foundation-pcss-3"
+            },
+            {
+              "id": 3,
+              "question": "Apa perbedaan utama antara adjacent sibling selector (+) dan general sibling selector (~)?",
+              "options": [
+                "+ hanya bekerja pada elemen bertipe inline, ~ untuk elemen bertipe block",
+                "~ mewajibkan pemakaian class target, sedangkan + hanya berlaku pada tag",
+                "+ memilih satu saudara terdekat, ~ memilih semua saudara sesudahnya",
+                "Keduanya identik secara perilaku styling, hanya berbeda simbol karakter"
+              ],
+              "correctIndex": 2,
+              "explanation": "Adjacent sibling (+) hanya mengenai elemen kedua yang langsung mengikuti elemen pertama. General sibling (~) mengenai semua elemen kedua yang muncul setelahnya, selama induknya sama.",
+              "sourceModuleId": "web-foundation-pcss-4"
+            },
+            {
+              "id": 4,
+              "question": "Selector .kotak > p hanya akan menargetkan paragraf yang...",
+              "options": [
+                "Memiliki class kotak",
+                "Berada di mana pun di dalam .kotak, sedalam apa pun",
+                "Berada tepat sebelum .kotak",
+                "Merupakan anak langsung dari .kotak"
+              ],
+              "correctIndex": 3,
+              "explanation": "Child selector (>) hanya menargetkan anak langsung, berbeda dengan descendant selector (spasi) yang menjangkau seluruh turunan pada kedalaman berapa pun.",
+              "sourceModuleId": "web-foundation-pcss-5"
+            },
+            {
+              "id": 5,
+              "question": "Properti content: \"\"; wajib ditulis agar pseudo-element berikut ini tampil, kecuali...",
+              "options": [
+                ":hover",
+                "::after",
+                "::before",
+                "Keduanya (::before dan ::after) butuh content"
+              ],
+              "correctIndex": 0,
+              "explanation": ":hover adalah pseudo-class (memilih berdasarkan keadaan), bukan pseudo-element, sehingga tidak membutuhkan properti content. ::before dan ::after wajib punya content agar muncul.",
+              "sourceModuleId": "web-foundation-pcss-6"
+            },
+            {
+              "id": 6,
+              "question": "Mengapa penulisan font-size: 1.5 em; (dengan spasi) dianggap tidak valid oleh browser?",
+              "options": [
+                "Karena satuan em hanya diizinkan untuk margin, bukan untuk ukuran font",
+                "Karena angka pecahan desimal harus dibulatkan ke bilangan bulat terdekat",
+                "Karena nilai dan satuan ukuran CSS wajib ditulis menyatu tanpa jeda spasi",
+                "Karena mesin peramban web modern hanya menerima ukuran bertipe piksel (px)"
+              ],
+              "correctIndex": 2,
+              "explanation": "Nilai dan satuan pada properti ukuran seperti font-size harus ditulis menempel, misalnya 1.5em. Jika ada spasi, seluruh declaration diabaikan browser.",
+              "sourceModuleId": "web-foundation-pcss-8"
+            },
+            {
+              "id": 7,
+              "question": "Satuan font-size manakah yang dihitung relatif terhadap ukuran font elemen root (<html>), sehingga lebih mudah diprediksi dibanding em?",
+              "options": [
+                "rem",
+                "vh",
+                "px",
+                "%"
+              ],
+              "correctIndex": 0,
+              "explanation": "rem relatif terhadap ukuran font elemen root, sedangkan em relatif terhadap ukuran font elemen itu sendiri sehingga bisa bertumpuk jika dipakai berulang pada elemen bersarang.",
+              "sourceModuleId": "web-foundation-pcss-8"
+            },
+            {
+              "id": 8,
+              "question": "Shorthand font: italic bold 16px/1.5 sans-serif; mengikuti urutan penulisan...",
+              "options": [
+                "style weight size/line-height family",
+                "family size weight style",
+                "weight style family/size",
+                "size weight style family"
+              ],
+              "correctIndex": 0,
+              "explanation": "Shorthand font wajib mengikuti urutan style weight size/line-height family. Jika urutannya salah, seluruh declaration dianggap tidak valid.",
+              "sourceModuleId": "web-foundation-pcss-9"
+            },
+            {
+              "id": 9,
+              "question": "Properti apa yang dipakai untuk mengubah kapitalisasi teks menjadi huruf besar semua, tanpa mengubah teks asli di HTML?",
+              "options": [
+                "text-indent",
+                "text-transform",
+                "text-shadow",
+                "text-decoration"
+              ],
+              "correctIndex": 1,
+              "explanation": "text-transform mengubah tampilan kapitalisasi (misalnya uppercase) tanpa mengubah teks sumber di HTML, sehingga tetap ramah untuk pencarian dan pembaca layar.",
+              "sourceModuleId": "web-foundation-pcss-11"
+            },
+            {
+              "id": 10,
+              "question": "Manakah pernyataan yang benar tentang format penulisan warna di CSS?",
+              "options": [
+                "Format HSL hanya berlaku untuk properti latar belakang, bukan untuk teks",
+                "Format penulisan kode HEX wajib diawali dengan tanda pembuka kurung rgb(",
+                "RGB memakai nilai angka 0-255, sedangkan notasi HEX berbasis heksadesimal",
+                "Nama warna standar mendukung rentang jutaan palet warna seperti nilai HEX"
+              ],
+              "correctIndex": 2,
+              "explanation": "RGB menyatakan nilai merah, hijau, biru masing-masing 0-255. HEX adalah bentuk ringkas enam digit heksadesimal dari kombinasi RGB yang sama.",
+              "sourceModuleId": "web-foundation-pcss-16"
+            },
+            {
+              "id": 11,
+              "question": "Apa yang terjadi jika sebuah elemen diberi opacity: 0%?",
+              "options": [
+                "Hanya border elemen yang hilang",
+                "Elemen beserta seluruh isinya menjadi tidak terlihat sama sekali",
+                "Elemen tampil dengan warna hitam pekat",
+                "Elemen tetap terlihat tapi warnanya berubah jadi abu-abu"
+              ],
+              "correctIndex": 1,
+              "explanation": "opacity: 0% membuat elemen beserta seluruh isi dan turunannya tidak terlihat sama sekali, berbeda dengan alpha channel yang hanya membuat warnanya transparan.",
+              "sourceModuleId": "web-foundation-pcss-18"
+            },
+            {
+              "id": 12,
+              "question": "Sebuah kotak memiliki width: 200px, padding: 20px, dan border: 2px solid. Dengan box-sizing: content-box (default), berapa lebar total kotak tersebut?",
+              "options": [
+                "240px",
+                "200px",
+                "244px",
+                "220px"
+              ],
+              "correctIndex": 2,
+              "explanation": "Dengan content-box, padding dan border ditambahkan di luar width: 200 + (20x2) + (2x2) = 244px. Dengan border-box, lebar totalnya akan tetap 200px.",
+              "sourceModuleId": "web-foundation-pcss-19"
+            },
+            {
+              "id": 13,
+              "question": "Properti box-sizing: border-box; berguna untuk...",
+              "options": [
+                "Menyembunyikan garis batas tepi elemen tanpa mengubah ukuran fisik kotak",
+                "Membuat padding dan border dihitung di dalam penetapan lebar elemen (width)",
+                "Menghilangkan seluruh jarak margin bawaan yang dimiliki oleh elemen HTML",
+                "Mengubah sudut batas elemen menjadi melengkung secara halus dan simetris"
+              ],
+              "correctIndex": 1,
+              "explanation": "border-box membuat ukuran akhir elemen (termasuk padding dan border) tetap sesuai width yang ditentukan, sangat berguna saat menyusun layout dengan float atau persentase.",
+              "sourceModuleId": "web-foundation-pcss-22"
+            },
+            {
+              "id": 14,
+              "question": "Dua elemen sibling bertumpuk vertikal: elemen atas punya margin-bottom: 30px, elemen bawah punya margin-top: 20px. Berapa jarak akhir di antara keduanya?",
+              "options": [
+                "30px, karena mekanisme margin collapsing memakai nilai terbesar",
+                "50px, karena kedua nilai margin vertikal dijumlahkan oleh peramban",
+                "20px, karena aturan CSS memprioritaskan nilai margin paling kecil",
+                "0px, karena kedua batas margin vertikal saling meniadakan nilainya"
+              ],
+              "correctIndex": 0,
+              "explanation": "Margin vertikal antar sibling mengalami margin collapsing: nilainya tidak dijumlahkan, melainkan diambil yang terbesar di antara keduanya.",
+              "sourceModuleId": "web-foundation-pcss-24"
+            },
+            {
+              "id": 15,
+              "question": "Apa syarat utama agar teknik margin: 0 auto; berhasil menengahkan sebuah elemen secara horizontal?",
+              "options": [
+                "Elemen harus diberi display: inline",
+                "Elemen harus memiliki padding lebih besar dari margin",
+                "Elemen harus memiliki width yang ditentukan",
+                "Elemen harus berada di dalam elemen dengan position: relative"
+              ],
+              "correctIndex": 2,
+              "explanation": "Tanpa width yang ditentukan, elemen block akan memenuhi lebar penuh induknya sehingga tidak ada sisa ruang kiri-kanan untuk ditengahkan.",
+              "sourceModuleId": "web-foundation-pcss-25"
+            },
+            {
+              "id": 16,
+              "question": "Nilai display apa yang membuat elemen tidak membuat baris baru (seperti inline), tetapi dimensinya tetap bisa diatur dengan width dan height (seperti block)?",
+              "options": [
+                "inline-block",
+                "inline",
+                "block",
+                "none"
+              ],
+              "correctIndex": 0,
+              "explanation": "inline-block menggabungkan dua sifat: tidak membuat baris baru seperti inline, namun dimensinya tetap bisa diatur layaknya block.",
+              "sourceModuleId": "web-foundation-pcss-26"
+            },
+            {
+              "id": 17,
+              "question": "Properti top, left, right, dan bottom hanya akan berpengaruh jika elemen memiliki position bernilai...",
+              "options": [
+                "static saja",
+                "Tidak ada hubungannya dengan position",
+                "inline atau block",
+                "relative, absolute, atau fixed"
+              ],
+              "correctIndex": 3,
+              "explanation": "Properti top/right/bottom/left hanya berfungsi pada elemen yang sudah keluar dari normal flow, yaitu position relative, absolute, atau fixed. Pada static (default), properti ini tidak berpengaruh.",
+              "sourceModuleId": "web-foundation-pcss-35"
+            },
+            {
+              "id": 18,
+              "question": "Apa perbedaan utama antara position: relative dan position: absolute terhadap ruang yang ditinggalkan elemen?",
+              "options": [
+                "Keduanya sama-sama menghapus alokasi ruang elemen dari alur normal dokumen",
+                "absolute mempertahankan alokasi ruang asli, sedangkan relative menghapusnya",
+                "relative mempertahankan ruang asli elemen, absolute menghapus ruangnya",
+                "Keduanya tetap mempertahankan alokasi ruang kosong pada posisi asli dokumen"
+              ],
+              "correctIndex": 2,
+              "explanation": "relative tetap menyisakan ruang di posisi aslinya seolah elemen masih ada di sana. absolute menghilangkan elemen sepenuhnya dari flow, sehingga elemen di bawahnya naik mengisi ruang tersebut.",
+              "sourceModuleId": "web-foundation-pcss-38"
+            },
+            {
+              "id": 19,
+              "question": "position: fixed selalu dihitung relatif terhadap...",
+              "options": [
+                "Jendela browser, dan tetap di tempat meski halaman di-scroll",
+                "Ukuran viewport mobile saja, tidak berlaku di desktop",
+                "Elemen sibling sebelumnya",
+                "Elemen induk terdekat, apa pun position induknya"
+              ],
+              "correctIndex": 0,
+              "explanation": "Berbeda dengan absolute yang bisa relatif terhadap induk ber-posisi non-static, fixed selalu relatif terhadap jendela browser dan tidak ikut bergerak saat halaman di-scroll.",
+              "sourceModuleId": "web-foundation-pcss-39"
+            },
+            {
+              "id": 20,
+              "question": "Sebuah <div> hanya berisi satu <img> dengan float: left, dan div tersebut tidak diberi gaya lain. Apa yang terjadi pada tinggi <div> tersebut?",
+              "options": [
+                "Elemen div mengalami galat rendering dan seluruh gambarnya tidak tampil",
+                "Tinggi elemen membengkak menjadi dua kali lipat dari dimensi gambar asli",
+                "Tinggi elemen otomatis membesar mengikuti tinggi gambar di dalamnya",
+                "Tingginya menjadi 0px karena elemen float lepas dari alur normal induk"
+              ],
+              "correctIndex": 3,
+              "explanation": "Elemen yang di-float dikeluarkan dari normal flow, sehingga induk tidak menghitungnya saat menentukan tinggi. Ini adalah masalah collapse yang umum terjadi saat memakai float.",
+              "sourceModuleId": "web-foundation-pcss-41"
+            },
+            {
+              "id": 21,
+              "question": "Dua cara umum mengatasi masalah induk yang kehilangan tinggi akibat elemen float adalah...",
+              "options": [
+                "Menerapkan kombinasi display: none dan properti opacity: 0 pada wadah induk",
+                "Menggunakan properti clear penutup atau overflow: auto pada elemen induk",
+                "Menghapus seluruh elemen bertipe float dari struktur kontainer wadah induk",
+                "Mengganti semua properti float menjadi kombinasi margin dan padding negatif"
+              ],
+              "correctIndex": 1,
+              "explanation": "clear (biasanya pada elemen kosong setelah elemen float) dan overflow: auto pada induk adalah dua teknik umum untuk membuat induk kembali menghitung tinggi anak-anaknya yang di-float.",
+              "sourceModuleId": "web-foundation-pcss-42"
+            },
+            {
+              "id": 22,
+              "question": "Apa fungsi utama meta tag <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">?",
+              "options": [
+                "Meningkatkan kecepatan unduh berkas halaman web pada koneksi seluler lambat",
+                "Menyesuaikan lebar viewport peramban dengan ukuran fisik layar perangkat",
+                "Mengaktifkan mode gelap otomatis untuk seluruh komponen tampilan antarmuka",
+                "Menonaktifkan pembacaan berkas CSS eksternal pada perangkat layar ponsel"
+              ],
+              "correctIndex": 1,
+              "explanation": "Tanpa meta tag ini, browser mobile cenderung menampilkan halaman dalam ukuran yang di-zoom out agar muat di layar kecil, membuat teks terlalu kecil dibaca.",
+              "sourceModuleId": "web-foundation-pcss-45"
+            },
+            {
+              "id": 23,
+              "question": "Perhatikan kode berikut:\n\naside { width: 25%; }\n@media screen and (max-width: 600px) { aside { width: 100%; } }\n\nApa yang terjadi pada elemen aside ketika lebar viewport adalah 500px?",
+              "options": [
+                "Terjadi error karena dua rule bertabrakan",
+                "Lebarnya tetap 25%, media query diabaikan",
+                "Elemen aside akan hilang dari halaman",
+                "Lebarnya menjadi 100%, karena kondisi max-width: 600px terpenuhi"
+              ],
+              "correctIndex": 3,
+              "explanation": "Karena 500px lebih kecil dari batas max-width: 600px yang ditetapkan, aturan di dalam media query berlaku dan menimpa aturan sebelumnya, membuat aside selebar 100%.",
+              "sourceModuleId": "web-foundation-pcss-46"
+            },
+            {
+              "id": 24,
+              "question": "position: sticky adalah gabungan dari sifat dua nilai position lain, yaitu...",
+              "options": [
+                "relative dan absolute",
+                "absolute dan static",
+                "static dan fixed",
+                "relative dan fixed"
+              ],
+              "correctIndex": 3,
+              "explanation": "sticky bersifat relative selama belum menyentuh tepi viewport, lalu berubah menempel seperti fixed begitu mencapai posisi yang ditentukan (misalnya top: 0) saat halaman di-scroll.",
+              "sourceModuleId": "web-foundation-pcss-48"
+            },
+            {
+              "id": 25,
+              "question": "Apa manfaat utama melakukan minifikasi pada berkas CSS sebelum dipakai di website produksi?",
+              "options": [
+                "Memperkecil ukuran berkas agar halaman lebih cepat dimuat oleh peramban",
+                "Membuka dukungan fitur eksperimental CSS yang belum stabil di peramban",
+                "Membuat struktur penulisan kode CSS jauh lebih rapi untuk dibaca manusia",
+                "Meningkatkan kecerahan dan kontras warna secara otomatis pada tampilan"
+              ],
+              "correctIndex": 0,
+              "explanation": "Minifikasi menghapus whitespace, baris baru, dan komentar yang tidak memengaruhi fungsi CSS, sehingga ukuran berkas lebih kecil dan halaman lebih cepat dimuat.",
+              "sourceModuleId": "web-foundation-pcss-49"
+            }
+          ]
+        }
+      ],
+      "cheatSheetMarkdown": "# Cheat Sheet Sintaks HTML Lengkap\n\nRangkuman ringkas tag, atribut, & struktur HTML untuk referensi cepat:\n\n## 1. Kerangka Standar Dokumen (HTML5)\n```html\n<!DOCTYPE html>\n<html lang=\"id\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Judul Tab Browser</title>\n  </head>\n  <body>\n    <!-- Seluruh konten visual diletakkan di sini -->\n  </body>\n</html>\n```\n\n## 2. Struktur Tata Letak Semantik (Semantic Layout)\n| Elemen | Peran & Makna Semantik |\n| :--- | :--- |\n| `<header>` | Area kepala halaman / bagian (logo, judul, intro) |\n| `<nav>` | Kumpulan navigasi menu utama |\n| `<main>` | Konten utama dokumen (hanya boleh ada **1** per halaman) |\n| `<article>` | Konten mandiri yang berdiri sendiri (artikel, postingan, kartu info) |\n| `<section>` | Bagian dokumen bertema spesifik (diawali heading) |\n| `<aside>` | Konten pelengkap samping (sidebar, catatan kaki, kutipan terkait) |\n| `<footer>` | Area kaki halaman / penutup (hak cipta, tautan sosial) |\n| `<div>` | Pembungkus generic tingkat blok (tanpa makna semantik) |\n| `<span>` | Pembungkus generic tingkat inline (tanpa ganti baris) |\n\n## 3. Heading & Format Teks\n| Tag | Fungsi | Contoh |\n| :--- | :--- | :--- |\n| `<h1>` - `<h6>` | Judul bertingkat (h1 terbesar) | `<h1>Judul Utama</h1>` |\n| `<p>` | Paragraf teks umum | `<p>Teks bacaan...</p>` |\n| `<strong>` | Teks sangat penting / tebal | `<strong>Penting!</strong>` |\n| `<em>` | Teks penekanan intonasi / miring | `<em>Sangat disarankan</em>` |\n| `<mark>` | Sorotan teks (highlight kuning) | `<mark>Kata kunci</mark>` |\n| `<q>` | Kutipan pendek sebaris (inline) | `<q>Kutipan sebaris</q>` |\n| `<blockquote>` | Kutipan panjang blok | `<blockquote>Kutipan panjang...</blockquote>` |\n| `<pre>` | Teks format asli (spasi & enter dipertahankan) | `<pre>Kode / teks rapi</pre>` |\n| `<code>` | Potongan kode komputer | `<code>console.log()</code>` |\n| `<cite>` | Judul karya / rujukan | `<cite>Buku Pemrograman Web</cite>` |\n| `<dfn>` | Istilah yang didefinisikan | `<dfn>HTML</dfn>` |\n| `<sub>` / `<sup>` | Subscript & Superscript | `H<sub>2</sub>O`, `x<sup>2</sup>` |\n| `<br>` | Ganti baris (void element) | `Baris 1<br>Baris 2` |\n| `<hr>` | Garis pemisah tematik (void element) | `<hr>` |\n\n## 4. Tautan, List & Media\n| Tag | Fungsi & Atribut Utama | Contoh |\n| :--- | :--- | :--- |\n| `<a>` | Tautan hyperlink (`href`, `target`) | `<a href=\"https://example.com\" target=\"_blank\">Web</a>` |\n| `<a href=\"#id\">` | Tautan anchor internal | `<a href=\"#profil\">Ke Bagian Profil</a>` |\n| `<img>` | Gambar (`src`, `alt`, `width`/`height`) | `<img src=\"foto.jpg\" alt=\"Foto Profil\" width=\"300\">` |\n| `<ul>`, `<li>` | Daftar tanpa urutan (bullet) | `<ul><li>Item 1</li><li>Item 2</li></ul>` |\n| `<ol>`, `<li>` | Daftar berurutan (angka/huruf) | `<ol type=\"1\" start=\"1\"><li>Langkah 1</li></ol>` |\n| `<dl>`, `<dt>`, `<dd>` | Daftar istilah & penjelasan | `<dl><dt>HTML</dt><dd>Bahasa markup</dd></dl>` |\n| `<figure>`, `<figcaption>` | Gambar ilustratif & keterangannya | `<figure><img src=\"g.jpg\" alt=\"g\"><figcaption>Ket.</figcaption></figure>` |\n\n## 5. Tabel Data\n| Tag / Atribut | Fungsi | Contoh |\n| :--- | :--- | :--- |\n| `<table>` | Wadah tabel data | `<table>...</table>` |\n| `<caption>` | Judul / deskripsi tabel | `<caption>Jadwal Belajar</caption>` |\n| `<thead>`, `<tbody>`, `<tfoot>` | Struktur kepala, isi, & kaki tabel | `<thead><tr><th>Hari</th></tr></thead>` |\n| `<tr>` | Baris tabel (*table row*) | `<tr>...</tr>` |\n| `<th>` | Sel judul kolom/baris (`scope=\"col/row\"`) | `<th scope=\"col\">Nama</th>` |\n| `<td>` | Sel data reguler | `<td>Rani</td>` |\n| `colspan=\"N\"` | Menggabungkan *N* kolom sel | `<td colspan=\"2\">Merge 2 Kolom</td>` |\n| `rowspan=\"N\"` | Menggabungkan *N* baris sel | `<td rowspan=\"2\">Merge 2 Baris</td>` |\n\n## 6. Formulir & Interaktivitas Input\n| Tag / Atribut | Fungsi | Contoh |\n| :--- | :--- | :--- |\n| `<form>` | Wadah form (`action`, `method=\"GET/POST\"`) | `<form action=\"/submit\" method=\"POST\">` |\n| `<label>` | Label input (`for=\"id-input\"`) | `<label for=\"nama\">Nama:</label>` |\n| `<input type=\"text\">` | Kotak teks satu baris | `<input type=\"text\" id=\"nama\" name=\"nama\" required>` |\n| `<input type=\"email\">` | Input format email valid | `<input type=\"email\" name=\"email\" placeholder=\"kamu@email.com\">` |\n| `<input type=\"password\">` | Input sandi (karakter disembunyikan) | `<input type=\"password\" name=\"sandi\">` |\n| `<input type=\"number\">` | Input angka (`min`, `max`, `step`) | `<input type=\"number\" min=\"1\" max=\"100\">` |\n| `<input type=\"checkbox\">` | Pilihan centang mandiri/jamak | `<input type=\"checkbox\" name=\"setuju\" id=\"s\">` |\n| `<input type=\"radio\">` | Pilihan tunggal dalam satu grup `name` | `<input type=\"radio\" name=\"gender\" value=\"L\">` |\n| `<input type=\"submit\">` / `<button>` | Tombol kirim data form | `<button type=\"submit\">Kirim Data</button>` |\n| `<textarea>` | Area teks panjang multi-baris | `<textarea name=\"pesan\" rows=\"4\"></textarea>` |\n| `<select>`, `<option>` | Menu dropdown pilihan | `<select name=\"kota\"><option value=\"jkt\">Jakarta</option></select>` |\n\n## 7. Karakter Khusus (HTML Entities)\n| Karakter | Entity Name | Entity Number | Makna / Fungsi |\n| :---: | :---: | :---: | :--- |\n| `<` | `&lt;` | `&#60;` | Tanda lebih kecil (mencegah salah baca tag) |\n| `>` | `&gt;` | `&#62;` | Tanda lebih besar |\n| `&` | `&amp;` | `&#38;` | Tanda ampersand |\n| `\"` | `&quot;` | `&#34;` | Tanda petik ganda |\n| `'` | `&apos;` | `&#39;` | Tanda petik tunggal |\n| `©` | `&copy;` | `&#169;` | Simbol Hak Cipta (*Copyright*) |\n| `®` | `&reg;` | `&#174;` | Simbol Merek Terdaftar (*Registered*) |\n| ` ` | `&nbsp;` | `&#160;` | Spasi tak putus (*Non-breaking space*) |"
+    },
+    {
+      "id": "fe-css-02",
+      "trackId": "front-end",
+      "title": "CSS Layout Modern: Flexbox & Grid",
+      "level": "Pemula-Menengah",
+      "durationMinutes": 136,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Kuasai teknik tata letak modern web menggunakan CSS Flexbox satu dimensi dan CSS Grid dua dimensi untuk membangun antarmuka web yang fleksibel, responsif, dan profesional.",
+      "prerequisites": [
+        "Selesai Fondasi Web: Dari Nol ke Baris Kode Pertama"
+      ],
+      "instructor": "Siti Rahmawati, UI/UX & Web Designer",
+      "contentPath": "content/fe-css-02",
+      "sectionTitles": {
+        "PERSIAPAN": "Persiapan",
+        "PENDAHULUAN": "Mengapa Layout Modern",
+        "INTI": "Flexbox",
+        "LANJUTAN": "CSS Grid",
+        "EVALUASI": "Proyek & Evaluasi"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Properti CSS Flexbox apa yang digunakan untuk mengatur posisi dan distribusi item di sepanjang sumbu utama (main axis)?",
+          "options": [
+            "align-items",
+            "align-content",
+            "flex-wrap",
+            "justify-content"
+          ],
+          "correctIndex": 3,
+          "explanation": "justify-content mendistribusikan sisa ruang kosong dan mengatur posisi item pada main axis (horizontal secara default pada flex-direction: row).",
+          "sourceModuleId": "css-layout-inti-3"
+        },
+        {
+          "id": 2,
+          "question": "Apa fungsi properti display: grid pada elemen kontainer CSS?",
+          "options": [
+            "Mengaktifkan tata letak grid dua dimensi untuk baris dan kolom",
+            "Menyembunyikan elemen dari tampilan visual dan aksesibilitas browser",
+            "Menghapus seluruh padding dan margin dari elemen anak di dalamnya",
+            "Mengubah elemen menjadi teks inline biasa tanpa dimensi kotak"
+          ],
+          "correctIndex": 0,
+          "explanation": "display: grid mengaktifkan sistem tata letak kisi dua dimensi yang memungkinkan pengaturan elemen anak secara simultan dalam baris (rows) dan kolom (columns).",
+          "sourceModuleId": "css-layout-lanjutan-1"
+        },
+        {
+          "id": 3,
+          "question": "Apa perbedaan filosofis mendasar antara CSS Flexbox dan CSS Grid?",
+          "options": [
+            "Flexbox hanya berjalan di peramban desktop, sedangkan Grid di semua peramban",
+            "Flexbox hanya menata tata letak teks, sedangkan Grid mengatur tata letak gambar",
+            "Flexbox membutuhkan dependensi JavaScript, sedangkan Grid murni berbasis CSS",
+            "Flexbox adalah layout 1 dimensi, sedangkan Grid adalah layout 2 dimensi"
+          ],
+          "correctIndex": 3,
+          "explanation": "Flexbox dirancang untuk mengatur aliran elemen di sepanjang satu dimensi garis, sementara CSS Grid dirancang untuk mengatur kerangka denah baris dan kolom dua dimensi sekaligus.",
+          "sourceModuleId": "css-layout-prep-2"
+        },
+        {
+          "id": 4,
+          "question": "Mengapa penggunaan properti CSS float untuk membagi kolom halaman dianggap problematik pada masa lalu?",
+          "options": [
+            "Karena browser lama menolak merender warna pada elemen dengan properti float",
+            "Karena float menghapus elemen anak dari hierarki dokumen DOM halaman",
+            "Karena elemen keluar dari aliran normal sehingga induknya runtuh (collapse)",
+            "Karena memicu konsumsi CPU tinggi yang memperlambat rendering peramban"
+          ],
+          "correctIndex": 2,
+          "explanation": "Elemen yang di-float terangkat keluar dari normal flow, menyebabkan tinggi kontainer induknya runtuh menjadi 0 (container collapsing) dan memerlukan trik clearfix.",
+          "sourceModuleId": "css-layout-pend-3"
+        },
+        {
+          "id": 5,
+          "question": "Perilaku apa yang langsung terjadi pada elemen anak langsung ketika elemen induk diberi 'display: flex'?",
+          "options": [
+            "Elemen anak otomatis dikonversi strukturnya menjadi elemen tabel HTML",
+            "Semua teks di dalam elemen anak otomatis diformat menjadi huruf miring",
+            "Elemen anak berbaris mendatar horizontal dan tingginya otomatis seragam",
+            "Semua elemen anak disembunyikan sementara dari alur tampilan peramban"
+          ],
+          "correctIndex": 2,
+          "explanation": "Mengaktifkan display: flex membuat direct children berbaris secara horizontal (default row) dan secara default meregang (stretch) menyamakan tinggi pada sumbu silang.",
+          "sourceModuleId": "css-layout-inti-1"
+        },
+        {
+          "id": 6,
+          "question": "Jika sebuah kontainer memiliki 'flex-direction: column', ke manakah arah Main Axis (Sumbu Utama) mengalir?",
+          "options": [
+            "Diagonal dari sudut kiri atas ke kanan bawah",
+            "Mendatar dari kiri ke kanan",
+            "Vertikal menurun dari atas ke bawah",
+            "Mendatar dari kanan ke kiri"
+          ],
+          "correctIndex": 2,
+          "explanation": "Pada flex-direction: column, sumbu utama (main axis) berubah arah menjadi vertikal dari atas ke bawah, sedangkan sumbu silang (cross axis) menjadi horizontal.",
+          "sourceModuleId": "css-layout-inti-2"
+        },
+        {
+          "id": 7,
+          "question": "Nilai justify-content apa yang paling sering digunakan pada Navbar untuk menempatkan logo di ujung kiri dan menu di ujung kanan?",
+          "options": [
+            "flex-start",
+            "space-around",
+            "center",
+            "space-between"
+          ],
+          "correctIndex": 3,
+          "explanation": "space-between menaruh item pertama di ujung awal, item terakhir di ujung akhir, dan membagi sisa ruang secara merata di antaranya.",
+          "sourceModuleId": "css-layout-inti-3"
+        },
+        {
+          "id": 8,
+          "question": "Dua baris deklarasi CSS Flexbox manakah yang menghasilkan 'centering' sempurna (tengah horizontal dan tengah vertikal)?",
+          "options": [
+            "margin: auto; float: center;",
+            "text-align: center; vertical-align: middle;",
+            "flex-direction: center; flex-wrap: center;",
+            "justify-content: center; align-items: center;"
+          ],
+          "correctIndex": 3,
+          "explanation": "Kombinasi justify-content: center (pada main axis) dan align-items: center (pada cross axis) menengahkan elemen secara sempurna dua arah.",
+          "sourceModuleId": "css-layout-inti-4"
+        },
+        {
+          "id": 9,
+          "question": "Apa fungsi properti 'flex-wrap: wrap' pada kontainer Flexbox?",
+          "options": [
+            "Membuat seluruh teks di dalam kontainer terbungkus tanda kurung khusus",
+            "Mengubah batas luar kontainer menjadi bingkai dekoratif yang melipat",
+            "Mengizinkan elemen melipat ke baris baru saat lebar kontainer tidak cukup",
+            "Mencegah elemen meluap dengan memotong konten yang melebihi batas wadah"
+          ],
+          "correctIndex": 2,
+          "explanation": "Secara default Flexbox bernilai nowrap (memaksa 1 baris). flex-wrap: wrap mengizinkan elemen anak berpindah membentuk baris baru saat ruang horizontal habis.",
+          "sourceModuleId": "css-layout-inti-5"
+        },
+        {
+          "id": 10,
+          "question": "Apa keunggulan menggunakan properti 'gap: 16px' dibanding memberi margin pada elemen anak Flexbox/Grid?",
+          "options": [
+            "gap memberi jarak antar item tanpa menambah margin berlebih di dinding luar",
+            "gap mengubah warna latar belakang di sela-sela elemen menjadi transparan",
+            "gap menghitung proporsi jarak secara dinamis menggunakan persentase layar",
+            "gap dapat diterapkan secara otomatis hanya pada elemen gambar interaktif"
+          ],
+          "correctIndex": 0,
+          "explanation": "gap memberikan celah pemisah murni di antara sel-sel elemen anak tanpa menambahkan margin ekstra pada sisi tepi luar kontainer.",
+          "sourceModuleId": "css-layout-inti-5"
+        },
+        {
+          "id": 11,
+          "question": "Apa makna deklarasi ringkas 'flex: 1' yang diterapkan pada beberapa elemen anak Flexbox?",
+          "options": [
+            "Semua elemen membagi rata sisa ruang kontainer secara adil dan seragam",
+            "Hanya elemen urutan pertama yang diizinkan merenggang memenuhi kontainer",
+            "Elemen dilarang menyusut meskipun ruang di dalam kontainer telah habis",
+            "Semua elemen dipaksa memiliki ukuran tetap sebesar tepat satu piksel"
+          ],
+          "correctIndex": 0,
+          "explanation": "flex: 1 adalah shorthand untuk flex-grow: 1, flex-shrink: 1, flex-basis: 0%, yang membagi sisa ruang secara merata kepada seluruh item yang memilikinya.",
+          "sourceModuleId": "css-layout-inti-6"
+        },
+        {
+          "id": 12,
+          "question": "Apakah manipulasi urutan visual menggunakan properti 'order: -1' mengubah urutan pembacaan oleh Screen Reader dan tombol Tab?",
+          "options": [
+            "Ya, dokumen HTML pada sisi server ikut dimutasi sesuai urutan tampilan",
+            "Tidak, order hanya mengubah visual, urutan aksesibilitas DOM tetap sama",
+            "Ya, urutan pembacaan DOM dan navigasi tombol Tab ikut bergeser otomatis",
+            "Tergantung pada peramban web dan tipe perangkat yang digunakan pengguna"
+          ],
+          "correctIndex": 1,
+          "explanation": "Properti order hanya memanipulasi presentasi visual di layar dan tidak mengubah urutan struktural dokumen HTML asli (DOM order) bagi screen reader dan navigasi keyboard.",
+          "sourceModuleId": "css-layout-inti-7"
+        },
+        {
+          "id": 13,
+          "question": "Apa arti satuan '1fr' pada deklarasi 'grid-template-columns: 200px 1fr'?",
+          "options": [
+            "Tinggi satu baris penuh dari kontainer ke arah bawah",
+            "Satu bagian fraksi dari sisa ruang setelah 200px",
+            "Kecepatan animasi satu frame per detik pada peramban",
+            "Ukuran relatif setara dengan satu root em peramban"
+          ],
+          "correctIndex": 1,
+          "explanation": "Satuan fr (fractional unit) mengalokasikan pecahan dari sisa ruang kosong kontainer setelah lebar absolut (seperti 200px) dan gap diperhitungkan.",
+          "sourceModuleId": "css-layout-lanjutan-3"
+        },
+        {
+          "id": 14,
+          "question": "Bagaimana cara menuliskan 4 kolom selebar 1fr yang ringkas menggunakan CSS Grid?",
+          "options": [
+            "grid-template-columns: times(4, 1fr);",
+            "grid-template-columns: repeat(4, 1fr);",
+            "grid-template-columns: auto-fit(4, 1fr);",
+            "grid-template-columns: 4fr;"
+          ],
+          "correctIndex": 1,
+          "explanation": "Fungsi repeat(4, 1fr) adalah cara resmi untuk mengulang deklarasi ukuran 1fr sebanyak 4 kali.",
+          "sourceModuleId": "css-layout-lanjutan-3"
+        },
+        {
+          "id": 15,
+          "question": "Deklarasi CSS Grid manakah yang membentangkan elemen kartu dari garis kisi kolom 1 hingga garis kisi kolom 3?",
+          "options": [
+            "grid-column: 1 / 3;",
+            "grid-row: 1 / 3;",
+            "column-span: 3;",
+            "grid-column: 1 to 3;"
+          ],
+          "correctIndex": 0,
+          "explanation": "grid-column: 1 / 3 (atau grid-column: span 2) merentangkan elemen mulai dari grid line 1 hingga grid line 3.",
+          "sourceModuleId": "css-layout-lanjutan-4"
+        },
+        {
+          "id": 16,
+          "question": "Apa keajaiban dari mantra 'grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))'?",
+          "options": [
+            "Memutar orientasi konten kartu sebesar dua ratus derajat secara melingkar",
+            "Membuat galeri responsif otomatis tanpa media query di berbagai ukuran layar",
+            "Menghapus elemen kartu yang lebarnya di bawah batas minimal dua ratus piksel",
+            "Membatasi susunan elemen galeri kartu agar selalu terdiri dari tepat satu kolom"
+          ],
+          "correctIndex": 1,
+          "explanation": "Kombinasi auto-fit dan minmax menghitung jumlah kolom yang muat secara otomatis dan memecah baris secara responsif tanpa perlu satu pun baris @media query.",
+          "sourceModuleId": "css-layout-lanjutan-6"
+        }
+      ],
+      "sectionQuizzes": [],
+      "cheatSheetMarkdown": null
+    },
+    {
+      "id": "fe-js-03",
+      "trackId": "front-end",
+      "title": "JavaScript Fundamentals",
+      "level": "Pemula",
+      "durationMinutes": 142,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Kuasai logika pemrograman web modern (ES2015+): variabel let/const, tipe data, operator, alur if/else dan loop, array & objek, fungsi arrow, manipulasi DOM & event listener, serta pengantar konsep asinkron melalui proyek to-do list interaktif.",
+      "prerequisites": [
+        "Fondasi Web: Dari Nol ke Baris Kode Pertama",
+        "CSS Layout Modern: Flexbox & Grid"
+      ],
+      "instructor": "Andi Wijaya, Fullstack Developer",
+      "contentPath": "content/fe-js-03",
+      "sectionTitles": {
+        "PERSIAPAN": "Persiapan",
+        "PENDAHULUAN": "Dasar-Dasar JavaScript",
+        "INTI": "Logika & Alur Program",
+        "LANJUTAN": "Fungsi, Objek & DOM",
+        "EVALUASI": "Proyek & Evaluasi"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Keyword deklarasi variabel mana yang nilainya tidak boleh di-assign ulang?",
+          "options": [
+            "let",
+            "const",
+            "var",
+            "static"
+          ],
+          "correctIndex": 1,
+          "explanation": "const (konstanta) mencegah reassignment variabel setelah inisialisasi.",
+          "sourceModuleId": "js-inti-1"
+        },
+        {
+          "id": 2,
+          "question": "Perhatikan kode berikut:\n```javascript\nlet a = 10;\nlet b = \"10\";\nconsole.log(a === b);\n```\nApa output yang ditampilkan di Console?",
+          "options": [
+            "undefined",
+            "false",
+            "TypeError",
+            "true"
+          ],
+          "correctIndex": 1,
+          "explanation": "Operator === memeriksa kesamaan nilai dan tipe data. Karena a bertipe number dan b bertipe string, hasilnya adalah false.",
+          "sourceModuleId": "js-inti-3"
+        },
+        {
+          "id": 3,
+          "question": "Perhatikan kode berikut:\n```javascript\nconst buah = [\"Apel\", \"Jeruk\", \"Mangga\"];\nconsole.log(buah[1]);\n```\nApa output yang dihasilkan?",
+          "options": [
+            "Mangga",
+            "Apel",
+            "undefined",
+            "Jeruk"
+          ],
+          "correctIndex": 3,
+          "explanation": "Indeks array pada JavaScript dimulai dari angka 0. Indeks 0 adalah 'Apel', dan indeks 1 adalah 'Jeruk'.",
+          "sourceModuleId": "js-inti-8"
+        },
+        {
+          "id": 4,
+          "question": "Perhatikan kode berikut:\n```javascript\nconst kuadrat = (x) => x * x;\nconsole.log(kuadrat(6));\n```\nBerapa nilai output yang dicetak?",
+          "options": [
+            "NaN",
+            "12",
+            "36",
+            "undefined"
+          ],
+          "correctIndex": 2,
+          "explanation": "Arrow function sebaris menerapkan implicit return, sehingga kuadrat(6) mengembalikan 6 * 6 = 36.",
+          "sourceModuleId": "js-lanjutan-2"
+        },
+        {
+          "id": 5,
+          "question": "Perhatikan kode berikut:\n```javascript\nconst angka = [1, 2, 3, 4, 5];\nconst hasil = angka.filter((n) => n > 3);\nconsole.log(hasil.length);\n```\nBerapa output yang dihasilkan?",
+          "options": [
+            "3",
+            "5",
+            "2",
+            "4"
+          ],
+          "correctIndex": 2,
+          "explanation": "Metode filter hanya meloloskan elemen yang bernilai lebih besar dari 3, yaitu [4, 5]. Panjang array hasil.length adalah 2.",
+          "sourceModuleId": "js-lanjutan-5"
+        },
+        {
+          "id": 6,
+          "question": "Perhatikan kode berikut:\n```javascript\nlet hitung = 0;\nfor (let i = 0; i < 3; i++) {\n  hitung += 2;\n}\nconsole.log(hitung);\n```\nApa output yang ditampilkan di Console?",
+          "options": [
+            "6",
+            "3",
+            "8",
+            "4"
+          ],
+          "correctIndex": 0,
+          "explanation": "Loop for berputar sebanyak 3 kali (i = 0, 1, 2). Setiap putaran hitung ditambah 2, sehingga total akhirnya adalah 6.",
+          "sourceModuleId": "js-inti-7"
+        },
+        {
+          "id": 7,
+          "question": "Perhatikan kode berikut:\n```javascript\nconst nama = \"Budi\";\nconst salam = `Halo ${nama}!`;\nconsole.log(salam);\n```\nApa teks yang tercetak di Console?",
+          "options": [
+            "undefined",
+            "Halo ${nama}!",
+            "Halo \"Budi\"!",
+            "Halo Budi!"
+          ],
+          "correctIndex": 3,
+          "explanation": "Template literals menggunakan tanda backtick dan sintaks ${...} untuk menyisipkan nilai variabel secara dinamis ke dalam teks.",
+          "sourceModuleId": "js-inti-4"
+        },
+        {
+          "id": 8,
+          "question": "Standar resmi yang mengatur spesifikasi dan evolusi bahasa JavaScript adalah...",
+          "options": [
+            "TypeScript Foundation",
+            "W3C Standards",
+            "ECMAScript",
+            "JSON Schema"
+          ],
+          "correctIndex": 2,
+          "explanation": "ECMAScript (biasanya disingkat ES, seperti ES6 / ES2015) adalah spesifikasi standar resmi untuk bahasa JavaScript.",
+          "sourceModuleId": "js-pend-1"
+        },
+        {
+          "id": 9,
+          "question": "Di mana posisi yang paling disarankan untuk meletakkan tag <script src=\"app.js\"> pada dokumen HTML?",
+          "options": [
+            "Di dalam tag <head>",
+            "Di dalam tag <title>",
+            "Di baris pertama dokumen sebelum <!DOCTYPE html>",
+            "Tepat sebelum tag penutup </body>"
+          ],
+          "correctIndex": 3,
+          "explanation": "Meletakkan tag script sebelum penutup body memastikan seluruh elemen HTML telah diunduh dan diproses peramban sebelum skrip dijalankan.",
+          "sourceModuleId": "js-pend-2"
+        },
+        {
+          "id": 10,
+          "question": "Perintah JavaScript standar apa yang digunakan untuk mencetak informasi atau nilai ke developer console?",
+          "options": [
+            "terminal.echo()",
+            "document.write()",
+            "console.log()",
+            "print()"
+          ],
+          "correctIndex": 2,
+          "explanation": "console.log() adalah perintah standar untuk mencetak output ke konsol pengembang.",
+          "sourceModuleId": "js-pend-3"
+        },
+        {
+          "id": 11,
+          "question": "Jenis error apa yang muncul ketika kamu memanggil variabel yang belum pernah dideklarasikan sebelumnya?",
+          "options": [
+            "ReferenceError",
+            "RangeError",
+            "TypeError",
+            "SyntaxError"
+          ],
+          "correctIndex": 0,
+          "explanation": "ReferenceError terjadi ketika JavaScript mencoba mencari nama variabel yang tidak ditemukan di dalam memori/scope.",
+          "sourceModuleId": "js-pend-5"
+        },
+        {
+          "id": 12,
+          "question": "Apa hasil dari ekspresi typeof 'CodeAcademy'?",
+          "options": [
+            "'text'",
+            "'string'",
+            "'object'",
+            "'character'"
+          ],
+          "correctIndex": 1,
+          "explanation": "Operator typeof mengembalikan string 'string' untuk semua data teks yang diapit tanda kutip.",
+          "sourceModuleId": "js-inti-2"
+        },
+        {
+          "id": 13,
+          "question": "Berapa hasil dari operasi aritmatika 14 % 4?",
+          "options": [
+            "3.5",
+            "3",
+            "0",
+            "2"
+          ],
+          "correctIndex": 3,
+          "explanation": "Operator modulo (%) menghasilkan sisa pembagian bulat. 14 dibagi 4 menghasilkan 3 dengan sisa 2.",
+          "sourceModuleId": "js-inti-3"
+        },
+        {
+          "id": 14,
+          "question": "Apa kata kunci yang harus disertakan di akhir setiap blok case dalam switch agar eksekusi tidak meluncur bebas ke case di bawahnya?",
+          "options": [
+            "stop",
+            "continue",
+            "exit",
+            "break"
+          ],
+          "correctIndex": 3,
+          "explanation": "Perintah break menghentikan evaluasi blok switch dan melompat keluar, mencegah perilaku fall-through.",
+          "sourceModuleId": "js-inti-6"
+        },
+        {
+          "id": 15,
+          "question": "Manakah pernyataan yang BENAR mengenai variabel yang dideklarasikan dengan 'const' di dalam tanda kurung kurawal {}?",
+          "options": [
+            "Hanya dapat diakses di dalam blok kurung kurawal tersebut (Block Scope)",
+            "Akan menghasilkan SyntaxError saat program dijalankan",
+            "Dapat diakses bebas dari luar kurung kurawal di mana saja",
+            "Otomatis berubah menjadi variabel global"
+          ],
+          "correctIndex": 0,
+          "explanation": "Variabel const dan let memiliki block scope, sehingga terisolasi di dalam tanda kurung kurawal tempat mereka dideklarasikan.",
+          "sourceModuleId": "js-lanjutan-3"
+        },
+        {
+          "id": 16,
+          "question": "Jika terdapat objek const pengguna = { nama: 'Rani', umur: 21 }, bagaimana cara membaca properti umur menggunakan dot notation?",
+          "options": [
+            "pengguna->umur",
+            "pengguna.umur",
+            "pengguna:umur",
+            "pengguna(umur)"
+          ],
+          "correctIndex": 1,
+          "explanation": "Dot notation menggunakan tanda titik antara nama objek dan nama properti: pengguna.umur.",
+          "sourceModuleId": "js-lanjutan-4"
+        },
+        {
+          "id": 17,
+          "question": "Perintah document apa yang digunakan untuk memilih elemen HTML pertama yang memiliki id 'tombol-kirim'?",
+          "options": [
+            "document.findTag('tombol-kirim')",
+            "document.selectId('tombol-kirim')",
+            "document.querySelector('#tombol-kirim')",
+            "document.querySelector('.tombol-kirim')"
+          ],
+          "correctIndex": 2,
+          "explanation": "document.querySelector() menggunakan selektor CSS, di mana tanda pagar (#) menandakan pencarian berdasarkan id elemen.",
+          "sourceModuleId": "js-lanjutan-6"
+        },
+        {
+          "id": 18,
+          "question": "Metode apa yang digunakan untuk mendaftarkan fungsi penangan klik pada elemen tombol HTML?",
+          "options": [
+            "tombol.addEventListener('click', handler)",
+            "tombol.registerAction('click')",
+            "tombol.onClickHandler()",
+            "tombol.listenEvent('press', handler)"
+          ],
+          "correctIndex": 0,
+          "explanation": "addEventListener('click', handler) adalah metode standar untuk menangani event klik pada elemen DOM.",
+          "sourceModuleId": "js-lanjutan-7"
+        },
+        {
+          "id": 19,
+          "question": "Kata kunci apa yang dipasangkan dengan 'async' di dalam fungsi untuk menunggu penyelesaian sebuah Promise secara non-blocking?",
+          "options": [
+            "pause",
+            "await",
+            "wait",
+            "defer"
+          ],
+          "correctIndex": 1,
+          "explanation": "Kata kunci await hanya dapat digunakan di dalam fungsi yang diawali dengan kata kunci async.",
+          "sourceModuleId": "js-lanjutan-8"
+        },
+        {
+          "id": 20,
+          "question": "Metode array apa yang digunakan untuk menambahkan item baru ke urutan paling belakang?",
+          "options": [
+            "push()",
+            "pop()",
+            "shift()",
+            "unshift()"
+          ],
+          "correctIndex": 0,
+          "explanation": "Metode .push() menyisipkan satu atau beberapa elemen baru ke akhir array dan memperbarui panjangnya.",
+          "sourceModuleId": "js-inti-8"
+        }
+      ],
+      "sectionQuizzes": [],
+      "cheatSheetMarkdown": null
+    }
+  ]
+}

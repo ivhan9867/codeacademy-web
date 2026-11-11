@@ -1,0 +1,295 @@
+{
+  "id": "back-end",
+  "name": "Back-End Development",
+  "description": "Bangun server handal, REST API, dan kelola database yang mendukung aplikasi web modern.",
+  "iconEmoji": "⚙️",
+  "courses": [
+    {
+      "id": "be-node-01",
+      "trackId": "back-end",
+      "title": "Node.js Fundamentals",
+      "level": "Pemula",
+      "durationMinutes": 150,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Kuasai pemrograman sisi server dengan Node.js runtime: arsitektur event loop, non-blocking I/O, sistem modul (CommonJS & ESM), manipulasi file, hingga pembuatan server HTTP & REST API. Berbasis metode baca & tebak output (mental execution) tanpa membutuhkan runtime compiler di aplikasi.",
+      "prerequisites": [
+        "JavaScript Fundamentals"
+      ],
+      "instructor": "Rian Hidayat, Backend Lead",
+      "contentPath": "content/be-node-01",
+      "sectionTitles": {
+        "PERSIAPAN": "Persiapan",
+        "PENDAHULUAN": "Memahami Node.js",
+        "INTI": "Modul, File & Asinkron",
+        "LANJUTAN": "Server & npm",
+        "EVALUASI": "Proyek & Evaluasi"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Mesin JavaScript apa yang digunakan oleh Node.js?",
+          "options": [
+            "SpiderMonkey",
+            "Chakra",
+            "V8",
+            "JavaScriptCore"
+          ],
+          "correctIndex": 2,
+          "explanation": "Node.js menggunakan mesin V8 performa tinggi yang dikembangkan oleh Google.",
+          "sourceModuleId": "node-pend-1"
+        },
+        {
+          "id": 2,
+          "question": "Objek browser manakah berikut ini yang TIDAK tersedia di lingkungan Node.js?",
+          "options": [
+            "console",
+            "document (DOM)",
+            "JSON",
+            "setTimeout"
+          ],
+          "correctIndex": 1,
+          "explanation": "Objek document (DOM) dan window hanya ada di browser, sedangkan Node.js berjalan di sisi server tanpa antarmuka visual.",
+          "sourceModuleId": "node-pend-1"
+        },
+        {
+          "id": 3,
+          "question": "Pustaka C berbasis event-driven manakah yang menangani thread pool dan Event Loop di balik layar Node.js?",
+          "options": [
+            "Glibc",
+            "OpenGL",
+            "Boost",
+            "Libuv"
+          ],
+          "correctIndex": 3,
+          "explanation": "Libuv adalah pustaka C multi-platform yang mengelola operasi I/O asinkron, thread pool, dan Event Loop pada Node.js.",
+          "sourceModuleId": "node-pend-2"
+        },
+        {
+          "id": 4,
+          "question": "Apa output dari kode berikut?\nconsole.log('1');\nsetTimeout(() => console.log('2'), 0);\nconsole.log('3');",
+          "options": [
+            "1 lalu 3 lalu 2",
+            "2 lalu 1 lalu 3",
+            "1 lalu 2 lalu 3",
+            "3 lalu 2 lalu 1"
+          ],
+          "correctIndex": 0,
+          "explanation": "Meskipun durasi setTimeout adalah 0ms, callback tersebut ditaruh di Callback Queue dan baru dieksekusi setelah seluruh kode sinkron (1 dan 3) selesai.",
+          "sourceModuleId": "node-pend-2"
+        },
+        {
+          "id": 5,
+          "question": "Perintah apa yang digunakan untuk menghentikan proses Node.js dengan indikasi telah terjadi kesalahan (error)?",
+          "options": [
+            "process.exit(0)",
+            "process.exit(1)",
+            "process.stop()",
+            "process.kill()"
+          ],
+          "correctIndex": 1,
+          "explanation": "process.exit(1) atau angka non-nol menandakan kepada sistem operasi bahwa proses berakhir karena terjadi kegagalan/error.",
+          "sourceModuleId": "node-pend-3"
+        },
+        {
+          "id": 6,
+          "question": "Pada array process.argv, indeks ke berapakah yang pertama kali menyimpan argumen baris perintah kustom yang diketikkan pengguna?",
+          "options": [
+            "Indeks 1",
+            "Indeks 0",
+            "Indeks 3",
+            "Indeks 2"
+          ],
+          "correctIndex": 3,
+          "explanation": "Indeks 0 berisi path ke executable node, indeks 1 berisi path ke file skrip, dan indeks 2 ke atas berisi argumen tambahan pengguna.",
+          "sourceModuleId": "node-pend-4"
+        },
+        {
+          "id": 7,
+          "question": "Pada sistem modul CommonJS, objek apakah yang digunakan untuk mengekspor fungsi atau data ke file lain?",
+          "options": [
+            "process.exports",
+            "module.exports",
+            "export default",
+            "global.export"
+          ],
+          "correctIndex": 1,
+          "explanation": "CommonJS menggunakan module.exports (atau shorthand exports) untuk membagikan data/fungsi ke file lain via require().",
+          "sourceModuleId": "node-inti-1"
+        },
+        {
+          "id": 8,
+          "question": "Bagaimana cara menandai proyek Node.js agar mendukung sintaks ES Modules (import/export) pada seluruh file .js?",
+          "options": [
+            "Menambahkan \"esm\": true di package.json",
+            "Memasang flag --experimental-modules otomatis",
+            "Menambahkan \"type\": \"module\" di package.json",
+            "Mengganti nama folder menjadi /esm"
+          ],
+          "correctIndex": 2,
+          "explanation": "Konfigurasi \"type\": \"module\" di package.json memberitahu Node.js untuk memperlakukan seluruh berkas .js sebagai ES Modules.",
+          "sourceModuleId": "node-inti-2"
+        },
+        {
+          "id": 9,
+          "question": "Method apa pada modul bawaan node:path yang paling aman digunakan untuk menggabungkan potongan folder lintas sistem operasi (Windows & Linux)?",
+          "options": [
+            "path.concat()",
+            "path.join()",
+            "path.merge()",
+            "path.append()"
+          ],
+          "correctIndex": 1,
+          "explanation": "path.join() secara otomatis menyatukan segmen path dengan separator yang sesuai dengan sistem operasi yang aktif (\\ untuk Windows, / untuk Linux/macOS).",
+          "sourceModuleId": "node-inti-3"
+        },
+        {
+          "id": 10,
+          "question": "Mengapa penggunaan fs.readFileSync() sangat tidak dianjurkan di dalam alur penanganan request web server?",
+          "options": [
+            "Karena memblokir Call Stack utama sehingga request lain tidak dapat dilayani",
+            "Karena berkas fisik otomatis terhapus dari storage setelah selesai dibaca",
+            "Karena menghasilkan format data terenkripsi yang sulit dibaca oleh server",
+            "Karena hanya kompatibel dengan sistem operasi Windows dan membatasi platform"
+          ],
+          "correctIndex": 0,
+          "explanation": "fs.readFileSync adalah operasi sinkron yang membekukan thread utama Node.js hingga proses baca selesai, menurunkan throughput server secara drastis.",
+          "sourceModuleId": "node-inti-4"
+        },
+        {
+          "id": 11,
+          "question": "Sub-modul resmi apa pada Node.js yang memungkinkan pembacaan file asinkron menggunakan sintaks async/await?",
+          "options": [
+            "node:fs/sync",
+            "node:fs/promises",
+            "node:fs/async",
+            "node:fs/stream"
+          ],
+          "correctIndex": 1,
+          "explanation": "node:fs/promises mengembalikan Promise untuk setiap operasi file sehingga dapat langsung dipadukan dengan kata kunci await.",
+          "sourceModuleId": "node-inti-5"
+        },
+        {
+          "id": 12,
+          "question": "Apa yang akan terjadi jika sebuah EventEmitter memancarkan event bernama 'error' tanpa ada listener .on('error', ...) yang didaftarkan?",
+          "options": [
+            "Event loop otomatis me-restart proses server secara mandiri di background",
+            "Error diabaikan dan server tetap melayani request baru seperti biasa",
+            "Terminal hanya mencetak peringatan kuning tanpa menghentikan eksekusi",
+            "Node.js melempar uncaught exception dan proses server langsung berhenti"
+          ],
+          "correctIndex": 3,
+          "explanation": "Di Node.js, event 'error' diperlakukan istimewa; jika tidak memiliki listener penangkap, Node.js akan menghentikan proses saat itu juga.",
+          "sourceModuleId": "node-inti-6"
+        },
+        {
+          "id": 13,
+          "question": "Di antara opsi berikut, manakah yang memiliki prioritas eksekusi paling awal setelah operasi sinkron saat ini selesai?",
+          "options": [
+            "setTimeout(..., 0)",
+            "fs.readFile()",
+            "process.nextTick()",
+            "setImmediate()"
+          ],
+          "correctIndex": 2,
+          "explanation": "process.nextTick() dieksekusi di antrean prioritas tertinggi tepat setelah operasi sinkron selesai, mendahului Promise dan Macrotask timer.",
+          "sourceModuleId": "node-inti-7"
+        },
+        {
+          "id": 14,
+          "question": "Apa output dari kode berikut?\nconsole.log('A');\nPromise.resolve().then(() => console.log('B'));\nprocess.nextTick(() => console.log('C'));\nconsole.log('D');",
+          "options": [
+            "A lalu B lalu C lalu D",
+            "C lalu B lalu A lalu D",
+            "A lalu D lalu B lalu C",
+            "A lalu D lalu C lalu B"
+          ],
+          "correctIndex": 3,
+          "explanation": "A dan D dicetak pertama (sinkron), disusul C (nextTick queue dieksekusi sebelum microtask lainnya), dan terakhir B (Promise.then microtask).",
+          "sourceModuleId": "node-inti-7"
+        },
+        {
+          "id": 15,
+          "question": "Apa arti tanda caret (^) pada dependensi \"express\": \"^4.19.2\" di file package.json?",
+          "options": [
+            "Mengunci versi paket secara permanen pada 4.19.2 tanpa update apa pun",
+            "Menandakan paket bersifat opsional dan tidak diikutsertakan di production",
+            "Mengizinkan pembaruan versi minor dan patch terbaru, melarang major baru",
+            "Hanya mengizinkan pembaruan patch keamanan terkecil tanpa fitur minor baru"
+          ],
+          "correctIndex": 2,
+          "explanation": "Simbol caret (^) mengizinkan pembaruan otomatis yang tidak merusak kompatibilitas (minor dan patch) dalam versi major yang sama.",
+          "sourceModuleId": "node-lanjutan-1"
+        },
+        {
+          "id": 16,
+          "question": "Method apa yang WAJIB dipanggil pada objek ServerResponse (res) untuk mengakhiri transmisi respon ke klien?",
+          "options": [
+            "res.end()",
+            "res.close()",
+            "res.finish()",
+            "res.stop()"
+          ],
+          "correctIndex": 0,
+          "explanation": "res.end() wajib dipanggil untuk memberi tahu peramban bahwa respon telah selesai dikirim; tanpa ini peramban akan mengalami timeout.",
+          "sourceModuleId": "node-lanjutan-2"
+        },
+        {
+          "id": 17,
+          "question": "Kode status HTTP manakah yang paling tepat dikembalikan oleh server jika pengguna meminta rute URL yang tidak terdaftar?",
+          "options": [
+            "200 OK",
+            "500 Internal Server Error",
+            "400 Bad Request",
+            "404 Not Found"
+          ],
+          "correctIndex": 3,
+          "explanation": "Status code 404 Not Found adalah standar universal HTTP yang menandakan bahwa endpoint yang diminta tidak tersedia di server.",
+          "sourceModuleId": "node-lanjutan-3"
+        },
+        {
+          "id": 18,
+          "question": "Event apa pada objek Request (req) yang dipicu ketika seluruh pecahan paket data stream request body telah selesai tiba di server?",
+          "options": [
+            "'finish'",
+            "'data'",
+            "'end'",
+            "'close'"
+          ],
+          "correctIndex": 2,
+          "explanation": "Event 'end' menandakan bahwa seluruh stream data request body telah selesai diterima dan siap di-parse sebagai JSON utuh.",
+          "sourceModuleId": "node-lanjutan-4"
+        },
+        {
+          "id": 19,
+          "question": "Pada framework Express, apa fungsi dari parameter ketiga (next) dalam sebuah fungsi middleware (req, res, next)?",
+          "options": [
+            "Meneruskan aliran eksekusi ke middleware atau handler rute berikutnya",
+            "Mengakhiri koneksi klien dan langsung mengirim response HTTP ke browser",
+            "Membaca konfigurasi environment dan memuat variabel lingkungan server",
+            "Me-restart server Express otomatis jika terjadi kesalahan eksekusi rute"
+          ],
+          "correctIndex": 0,
+          "explanation": "Pemanggilan next() memberitahu Express untuk melanjutkan pemrosesan ke middleware atau fungsi rute berikutnya dalam pipeline.",
+          "sourceModuleId": "node-lanjutan-5"
+        },
+        {
+          "id": 20,
+          "question": "Bagaimana sintaks standar untuk membaca nomor port dari environment variable dengan nilai fallback 3000 jika belum disetel?",
+          "options": [
+            "const PORT = process.env.PORT || 3000;",
+            "const PORT = env.PORT ?? 3000;",
+            "const PORT = process.get('PORT', 3000);",
+            "const PORT = process.port || 3000;"
+          ],
+          "correctIndex": 0,
+          "explanation": "process.env.PORT || 3000 adalah pola standar industri untuk membaca variabel lingkungan dengan nilai default cadangan.",
+          "sourceModuleId": "node-lanjutan-7"
+        }
+      ],
+      "sectionQuizzes": [],
+      "cheatSheetMarkdown": null
+    }
+  ]
+}

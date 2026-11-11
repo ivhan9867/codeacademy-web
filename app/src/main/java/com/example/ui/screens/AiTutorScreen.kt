@@ -1,0 +1,355 @@
+package com.example.ui.screens
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
+import com.example.R
+import com.example.data.models.ChatMessage
+import com.example.ui.components.CodeBlockView
+import com.example.ui.components.MarkdownText
+import com.example.ui.theme.CyanAccent
+import com.example.ui.theme.TealDark
+import com.example.ui.theme.TealPrimary
+
+data class PromptSuggestion(
+    val id: String,
+    val text: String
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AiTutorScreen(
+    courseTitle: String,
+    moduleTitle: String,
+    messages: List<ChatMessage>,
+    isThinking: Boolean,
+    onSendMessage: (String) -> Unit,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var textInput by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+
+    // Contextual suggestion prompt chips with stable unique IDs
+    val suggestions = remember(courseTitle, moduleTitle) {
+        listOf(
+            PromptSuggestion("analogi", "Jelaskan $moduleTitle dengan analogi sederhana"),
+            PromptSuggestion("contoh_kode", "Beri contoh kode praktik untuk $courseTitle"),
+            PromptSuggestion("kesalahan_pemula", "Apa kesalahan umum yang sering dilakukan pemula?"),
+            PromptSuggestion("troubleshoot", "Bagaimana cara memecahkan masalah ini?")
+        )
+    }
+
+    LaunchedEffect(messages.size, isThinking) {
+        if (messages.isNotEmpty()) {
+            try {
+                listState.animateScrollToItem((messages.size - 1).coerceAtLeast(0))
+            } catch (_: Throwable) {
+                // Ignore scroll animation interruption during screen transition
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(CyanAccent.copy(alpha = 0.2f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AutoAwesome,
+                                contentDescription = null,
+                                tint = CyanAccent,
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = stringResource(R.string.ai_tutor_title),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "$courseTitle • $moduleTitle",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1
+                            )
+                        }
+                    }
+                },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.common_close)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            )
+        },
+        bottomBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                // Quick suggested prompts
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(bottom = 8.dp)
+                ) {
+                    items(suggestions, key = { it.id }) { prompt ->
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant,
+                            modifier = Modifier.clickable {
+                                onSendMessage(prompt.text)
+                            }
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.AutoAwesome,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = prompt.text,
+                                    fontSize = 11.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                }
+
+                // Chat Input Field
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = textInput,
+                        onValueChange = { textInput = it },
+                        placeholder = { Text(stringResource(R.string.ai_tutor_placeholder), fontSize = 13.sp) },
+                        shape = RoundedCornerShape(24.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        ),
+                        modifier = Modifier.weight(1f),
+                        maxLines = 4
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    IconButton(
+                        onClick = {
+                            if (textInput.isNotBlank()) {
+                                val msg = textInput
+                                textInput = ""
+                                onSendMessage(msg)
+                            }
+                        },
+                        enabled = textInput.isNotBlank() && !isThinking,
+                        modifier = Modifier
+                            .size(46.dp)
+                            .clip(CircleShape)
+                            .background(if (textInput.isNotBlank()) TealPrimary else MaterialTheme.colorScheme.surfaceVariant)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Send,
+                            contentDescription = stringResource(R.string.ai_tutor_send_button),
+                            tint = if (textInput.isNotBlank()) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        },
+        modifier = modifier
+    ) { paddingValues ->
+        LazyColumn(
+            state = listState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            items(messages, key = { it.id }) { message ->
+                ChatMessageBubble(message = message)
+            }
+
+            if (isThinking) {
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(20.dp),
+                            strokeWidth = 2.dp
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = stringResource(R.string.ai_tutor_thinking),
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ChatMessageBubble(
+    message: ChatMessage,
+    modifier: Modifier = Modifier
+) {
+    val isUser = message.isUser
+
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = if (isUser) Arrangement.End else Arrangement.Start,
+        verticalAlignment = Alignment.Top
+    ) {
+        if (!isUser) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(CyanAccent.copy(alpha = 0.2f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Psychology,
+                    contentDescription = "AI",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        Surface(
+            shape = RoundedCornerShape(
+                topStart = 16.dp,
+                topEnd = 16.dp,
+                bottomStart = if (isUser) 16.dp else 4.dp,
+                bottomEnd = if (isUser) 4.dp else 16.dp
+            ),
+            color = if (isUser) TealPrimary else MaterialTheme.colorScheme.surfaceVariant,
+            modifier = Modifier.widthIn(max = 300.dp)
+        ) {
+            Column(modifier = Modifier.padding(14.dp)) {
+                // If message has code block ``` ... ```
+                if (message.text.contains("```")) {
+                    val parts = message.text.split("```")
+                    parts.forEachIndexed { index, part ->
+                        if (index % 2 == 1) {
+                            // Code section
+                            val lines = part.trim().lines()
+                            val lang = if (lines.isNotEmpty() && lines[0].length < 15 && !lines[0].contains(" ")) lines[0] else "code"
+                            val codeBody = if (lang != "code") lines.drop(1).joinToString("\n") else part.trim()
+                            CodeBlockView(
+                                code = codeBody,
+                                language = lang,
+                                modifier = Modifier.padding(vertical = 4.dp)
+                            )
+                        } else if (part.trim().isNotEmpty()) {
+                            MarkdownText(
+                                text = part.trim(),
+                                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+                                color = if (isUser) Color.White else MaterialTheme.colorScheme.onSurface,
+                                lineHeight = 20.sp,
+                                codeBackgroundColor = if (isUser) Color.White.copy(alpha = 0.25f) else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
+                                codeTextColor = if (isUser) Color.White else MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                } else {
+                    MarkdownText(
+                        text = message.text,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
+                        color = if (isUser) Color.White else MaterialTheme.colorScheme.onSurface,
+                        lineHeight = 20.sp,
+                        codeBackgroundColor = if (isUser) Color.White.copy(alpha = 0.25f) else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
+                        codeTextColor = if (isUser) Color.White else MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+# Single Source of Truth for Ignored / Unused Tree Subpackages
+# Used by both tools/find_hardcoded_strings.sh and ActiveTreeHardcodedStringCheckTest.kt
+# Note: ui/screens/onboarding was moved to active tree in TAHAP 1.5-A.
+#
+# Catatan TAHAP 1.5-E:
+# - data/repository dan data/model berstatus "dipakai sebagian" (bukan tidak pernah diimpor sama sekali):
+#   * data.repository.CodeAcademyRepository diimpor oleh ui/viewmodel/SocialViewModel.kt (aktif) untuk
+#     fitur friend request, authService, dan realtime. Namun, 2 literal string UI di dalamnya
+#     (addXpAndCheckLevelUp dan submitQuiz) berada pada method yang tidak dipanggil dari alur aktif
+#     (hanya dirujuk internal atau oleh ViewModel pohon tidak terpakai).
+#   * data.model.* diimpor oleh data/remote/supabase/ (SupabaseModels.kt, SupabaseRestClient.kt),
+#     SocialViewModel.kt (FriendshipEntity), dan CommonComponents.kt (BadgeEntity, CourseEntity).
+#     File data/model/Entities.kt sendiri memiliki 0 literal teks UI hardcoded.
+#   * Oleh karena itu, kedua paket ini tetap dikecualikan dari hitungan literal teks UI pohon aktif.
+
+app/src/main/java/com/example/ui/navigation
+app/src/main/java/com/example/ui/screens/auth
+app/src/main/java/com/example/ui/screens/home
+app/src/main/java/com/example/ui/screens/catalog
+app/src/main/java/com/example/ui/screens/profile
+app/src/main/java/com/example/ui/screens/social
+app/src/main/java/com/example/ui/screens/forum
+app/src/main/java/com/example/ui/screens/quiz
+app/src/main/java/com/example/ui/screens/lesson
+app/src/main/java/com/example/ui/screens/playground
+app/src/main/java/com/example/ui/screens/aitutor
+app/src/main/java/com/example/ui/screens/notifications
+app/src/main/java/com/example/ui/screens/ar
+app/src/main/java/com/example/ui/screens/leaderboard
+app/src/main/java/com/example/data/repository
+app/src/main/java/com/example/data/model

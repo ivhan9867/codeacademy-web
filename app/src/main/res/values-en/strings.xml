@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CodeAcademy</string>
+
+    <!-- Bottom Navigation -->
+    <string name="nav_home_label">Home</string>
+    <string name="nav_courses_label">Courses</string>
+    <string name="nav_progress_label">Progress</string>
+    <string name="nav_leaderboard_label">Leaderboard</string>
+    <string name="nav_profile_label">Profile</string>
+
+    <!-- Profile Screen -->
+    <string name="profile_title_text">Account Profile</string>
+    <string name="profile_settings_title">Settings &amp; Preferences</string>
+    <string name="profile_language_title">App Language</string>
+    <string name="profile_language_subtitle">Choose your interface display language</string>
+    <string name="profile_language_dialog_title">Choose App Language</string>
+    <string name="profile_language_dialog_subtitle">The selected language will be immediately applied across the application interface.</string>
+    <string name="profile_dark_mode_title">Dark Mode</string>
+    <string name="profile_dark_mode_active">Dark appearance active</string>
+    <string name="profile_light_mode_active">Light appearance active</string>
+    <string name="profile_notifications_title">Notifications &amp; Reminders</string>
+    <string name="profile_notifications_subtitle">Daily streak alerts and new lesson updates</string>
+    <string name="profile_restart_onboarding_title">Restart Track Onboarding</string>
+    <string name="profile_restart_onboarding_subtitle">Re-select learning track preferences and targets</string>
+    <string name="profile_logout_title">Sign Out</string>
+    <string name="profile_logout_subtitle">Sign out from CodeAcademy local session</string>
+    <string name="profile_logout_confirm_title">Confirm Sign Out</string>
+    <string name="profile_logout_confirm_message">Are you sure you want to sign out? Your learning progress remains safely saved on this device.</string>
+    <string name="profile_edit_title">Edit Student Profile</string>
+    <string name="profile_edit_name_label">Full Name</string>
+    <string name="profile_edit_bio_label">Short Bio</string>
+    <string name="profile_achievements_title">Learning Achievements</string>
+    <string name="profile_certificates_title">Course Certificates</string>
+    <string name="profile_certificates_subtitle">View completion certificates for finished courses</string>
+    <string name="profile_bookmarks_title">Saved Modules</string>
+    <string name="profile_bookmarks_subtitle">Quick access to your favorite modules and courses</string>
+    <string name="profile_badge_collection_title">Badge Collection</string>
+    <string name="profile_see_all_badges">View All</string>
+    <string name="profile_badge_earned_status">Earned</string>
+    <string name="profile_badge_locked_status">Locked</string>
+    <string name="profile_streak_label">Day Streak</string>
+    <string name="profile_total_xp_label">Total XP</string>
+    <string name="profile_certs_count_label">Certificates</string>
+    <string name="profile_flame_heatmap_title">Learning Activity Heatmap</string>
+
+    <!-- Home Screen -->
+    <string name="home_greeting_text">Hello</string>
+    <string name="home_search_placeholder">Search courses, languages, or topics...</string>
+    <string name="home_continue_learning_title">Continue Learning</string>
+    <string name="home_explore_tracks_title">Featured Learning Tracks</string>
+    <string name="home_popular_courses_title">Popular Courses</string>
+    <string name="home_start_learning_button">Start Learning</string>
+    <string name="home_continue_button">Continue</string>
+    <string name="home_ai_tutor_banner_title">Ask AI Tutor</string>
+    <string name="home_ai_tutor_banner_desc">Stuck on code concepts? AI Tutor is ready to help 24/7!</string>
+    <string name="home_daily_quest_title">Daily Quest</string>
+
+    <!-- Course & Catalog -->
+    <string name="course_all_title">All Courses</string>
+    <string name="course_modules_count_suffix">Modules</string>
+    <string name="course_minutes_suffix">Mins</string>
+    <string name="course_level_beginner">Beginner</string>
+    <string name="course_level_intermediate">Intermediate</string>
+    <string name="course_level_advanced">Advanced</string>
+    <string name="course_detail_about_title">About This Course</string>
+    <string name="course_detail_modules_title">Course Syllabus</string>
+    <string name="course_try_playground_button">Try in Playground</string>
+    <string name="course_copy_code_button">Copy</string>
+    <string name="course_code_copied_toast">Code copied to clipboard</string>
+
+    <!-- Progress Screen -->
+    <string name="progress_title">Learning Progress</string>
+    <string name="progress_overall_performance">Overall Performance</string>
+    <string name="progress_next_target">Next Target Module</string>
+    <string name="progress_view_certificates">View All Certificates</string>
+    <string name="progress_completed_label">Completed</string>
+
+    <!-- Leaderboard / Community -->
+    <string name="leaderboard_title">Leaderboard &amp; Community</string>
+    <string name="leaderboard_your_rank">Your Standing</string>
+    <string name="leaderboard_top_learners">Top Learners Ranking</string>
+    <string name="leaderboard_weekly_challenge">Weekly Challenge</string>
+
+    <!-- Common -->
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_close">Close</string>
+    <string name="common_confirm">Yes, Continue</string>
+    <string name="common_apply">Apply</string>
+    <string name="common_loading">Loading...</string>
+    <string name="common_success">Success</string>
+
+    <!-- Help & FAQ -->
+    <string name="help_title">Help &amp; FAQ</string>
+    <string name="help_tab_faq">FAQ</string>
+    <string name="help_tab_privacy">Privacy &amp; Terms</string>
+    <string name="help_tab_feedback">Contact &amp; Version</string>
+    <string name="help_contact_title">Contact Us &amp; Feedback</string>
+    <string name="help_send_feedback_button">Send Email Support</string>
+    <string name="help_app_version_label">App Version</string>
+
+    <!-- Authentication (Login, Register, Forgot Password) -->
+    <!-- Login -->
+    <string name="login_error_empty_fields">Email and password are required.</string>
+    <string name="login_error_invalid_email">Invalid email format.</string>
+    <string name="login_error_password_min_length">Password must be at least 6 characters.</string>
+    <string name="login_error_default_failure">Sign in failed. Please check your account.</string>
+    <string name="login_headline_prefix">Continue your\n</string>
+    <string name="login_headline_highlight">learning progress.</string>
+    <string name="login_subtitle">Sign in to your account to continue today\'s lessons and coding practice</string>
+    <string name="login_badge_mobile_dev">Mobile Dev</string>
+    <string name="login_email_label">Email</string>
+    <string name="login_email_placeholder">name@email.com</string>
+    <string name="login_password_label">Password</string>
+    <string name="login_password_placeholder">Minimum 6 characters</string>
+    <string name="login_hide_password">Hide password</string>
+    <string name="login_show_password">Show password</string>
+    <string name="login_forgot_password">Forgot Password?</string>
+    <string name="login_submit_button">Sign In</string>
+    <string name="login_divider_or">or</string>
+    <string name="login_google_signin">Sign in with Google</string>
+    <string name="login_footer_no_account">Don\'t have an account?</string>
+    <string name="login_footer_register_now">Register Now</string>
+
+    <!-- Register -->
+    <string name="register_error_empty_fields">All fields are required.</string>
+    <string name="register_error_name_min_length">Full name must be at least 2 characters.</string>
+    <string name="register_error_invalid_email">Invalid email format.</string>
+    <string name="register_error_password_min_length">Password must be at least 6 characters.</string>
+    <string name="register_error_password_mismatch">Password confirmation does not match.</string>
+    <string name="register_error_default_failure">Registration failed. Please try again.</string>
+    <string name="register_headline_prefix">Start your\n</string>
+    <string name="register_headline_highlight">coding journey.</string>
+    <string name="register_subtitle">Register a free account and build programming skills from scratch now</string>
+    <string name="register_badge_new_account">New Account</string>
+    <string name="register_name_label">Full Name</string>
+    <string name="register_name_placeholder">Enter full name</string>
+    <string name="register_email_label">Email</string>
+    <string name="register_email_placeholder">name@email.com</string>
+    <string name="register_password_label">Password</string>
+    <string name="register_password_placeholder">Minimum 6 characters</string>
+    <string name="register_hide_password">Hide password</string>
+    <string name="register_show_password">Show password</string>
+    <string name="register_confirm_password_label">Confirm Password</string>
+    <string name="register_confirm_password_placeholder">Repeat password</string>
+    <string name="register_confirm_hide_password">Hide password</string>
+    <string name="register_confirm_show_password">Show password</string>
+    <string name="register_submit_button">Register Account</string>
+    <string name="register_footer_has_account">Already have an account?</string>
+    <string name="register_footer_login_link">Sign In</string>
+
+    <!-- Forgot Password -->
+    <string name="forgot_password_error_empty_fields">All fields are required.</string>
+    <string name="forgot_password_error_min_length">New password must be at least 6 characters.</string>
+    <string name="forgot_password_error_mismatch">Password confirmation does not match.</string>
+    <string name="forgot_password_success_message">New password successfully saved! Redirecting to sign in...</string>
+    <string name="forgot_password_error_default_failure">Failed to reset password.</string>
+    <string name="forgot_password_back_button_desc">Back to Sign In</string>
+    <string name="forgot_password_headline_prefix">Forgot your\n</string>
+    <string name="forgot_password_headline_highlight">password?</string>
+    <string name="forgot_password_subtitle">Enter your account email and full name to create a new password</string>
+    <string name="forgot_password_badge_secure_account">Secure Account</string>
+    <string name="forgot_password_email_label">Account Email</string>
+    <string name="forgot_password_email_placeholder">name@email.com</string>
+    <string name="forgot_password_name_label">Full Name</string>
+    <string name="forgot_password_name_placeholder">Name according to account profile</string>
+    <string name="forgot_password_new_password_label">New Password</string>
+    <string name="forgot_password_new_password_placeholder">Minimum 6 characters</string>
+    <string name="forgot_password_hide_password">Hide password</string>
+    <string name="forgot_password_show_password">Show password</string>
+    <string name="forgot_password_confirm_password_label">Confirm New Password</string>
+    <string name="forgot_password_confirm_password_placeholder">Repeat new password</string>
+    <string name="forgot_password_confirm_hide_password">Hide password</string>
+    <string name="forgot_password_confirm_show_password">Show password</string>
+    <string name="forgot_password_submit_button">Save New Password</string>
+    <string name="forgot_password_footer_remember">Remember your account password?</string>
+    <string name="forgot_password_footer_login_link">Sign In</string>
+
+    <!-- Data-to-Display-Label Mappings (TAHAP 3B) -->
+    <!-- Course Levels -->
+    <string name="course_level_all">All</string>
+    <string name="course_level_orientation">Orientation</string>
+    <string name="course_level_beginner_intermediate">Beginner-Intermediate</string>
+
+    <!-- Gamification XP Levels -->
+    <string name="xp_level_1_name">Code Newbie</string>
+    <string name="xp_level_2_name">Code Explorer</string>
+    <string name="xp_level_3_name">Code Learner</string>
+    <string name="xp_level_4_name">Code Builder</string>
+    <string name="xp_level_5_name">Code Apprentice</string>
+    <string name="xp_level_6_name">Code Crafter</string>
+    <string name="xp_level_7_name">Code Developer</string>
+    <string name="xp_level_8_name">Code Engineer</string>
+    <string name="xp_level_9_name">Code Architect</string>
+    <string name="xp_level_10_name">Code Master</string>
+
+    <!-- Community & Forum Level Tiers -->
+    <string name="level_tier_master">Master</string>
+    <string name="level_tier_advanced">Advanced</string>
+    <string name="level_tier_learner">Learner</string>
+    <string name="level_tier_beginner">Beginner</string>
+
+    <!-- Badges -->
+    <string name="badge_b1_name">First Step</string>
+    <string name="badge_b1_desc">Complete your first learning module</string>
+    <string name="badge_b2_name">New Learner</string>
+    <string name="badge_b2_desc">Complete your first course thoroughly</string>
+    <string name="badge_b3_name">Consistent</string>
+    <string name="badge_b3_desc">Maintain a 7-day learning streak</string>
+    <string name="badge_b4_name">Eternal Flame</string>
+    <string name="badge_b4_desc">Maintain a 30-day consecutive learning streak</string>
+    <string name="badge_b5_name">Adventurer</string>
+    <string name="badge_b5_desc">Enroll and follow 3 different learning tracks</string>
+    <string name="badge_b6_name">Master Tester</string>
+    <string name="badge_b6_desc">Pass the assessment with a perfect score of 100%</string>
+    <string name="badge_b7_name">Mission Warrior</string>
+    <string name="badge_b7_desc">Complete daily quests for 7 days</string>
+    <string name="badge_b8_name">Code Master</string>
+    <string name="badge_b8_desc">Reach Level 10 (Code Master)</string>
+    <string name="badge_b9_name">Collector</string>
+    <string name="badge_b9_desc">Earn at least 3 completion certificates</string>
+    <string name="badge_b10_name">AI Enthusiast</string>
+    <string name="badge_b10_desc">Ask at least 10 questions to AI Tutor</string>
+    <string name="badge_b11_name">Bookmarker</string>
+    <string name="badge_b11_desc">Save a module or course to your Bookmarks</string>
+    <string name="badge_b12_name">Full-Stack Hero</string>
+    <string name="badge_b12_desc">Complete modules from both Front-End and Back-End tracks</string>
+
+    <string name="badge_status_unlocked">Unlocked</string>
+    <string name="badge_status_locked">Locked</string>
+    <string name="badge_status_earned_congrats">Achievement Unlocked!</string>
+    <string name="badge_status_not_yet_unlocked">Locked</string>
+
+    <!-- Daily Quests -->
+    <string name="quest_mod_title">Complete 1 Module</string>
+    <string name="quest_mod_desc">Read and understand at least 1 module today</string>
+    <string name="quest_quiz_title">Take 1 Quiz</string>
+    <string name="quest_quiz_desc">Test your understanding by taking 1 quiz</string>
+    <string name="quest_ai_title">Ask AI Tutor</string>
+    <string name="quest_ai_desc">Discuss a coding concept with AI Tutor</string>
+    <string name="quest_play_title">Run Playground</string>
+    <string name="quest_play_desc">Test HTML, CSS, or JS in interactive playground</string>
+
+    <!-- Learning Tracks (TAHAP 3C) -->
+    <string name="track_front_end_name">Front-End Development</string>
+    <string name="track_front_end_desc">Learn how to build attractive, responsive, and interactive web interfaces from scratch.</string>
+    <string name="track_back_end_name">Back-End Development</string>
+    <string name="track_back_end_desc">Build reliable servers, REST APIs, and manage databases that power modern web applications.</string>
+    <string name="track_python_name">Python Programming</string>
+    <string name="track_python_desc">Master Python for automation, data analysis, web backend, and beginner machine learning.</string>
+    <string name="track_c_lang_name">C Language</string>
+    <string name="track_c_lang_desc">Understand computer architecture foundations, memory allocation, and basic systems algorithms.</string>
+    <string name="track_cpp_lang_name">C++ Language</string>
+    <string name="track_cpp_lang_desc">Learn object-oriented programming (OOP), STL, and high-performance applications.</string>
+
+    <!-- Courses (TAHAP 3C) -->
+    <string name="course_fe_web_foundation_00_title">Web Foundations: From Zero to Your First Line of Code</string>
+    <string name="course_fe_web_foundation_00_desc">Learn complete HTML structure and CSS styling from basics to positioning &amp; float techniques. This class is the foundation before moving to modern Flexbox and Grid layouts.</string>
+    <string name="course_fe_css_02_title">Modern CSS Layouts: Flexbox &amp; Grid</string>
+    <string name="course_fe_css_02_desc">Master modern web layout techniques using one-dimensional CSS Flexbox and two-dimensional CSS Grid to build flexible, responsive, and professional web interfaces.</string>
+    <string name="course_fe_js_03_title">JavaScript Fundamentals</string>
+    <string name="course_fe_js_03_desc">Master modern web programming logic (ES2015+): let/const variables, data types, operators, if/else flows and loops, arrays &amp; objects, arrow functions, DOM manipulation &amp; event listeners, and introduction to asynchronous concepts through an interactive to-do list project.</string>
+    <string name="course_be_node_01_title">Node.js Fundamentals</string>
+    <string name="course_be_node_01_desc">Master server-side programming with Node.js runtime: event loop architecture, non-blocking I/O, module systems (CommonJS &amp; ESM), file manipulation, and building HTTP servers &amp; REST APIs. Based on read &amp; predict output method (mental execution) without requiring a compiler in the app.</string>
+    <string name="course_py_fund_01_title">Python Fundamentals</string>
+    <string name="course_py_fund_01_desc">Learn the programming language with the cleanest syntax. Perfect for data science, scripting automation, and web development.</string>
+    <string name="course_c_fund_01_title">C Fundamentals: Syntax &amp; Memory</string>
+    <string name="course_c_fund_01_desc">Master low-level computing foundations: primitive data types, memory pointers, structs, and dynamic heap allocation. Presented with the read &amp; predict output method (mental execution) to build memory intuition without requiring a compiler in the app.</string>
+    <string name="course_cpp_fund_01_title">C++ Fundamentals: From C to OOP</string>
+    <string name="course_cpp_fund_01_desc">Master Object-Oriented Programming (OOP) and modern C++ features: references, STL vector &amp; string, classes, RAII constructors/destructors, inheritance, virtual polymorphism, templates, and smart pointers. Based on the read &amp; predict output method (mental execution) without requiring a compiler in the app.</string>
+
+    <!-- Generic Section Titles &amp; Subtitles (TAHAP 3C) -->
+    <string name="section_title_persiapan">Preparation</string>
+    <string name="section_title_pendahuluan">Introduction</string>
+    <string name="section_title_inti">Core Material</string>
+    <string name="section_title_lanjutan">Advanced Material</string>
+    <string name="section_title_css_dasar">CSS Basics</string>
+    <string name="section_title_pendalaman_css">Deep Dive into CSS</string>
+    <string name="section_title_evaluasi">Evaluation</string>
+
+    <string name="section_sub_persiapan_tools">Preparation &amp; Tool Setup</string>
+    <string name="section_sub_pengantar_silabus">Introductory Material &amp; Syllabus</string>
+    <string name="section_sub_inti_praktik">Core Material &amp; Practice</string>
+    <string name="section_sub_variasi_elemen">Element Variations &amp; Advanced Practice</string>
+    <string name="section_sub_variasi_styling">Styling Variations &amp; CSS Rules</string>
+    <string name="section_sub_selector_box_model">Selectors, Text Formatting, Box Model &amp; Layout</string>
+    <string name="section_sub_evaluasi_sertifikat">Comprehensive test to claim your certificate</string>
+    <string name="section_sub_penerapan_lanjutan">Advanced Application &amp; Case Studies</string>
+    <string name="section_sub_styling_desain">Styling &amp; Design Material</string>
+    <string name="section_sub_tata_letak_lanjutan">Layout &amp; Advanced Styling</string>
+
+    <!-- Course-Specific Section Titles (TAHAP 3C) -->
+    <string name="section_title_fe_intro_html">Introduction to HTML</string>
+    <string name="section_title_fe_deep_html">Deep Dive into HTML</string>
+    <string name="section_title_fe_why_modern">Why Modern Layouts</string>
+    <string name="section_title_fe_flexbox">Flexbox</string>
+    <string name="section_title_fe_grid">CSS Grid</string>
+    <string name="section_title_fe_js_basics">JavaScript Fundamentals</string>
+    <string name="section_title_fe_js_logic">Logic &amp; Program Flow</string>
+    <string name="section_title_fe_js_functions">Functions, Objects &amp; DOM</string>
+    <string name="section_title_be_understand_node">Understanding Node.js</string>
+    <string name="section_title_be_modules_async">Modules, Files &amp; Async</string>
+    <string name="section_title_be_server_npm">Server &amp; npm</string>
+    <string name="section_title_py_basics">Python Fundamentals</string>
+    <string name="section_title_py_flow">Program Flow &amp; Loops</string>
+    <string name="section_title_py_structs">Data Structures &amp; Functions</string>
+    <string name="section_title_c_basics">C Fundamentals</string>
+    <string name="section_title_c_flow">Program Flow &amp; Functions</string>
+    <string name="section_title_c_pointers">Pointers, Structs &amp; Memory</string>
+    <string name="section_title_cpp_basics">C++ Fundamentals</string>
+    <string name="section_title_cpp_stl">Functions, STL &amp; Classes</string>
+    <string name="section_title_cpp_oop">OOP &amp; Modern Features</string>
+    <string name="section_title_proyek_evaluasi">Project &amp; Evaluation</string>
+    <!-- AI Tutor -->
+    <string name="ai_tutor_title">CodeAcademy AI Tutor</string>
+    <string name="ai_tutor_subtitle">Powered by Gemini AI • Ready to help coding</string>
+    <string name="ai_tutor_placeholder">Ask anything about coding...</string>
+    <string name="ai_tutor_thinking">AI Tutor is typing...</string>
+    <string name="ai_tutor_send_button">Send</string>
+    <string name="ai_tutor_attach_code">Attach Code</string>
+    <string name="ai_tutor_code_attached">Code Attached (%1$d lines)</string>
+    <string name="ai_tutor_error_communication">Sorry, an issue occurred while connecting to AI Tutor (%1$s). Please try sending your message again.</string>
+    <string name="ai_tutor_welcome_title">CodeAcademy AI Tutor</string>
+    <string name="ai_tutor_welcome_desc">Hello! I am your personal AI Tutor. Confused about Web Dev, Python, C, or C++? Ask your question or paste your code snippet!</string>
+
+    <!-- Materi Content Localization Notice -->
+    <string name="materi_content_id_only">Lesson content is currently available in Indonesian only</string>
+
+    <!-- Tahap 2B: Home & Navigation Drawer -->
+    <string name="home_top_header_default_user">CodeAcademy Student</string>
+    <string name="home_default_user">Student</string>
+    <string name="home_coachmark_intro">Tap the ☰ menu icon on the top left to access Search Modules, Saved, Playground, and all other features!</string>
+    <string name="home_coachmark_quest_intro">Complete your Daily Quest to maintain your streak and check your XP standing on the Student Leaderboard!</string>
+    <string name="home_leaderboard_banner_title">Student Leaderboard</string>
+    <string name="home_leaderboard_banner_top50">TOP 50</string>
+    <string name="home_leaderboard_banner_desc">Compete for XP with other learners!</string>
+    <string name="home_leaderboard_banner_cd">Open Leaderboard</string>
+    <string name="home_see_all">View All</string>
+    <string name="home_course_open_cd">Open</string>
+    <string name="home_course_modules_and_duration">%1$d Modules • %2$d Minutes</string>
+
+    <!-- Carousel Slide 0: Promo Hero -->
+    <string name="carousel_hero_cd">CodeAcademy Hero</string>
+    <string name="carousel_hero_badge">MOBILE-FIRST CODING</string>
+    <string name="carousel_hero_title">Practical Daily Coding\nRight on Your Smartphone</string>
+    <string name="carousel_hero_btn_start">Start Learning</string>
+
+    <!-- Carousel Slide 1: Weekly XP -->
+    <string name="carousel_weekly_xp_badge">THIS WEEK\'S EARNED XP</string>
+    <string name="carousel_weekly_xp_level">Level %1$d</string>
+    <string name="carousel_weekly_xp_plus_format">+%1$d XP</string>
+    <string name="carousel_weekly_xp_account_total">Total %1$d account XP earned</string>
+    <string name="carousel_weekly_xp_target_goal">Weekly target: %1$d XP</string>
+    <string name="carousel_weekly_xp_percent">%1$d%%</string>
+
+    <!-- Carousel Slide 2: Recommended Course -->
+    <string name="carousel_recommended_badge">RECOMMENDED LEARNING</string>
+    <string name="carousel_recommended_reward">+%1$d XP</string>
+    <string name="carousel_recommended_duration">⏱️ ~%1$d min</string>
+    <string name="carousel_recommended_hands_on">Instant Practice</string>
+    <string name="carousel_recommended_btn_start">Start</string>
+    <string name="carousel_recommended_default_title">CSS Flexbox &amp; Modern Layout</string>
+    <string name="carousel_recommended_default_desc">Master 2-dimensional responsive layout right on your smartphone with instant hands-on practice.</string>
+
+    <!-- Carousel Slide Streak (Fallback) -->
+    <string name="carousel_streak_badge">LEARNING CONSISTENCY</string>
+    <string name="carousel_streak_rate">+20 XP/Day</string>
+    <string name="carousel_streak_days_count">%1$d Day Streak</string>
+    <string name="carousel_streak_best_record">Your best record: %1$d days</string>
+    <string name="carousel_streak_active_msg">Active streak! Finish today\'s lesson to keep it going.</string>
+    <string name="carousel_streak_inactive_msg">Learn today\'s lesson to start your new streak.</string>
+
+    <!-- Tracks List -->
+    <string name="home_track_courses_count">%1$d Courses</string>
+    <string name="home_track_progress_label">Progress</string>
+    <string name="home_track_progress_percent">%1$d%%</string>
+    <string name="home_track_interactive_specializations">%1$d interactive specializations</string>
+    <string name="track_specialization_pill">Specialization</string>
+
+    <!-- App Navigation Drawer -->
+    <string name="drawer_close_cd">Close menu</string>
+    <string name="drawer_user_level_xp">Lv. %1$d · %2$d XP</string>
+    <string name="drawer_greeting_pagi">Good morning, %1$s</string>
+    <string name="drawer_greeting_siang">Good afternoon, %1$s</string>
+    <string name="drawer_greeting_sore">Good afternoon, %1$s</string>
+    <string name="drawer_greeting_malam">Good evening, %1$s</string>
+    <string name="drawer_menu_home">Home</string>
+    <string name="drawer_menu_search">Search Modules</string>
+    <string name="drawer_menu_progress">Learning Progress</string>
+    <string name="drawer_section_activity">Activities</string>
+    <string name="drawer_menu_notifications">Notifications</string>
+    <string name="drawer_menu_certificates">My Certificates</string>
+    <string name="drawer_menu_bookmarks">Saved Modules</string>
+    <string name="drawer_menu_diskusi_hangat">Trending Discussions</string>
+    <string name="drawer_section_tools">Tools</string>
+    <string name="drawer_menu_playground">Playground</string>
+    <string name="drawer_menu_ai_tutor">Ask AI Tutor</string>
+    <string name="drawer_section_other">More</string>
+    <string name="drawer_menu_settings">Settings</string>
+    <string name="drawer_menu_help">Help &amp; FAQ</string>
+    <string name="drawer_menu_logout">Sign Out</string>
+    <string name="drawer_logout_dialog_title">Sign Out of Account?</string>
+    <string name="drawer_logout_dialog_message">Your progress remains saved. You can sign in again anytime.</string>
+    <string name="drawer_logout_dialog_confirm">Sign Out</string>
+
+    <!-- Search Screen -->
+    <string name="search_back_cd">Back</string>
+    <string name="search_input_placeholder">Search modules, topics, or syntax...</string>
+    <string name="search_clear_cd">Clear text</string>
+    <string name="search_loading_title">Loading learning materials...</string>
+    <string name="search_loading_desc">Preparing module index across all courses</string>
+    <string name="search_intro_title">Search Across Courses</string>
+    <string name="search_intro_desc">Type title or content keywords to instantly find the module you are looking for.</string>
+    <string name="search_popular_topics_title">Popular Topics &amp; Keywords</string>
+    <string name="search_empty_title">No Results Found</string>
+    <string name="search_empty_desc">No modules or lessons found matching \"%1$s\". Check your spelling or try broader keywords.</string>
+    <string name="search_found_results">%1$d lessons found</string>
+    <string name="search_keyword_label">Keyword: \"%1$s\"</string>
+    <string name="search_open_module_cd">Open Module</string>
+
+    <!-- ClassDetailScreen -->
+    <string name="class_detail_title">Course Details</string>
+    <string name="class_detail_back_cd">Back</string>
+    <string name="class_detail_cheatsheet_cd">Syntax Cheat Sheet</string>
+    <string name="class_detail_forum_cd">Course Discussion Forum</string>
+    <string name="class_detail_bookmark_cd">Bookmark</string>
+    <string name="class_detail_completed_label">Course Completed</string>
+    <string name="class_detail_modules_progress_format">%1$d of %2$d Modules</string>
+    <string name="class_detail_percent_completed_format">%1$d%% Completed</string>
+    <string name="class_detail_students_count_format">(%1$d learners)</string>
+    <string name="class_detail_learning_progress_label">Learning Progress</string>
+    <string name="class_detail_modules_fraction_percent_format">%1$d/%2$d Modules (%3$d%%)</string>
+    <string name="class_detail_instructor_label">Instructor</string>
+    <string name="class_detail_placement_title">Already know the basics?</string>
+    <string name="class_detail_placement_desc">Take the Placement Test to fast-track modules you have mastered &amp; earn bonus XP!</string>
+    <string name="class_detail_placement_start_cd">Start Test</string>
+    <string name="class_detail_forum_title">Course Discussion Forum</string>
+    <string name="class_detail_forum_desc">Ask questions &amp; discuss code solutions with fellow learners</string>
+    <string name="class_detail_forum_open_cd">Open Forum</string>
+    <string name="class_detail_pill_prep">Preparation</string>
+    <string name="class_detail_pill_intro">Introduction</string>
+    <string name="class_detail_est_minutes_format">⏱️ ~%1$d mins</string>
+    <string name="class_detail_eval_section_title">Final Evaluation, Project &amp; Certification</string>
+    <string name="class_detail_eval_section_subtitle">Pass the final quiz and final project review to claim your graduation certificate</string>
+    <string name="class_detail_toast_complete_modules_first">Please complete all modules first</string>
+    <string name="class_detail_final_quiz_title">Course Final Evaluation</string>
+    <string name="class_detail_final_quiz_locked_hint">Complete all modules to unlock the final evaluation</string>
+    <string name="class_detail_final_quiz_info_format">%1$d Multiple Choice Questions • Min. score 70%%</string>
+    <string name="class_detail_final_quiz_passed_format">✓ Evaluation Passed (%1$d%%) • Retake allowed</string>
+    <string name="class_detail_btn_start">Start</string>
+    <string name="class_detail_btn_retake">Retake</string>
+    <string name="class_detail_btn_open">Open</string>
+    <string name="class_detail_cert_title">Official Graduation Certificate</string>
+    <string name="class_detail_cert_desc">Complete all modules, pass the final evaluation, and get your final project approved by a facilitator to claim your digital certificate.</string>
+    <string name="class_detail_cert_ready_desc">Congratulations! Your official graduation certificate has been issued and is ready to view or share.</string>
+    <string name="class_detail_cert_view_btn">View Certificate</string>
+    <string name="class_detail_section_quiz_toast_locked">Please complete all %1$s modules first</string>
+    <string name="class_detail_section_quiz_locked_hint">Complete all %1$s modules to unlock</string>
+    <string name="class_detail_section_quiz_passed_label">✓ Passed • Can be retaken anytime</string>
+    <string name="class_detail_section_quiz_info_format">%1$d random questions • Pass %2$d%% • %3$d mins</string>
+    <string name="class_detail_module_toast_locked">Please complete the previous module first</string>
+    <string name="class_detail_module_locked_req_format">Complete \'%1$s\' to unlock</string>
+    <string name="class_detail_module_intro_read_format">%1$d min read • Module introduction</string>
+    <string name="class_detail_module_read_format">%1$d min read</string>
+
+    <!-- HasilEvaluasiScreen -->
+    <string name="eval_result_passed_title">Congratulations, You Passed the Quiz! 🎉</string>
+    <string name="eval_result_failed_title">Passing Score Not Reached Yet</string>
+    <string name="eval_result_xp_awarded_format">+%1$d Awarded XP</string>
+    <string name="eval_result_btn_retake">Retake Quiz</string>
+    <string name="eval_result_btn_open_project">Continue to Final Project</string>
+    <string name="eval_result_btn_view_cert">Claim Certificate</string>
+    <string name="eval_result_btn_study_again">Review Modules</string>
+    <string name="eval_result_next_step_project_title">Final Step to Your Certificate: Final Project</string>
+    <string name="eval_result_next_step_project_desc">You passed the evaluation quiz! Now complete and submit this course\'s Final Project for Facilitator grading to unlock your graduation certificate.</string>
+    <string name="eval_result_answer_key_title">Answer Key &amp; Explanations</string>
+    <string name="eval_result_question_item_format">**Question %1$d:** %2$s</string>
+    <string name="eval_result_correct_cd">Correct</string>
+    <string name="eval_result_correct_answer_format">**Correct Answer:** %1$s</string>
+    <string name="eval_result_explanation_format">💡 **Explanation:** %1$s</string>
+
+    <!-- FinalProjectSubmissionScreen & Card -->
+    <string name="final_project_screen_title">Final Project Submission</string>
+    <string name="final_project_card_title">Course Final Project Submission</string>
+    <string name="final_project_card_locked_hint">Pass the Course Final Evaluation (min. 70%%) to unlock the final project</string>
+    <string name="final_project_card_ready_desc">Unlocked • Build your final project &amp; submit for Facilitator review</string>
+    <string name="final_project_card_pending_desc">⏳ Awaiting Facilitator Review (Attempt #%1$d)</string>
+    <string name="final_project_card_revision_desc">📝 Revision Requested by Facilitator • Current score: %1$d/100</string>
+    <string name="final_project_card_approved_desc">✅ Approved by Facilitator (%1$d/100) • Certificate Issued</string>
+    <string name="final_project_status_locked">Locked</string>
+    <string name="final_project_status_draft">Project Draft</string>
+    <string name="final_project_status_pending">Awaiting Facilitator Review</string>
+    <string name="final_project_status_revision">Revision Needed</string>
+    <string name="final_project_status_approved">Approved &amp; Passed</string>
+    <string name="final_project_attempt_badge">Attempt #%1$d • Min. Passing Score %2$d/100 • +%3$d XP</string>
+    <string name="final_project_quiz_score_summary">Evaluation Quiz: %1$d%% (40%% weight) • Facilitator Project Score: %2$s (60%% weight)</string>
+    <string name="final_project_scenario_header">Case Study &amp; Project Specification</string>
+    <string name="final_project_rubric_header">Self-Check &amp; Grading Rubric</string>
+    <string name="final_project_rubric_subtitle">Check off all criteria you have implemented before submitting your project to the facilitator:</string>
+    <string name="final_project_rubric_weight_format">Weight %1$d%%</string>
+    <string name="final_project_workspace_header">1. Project Code (Workspace Editor)</string>
+    <string name="final_project_workspace_subtitle">Write or paste your final project code here, or load from your course Playground draft.</string>
+    <string name="final_project_btn_load_playground">Load Playground Draft</string>
+    <string name="final_project_btn_load_starter">Load Starter Code</string>
+    <string name="final_project_code_placeholder">Write your final project solution code here...</string>
+    <string name="final_project_url_header">2. Project / Repository Link (Optional)</string>
+    <string name="final_project_url_placeholder">https://github.com/username/final-project or Gist/Drive URL</string>
+    <string name="final_project_notes_header">3. Student Notes for Facilitator</string>
+    <string name="final_project_notes_placeholder">Explain the features you built, how to run it, or highlights for the reviewer...</string>
+    <string name="final_project_btn_save_draft">Save Draft</string>
+    <string name="final_project_btn_submit">Submit to Facilitator</string>
+    <string name="final_project_btn_resubmit">Resubmit Revision</string>
+    <string name="final_project_toast_draft_saved">Final project draft saved successfully</string>
+    <string name="final_project_toast_check_all_rubrics">Please check all rubric items and provide project code or a repository link first</string>
+    <string name="final_project_toast_submitted">Final project submitted! Waiting for facilitator review.</string>
+    <string name="final_project_pending_banner_title">Project Under Facilitator Review</string>
+    <string name="final_project_pending_banner_desc">Your submission is synced to the Facilitator Web review queue. You will be notified as soon as your grade and feedback are ready.</string>
+    <string name="final_project_feedback_card_title">Facilitator Evaluation &amp; Feedback</string>
+    <string name="final_project_feedback_reviewer_format">Reviewed by: %1$s</string>
+    <string name="final_project_feedback_score_format">Project Score: %1$d/100</string>
+    <string name="final_project_feedback_empty">No additional notes provided.</string>
+    <string name="final_project_simulator_title">🧪 Facilitator Review Simulator (Pre-Web Testing)</string>
+    <string name="final_project_simulator_desc">While the Facilitator Web Dashboard is separate, use this simulator panel to test receiving facilitator review results (Approve/Revision) and automatic Certificate issuance directly.</string>
+    <string name="final_project_simulator_score_label">Simulated Facilitator Score: %1$d/100</string>
+    <string name="final_project_simulator_feedback_label">Facilitator Feedback Notes</string>
+    <string name="final_project_simulator_default_pass_feedback">Great job! Clean code structure, all rubric criteria are thoroughly satisfied, and the program logic works as specified in the course.</string>
+    <string name="final_project_simulator_default_rev_feedback">Good initial implementation, but please complete the edge-case handling and refine the modular structure according to rubric items #3 and #4.</string>
+    <string name="final_project_simulator_btn_revision">Simulate Request Revision</string>
+    <string name="final_project_simulator_btn_approve">Simulate Approve (Pass)</string>
+
+    <!-- MainActivity Level Up & Bookmark -->
+    <string name="course_bookmark_subtitle_format">%1$d Modules • %2$s</string>
+    <string name="level_up_dialog_title">🎉 LEVEL UP!</string>
+    <string name="level_up_dialog_subtitle">Congratulations! You have reached:</string>
+    <string name="level_up_dialog_badge_format">Level %1$d • %2$s</string>
+    <string name="level_up_dialog_desc">Keep your learning streak alive and conquer the next module!</string>
+    <string name="level_up_dialog_btn_continue">Continue Learning</string>
+    <string name="ai_tutor_playground_prompt_prefix">Hello AI Tutor, please help explain and review my Playground code below:</string>
+
+    <!-- QuizScreen -->
+    <string name="quiz_screen_top_title">Course Final Evaluation</string>
+    <string name="quiz_screen_back_cd">Back</string>
+    <string name="quiz_screen_empty">Evaluation questions are not available yet.</string>
+    <string name="quiz_screen_question_progress_format">Question %1$d of %2$d</string>
+    <string name="quiz_screen_answered_count_format">%1$d/%2$d Answered</string>
+    <string name="quiz_screen_explanation_title">💡 Answer Explanation:</string>
+    <string name="quiz_screen_btn_prev">Previous</string>
+    <string name="quiz_screen_btn_next">Next</string>
+    <string name="quiz_screen_btn_submit">Finish &amp; View Score</string>
+
+    <!-- CertificateListScreen -->
+    <string name="cert_list_top_title">Graduation Certificates</string>
+    <string name="cert_list_back_cd">Back</string>
+    <string name="cert_list_header_badge_format">%1$d Certificates</string>
+    <string name="cert_list_empty_title">No Certificates Yet</string>
+    <string name="cert_list_empty_desc">Complete all modules, pass the final quiz (at least 70%), and get your final project approved by a facilitator to earn an official certificate.</string>
+    <string name="cert_list_btn_explore">Explore Courses Now</string>
+    <string name="cert_list_summary_title">Official Certificate Portfolio</string>
+    <string name="cert_list_summary_desc">Each certificate is verified with a unique ID and combines your final evaluation and final project scores.</string>
+    <string name="cert_list_card_badge">VERIFIED</string>
+    <string name="cert_list_card_recipient_format">Recipient: %1$s</string>
+    <string name="cert_list_card_score_format">Score: %1$d%%</string>
+    <string name="cert_list_card_id_format">ID: %1$s</string>
+    <string name="cert_list_card_btn_view">View Certificate</string>
+
+    <!-- CertificateScreen -->
+    <string name="cert_view_top_title">Official Certificate</string>
+    <string name="cert_view_back_cd">Back</string>
+    <string name="cert_view_share_cd">Share Certificate</string>
+    <string name="cert_view_not_found">Certificate data not found.</string>
+    <string name="cert_view_header_org">NGODINGYUK ACADEMY</string>
+    <string name="cert_view_header_title">CERTIFICATE OF COMPLETION</string>
+    <string name="cert_view_awarded_to">Officially awarded to:</string>
+    <string name="cert_view_completion_desc">For successfully completing all modules, the final evaluation quiz, and the facilitator-verified final project in:</string>
+    <string name="cert_view_label_score">FINAL SCORE</string>
+    <string name="cert_view_label_date">ISSUE DATE</string>
+    <string name="cert_view_label_id">CERTIFICATE ID</string>
+    <string name="cert_view_verified_stamp">PASSED &amp; VERIFIED</string>
+    <string name="cert_view_btn_share">Share / Export Certificate</string>
+    <string name="cert_view_btn_saving">Preparing Image...</string>
+    <string name="cert_view_share_chooser_title">Share Graduation Certificate</string>
+    <string name="cert_view_share_error_toast">Failed to share certificate</string>
+
+    <!-- PlacementTestScreen -->
+    <string name="placement_top_title">Placement Test</string>
+    <string name="placement_back_cd">Back</string>
+    <string name="placement_intro_badge">OPTIONAL • SAVE TIME</string>
+    <string name="placement_intro_title">Test Your Prior Knowledge</string>
+    <string name="placement_intro_desc_format">Answer %1$d quick questions to skip basic sections in %2$s that you have already mastered.</string>
+    <string name="placement_intro_rule_1">Score at least 80% per section to unlock section skipping.</string>
+    <string name="placement_intro_rule_2">No XP penalty if you do not pass.</string>
+    <string name="placement_intro_rule_3">The final project is still required to earn the graduation certificate.</string>
+    <string name="placement_btn_start">Start Placement Test</string>
+    <string name="placement_question_counter_format">Question %1$d / %2$d</string>
+    <string name="placement_btn_prev">Previous</string>
+    <string name="placement_btn_next">Next</string>
+    <string name="placement_btn_submit">Finish &amp; Evaluate</string>
+    <string name="placement_result_pass_title">Awesome! Section Skip Activated</string>
+    <string name="placement_result_fail_title">Start from the Foundations</string>
+    <string name="placement_result_score_format">Placement Test Score: %1$d%% (%2$d/%3$d Correct)</string>
+    <string name="placement_result_pass_desc_format">You unlocked %1$d initial sections! You can jump straight into advanced topics.</string>
+    <string name="placement_result_fail_desc">No sections were skipped yet. Let&apos;s learn step by step to build a rock-solid foundation!</string>
+    <string name="placement_result_btn_continue">Back to Course Details</string>
+
+    <!-- SectionQuizRulesScreen -->
+    <string name="section_quiz_rules_top_title">Section Quiz Rules</string>
+    <string name="section_quiz_rules_back_cd">Back</string>
+    <string name="section_quiz_rules_badge">SECTION EVALUATION</string>
+    <string name="section_quiz_rules_subtitle">Make sure you are ready before starting this section quiz.</string>
+    <string name="section_quiz_rules_stat_questions_label">Questions</string>
+    <string name="section_quiz_rules_stat_questions_value_format">%1$d Questions</string>
+    <string name="section_quiz_rules_stat_pass_label">Passing Grade</string>
+    <string name="section_quiz_rules_stat_duration_label">Time Limit</string>
+    <string name="section_quiz_rules_stat_duration_value_format">%1$d Mins</string>
+    <string name="section_quiz_rules_card_title">Quiz Guidelines</string>
+    <string name="section_quiz_rules_item_1">Reach the minimum passing score to unlock the next course section.</string>
+    <string name="section_quiz_rules_item_2">The timer runs automatically once started and auto-submits when time runs out.</string>
+    <string name="section_quiz_rules_item_3">You can retake the quiz if you haven&apos;t reached the passing score yet.</string>
+    <string name="section_quiz_rules_history_title">Previous Attempts</string>
+    <string name="section_quiz_rules_history_passed">PASSED</string>
+    <string name="section_quiz_rules_history_failed">NOT PASSED</string>
+    <string name="section_quiz_rules_btn_start">Start Quiz Now</string>
+
+    <!-- SectionQuizScreen -->
+    <string name="section_quiz_exit_dialog_title">Exit Quiz?</string>
+    <string name="section_quiz_exit_dialog_desc">Your current quiz progress will not be saved if you leave now.</string>
+    <string name="section_quiz_exit_dialog_confirm">Exit</string>
+    <string name="section_quiz_exit_dialog_cancel">Keep Working</string>
+    <string name="section_quiz_submit_dialog_title">Submit Answers?</string>
+    <string name="section_quiz_submit_dialog_all_answered_format">All %1$d questions have been answered. Are you ready to submit?</string>
+    <string name="section_quiz_submit_dialog_unanswered_format">There are still %1$d unanswered questions. Submit anyway?</string>
+    <string name="section_quiz_submit_dialog_confirm">Yes, Submit</string>
+    <string name="section_quiz_submit_dialog_cancel">Review Again</string>
+    <string name="section_quiz_question_number_format">Question %1$d of %2$d</string>
+    <string name="section_quiz_btn_prev">Previous</string>
+    <string name="section_quiz_btn_next">Next</string>
+    <string name="section_quiz_btn_submit">Submit</string>
+
+    <!-- SectionQuizResultScreen -->
+    <string name="section_quiz_result_top_title">Section Quiz Result</string>
+    <string name="section_quiz_result_passed_badge">SECTION PASSED</string>
+    <string name="section_quiz_result_failed_badge">NEEDS RETRY</string>
+    <string name="section_quiz_result_passed_title">Congratulations! You Passed This Section</string>
+    <string name="section_quiz_result_failed_title">Don&apos;t Give Up! Try Again</string>
+    <string name="section_quiz_result_passed_desc">The next section is now unlocked. Keep up your learning momentum!</string>
+    <string name="section_quiz_result_failed_desc_format">You need at least %1$d%% to pass. Review the explanations below before retrying.</string>
+    <string name="section_quiz_result_stat_correct">Correct</string>
+    <string name="section_quiz_result_stat_total">Total</string>
+    <string name="section_quiz_result_stat_min_score">Min. Pass</string>
+    <string name="section_quiz_result_review_title">Answer Explanations</string>
+    <string name="section_quiz_result_your_answer_format">Your Answer: %1$s</string>
+    <string name="section_quiz_result_unanswered">Unanswered</string>
+    <string name="section_quiz_result_correct_answer_format">Correct Answer: %1$s</string>
+    <string name="section_quiz_result_btn_retry">Retry Quiz</string>
+    <string name="section_quiz_result_btn_back_course">Back to Course</string>
+
+    <!-- CheatSheetScreen -->
+    <string name="cheatsheet_search_placeholder">Search syntax, tags, or functions...</string>
+    <string name="cheatsheet_items_count_format">%1$d items</string>
+    <string name="cheatsheet_empty_title">No syntax found</string>
+    <string name="cheatsheet_empty_subtitle">Try another keyword or select the All Languages category.</string>
+
+    <!-- CourseDetailScreen -->
+    <string name="course_detail_not_found">Course not found</string>
+    <string name="course_detail_top_title">Course Details</string>
+    <string name="course_detail_stat_modules">Modules</string>
+    <string name="course_detail_stat_quizzes">Quizzes</string>
+    <string name="course_detail_stat_duration">Duration</string>
+    <string name="course_detail_stat_xp">Total XP</string>
+    <string name="course_detail_progress_title">Learning Progress</string>
+    <string name="course_detail_progress_modules_format">%1$d of %2$d modules completed</string>
+    <string name="course_detail_syllabus_title">Course Syllabus</string>
+    <string name="course_detail_module_locked">Locked</string>
+    <string name="course_detail_module_completed">Completed</string>
+    <string name="course_detail_eval_card_title">Course Final Evaluation</string>
+    <string name="course_detail_eval_passed_format">Passed • Best Score: %1$d%%</string>
+    <string name="course_detail_eval_ready_format">%1$d Questions • Min. Pass 70%%</string>
+    <string name="course_detail_eval_locked_desc">Complete all modules to unlock the final evaluation</string>
+    <string name="course_detail_btn_start">Start Learning</string>
+    <string name="course_detail_btn_continue">Continue Learning</string>
+    <string name="course_detail_btn_start_eval">Start Final Evaluation</string>
+
+    <!-- CourseCatalogScreen -->
+    <string name="catalog_top_title">Course Catalog</string>
+    <string name="catalog_header_subtitle">Choose a structured learning path from beginner to advanced</string>
+    <string name="catalog_search_placeholder">Search courses or programming topics...</string>
+    <string name="catalog_clear_search_cd">Clear search</string>
+    <string name="catalog_filter_all">All</string>
+    <string name="catalog_filter_in_progress">In Progress</string>
+    <string name="catalog_filter_completed">Completed</string>
+    <string name="catalog_level_all">All Levels</string>
+    <string name="catalog_courses_count_format">%1$d Courses Available</string>
+    <string name="catalog_empty_title">No courses found</string>
+    <string name="catalog_empty_subtitle">Try changing your search keyword or resetting the category filter.</string>
+    <string name="catalog_reset_filter">Reset Filters</string>
+    <string name="catalog_prereq_locked_format">Complete prerequisite: %1$s</string>
+    <string name="catalog_modules_count_format">%1$d Modules</string>
+    <string name="catalog_progress_completed">100% Completed</string>
+    <string name="catalog_progress_modules_format">%1$d/%2$d Modules</string>
+    <string name="catalog_btn_locked">Locked</string>
+    <string name="catalog_btn_review">Review Course</string>
+    <string name="catalog_btn_continue">Continue</string>
+    <string name="catalog_btn_start">Start Course</string>
+
+    <!-- MateriScreen -->
+    <string name="materi_not_found">Lesson not found</string>
+    <string name="materi_module_step_format">Module %1$d of %2$d</string>
+    <string name="materi_bookmark_remove_cd">Remove Bookmark</string>
+    <string name="materi_bookmark_add_cd">Add Bookmark</string>
+    <string name="materi_bookmark_removed_toast">Removed from Bookmarks</string>
+    <string name="materi_bookmark_added_toast">Saved to Bookmarks</string>
+    <string name="materi_ai_tutor_cd">Ask AI Tutor</string>
+    <string name="materi_ai_tutor_label">Ask AI</string>
+    <string name="materi_key_takeaways_title">Key Takeaways</string>
+    <string name="materi_interactive_code_title">Interactive Code Example</string>
+    <string name="materi_interactive_code_subtitle">Study the syntax below and test it live in the Playground</string>
+    <string name="materi_challenge_badge">PRACTICE CHALLENGE</string>
+    <string name="materi_challenge_completed">Challenge Completed</string>
+    <string name="materi_challenge_criteria_title">Completion Criteria:</string>
+    <string name="materi_challenge_btn_solve">Solve in Playground</string>
+    <string name="materi_challenge_btn_review">Retry in Playground</string>
+    <string name="materi_challenge_required_hint">Complete the practice challenge above first to mark this module as completed.</string>
+    <string name="materi_btn_prev">Previous</string>
+    <string name="materi_btn_next">Next</string>
+    <string name="materi_btn_section_quiz">Go to Section Quiz</string>
+    <string name="materi_btn_final_quiz">Go to Final Evaluation</string>
+    <string name="materi_btn_finish_module">Finish &amp; Return</string>
+
+    <!-- PlaygroundScreen -->
+    <string name="playground_top_title_challenge">Code Challenge</string>
+    <string name="playground_top_title_default">Code Playground</string>
+    <string name="playground_ai_review_cd">Request AI Review</string>
+    <string name="playground_reset_cd">Reset Code</string>
+    <string name="playground_reset_dialog_title">Reset Code to Default?</string>
+    <string name="playground_reset_dialog_desc">All code changes you wrote in this session will be reverted to the starter template.</string>
+    <string name="playground_reset_dialog_confirm">Yes, Reset</string>
+    <string name="playground_reset_toast">Code reset to starter template</string>
+    <string name="playground_challenge_hide_cd">Hide Instructions</string>
+    <string name="playground_challenge_show_cd">Show Instructions</string>
+    <string name="playground_challenge_passed_badge">PASSED</string>
+    <string name="playground_challenge_instruction_label">Challenge Instructions</string>
+    <string name="playground_challenge_hint_hide">Hide Hint</string>
+    <string name="playground_challenge_hint_show">Show Hint</string>
+    <string name="playground_tab_editor">Code Editor</string>
+    <string name="playground_tab_output">Output &amp; Preview</string>
+    <string name="playground_editor_lines_chars_format">%1$d lines • %2$d chars</string>
+    <string name="playground_copy_cd">Copy Code</string>
+    <string name="playground_copy_toast">Code copied to clipboard</string>
+    <string name="playground_btn_running">Running...</string>
+    <string name="playground_btn_run_verify">Run &amp; Verify</string>
+    <string name="playground_btn_run_code">Run Code</string>
+    <string name="playground_challenge_all_passed_title">Congratulations! Challenge Completed 🎉</string>
+    <string name="playground_challenge_some_failed_title">Some Criteria Not Yet Met</string>
+    <string name="playground_challenge_btn_continue_module">Continue Lesson</string>
+    <string name="playground_output_web_preview">Live Web Preview</string>
+    <string name="playground_output_console_title">Terminal / Console Output</string>
+    <string name="playground_output_clear">Clear</string>
+    <string name="playground_output_running_msg">Running code in sandbox environment...</string>
+    <string name="playground_output_empty_msg">No output yet. Press \'Run Code\' to see execution results.</string>
+
+    <!-- Shared Components & MarkdownView -->
+    <string name="comp_back_cd">Back</string>
+    <string name="comp_try_in_playground">Try in Playground</string>
+    <string name="comp_copy">Copy</string>
+    <string name="comp_code_copied_toast">Code copied!</string>
+    <string name="comp_lang_code_copied_toast_format">%1$s code copied!</string>
+    <string name="comp_cancel">Cancel</string>
+    <string name="comp_search_clear_cd">Clear</string>
+    <string name="comp_error_default_title">An Error Occurred</string>
+    <string name="comp_error_retry">Try Again</string>
+    <string name="comp_locked_badge">Locked</string>
+    <string name="comp_completed_badge">Completed</string>
+    <string name="comp_course_card_modules_format">%1$d Modules</string>
+    <string name="comp_course_card_progress_format">%1$d/%2$d Modules (%3$d%%)</string>
+    <string name="markdown_glossary_cd">Glossary</string>
+    <string name="markdown_glossary_header">GLOSSARY TERM</string>
+    <string name="markdown_close">Close</string>
+    <string name="markdown_image_default_title">Lesson Illustration</string>
+    <string name="markdown_image_asset_format">Asset: %1$s</string>
+    <string name="markdown_image_preparing_desc">Visual concept illustration is being prepared for this lesson.</string>
+    <string name="markdown_image_cd">Lesson image</string>
+    <string name="markdown_video_play_cd_format">Play video: %1$s</string>
+    <string name="markdown_video_default_title">Watch Lesson Video</string>
+    <string name="markdown_callout_tips">TIP</string>
+    <string name="markdown_callout_warning">WARNING</string>
+    <string name="markdown_callout_info">INFO</string>
+    <string name="markdown_callout_note">NOTE</string>
+    <string name="markdown_callout_important">IMPORTANT</string>
+
+    <!-- Batch B Additional Keys -->
+    <string name="cheatsheet_top_title">Syntax Cheat Sheet</string>
+    <string name="cheatsheet_unavailable_desc">Syntax cheat sheet is not yet available for this course.</string>
+    <string name="course_detail_curriculum_format">Curriculum (%1$d Lessons)</string>
+    <string name="course_detail_enrolled_format">%1$d enrolled</string>
+    <string name="course_detail_rating_cd">Rating</string>
+    <string name="course_detail_duration_min_format">%1$d min</string>
+    <string name="course_detail_progress_percent_format">%1$d%% (%2$d/%3$d)</string>
+    <string name="course_detail_lesson_meta_format">%1$d min  •  +%2$d XP</string>
+    <string name="course_detail_open_lesson_cd">Open Lesson</string>
+    <string name="course_detail_lesson_header_format">Lesson %1$d: %2$s</string>
+    <string name="course_detail_xp_reward_format">+%1$d XP Reward</string>
+    <string name="course_detail_terminal_cd">Terminal</string>
+    <string name="course_detail_btn_complete_claim">Complete &amp; Claim</string>
+    <string name="catalog_nav_menu_cd">Navigation Menu</string>
+    <string name="catalog_explore_title">Explore Courses</string>
+    <string name="catalog_search_cd">Search</string>
+    <string name="catalog_all_tracks">All Tracks</string>
+    <string name="catalog_bookmark_course_cd">Bookmark Course</string>
+    <string name="materi_locked_title">Module Locked</string>
+    <string name="materi_locked_req_format">Complete \'%1$s\' to unlock this module.</string>
+    <string name="materi_locked_prev_desc">Please complete the previous module first</string>
+    <string name="materi_locked_btn_back">Back to Course Details</string>
+    <string name="materi_drawer_title">Module List</string>
+    <string name="materi_drawer_cd">Module List (Sidebar)</string>
+    <string name="materi_reading_min_short_format">%1$d min read</string>
+    <string name="materi_reading_min_long_format">⏱️ %1$d min read</string>
+    <string name="materi_verify_rule_notice_format">Write in Playground first: %1$s</string>
+    <string name="materi_btn_open_playground">Open Playground</string>
+    <string name="materi_btn_finish_and_next">Finish &amp; Next</string>
+    <string name="materi_btn_finish_course">Complete Course</string>
+    <string name="materi_objectives_title">After this module, you will be able to:</string>
+    <string name="materi_code_example_title">Practice Code Example:</string>
+    <string name="materi_callout_verify_desc">This module has a practice target. Open the Playground above and complete the code target to unlock the continue button.</string>
+    <string name="materi_callout_tip_desc">Tip: tap the Playground button above to try the code live.</string>
+    <string name="playground_top_title_python">Python Playground</string>
+    <string name="playground_reset_module_cd">Reset to module example</string>
+    <string name="playground_coach_mark_msg">Type your code here and press Run to see the live output!</string>
+    <string name="playground_pyodide_loading">Loading Engine...</string>
+    <string name="playground_clear_terminal_cd">Clear Terminal</string>
+    <string name="playground_task_title">Module Practice Challenge</string>
+    <string name="playground_max_time_hint">(max 5s)</string>
+    <string name="playground_python_error_title">Python Engine Failed to Load</string>
+    <string name="playground_python_error_desc">Please ensure your device is connected to the internet when loading Pyodide for the first time.</string>
+    <string name="playground_python_preparing_msg">Preparing Python runtime (Pyodide v0.26.4)...</string>
+    <string name="playground_python_empty_msg">&gt;&gt;&gt; Press \'Run\' to execute Python code and view the output here.</string>
+    <string name="playground_verify_done_format">Practice Complete! (%1$d/%2$d)</string>
+    <string name="playground_verify_target_format">Practice Target (%1$d/%2$d)</string>
+    <string name="playground_verify_ready_badge">Ready ✓</string>
+    <string name="playground_verify_contains_format">Contains: \"%1$s\"</string>
+    <string name="playground_console_header_format">Console Output (%1$d)</string>
+    <string name="playground_console_close">Close ▼</string>
+    <string name="playground_console_open">Open ▲</string>
+    <string name="playground_console_empty_msg">No console output yet. Run code to see console.log() output.</string>
+    <string name="comp_open_profile_label">Open Profile</string>
+    <string name="comp_welcome_greeting">Welcome,</string>
+    <string name="comp_notifications_cd">Notifications</string>
+    <string name="comp_streak_days_format">%1$d Day Streak</string>
+    <string name="comp_streak_best_format">Best record: %1$d days</string>
+    <string name="comp_daily_quest_label">Daily Quest</string>
+    <string name="comp_daily_quest_do">Start</string>
+    <string name="comp_carousel_streak_title">Today\'s Streak</string>
+    <string name="comp_carousel_study_title">Study Time This Week</string>
+    <string name="comp_carousel_study_val_format">%1$d Minutes</string>
+    <string name="comp_carousel_xp_title">XP Earned This Week</string>
+    <string name="comp_xp_level_student_format">Level %1$d Learner</string>
+    <string name="comp_xp_total_collected_format">%1$d Total XP Earned</string>
+    <string name="comp_xp_to_next_level_format">%1$d XP to L%2$d</string>
+    <string name="comp_students_count_format">%1$d students</string>
+    <string name="comp_progress_percent_format">Progress %1$d%%</string>
+    <string name="comp_completed_percent_format">%1$d%% Completed</string>
+    <string name="comp_lessons_progress_format">%1$d/%2$d lessons</string>
+    <string name="comp_lessons_duration_format">%1$d lessons  •  %2$d min</string>
+</resources>

@@ -421,6 +421,8 @@
 
     <!-- ClassDetailScreen -->
     <string name="class_detail_title">Detail Kelas</string>
+    <string name="class_detail_tab_modules">Modul Materi</string>
+    <string name="class_detail_modules_count_format">%1$d Modul</string>
     <string name="class_detail_back_cd">Kembali</string>
     <string name="class_detail_cheatsheet_cd">Cheat Sheet Sintaks</string>
     <string name="class_detail_forum_cd">Forum Diskusi Kelas</string>
@@ -481,6 +483,7 @@
     <string name="eval_result_explanation_format">💡 **Pembahasan:** %1$s</string>
 
     <!-- FinalProjectSubmissionScreen & Card -->
+    <string name="final_project_top_title">Submission Proyek Akhir</string>
     <string name="final_project_screen_title">Submission Proyek Akhir</string>
     <string name="final_project_card_title">Submission Proyek Akhir Kelas</string>
     <string name="final_project_card_locked_hint">Lulus Evaluasi Akhir Kelas (min. 70%%) untuk membuka proyek akhir</string>

@@ -421,6 +421,8 @@
 
     <!-- ClassDetailScreen -->
     <string name="class_detail_title">Course Details</string>
+    <string name="class_detail_tab_modules">Modules</string>
+    <string name="class_detail_modules_count_format">%1$d Modules</string>
     <string name="class_detail_back_cd">Back</string>
     <string name="class_detail_cheatsheet_cd">Syntax Cheat Sheet</string>
     <string name="class_detail_forum_cd">Course Discussion Forum</string>
@@ -481,6 +483,7 @@
     <string name="eval_result_explanation_format">💡 **Explanation:** %1$s</string>
 
     <!-- FinalProjectSubmissionScreen & Card -->
+    <string name="final_project_top_title">Final Project Submission</string>
     <string name="final_project_screen_title">Final Project Submission</string>
     <string name="final_project_card_title">Course Final Project Submission</string>
     <string name="final_project_card_locked_hint">Pass the Course Final Evaluation (min. 70%%) to unlock the final project</string>
@@ -600,7 +603,7 @@
     <string name="placement_result_fail_title">Start from the Foundations</string>
     <string name="placement_result_score_format">Placement Test Score: %1$d%% (%2$d/%3$d Correct)</string>
     <string name="placement_result_pass_desc_format">You unlocked %1$d initial sections! You can jump straight into advanced topics.</string>
-    <string name="placement_result_fail_desc">No sections were skipped yet. Let&apos;s learn step by step to build a rock-solid foundation!</string>
+    <string name="placement_result_fail_desc">No sections were skipped yet. Let\'s learn step by step to build a rock-solid foundation!</string>
     <string name="placement_result_btn_continue">Back to Course Details</string>
 
     <!-- SectionQuizRulesScreen -->
@@ -616,7 +619,7 @@
     <string name="section_quiz_rules_card_title">Quiz Guidelines</string>
     <string name="section_quiz_rules_item_1">Reach the minimum passing score to unlock the next course section.</string>
     <string name="section_quiz_rules_item_2">The timer runs automatically once started and auto-submits when time runs out.</string>
-    <string name="section_quiz_rules_item_3">You can retake the quiz if you haven&apos;t reached the passing score yet.</string>
+    <string name="section_quiz_rules_item_3">You can retake the quiz if you haven\'t reached the passing score yet.</string>
     <string name="section_quiz_rules_history_title">Previous Attempts</string>
     <string name="section_quiz_rules_history_passed">PASSED</string>
     <string name="section_quiz_rules_history_failed">NOT PASSED</string>
@@ -642,7 +645,7 @@
     <string name="section_quiz_result_passed_badge">SECTION PASSED</string>
     <string name="section_quiz_result_failed_badge">NEEDS RETRY</string>
     <string name="section_quiz_result_passed_title">Congratulations! You Passed This Section</string>
-    <string name="section_quiz_result_failed_title">Don&apos;t Give Up! Try Again</string>
+    <string name="section_quiz_result_failed_title">Don\'t Give Up! Try Again</string>
     <string name="section_quiz_result_passed_desc">The next section is now unlocked. Keep up your learning momentum!</string>
     <string name="section_quiz_result_failed_desc_format">You need at least %1$d%% to pass. Review the explanations below before retrying.</string>
     <string name="section_quiz_result_stat_correct">Correct</string>

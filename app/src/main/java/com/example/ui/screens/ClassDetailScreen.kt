@@ -171,7 +171,7 @@ fun ClassDetailScreen(
         ) || submissionStatus != ProjectSubmissionStatus.LOCKED
     }
     val isCertReady = hasCertificate || CourseUnlockUtils.isCertificateUnlocked(
-        finalProjectUnlocked = isFinalProjectUnlocked,
+        finalQuizPassed = isFinalQuizPassed,
         submissionStatus = submissionStatus
     )
 
@@ -1016,7 +1016,7 @@ fun ClassDetailScreen(
                                     )
                                     ProjectSubmissionStatus.PENDING_REVIEW -> stringResource(
                                         R.string.final_project_card_pending_desc,
-                                        (projectSubmission?.attemptCount ?: 1).coerceAtLeast(1)
+                                        (projectSubmission?.attemptNumber ?: 1).coerceAtLeast(1)
                                     )
                                     else -> stringResource(R.string.final_project_card_ready_desc)
                                 }

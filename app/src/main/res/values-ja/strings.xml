@@ -657,6 +657,8 @@
 
     <!-- ClassDetailScreen -->
     <string name="class_detail_title">コース詳細</string>
+    <string name="class_detail_tab_modules">学習モジュール</string>
+    <string name="class_detail_modules_count_format">%1$dモジュール</string>
     <string name="class_detail_back_cd">戻る</string>
     <string name="class_detail_cheatsheet_cd">構文チートシート</string>
     <string name="class_detail_forum_cd">コースディスカッションフォーラム</string>
@@ -717,6 +719,7 @@
     <string name="eval_result_explanation_format">💡 **解説:** %1$s</string>
 
     <!-- FinalProjectSubmissionScreen & Card -->
+    <string name="final_project_top_title">最終プロジェクト提出</string>
     <string name="final_project_screen_title">最終プロジェクト提出</string>
     <string name="final_project_card_title">コース最終プロジェクト提出</string>
     <string name="final_project_card_locked_hint">コース最終評価クイズ（70%%以上）に合格すると解放されます</string>

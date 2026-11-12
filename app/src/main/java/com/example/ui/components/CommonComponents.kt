@@ -529,7 +529,7 @@ fun LevelUpDialog(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = stringResource(R.string.level_up_dialog_level_format, newLevel),
+                    text = stringResource(R.string.level_up_dialog_badge_format, newLevel, "Level $newLevel"),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = TextPrimaryDark,
@@ -549,7 +549,7 @@ fun LevelUpDialog(
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = PrimaryPurple)
                 ) {
-                    Text(stringResource(R.string.level_up_dialog_btn), fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.level_up_dialog_btn_continue), fontWeight = FontWeight.Bold)
                 }
             }
         }

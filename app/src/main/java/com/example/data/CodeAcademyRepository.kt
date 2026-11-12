@@ -1264,6 +1264,20 @@ class CodeAcademyRepository(
         sessionManager.clearSession()
     }
 
+    suspend fun deleteCurrentAccount(): Result<Unit> = withContext(Dispatchers.IO) {
+        val accountId = sessionManager.accountId.first() ?: return@withContext Result.failure(Exception("Tidak ada akun aktif."))
+        accountDao.deleteAccountById(accountId)
+        userDao.deleteUserProfile(accountId)
+        progressDao.deleteAllForAccount(accountId)
+        bookmarkDao.deleteAllForAccount(accountId)
+        certDao.deleteAllForAccount(accountId)
+        playDao.deleteAllForAccount(accountId)
+        notifDao.deleteAllForAccount(accountId)
+        projectSubmissionDao.deleteAllForAccount(accountId)
+        sessionManager.clearSession()
+        Result.success(Unit)
+    }
+
     suspend fun hasAnyLocalAccount(): Boolean = withContext(Dispatchers.IO) {
         accountDao.getAccountCount() > 0
     }

@@ -41,6 +41,9 @@ interface UserDao {
 
     @Query("UPDATE user_profile SET name = :name, email = :email WHERE accountId = :accountId")
     suspend fun updateAccountProfile(accountId: Long, name: String, email: String)
+
+    @Query("DELETE FROM user_profile WHERE accountId = :accountId")
+    suspend fun deleteUserProfile(accountId: Long)
 }
 
 @Dao
@@ -62,6 +65,9 @@ interface ModuleProgressDao {
 
     @Query("SELECT isCompleted FROM module_progress WHERE accountId = :accountId AND courseId = :courseId AND moduleId = :moduleId")
     suspend fun isModuleCompleted(accountId: Long, courseId: String, moduleId: String): Boolean?
+
+    @Query("DELETE FROM module_progress WHERE accountId = :accountId")
+    suspend fun deleteAllForAccount(accountId: Long)
 }
 
 @Dao
@@ -80,6 +86,9 @@ interface BookmarkDao {
 
     @Query("DELETE FROM bookmarks WHERE accountId = :accountId AND itemId = :itemId")
     suspend fun deleteBookmarkByItemId(accountId: Long, itemId: String)
+
+    @Query("DELETE FROM bookmarks WHERE accountId = :accountId")
+    suspend fun deleteAllForAccount(accountId: Long)
 }
 
 @Dao
@@ -89,6 +98,9 @@ interface CertificateDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCertificate(cert: CertificateEntity)
+
+    @Query("DELETE FROM certificates WHERE accountId = :accountId")
+    suspend fun deleteAllForAccount(accountId: Long)
 }
 
 @Dao
@@ -101,6 +113,9 @@ interface PlaygroundDao {
 
     @Query("DELETE FROM playground_drafts WHERE accountId = :accountId AND courseId = :courseId")
     suspend fun clearDraft(accountId: Long, courseId: String)
+
+    @Query("DELETE FROM playground_drafts WHERE accountId = :accountId")
+    suspend fun deleteAllForAccount(accountId: Long)
 }
 
 @Dao
@@ -119,6 +134,9 @@ interface NotificationDao {
 
     @Query("UPDATE notifications SET isRead = 1 WHERE accountId = :accountId")
     suspend fun markAllAsRead(accountId: Long)
+
+    @Query("DELETE FROM notifications WHERE accountId = :accountId")
+    suspend fun deleteAllForAccount(accountId: Long)
 }
 
 @Dao
@@ -134,6 +152,9 @@ interface LocalAccountDao {
 
     @Query("SELECT COUNT(*) FROM local_accounts")
     suspend fun getAccountCount(): Int
+
+    @Query("DELETE FROM local_accounts WHERE id = :id")
+    suspend fun deleteAccountById(id: Long)
 }
 
 @Dao
@@ -261,6 +282,9 @@ interface ProjectSubmissionDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertSubmission(submission: ProjectSubmissionEntity)
+
+    @Query("DELETE FROM project_submissions WHERE accountId = :accountId")
+    suspend fun deleteAllForAccount(accountId: Long)
 }
 
 

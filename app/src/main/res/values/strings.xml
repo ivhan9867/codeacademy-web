@@ -27,6 +27,11 @@
     <string name="profile_logout_subtitle">Keluar dari sesi akun lokal CodeAcademy</string>
     <string name="profile_logout_confirm_title">Konfirmasi Keluar</string>
     <string name="profile_logout_confirm_message">Apakah kamu yakin ingin keluar dari akun ini? Progres belajar tetap tersimpan aman di perangkat ini.</string>
+    <string name="profile_delete_account_title">Hapus Akun</string>
+    <string name="profile_delete_account_subtitle">Hapus data dan akun secara permanen</string>
+    <string name="profile_delete_account_dialog_title">Hapus Akun Permanen?</string>
+    <string name="profile_delete_account_dialog_desc">Tindakan ini tidak dapat dibatalkan. Seluruh progres belajar, sertifikat kelulusan, dan XP kamu akan dihapus secara permanen dari perangkat ini.</string>
+    <string name="profile_delete_account_confirm">Ya, Hapus Akun</string>
     <string name="profile_edit_title">Edit Profil Siswa</string>
     <string name="profile_edit_name_label">Nama Lengkap</string>
     <string name="profile_edit_bio_label">Bio Singkat</string>

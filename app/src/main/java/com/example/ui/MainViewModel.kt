@@ -462,6 +462,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         repo.logoutLocalAccount()
     }
 
+    suspend fun deleteAccount(): Result<Unit> = withContext(Dispatchers.IO) {
+        repo.deleteCurrentAccount()
+    }
+
     fun getAllTracks(): List<LearningTrack> = repo.getAllTracks()
     fun getAllCourses(): List<Course> = repo.getAllCourses()
     fun getCourseById(courseId: String): Course? = repo.getCourseById(courseId)

@@ -27,6 +27,11 @@
     <string name="profile_logout_subtitle">Sign out from CodeAcademy local session</string>
     <string name="profile_logout_confirm_title">Confirm Sign Out</string>
     <string name="profile_logout_confirm_message">Are you sure you want to sign out? Your learning progress remains safely saved on this device.</string>
+    <string name="profile_delete_account_title">Delete Account</string>
+    <string name="profile_delete_account_subtitle">Permanently delete your account and all data</string>
+    <string name="profile_delete_account_dialog_title">Permanently Delete Account?</string>
+    <string name="profile_delete_account_dialog_desc">This action cannot be undone. All your learning progress, certificates, and XP will be permanently deleted from this device.</string>
+    <string name="profile_delete_account_confirm">Yes, Delete Account</string>
     <string name="profile_edit_title">Edit Student Profile</string>
     <string name="profile_edit_name_label">Full Name</string>
     <string name="profile_edit_bio_label">Short Bio</string>

@@ -162,7 +162,55 @@ fun HomeScreen(
     viewModel: MainViewModel? = null,
     modifier: Modifier = Modifier
 ) {
-    val topCourses = remember(courses) { courses.take(2) }
+    val primaryUserTrack = remember(userProfile?.selectedTracks) {
+        userProfile?.selectedTracks?.split(",")?.firstOrNull()?.trim()?.takeIf { it.isNotEmpty() } ?: "front-end"
+    }
+
+    val topCourses = remember(courses, progressList, primaryUserTrack) {
+        val completedKeys = progressList.filter { it.isCompleted }.map { it.courseId to it.moduleId }.toSet()
+        val inProgress = courses.filter { course ->
+            val total = course.modules.size
+            val completed = course.modules.count { (course.id to it.id) in completedKeys }
+            completed in 1 until total
+        }
+        if (inProgress.isNotEmpty()) {
+            inProgress.take(2)
+        } else {
+            val trackCourses = courses.filter { it.trackId == primaryUserTrack }
+            if (trackCourses.isNotEmpty()) trackCourses.take(2) else courses.take(2)
+        }
+    }
+
+    val (recommendedCourseId, recTitle, recDesc) = remember(courses, primaryUserTrack) {
+        val userTrack = primaryUserTrack
+        when (userTrack) {
+            "python" -> Triple(
+                "py-fund-01",
+                "Pemrograman Python: Logika & Otomasi",
+                "Kuasai dasar sintaksis Python, struktur data, dan otomasi script dengan latihan langsung."
+            )
+            "back-end" -> Triple(
+                "be-node-01",
+                "Backend Modern: REST API & Database",
+                "Pelajari arsitektur server, manajemen API, dan integrasi database performa tinggi."
+            )
+            "c-lang" -> Triple(
+                "c-fund-01",
+                "Fondasi Bahasa C: Memori & Algoritma",
+                "Pahami cara kerja komputer dari tingkat rendah dengan manajemen memori dan pointer."
+            )
+            "cpp-lang" -> Triple(
+                "cpp-fund-01",
+                "Modern C++: OOP & Standard Library",
+                "Bangun aplikasi berperforma tinggi dengan konsep Object Oriented dan STL modern."
+            )
+            else -> Triple(
+                "fe-css-02",
+                "CSS Layout Modern: Flexbox & Grid",
+                "Kuasai tata letak responsif dengan Flexbox & Grid langsung di smartphone dengan praktik instan."
+            )
+        }
+    }
 
     // Precompute progress fraction per track for smooth rendering
     val trackProgressMap = remember(tracks, courses, progressList) {
@@ -229,16 +277,17 @@ fun HomeScreen(
 
         // Redesigned Carousel at Top (Banner Promo, XP Terkumpul Minggu Ini, Rekomendasi Kelas)
         item(key = "home_top_carousel") {
+            val startCourseId = topCourses.firstOrNull()?.id ?: "fe-web-foundation-00"
             HomeScreenTopCarousel(
                 currentStreak = currentStreak,
                 longestStreak = longestStreak,
                 totalXp = totalXp,
                 currentLevel = currentLevel,
-                onStartLearning = { onCourseClick("fe-web-foundation-00") },
+                onStartLearning = { onCourseClick(startCourseId) },
                 isParentScrolling = isScrolling,
-                recommendedCourseTitle = "CSS Layout Modern: Flexbox & Grid",
-                recommendedCourseDescription = "Kuasai tata letak responsif dengan Flexbox & Grid langsung di smartphone dengan praktik instan.",
-                onExploreRecommendation = { onCourseClick("fe-css-02") }
+                recommendedCourseTitle = recTitle,
+                recommendedCourseDescription = recDesc,
+                onExploreRecommendation = { onCourseClick(recommendedCourseId) }
             )
         }
 
@@ -356,8 +405,9 @@ fun HomeScreen(
 
         // Section: Lanjutkan Belajar
         item(key = "continue_learning_header") {
+            val trackToOpen = primaryUserTrack
             HomeScreenContinueLearningHeader(
-                onSeeAllClick = { onTrackClick("front-end") }
+                onSeeAllClick = { onTrackClick(trackToOpen) }
             )
         }
 

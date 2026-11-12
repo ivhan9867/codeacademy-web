@@ -44,6 +44,7 @@ fun ProfileScreen(
     onNavigateToCertificates: () -> Unit = {},
     onResetOnboarding: () -> Unit = {},
     onLogout: () -> Unit = {},
+    onDeleteAccount: () -> Unit = {},
     onMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -75,6 +76,9 @@ fun ProfileScreen(
         onLogout = {
             onLogout()
         },
+        onDeleteAccount = {
+            onDeleteAccount()
+        },
         onNavigateToBookmarks = onNavigateToBookmarks,
         onNavigateToNotifications = onNavigateToNotifications,
         onNavigateToCertificates = onNavigateToCertificates,
@@ -100,6 +104,7 @@ fun ProfileScreen(
     onUpdateProfile: (String, String) -> Unit,
     onResetOnboarding: () -> Unit,
     onLogout: () -> Unit,
+    onDeleteAccount: () -> Unit = {},
     onNavigateToBookmarks: () -> Unit,
     onNavigateToNotifications: () -> Unit,
     onNavigateToCertificates: () -> Unit,
@@ -157,6 +162,18 @@ fun ProfileScreen(
     }
 
     // Logout Confirmation Dialog
+    var showDeleteAccountDialog by remember { mutableStateOf(false) }
+
+    if (showDeleteAccountDialog) {
+        ProfileDeleteAccountDialog(
+            onDismiss = { showDeleteAccountDialog = false },
+            onConfirm = {
+                showDeleteAccountDialog = false
+                onDeleteAccount()
+            }
+        )
+    }
+
     if (showLogoutDialog) {
         ProfileLogoutDialog(
             onDismiss = { showLogoutDialog = false },
@@ -256,7 +273,8 @@ fun ProfileScreen(
                 onSelectLanguageClick = { showLanguageDialog = true },
                 onNavigateToNotifications = onNavigateToNotifications,
                 onResetOnboarding = onResetOnboarding,
-                onLogoutClick = { showLogoutDialog = true }
+                onLogoutClick = { showLogoutDialog = true },
+                onDeleteAccountClick = { showDeleteAccountDialog = true }
             )
         }
     }

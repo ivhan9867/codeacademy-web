@@ -27,6 +27,11 @@
     <string name="profile_logout_subtitle">ローカルアカウントからログアウト</string>
     <string name="profile_logout_confirm_title">ログアウトの確認</string>
     <string name="profile_logout_confirm_message">本当にログアウトしますか？学習進捗と獲得XPはこの端末に安全に保持されます。</string>
+    <string name="profile_delete_account_title">アカウント削除</string>
+    <string name="profile_delete_account_subtitle">アカウントとすべてのデータを完全に削除</string>
+    <string name="profile_delete_account_dialog_title">アカウントを完全に削除しますか？</string>
+    <string name="profile_delete_account_dialog_desc">この操作は取り消せません。この端末内のすべての学習進捗、修了証、XPが完全に削除されます。</string>
+    <string name="profile_delete_account_confirm">アカウントを削除</string>
     <string name="profile_edit_title">プロフィールの編集</string>
     <string name="profile_edit_name_label">氏名</string>
     <string name="profile_edit_bio_label">自己紹介</string>

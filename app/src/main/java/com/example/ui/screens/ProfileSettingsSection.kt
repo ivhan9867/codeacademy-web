@@ -20,6 +20,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.RestartAlt
@@ -111,6 +112,7 @@ fun ProfilePreferencesSection(
     onNavigateToNotifications: () -> Unit,
     onResetOnboarding: () -> Unit,
     onLogoutClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -206,6 +208,20 @@ fun ProfilePreferencesSection(
                     title = stringResource(R.string.profile_logout_title),
                     subtitle = stringResource(R.string.profile_logout_subtitle),
                     onClick = onLogoutClick
+                )
+
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp)
+                )
+
+                // Delete Account item (Google Play Policy Compliance)
+                ProfileMenuItem(
+                    icon = Icons.Default.DeleteForever,
+                    iconTint = Color(0xFFDC2626),
+                    title = stringResource(R.string.profile_delete_account_title),
+                    subtitle = stringResource(R.string.profile_delete_account_subtitle),
+                    onClick = onDeleteAccountClick
                 )
             }
         }
@@ -306,6 +322,66 @@ fun ProfileLogoutDialog(
                 colors = ButtonDefaults.buttonColors(containerColor = ErrorRed)
             ) {
                 Text(stringResource(R.string.profile_logout_title), color = Color.White, fontWeight = FontWeight.Bold)
+            }
+        },
+        dismissButton = {
+            OutlinedButton(
+                onClick = onDismiss,
+                shape = RoundedCornerShape(12.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+            ) {
+                Text(stringResource(R.string.common_cancel))
+            }
+        }
+    )
+}
+
+@Composable
+fun ProfileDeleteAccountDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AppDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            Box(
+                modifier = Modifier
+                    .size(52.dp)
+                    .clip(CircleShape)
+                    .background(ErrorRed.copy(alpha = 0.15f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DeleteForever,
+                    contentDescription = null,
+                    tint = ErrorRed,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.profile_delete_account_dialog_title),
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.profile_delete_account_dialog_desc),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                lineHeight = 20.sp
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirm,
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = ErrorRed)
+            ) {
+                Text(stringResource(R.string.profile_delete_account_confirm), color = Color.White, fontWeight = FontWeight.Bold)
             }
         },
         dismissButton = {
@@ -446,3 +522,4 @@ fun ProfileLanguageDialog(
         }
     )
 }
+

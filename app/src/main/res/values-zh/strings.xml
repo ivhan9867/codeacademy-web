@@ -27,6 +27,11 @@
     <string name="profile_logout_subtitle">退出当前的CodeAcademy本地会话</string>
     <string name="profile_logout_confirm_title">确认退出</string>
     <string name="profile_logout_confirm_message">确定要退出登录吗？你的学习进度和成就均已安全保存在本地设备中。</string>
+    <string name="profile_delete_account_title">注销账号</string>
+    <string name="profile_delete_account_subtitle">永久注销账号及全部数据</string>
+    <string name="profile_delete_account_dialog_title">确定永久注销账号？</string>
+    <string name="profile_delete_account_dialog_desc">此操作无法撤销。该设备上的所有学习进度、结业证书和经验值将被永久清除。</string>
+    <string name="profile_delete_account_confirm">确认注销</string>
     <string name="profile_edit_title">编辑个人资料</string>
     <string name="profile_edit_name_label">姓名</string>
     <string name="profile_edit_bio_label">个人简介</string>

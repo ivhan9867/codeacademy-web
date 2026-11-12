@@ -667,6 +667,14 @@ fun CodeAcademyApp(
                             }
                         }
                     },
+                    onDeleteAccount = {
+                        coroutineScope.launch {
+                            viewModel.deleteAccount()
+                            navController.navigate("login") {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+                    },
                     onMenuClick = openDrawer
                 )
             }

@@ -10,6 +10,11 @@ val CyanAccent = Color(0xFFDF7B56) // Warm Coral-Copper accent
 val CyanAccentText = Color(0xFFB85A3A) // Higher contrast text for warm cream backgrounds
 val CyanLight = Color(0xFFF3AB90)
 
+// Semantic Brand Aliases
+val CoralAccent = CyanAccent
+val CoralAccentText = CyanAccentText
+val CoralLight = CyanLight
+
 // Gamification Warm Accents
 val FlameOrange = Color(0xFFD96340)
 val FlameLight = Color(0xFFEA8666)

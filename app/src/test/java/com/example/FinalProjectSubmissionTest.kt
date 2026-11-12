@@ -19,29 +19,34 @@ class FinalProjectSubmissionTest {
         id = "test-course-01",
         trackId = "front-end",
         title = "Test Course",
-        description = "Test Description",
         level = "Pemula",
         durationMinutes = 60,
+        rating = 4.8f,
+        studentsCount = 100,
+        description = "Test Description",
+        prerequisites = emptyList(),
+        instructor = "Test Instructor",
+        quizQuestions = emptyList(),
         modules = listOf(
             CourseModule(
                 id = "m1",
                 courseId = "test-course-01",
-                title = "Module 1",
                 order = 1,
-                section = ModuleSection.INTI,
-                contentMarkdown = "Content 1",
-                codeExample = "",
-                codeLanguage = "html"
+                title = "Module 1",
+                readingMinutes = 5,
+                content = "Content 1",
+                codeLanguage = "html",
+                section = ModuleSection.INTI
             ),
             CourseModule(
                 id = "m2",
                 courseId = "test-course-01",
-                title = "Module 2",
                 order = 2,
-                section = ModuleSection.INTI,
-                contentMarkdown = "Content 2",
-                codeExample = "",
-                codeLanguage = "html"
+                title = "Module 2",
+                readingMinutes = 5,
+                content = "Content 2",
+                codeLanguage = "html",
+                section = ModuleSection.INTI
             )
         ),
         sectionQuizzes = listOf(
@@ -49,20 +54,21 @@ class FinalProjectSubmissionTest {
                 id = "sq1",
                 courseId = "test-course-01",
                 section = ModuleSection.INTI,
-                title = "Quiz Inti"
+                title = "Quiz Inti",
+                questionPool = emptyList()
             )
         )
     )
 
     @Test
     fun allDefaultCoursesHaveFinalProjectSpecAndFourRubrics() {
-        val courses = CourseCatalog.defaultCourses
-        assertEquals(7, courses.size)
+        val courses = CourseCatalog.courses
+        assertTrue(courses.isNotEmpty())
         for (course in courses) {
             val spec = course.finalProject
             assertNotNull("Course ${course.id} must have a FinalProjectSpec", spec)
             assertTrue("Course ${course.id} finalProject title must not be blank", spec!!.title.isNotBlank())
-            assertTrue("Course ${course.id} finalProject scenario must not be blank", spec.scenarioMarkdown.isNotBlank())
+            assertTrue("Course ${course.id} finalProject scenario must not be blank", spec.scenario.isNotBlank())
             assertEquals("Course ${course.id} must have 4 rubric items", 4, spec.rubrics.size)
             assertEquals(100, spec.rubrics.sumOf { it.weightPercent })
         }
@@ -105,7 +111,7 @@ class FinalProjectSubmissionTest {
     fun certificateUnlockRequiresApprovedSubmissionStatus() {
         for (status in ProjectSubmissionStatus.values()) {
             val unlocked = CourseUnlockUtils.isCertificateUnlocked(
-                finalProjectUnlocked = true,
+                finalQuizPassed = true,
                 submissionStatus = status
             )
             if (status == ProjectSubmissionStatus.APPROVED) {

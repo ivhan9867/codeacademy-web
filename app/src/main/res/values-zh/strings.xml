@@ -657,6 +657,8 @@
 
     <!-- ClassDetailScreen -->
     <string name="class_detail_title">课程详情</string>
+    <string name="class_detail_tab_modules">学习模块</string>
+    <string name="class_detail_modules_count_format">%1$d个模块</string>
     <string name="class_detail_back_cd">返回</string>
     <string name="class_detail_cheatsheet_cd">语法速查表</string>
     <string name="class_detail_forum_cd">课程讨论区</string>
@@ -717,6 +719,7 @@
     <string name="eval_result_explanation_format">💡 **解析：** %1$s</string>
 
     <!-- FinalProjectSubmissionScreen & Card -->
+    <string name="final_project_top_title">结课项目提交</string>
     <string name="final_project_screen_title">结课项目提交</string>
     <string name="final_project_card_title">课程结课项目提交</string>
     <string name="final_project_card_locked_hint">通过课程最终评估（最低 70%%）以解锁结课项目</string>

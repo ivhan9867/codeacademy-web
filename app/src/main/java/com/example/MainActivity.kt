@@ -1003,7 +1003,7 @@ fun CodeAcademyApp(
                     val certificates by viewModel.certificates.collectAsStateWithLifecycle()
 
                     LaunchedEffect(course.id) {
-                        viewModel.ensureProjectSubmissionInitialized(course.id, 80)
+                        viewModel.ensureProjectSubmissionInitialized(course.id)
                         viewModel.attachProjectSubmissionListener(course.id)
                     }
 
@@ -1011,18 +1011,27 @@ fun CodeAcademyApp(
                         course = course,
                         submission = submission,
                         onBack = { navController.popBackStack() },
+                        onLoadPlaygroundDraft = {
+                            viewModel.getPlaygroundDraft(course.id)?.let {
+                                "\n<style></style>\n<script></script>"
+                            }
+                        },
                         onSaveDraft = { code, repoUrl, notes, rubrics ->
                             viewModel.saveProjectSubmissionDraft(course.id, code, repoUrl, notes, rubrics)
                         },
-                        onSubmitForReview = { code, repoUrl, notes, rubrics ->
+                        onSubmitProject = { code, repoUrl, notes, rubrics ->
                             viewModel.submitFinalProject(course.id, code, repoUrl, notes, rubrics)
                         },
-                        onSimulateFacilitatorReview = { approve, score, feedback ->
+                        onSimulateFacilitatorReview = { approved, score, feedback, onCertReady ->
                             viewModel.simulateFacilitatorReview(
                                 courseId = course.id,
-                                approve = approve,
+                                approved = approved,
                                 facilitatorScore = score,
-                                feedback = feedback
+                                facilitatorFeedback = feedback,
+                                onResult = { result ->
+                                    val cert = result.getOrNull()?.second
+                                    onCertReady(cert?.certId)
+                                }
                             )
                         },
                         onViewCertificate = {

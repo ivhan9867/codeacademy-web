@@ -14,4 +14,13 @@ object Dimens {
     val CardDefaultShape = RoundedCornerShape(16.dp)
     val DialogDefaultShape = RoundedCornerShape(20.dp)
     val ChipDefaultShape = RoundedCornerShape(8.dp)
+
+    // Standardized 4-pt Spacing Tokens
+    val SpaceXXS = 2.dp
+    val SpaceXS = 4.dp
+    val SpaceSM = 8.dp
+    val SpaceMD = 12.dp
+    val SpaceLG = 16.dp
+    val SpaceXL = 24.dp
+    val SpaceXXL = 32.dp
 }

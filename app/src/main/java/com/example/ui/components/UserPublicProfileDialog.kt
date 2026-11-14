@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,7 +42,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.remote.PublicUserProfile
 import com.example.ui.screens.badgeVectorIcon
 import com.example.ui.theme.AmberGold
-import com.example.ui.theme.StreakOrange
+import com.example.ui.theme.FlameOrange
 import com.example.ui.theme.TealPrimary
 
 private fun badgeTitleForId(id: String): String = when (id) {
@@ -70,14 +71,12 @@ fun UserPublicProfileDialog(
 
     AppDialog(
         onDismissRequest = onDismiss,
-        maxWidth = 380.dp
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp)
-        ) {
+        modifier = Modifier.widthIn(max = 380.dp),
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
             if (isLoading) {
                 LinearProgressIndicator(
                     modifier = Modifier
@@ -164,7 +163,7 @@ fun UserPublicProfileDialog(
                 )
                 PublicStatTile(
                     icon = Icons.Rounded.LocalFireDepartment,
-                    tint = StreakOrange,
+                    tint = FlameOrange,
                     value = "${profile.currentStreak}h",
                     label = "Streak",
                     modifier = Modifier.weight(1f)
@@ -240,8 +239,9 @@ fun UserPublicProfileDialog(
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
-
+            }
+        },
+        confirmButton = {
             Button(
                 onClick = onDismiss,
                 colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
@@ -251,7 +251,7 @@ fun UserPublicProfileDialog(
                 Text("Tutup", fontWeight = FontWeight.Bold, color = Color.White)
             }
         }
-    }
+    )
 }
 
 @Composable

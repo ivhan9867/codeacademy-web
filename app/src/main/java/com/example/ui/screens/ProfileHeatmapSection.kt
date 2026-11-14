@@ -57,6 +57,7 @@ import com.example.data.local.ModuleProgressEntity
 import com.example.ui.theme.FlameOrange
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import com.example.util.localization.LocalAppLanguage
 import com.example.util.localization.toLocale

@@ -158,7 +158,7 @@ fun ProfileBadgesCard(
                         ) {
                             Icon(
                                 imageVector = if (badge.isUnlocked) badgeVectorIcon(badge.id) else Icons.Rounded.Lock,
-                                contentDescription = badge.title,
+                                contentDescription = com.example.util.localization.DataLabelMappings.badgeName(badge),
                                 tint = if (badge.isUnlocked) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                 modifier = Modifier.size(18.dp)
                             )
@@ -203,7 +203,7 @@ fun ProfileBadgeDetailDialog(
             ) {
                 Icon(
                     imageVector = if (badge.isUnlocked) badgeVectorIcon(badge.id) else Icons.Rounded.Lock,
-                    contentDescription = badge.title,
+                    contentDescription = com.example.util.localization.DataLabelMappings.badgeName(badge),
                     tint = if (badge.isUnlocked) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                     modifier = Modifier.size(32.dp)
                 )
@@ -338,7 +338,7 @@ fun ProfileAllBadgesSheet(
                             ) {
                                 Icon(
                                     imageVector = if (badge.isUnlocked) badgeVectorIcon(badge.id) else Icons.Rounded.Lock,
-                                    contentDescription = badge.title,
+                                    contentDescription = com.example.util.localization.DataLabelMappings.badgeName(badge),
                                     tint = if (badge.isUnlocked) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
                                     modifier = Modifier.size(24.dp)
                                 )

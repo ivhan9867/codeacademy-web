@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.BuildConfig
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
+import com.google.firebase.ai.type.GenerativeBackend
 import com.google.firebase.ai.type.content
 import com.google.firebase.ai.type.generationConfig
 import kotlinx.coroutines.Dispatchers
@@ -154,10 +155,10 @@ Tugas Anda:
             }
         }
 
-        // 2. Secondary: Firebase AI Logic SDK
-        for (fbModel in listOf("gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.0-flash")) {
+        // 2. Secondary: Firebase AI Logic SDK (Gemini Developer API - free tier)
+        for (fbModel in listOf("gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.0-flash")) {
             try {
-                val generativeModel = Firebase.ai.generativeModel(
+                val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
                     modelName = fbModel,
                     systemInstruction = content {
                         text(systemPrompt)

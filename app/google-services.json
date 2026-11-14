@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "823377846566",
+    "project_id": "codeacademy-6a361",
+    "storage_bucket": "codeacademy-6a361.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823377846566:android:c826094ec2ea97bb0ee1e7",
+        "android_client_info": {
+          "package_name": "com.aistudio.codeacademy.mizeud"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNx48ix_LleFX6_gcJmYAubdbTLYNfBrs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

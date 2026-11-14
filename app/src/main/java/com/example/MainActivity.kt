@@ -537,47 +537,42 @@ fun CodeAcademyApp(
 
                                     var authResult: Result<Boolean>? = null
 
-                                    // 1. Coba CredentialManager (native bottom sheet)
+                                    // 1. Coba Firebase Web OAuth (Custom Tab) langsung jika CredentialManager gagal, dan tampilkan detail jika keduanya gagal
+                                    var credErrorMsg: String? = null
                                     try {
-                                            val credentialManager = androidx.credentials.CredentialManager.create(activity)
-                                            val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
-                                                .build()
-                                            val request = androidx.credentials.GetCredentialRequest.Builder()
-                                                .addCredentialOption(signInWithGoogleOption)
-                                                .build()
-                                            val credResponse = credentialManager.getCredential(
-                                                context = activity,
-                                                request = request
-                                            )
-                                            val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-                                                .createFrom(credResponse.credential.data)
-                                            authResult = viewModel.loginWithGoogle(
-                                                idToken = googleCred.idToken,
-                                                displayName = googleCred.displayName,
-                                                email = googleCred.id
-                                            )
-                                        } catch (credErr: Exception) {
-                                            if (credErr is androidx.credentials.exceptions.GetCredentialCancellationException) {
-                                                return@launch
-                                            }
-                                            // 2. Fallback otomatis ke Firebase Web OAuth (Custom Tab) agar tidak mentok di "Failed to launch selector UI"
-                                            val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com").build()
-                                            val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
-                                                .startActivityForSignInWithProvider(activity, provider)
-                                                .await()
-                                            authResult = viewModel.completeGoogleLogin(
-                                                email = firebaseResult.user?.email,
-                                                displayName = firebaseResult.user?.displayName
-                                            )
+                                        val credentialManager = androidx.credentials.CredentialManager.create(activity)
+                                        val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
+                                            .build()
+                                        val request = androidx.credentials.GetCredentialRequest.Builder()
+                                            .addCredentialOption(signInWithGoogleOption)
+                                            .build()
+                                        val credResponse = credentialManager.getCredential(
+                                            context = activity,
+                                            request = request
+                                        )
+                                        val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+                                            .createFrom(credResponse.credential.data)
+                                        authResult = viewModel.loginWithGoogle(
+                                            idToken = googleCred.idToken,
+                                            displayName = googleCred.displayName,
+                                            email = googleCred.id
+                                        )
+                                    } catch (credErr: Exception) {
+                                        if (credErr is androidx.credentials.exceptions.GetCredentialCancellationException) {
+                                            return@launch
                                         }
+                                        credErrorMsg = credErr.message
+                                        val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com").build()
+                                        val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
+                                            .startActivityForSignInWithProvider(activity, provider)
+                                            .await()
+                                        authResult = viewModel.completeGoogleLogin(
+                                            email = firebaseResult.user?.email,
+                                            displayName = firebaseResult.user?.displayName
+                                        )
+                                    }
 
-                                    if (authResult == null) {
-                                        android.widget.Toast.makeText(
-                                            loginContext,
-                                            "Tidak dapat membuka dialog login Google pada konteks ini.",
-                                            android.widget.Toast.LENGTH_LONG
-                                        ).show()
-                                    } else if (authResult.isSuccess) {
+                                    if (authResult.isSuccess) {
                                         val isOnboarded = authResult.getOrDefault(false)
                                         navController.navigate(if (isOnboarded) "home" else "onboarding") {
                                             popUpTo("login") { inclusive = true }

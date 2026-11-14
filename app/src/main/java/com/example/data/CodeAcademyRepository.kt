@@ -136,7 +136,7 @@ class CodeAcademyRepository(
                 dailyQuestId = "quest_mod",
                 dailyQuestProgress = 0,
                 dailyQuestCompleted = false,
-                selectedTracks = "front-end,python",
+                selectedTracks = "front-end",
                 goal = "Persiapan Karier",
                 isDarkMode = true,
                 isOnboarded = true
@@ -1698,10 +1698,10 @@ class CodeAcademyRepository(
             ),
             ForumPostEntity(
                 postId = "highlight_3",
-                courseId = "py-foundations-01",
+                courseId = "fe-js-03",
                 authorId = "peer_1",
                 authorName = "Farhan Maulana",
-                content = "List comprehension di Python bikin kodenya ringkas banget! Jangan lupa cek efisiensi memori kalau data yang diproses sangat besar ya.",
+                content = "Tips manipulasi DOM di JavaScript: gunakan `document.querySelector()` dan `addEventListener()` alih-alih onclick inline agar kode HTML dan JS tetap bersih dan terpisah!",
                 timestamp = System.currentTimeMillis() - 28800000L,
                 likeCount = 15,
                 isLikedByMe = false

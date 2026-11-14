@@ -70,7 +70,7 @@ fun TrackSelectionStep(
     ) {
         // Track Selection Grid (fills dominant central area)
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+            columns = GridCells.Fixed(if (tracks.size <= 1) 1 else 2),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             modifier = Modifier

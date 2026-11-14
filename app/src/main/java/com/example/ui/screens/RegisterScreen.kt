@@ -81,6 +81,8 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import com.example.R
+import com.example.ui.components.CodeAcademyMascot
+import com.example.ui.components.MascotMood
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -334,7 +336,12 @@ private fun RegisterHeroHeader(
                 fadeIn(tween(0))
             }
         ) {
-            RegisterHeroIllustration()
+            CodeAcademyMascot(
+                size = 120.dp,
+                mood = MascotMood.CODING,
+                showWebBadges = true,
+                areAnimationsEnabled = areAnimationsEnabled
+            )
         }
 
         Spacer(modifier = Modifier.height(14.dp))

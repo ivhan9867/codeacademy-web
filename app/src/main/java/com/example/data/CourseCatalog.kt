@@ -23,37 +23,9 @@ object CourseCatalog {
     private val defaultTracks = listOf(
         LearningTrack(
             "front-end",
-            "Front-End Development",
-            "Pelajari cara membangun antarmuka web yang menarik, responsif, dan interaktif dari nol.",
+            "Front-End Web Development",
+            "Pelajari cara membangun antarmuka web yang menarik, responsif, dan interaktif dengan HTML, CSS, dan JavaScript.",
             "🌐",
-            0
-        ),
-        LearningTrack(
-            "back-end",
-            "Back-End Development",
-            "Bangun server handal, REST API, dan kelola database yang mendukung aplikasi web modern.",
-            "⚙️",
-            0
-        ),
-        LearningTrack(
-            "python",
-            "Python Programming",
-            "Kuasai Python untuk otomasi, analisis data, backend web, dan machine learning pemula.",
-            "🐍",
-            0
-        ),
-        LearningTrack(
-            "c-lang",
-            "Bahasa C",
-            "Pahami fondasi arsitektur komputer, alokasi memori, dan algoritma dasar sistem.",
-            "⚡",
-            0
-        ),
-        LearningTrack(
-            "cpp-lang",
-            "Bahasa C++",
-            "Pelajari pemrograman berorientasi objek (OOP), STL, dan aplikasi performa tinggi.",
-            "🚀",
             0
         )
     )
@@ -202,14 +174,14 @@ object CourseCatalog {
         BadgeItem("b2", "Pelajar Baru", "📚", "Selesaikan kelas pertama dengan tuntas", false),
         BadgeItem("b3", "Konsisten", "🔥", "Pertahankan streak belajar selama 7 hari", false),
         BadgeItem("b4", "Api Abadi", "⚡", "Pertahankan streak belajar selama 30 hari berturut-turut", false),
-        BadgeItem("b5", "Petualang", "🗺️", "Daftar dan ikuti 3 jalur belajar yang berbeda", false),
+        BadgeItem("b5", "Petualang Web", "🗺️", "Pelajari seluruh kelas HTML, CSS, dan JavaScript", false),
         BadgeItem("b6", "Penguji Ulung", "✅", "Lulus evaluasi dengan nilai sempurna 100%", false),
         BadgeItem("b7", "Pejuang Misi", "⚔️", "Selesaikan misi harian selama 7 hari", false),
         BadgeItem("b8", "Code Master", "💻", "Capai Level 10 (Code Master)", false),
         BadgeItem("b9", "Kolektor", "🏆", "Dapatkan minimal 3 sertifikat kelulusan", false),
         BadgeItem("b10", "AI Enthusiast", "🤖", "Ajukan minimal 10 pertanyaan ke AI Tutor", false),
         BadgeItem("b11", "Penyelamat", "💾", "Simpan modul atau kelas ke daftar Tersimpan", false),
-        BadgeItem("b12", "Full-Stack Hero", "🚀", "Selesaikan modul dari jalur Front-End dan Back-End", false)
+        BadgeItem("b12", "Web Master", "🚀", "Selesaikan seluruh proyek akhir Web Development", false)
     )
 
     val dailyQuestsPool = listOf(

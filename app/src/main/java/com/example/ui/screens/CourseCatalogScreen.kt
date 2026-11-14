@@ -315,35 +315,37 @@ fun CourseCatalogScreen(
 
         val visibleTracks = remember(tracks) { tracks.filter { it.totalCourses > 0 } }
 
-        // Track Horizontal Filter Chips
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(bottom = 6.dp)
-        ) {
-            item(key = "track_all") {
-                FilterChip(
-                    selected = currentSelectedTrackId == null,
-                    onClick = { onSelectTrackId?.invoke(null) ?: run { localSelectedTrackId = null } },
-                    label = { Text(stringResource(R.string.catalog_all_tracks), fontSize = 12.sp) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = TealPrimary,
-                        selectedLabelColor = Color.White
+        // Track Horizontal Filter Chips (only shown when multiple tracks exist)
+        if (visibleTracks.size > 1) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(bottom = 6.dp)
+            ) {
+                item(key = "track_all") {
+                    FilterChip(
+                        selected = currentSelectedTrackId == null,
+                        onClick = { onSelectTrackId?.invoke(null) ?: run { localSelectedTrackId = null } },
+                        label = { Text(stringResource(R.string.catalog_all_tracks), fontSize = 12.sp) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = TealPrimary,
+                            selectedLabelColor = Color.White
+                        )
                     )
-                )
-            }
-            items(visibleTracks, key = { it.id }) { track ->
-                FilterChip(
-                    selected = currentSelectedTrackId == track.id,
-                    onClick = {
-                        val newTrack = if (currentSelectedTrackId == track.id) null else track.id
-                        onSelectTrackId?.invoke(newTrack) ?: run { localSelectedTrackId = newTrack }
-                    },
-                    label = { Text("${track.iconEmoji} ${com.example.util.localization.DataLabelMappings.trackName(track)}", fontSize = 12.sp) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = TealPrimary,
-                        selectedLabelColor = Color.White
+                }
+                items(visibleTracks, key = { it.id }) { track ->
+                    FilterChip(
+                        selected = currentSelectedTrackId == track.id,
+                        onClick = {
+                            val newTrack = if (currentSelectedTrackId == track.id) null else track.id
+                            onSelectTrackId?.invoke(newTrack) ?: run { localSelectedTrackId = newTrack }
+                        },
+                        label = { Text("${track.iconEmoji} ${com.example.util.localization.DataLabelMappings.trackName(track)}", fontSize = 12.sp) },
+                        colors = FilterChipDefaults.filterChipColors(
+                            selectedContainerColor = TealPrimary,
+                            selectedLabelColor = Color.White
+                        )
                     )
-                )
+                }
             }
         }
 

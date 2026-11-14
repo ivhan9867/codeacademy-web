@@ -1,6 +1,7 @@
 package com.example.ui.screens
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,6 +27,8 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.RateReview
@@ -67,6 +71,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
@@ -156,6 +161,7 @@ fun FinalProjectSubmissionScreen(
     val defaultRevFeedback = stringResource(R.string.final_project_simulator_default_rev_feedback)
     var simulatedScore by remember { mutableIntStateOf(90) }
     var simulatedFeedback by remember(defaultPassFeedback) { mutableStateOf(defaultPassFeedback) }
+    var isSimulatorExpanded by remember { mutableStateOf(false) }
 
     val isEditable = status != ProjectSubmissionStatus.PENDING_REVIEW
     val toastDraftSaved = stringResource(R.string.final_project_toast_draft_saved)
@@ -175,7 +181,9 @@ fun FinalProjectSubmissionScreen(
                         Text(
                             text = DataLabelMappings.courseTitle(course),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 },
@@ -198,6 +206,7 @@ fun FinalProjectSubmissionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .imePadding()
                 .padding(horizontal = 16.dp),
             contentPadding = PaddingValues(top = 16.dp, bottom = 36.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -780,7 +789,7 @@ fun FinalProjectSubmissionScreen(
                 }
             }
 
-            // 8. Facilitator Review Simulator Card (for End-to-End Testing before Facilitator Web is built)
+            // 8. Facilitator Review Section / Simulator Toggle
             item(key = "facilitator_simulator_card") {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
@@ -791,107 +800,135 @@ fun FinalProjectSubmissionScreen(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f))
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .size(34.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
-                                contentAlignment = Alignment.Center
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { isSimulatorExpanded = !isSimulatorExpanded }
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
                             ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(34.dp)
+                                        .clip(CircleShape)
+                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Science,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = stringResource(R.string.final_project_simulator_title),
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = if (isSimulatorExpanded) "Ketuk untuk menutup simulasi" else "Ketuk untuk membuka pengujian offline",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                            }
+                            IconButton(onClick = { isSimulatorExpanded = !isSimulatorExpanded }) {
                                 Icon(
-                                    imageVector = Icons.Default.Science,
+                                    imageVector = if (isSimulatorExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(20.dp)
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(
-                                text = stringResource(R.string.final_project_simulator_title),
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
                         }
 
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = stringResource(R.string.final_project_simulator_desc),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            text = stringResource(R.string.final_project_simulator_score_label, simulatedScore),
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Slider(
-                            value = simulatedScore.toFloat(),
-                            onValueChange = { simulatedScore = it.toInt().coerceIn(40, 100) },
-                            valueRange = 40f..100f
-                        )
-
-                        OutlinedTextField(
-                            value = simulatedFeedback,
-                            onValueChange = { simulatedFeedback = it },
-                            label = {
-                                Text(stringResource(R.string.final_project_simulator_feedback_label))
-                            },
-                            minLines = 2,
-                            maxLines = 4,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(10.dp)
-                        ) {
-                            OutlinedButton(
-                                onClick = {
-                                    val revScore = minOf(simulatedScore, spec.minPassingScore - 5)
-                                    val feedbackText = if (simulatedFeedback == defaultPassFeedback) {
-                                        defaultRevFeedback
-                                    } else {
-                                        simulatedFeedback
-                                    }
-                                    onSimulateFacilitatorReview(false, revScore, feedbackText) {}
-                                },
-                                shape = RoundedCornerShape(10.dp),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .testTag("final_project_simulate_revision_btn")
-                            ) {
+                        AnimatedVisibility(visible = isSimulatorExpanded) {
+                            Column(modifier = Modifier.padding(top = 10.dp)) {
                                 Text(
-                                    text = stringResource(R.string.final_project_simulator_btn_revision),
-                                    fontSize = 12.sp
+                                    text = stringResource(R.string.final_project_simulator_desc),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
-                            }
 
-                            Button(
-                                onClick = {
-                                    val passScore = maxOf(simulatedScore, spec.minPassingScore)
-                                    onSimulateFacilitatorReview(true, passScore, simulatedFeedback) { _ ->
-                                        // Certificate is automatically generated and user can tap View Certificate
-                                    }
-                                },
-                                colors = ButtonDefaults.buttonColors(containerColor = SuccessGreen),
-                                shape = RoundedCornerShape(10.dp),
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .testTag("final_project_simulate_approve_btn")
-                            ) {
+                                Spacer(modifier = Modifier.height(12.dp))
                                 Text(
-                                    text = stringResource(R.string.final_project_simulator_btn_approve),
-                                    color = Color.White,
+                                    text = stringResource(R.string.final_project_simulator_score_label, simulatedScore),
+                                    style = MaterialTheme.typography.labelMedium,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 12.sp
+                                    color = MaterialTheme.colorScheme.primary
                                 )
+                                Slider(
+                                    value = simulatedScore.toFloat(),
+                                    onValueChange = { simulatedScore = it.toInt().coerceIn(40, 100) },
+                                    valueRange = 40f..100f
+                                )
+
+                                OutlinedTextField(
+                                    value = simulatedFeedback,
+                                    onValueChange = { simulatedFeedback = it },
+                                    label = {
+                                        Text(stringResource(R.string.final_project_simulator_feedback_label))
+                                    },
+                                    minLines = 2,
+                                    maxLines = 4,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                ) {
+                                    OutlinedButton(
+                                        onClick = {
+                                            val revScore = minOf(simulatedScore, spec.minPassingScore - 5)
+                                            val feedbackText = if (simulatedFeedback == defaultPassFeedback) {
+                                                defaultRevFeedback
+                                            } else {
+                                                simulatedFeedback
+                                            }
+                                            onSimulateFacilitatorReview(false, revScore, feedbackText) {}
+                                        },
+                                        shape = RoundedCornerShape(10.dp),
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .testTag("final_project_simulate_revision_btn")
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.final_project_simulator_btn_revision),
+                                            fontSize = 12.sp
+                                        )
+                                    }
+
+                                    Button(
+                                        onClick = {
+                                            val passScore = maxOf(simulatedScore, spec.minPassingScore)
+                                            onSimulateFacilitatorReview(true, passScore, simulatedFeedback) { _ ->
+                                                // Certificate is automatically generated and user can tap View Certificate
+                                            }
+                                        },
+                                        colors = ButtonDefaults.buttonColors(containerColor = SuccessGreen),
+                                        shape = RoundedCornerShape(10.dp),
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .testTag("final_project_simulate_approve_btn")
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.final_project_simulator_btn_approve),
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 12.sp
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

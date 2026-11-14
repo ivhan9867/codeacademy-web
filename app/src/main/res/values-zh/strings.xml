@@ -813,7 +813,7 @@
     <string name="cert_view_back_cd">返回</string>
     <string name="cert_view_share_cd">分享证书</string>
     <string name="cert_view_not_found">未找到证书数据。</string>
-    <string name="cert_view_header_org">NGODINGYUK ACADEMY</string>
+    <string name="cert_view_header_org">CODEACADEMY</string>
     <string name="cert_view_header_title">CERTIFICATE OF COMPLETION</string>
     <string name="cert_view_awarded_to">特此授予：</string>
     <string name="cert_view_completion_desc">顺利完成以下课程的全部模块、终期评估测验以及经导师审核通过的结课项目：</string>

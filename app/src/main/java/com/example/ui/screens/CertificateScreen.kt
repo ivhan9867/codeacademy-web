@@ -258,12 +258,12 @@ fun CertificateScreen(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 com.example.ui.components.SecondaryButton(
-                    text = stringResource(R.string.cert_view_label_id),
+                    text = "${stringResource(R.string.comp_copy)} ID",
                     onClick = {
                         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText(context.getString(R.string.cert_view_label_id), certificate.certId)
                         clipboard.setPrimaryClip(clip)
-                        Toast.makeText(context, certificate.certId, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "ID Kredensial disalin: ${certificate.certId}", Toast.LENGTH_SHORT).show()
                     },
                     icon = Icons.Default.ContentCopy,
                     modifier = Modifier.weight(1f)
@@ -276,7 +276,7 @@ fun CertificateScreen(
                             action = Intent.ACTION_SEND
                             putExtra(
                                 Intent.EXTRA_TEXT,
-                                "🎓 ${certificate.courseTitle} — ${certificate.certId}"
+                                "🎓 Kelulusan Kursus ${certificate.courseTitle} oleh ${certificate.recipientName}!\nID Kredensial: ${certificate.certId}\nCek keaslian sertifikat di Portal Web CodeAcademy (verify.html?id=${certificate.certId})"
                             )
                             type = "text/plain"
                         }

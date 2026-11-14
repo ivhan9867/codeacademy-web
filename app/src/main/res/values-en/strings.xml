@@ -577,7 +577,7 @@
     <string name="cert_view_back_cd">Back</string>
     <string name="cert_view_share_cd">Share Certificate</string>
     <string name="cert_view_not_found">Certificate data not found.</string>
-    <string name="cert_view_header_org">NGODINGYUK ACADEMY</string>
+    <string name="cert_view_header_org">CODEACADEMY</string>
     <string name="cert_view_header_title">CERTIFICATE OF COMPLETION</string>
     <string name="cert_view_awarded_to">Officially awarded to:</string>
     <string name="cert_view_completion_desc">For successfully completing all modules, the final evaluation quiz, and the facilitator-verified final project in:</string>

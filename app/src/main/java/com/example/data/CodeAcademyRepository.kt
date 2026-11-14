@@ -12,6 +12,7 @@ import com.example.data.local.NotificationEntity
 import com.example.data.local.PlaygroundDraftEntity
 import com.example.data.local.ProjectSubmissionEntity
 import com.example.data.local.SessionManager
+import com.example.data.local.sessionDataStore
 import com.example.data.local.SectionQuizAttemptEntity
 import com.example.data.local.ActiveSectionQuizSessionEntity
 import com.example.data.local.UserProfileEntity
@@ -48,6 +49,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
@@ -62,6 +64,7 @@ class CodeAcademyRepository(
     private val externalScope: CoroutineScope = (context.applicationContext as? CodeAcademyApplication)?.applicationScope
         ?: CoroutineScope(SupervisorJob() + Dispatchers.IO)
 ) {
+    private val appContext = context.applicationContext
     private val db = AppDatabase.getDatabase(context)
     private val userDao = db.userDao()
     private val progressDao = db.moduleProgressDao()
@@ -1158,7 +1161,7 @@ class CodeAcademyRepository(
         val accountId = getActiveAccountId()
         val tracksStr = if (selectedTrackId.isNotBlank()) selectedTrackId else "front-end"
         userDao.updateOnboardingStatus(accountId, isOnboarded = true, selectedTracks = tracksStr)
-        val savedGoal = context.sessionDataStore.data.firstOrNull()
+        val savedGoal = appContext.sessionDataStore.data.firstOrNull()
             ?.get(androidx.datastore.preferences.core.stringPreferencesKey("user_goal"))
         if (!savedGoal.isNullOrBlank()) {
             userDao.updateUserGoal(accountId, savedGoal)
@@ -1302,7 +1305,7 @@ class CodeAcademyRepository(
                 existing.id
             } else {
                 val regResult = registerLocalAccount(
-                    displayName = cleanName,
+                    name = cleanName,
                     email = cleanEmail,
                     password = UUID.randomUUID().toString()
                 )

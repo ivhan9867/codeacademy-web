@@ -81,8 +81,7 @@ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
 Satu baris ini menggantikan seluruh aturan media query di atas secara otomatis!
 
-![Mantra Responsif Otomatis dengan repeat, auto-fit, dan minmax](asset:images/fe-css-02/grid-autofit-minmax.png)
-
+> **Ilustrasi Konsep:** Mantra Responsif Otomatis dengan repeat, auto-fit, dan minmax
 ## Membedah Mantra Baris Sakti
 
 Mari kita pecah menjadi 3 bagian:

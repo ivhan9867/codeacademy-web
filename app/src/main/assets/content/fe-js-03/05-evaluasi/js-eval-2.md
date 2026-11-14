@@ -8,7 +8,7 @@ section: EVALUASI
 learningObjectives:
   - Mengulas secara menyeluruh seluruh konsep utama yang telah dikuasai di kelas JavaScript Fundamentals
   - Memahami prinsip kode bersih (Clean Code) untuk menjaga kualitas proyek web
-  - Mengetahui arah perjalanan belajar berikutnya menuju ekosistem Back-End (Node.js)
+  - Mengetahui arah perjalanan belajar berikutnya menuju pengembangan aplikasi web interaktif & portofolio Front-End
 ---
 
 # Rangkuman Fondasi JavaScript & Peta Perjalanan Selanjutnya
@@ -54,8 +54,8 @@ Mari kita rangkum konsep-konsep inti yang telah menjadi bagian dari keahlian bar
 
 Logika JavaScript yang baru saja kamu kuasai adalah fondasi universal di seluruh industri web modern. Langkah selanjutnya yang sangat disarankan:
 
-1. **Jalur Back-End (Node.js Fundamentals - `be-node-01`)**:
-   Hebatnya, bahasa yang kamu pelajari di browser ini juga bisa digunakan untuk membuat server di komputer! Di kelas Node.js, kamu akan menggunakan logika JavaScript yang sama untuk membaca berkas, membuat REST API, dan mengelola database.
+1. **Gabungkan HTML, CSS & JavaScript di Proyek Akhir**:
+   Gunakan kombinasi HTML semantik, tata letak CSS Flexbox/Grid, dan interaktivitas DOM JavaScript untuk membangun aplikasi web mini yang rapi dan responsif di Code Playground.
 2. **Eksplorasi Proyek Nyata**:
    Cobalah modifikasi aplikasi To-Do List yang sudah kamu buat: tambahkan tombol hapus tugas, fitur centang selesai (*strikethrough*), atau hitungan sisa tugas.
 

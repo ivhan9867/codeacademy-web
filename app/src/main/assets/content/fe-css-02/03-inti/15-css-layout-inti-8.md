@@ -117,8 +117,7 @@ Sebuah navbar yang baik memiliki tiga zona elemen:
 2. **Daftar Tautan Halaman** di tengah atau samping logo.
 3. **Tombol Panggilan Aksi (*Call-to-Action*)** di sisi kanan.
 
-![Anatomi Navbar Flexbox Modern](asset:images/fe-css-02/navbar-flexbox-anatomy.png)
-
+> **Ilustrasi Konsep:** Anatomi Navbar Flexbox Modern
 ## Bedah Arsitektur: Flexbox Bersarang (*Nested Flexbox*)
 
 Perhatikan struktur HTML pada latihan ini:

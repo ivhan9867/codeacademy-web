@@ -112,7 +112,7 @@
     <string name="ai_tutor_code_attached">コードを添付済 (%1$d 行)</string>
     <string name="ai_tutor_error_communication">申し訳ありません。AI チューターへの接続中にエラーが発生しました (%1$s)。メッセージを再送信してください。</string>
     <string name="ai_tutor_welcome_title">CodeAcademy AI チューター</string>
-    <string name="ai_tutor_welcome_desc">こんにちは！あなたの専属 AI チューターです。Web 開発、Python、C、C++ でお困りですか？質問するかコードを貼り付けてください！</string>
+    <string name="ai_tutor_welcome_desc">こんにちは！あなたの専属 AI チューターです。Web 開発（HTML、CSS、JavaScript）でお困りですか？質問するかコードを貼り付けてください！</string>
 
     <!-- Materi Content Localization Notice -->
     <string name="materi_content_id_only">レッスン内容は現在インドネシア語でのみ提供されています</string>

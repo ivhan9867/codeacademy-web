@@ -12,6 +12,12 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -1280,11 +1286,21 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                             )
                         }
 
-                        Text(
-                            text = if (showConsole) stringResource(R.string.playground_console_close) else stringResource(R.string.playground_console_open),
-                            color = Color(0xFF8B949E),
-                            fontSize = 11.sp
-                        )
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            if (consoleLogs.isNotEmpty()) {
+                                Text(
+                                    text = "Bersihkan",
+                                    color = Color(0xFF8B949E),
+                                    fontSize = 11.sp,
+                                    modifier = Modifier.clickable { consoleLogs.clear() }
+                                )
+                            }
+                            Text(
+                                text = if (showConsole) stringResource(R.string.playground_console_close) else stringResource(R.string.playground_console_open),
+                                color = Color(0xFF8B949E),
+                                fontSize = 11.sp
+                            )
+                        }
                     }
 
                     AnimatedVisibility(visible = showConsole) {
@@ -1293,6 +1309,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                                 .fillMaxWidth()
                                 .height(120.dp)
                                 .background(Color(0xFF0D1117))
+                                .verticalScroll(rememberScrollState())
                                 .padding(12.dp)
                         ) {
                             if (consoleLogs.isEmpty()) {
@@ -1329,10 +1346,14 @@ fun CodeEditorField(
     modifier: Modifier = Modifier
 ) {
     val transformation = remember(language) { codeHighlightTransformation(language) }
+    val vScroll = rememberScrollState()
+    val hScroll = rememberScrollState()
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(CodeDarkBg)
+            .verticalScroll(vScroll)
+            .horizontalScroll(hScroll)
             .padding(12.dp)
     ) {
         BasicTextField(
@@ -1343,6 +1364,11 @@ fun CodeEditorField(
                 fontSize = 13.sp,
                 color = Color(0xFFE6EDF3),
                 lineHeight = 22.sp
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Ascii,
+                autoCorrectEnabled = false,
+                capitalization = KeyboardCapitalization.None
             ),
             visualTransformation = transformation,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),

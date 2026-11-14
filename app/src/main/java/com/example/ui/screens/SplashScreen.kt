@@ -51,7 +51,6 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    isOnboarded: Boolean? = null,
     onPrepare: suspend () -> Unit = {},
     onSplashFinished: () -> Unit = {},
     modifier: Modifier = Modifier

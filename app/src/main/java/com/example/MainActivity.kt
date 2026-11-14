@@ -456,7 +456,6 @@ fun CodeAcademyApp(
             composable("splash") {
                 var resolvedDestination by remember { mutableStateOf<InitialDestination?>(null) }
                 SplashScreen(
-                    isOnboarded = null,
                     onPrepare = {
                         val destination = viewModel.prepareAppReadiness(context)
                         resolvedDestination = destination
@@ -1233,6 +1232,15 @@ fun CodeAcademyApp(
                         viewModel.askAi(query, courseTitle, moduleTitle)
                     },
                     onClearChat = { viewModel.clearAiChat() },
+                    onTryInPlayground = { snippet, lang ->
+                        val encodedCode = URLEncoder.encode(snippet, "UTF-8")
+                        val normalizedLang = when (lang.lowercase()) {
+                            "css" -> "css"
+                            "js", "javascript" -> "javascript"
+                            else -> "html"
+                        }
+                        navController.navigate("playground/fe-web-foundation-00?code=$encodedCode&lang=$normalizedLang")
+                    },
                     onBack = { navController.popBackStack() }
                 )
             }

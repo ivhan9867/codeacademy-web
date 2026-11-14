@@ -1066,6 +1066,18 @@ fun CodeSandboxWebView(
                 try {
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
+                    settings.allowFileAccess = false
+                    settings.allowContentAccess = false
+                    webViewClient = object : android.webkit.WebViewClient() {
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView?,
+                            request: android.webkit.WebResourceRequest?
+                        ): Boolean {
+                            val url = request?.url?.toString().orEmpty()
+                            // Keep sandbox isolated: block navigating away to external websites
+                            return !url.startsWith("https://localhost/") && !url.startsWith("about:blank")
+                        }
+                    }
                     webChromeClient = object : WebChromeClient() {
                         override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                             val msg = consoleMessage?.message()

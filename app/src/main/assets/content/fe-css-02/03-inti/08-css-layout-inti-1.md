@@ -100,8 +100,7 @@ Selamat datang di materi inti! Aturan nomor satu dalam Flexbox yang wajib kamu t
 
 Kamu tidak bisa begitu saja memberikan perintah Flexbox pada elemen anak tanpa terlebih dahulu mengaktifkan mode fleksibel pada elemen induk pembungkusnya.
 
-![Hubungan Flex Container dan Flex Items](asset:images/fe-css-02/flex-container-dan-items.png)
-
+> **Ilustrasi Konsep:** Hubungan Flex Container dan Flex Items
 ## Langkah Pertama: Membuka Gerbang `display: flex`
 
 Untuk mengubah elemen biasa menjadi wadah fleksibel, cukup berikan satu baris CSS ajaib pada elemen pembungkusnya:

@@ -151,8 +151,9 @@ object CourseUnlockUtils {
         passedQuizIds: Set<String> = emptySet(),
         finalQuizPassed: Boolean = false
     ): Boolean {
-        if (finalQuizPassed) return true
-        return false
+        val allModulesCompleted = course.modules.all { it.id in completedModuleIds }
+        val allQuizzesPassed = course.sectionQuizzes.all { it.id in passedQuizIds }
+        return allModulesCompleted && allQuizzesPassed && finalQuizPassed
     }
 
     /**

@@ -46,8 +46,7 @@ Selama ini, kita mengamati kerja JavaScript melalui panel Console. Sekarang saat
 
 Bagaimana cara JavaScript berinteraksi dengan tag HTML? Jawabannya adalah melalui **DOM (Document Object Model)**.
 
-![Hubungan JavaScript dan Pohon DOM](asset:images/fe-js-03/dom-tree-js.png)
-
+> **Ilustrasi Konsep:** Hubungan JavaScript dan Pohon DOM
 ---
 
 ## Apa Itu DOM?

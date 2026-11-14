@@ -67,8 +67,7 @@ Saat total lebar elemen anak lebih kecil daripada lebar kontainer induknya, akan
 
 Bagaimana cara kita membagikan atau menaruh sisa ruang kosong tersebut di sepanjang Sumbu Utama (*Main Axis*)? Jawabannya adalah properti **`justify-content`**.
 
-![Variasi Nilai justify-content pada Sumbu Utama](asset:images/fe-css-02/justify-content-variasi.png)
-
+> **Ilustrasi Konsep:** Variasi Nilai justify-content pada Sumbu Utama
 ## 6 Nilai Utama `justify-content`
 
 Mari kita bedah perilakunya saat `flex-direction: row` (sumbu horizontal):

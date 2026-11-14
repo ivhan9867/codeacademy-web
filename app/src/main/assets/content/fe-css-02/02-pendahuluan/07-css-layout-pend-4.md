@@ -14,8 +14,7 @@ Setelah merasakan betapa melelahkannya masa lalu, sekarang saatnya berkenalan de
 
 Banyak pemula salah mengira bahwa mereka harus memilih salah satu mazhab: *"Saya tim Flexbox"* atau *"Saya tim Grid"*. Padahal rahasia pengembang web profesional adalah: **Grid untuk Tata Letak Makro, Flexbox untuk Komponen Mikro**.
 
-![Struktur Halaman Web: Grid untuk Makro dan Flexbox untuk Mikro](asset:images/fe-css-02/arsitektur-grid-dan-flexbox.png)
-
+> **Ilustrasi Konsep:** Struktur Halaman Web: Grid untuk Makro dan Flexbox untuk Mikro
 ## Level Makro: Arsitektur Utama Halaman (Tugas CSS Grid)
 
 Tata letak makro adalah kerangka besar yang membagi layar perangkatmu menjadi petak-petak fungsional:

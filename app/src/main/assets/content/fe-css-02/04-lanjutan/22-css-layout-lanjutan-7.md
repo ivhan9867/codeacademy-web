@@ -151,8 +151,7 @@ Banyak desainer pemula mengalami masalah klasik pada kartu produk:
 - Kartu dengan teks deskripsi pendek menjadi bantet.
 - Akibatnya, tombol "Beli" atau "Daftar" di bawah kartu berada pada ketinggian yang naik-turun berantakan!
 
-![Kolaborasi Grid untuk Luar dan Flexbox untuk Dalam Kartu](asset:images/fe-css-02/kartu-produk-grid-flex.png)
-
+> **Ilustrasi Konsep:** Kolaborasi Grid untuk Luar dan Flexbox untuk Dalam Kartu
 ## Resep Kolaborasi Juara
 
 Kita membagi tugas secara harmonis:

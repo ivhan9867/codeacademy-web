@@ -40,8 +40,7 @@ Saat kamu berselancar di internet, aplikasi web perlu mengingat banyak hal: siap
 
 Untuk mengingat informasi tersebut, komputer menyediakan tempat di memori yang disebut **Variabel**.
 
-![Analogi Variabel sebagai Kotak Berlabel](asset:images/fe-js-03/variabel-kotak.png)
-
+> **Ilustrasi Konsep:** Analogi Variabel sebagai Kotak Berlabel
 ---
 
 ## Analogi Kotak Penyimpanan Berlabel

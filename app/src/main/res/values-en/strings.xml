@@ -327,7 +327,7 @@
     <string name="ai_tutor_code_attached">Code Attached (%1$d lines)</string>
     <string name="ai_tutor_error_communication">Sorry, an issue occurred while connecting to AI Tutor (%1$s). Please try sending your message again.</string>
     <string name="ai_tutor_welcome_title">CodeAcademy AI Tutor</string>
-    <string name="ai_tutor_welcome_desc">Hello! I am your personal AI Tutor. Confused about Web Dev, Python, C, or C++? Ask your question or paste your code snippet!</string>
+    <string name="ai_tutor_welcome_desc">Hello! I am your personal AI Tutor. Confused about Web Development (HTML, CSS, or JavaScript)? Ask your question or paste your code snippet!</string>
 
     <!-- Materi Content Localization Notice -->
     <string name="materi_content_id_only">Lesson content is currently available in Indonesian only</string>

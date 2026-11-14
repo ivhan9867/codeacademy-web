@@ -327,7 +327,7 @@
     <string name="ai_tutor_code_attached">Kode Terlampir (%1$d baris)</string>
     <string name="ai_tutor_error_communication">Maaf, terjadi kendala saat menghubungkan ke AI Tutor (%1$s). Silakan coba kirim ulang pesan kamu.</string>
     <string name="ai_tutor_welcome_title">CodeAcademy AI Tutor</string>
-    <string name="ai_tutor_welcome_desc">Halo! Saya AI Tutor pribadimu. Sedang bingung dengan materi Web Dev, Python, C, atau C++? Tanyakan pertanyaanmu atau tempel potongan kodenya!</string>
+    <string name="ai_tutor_welcome_desc">Halo! Saya AI Tutor pribadimu. Sedang bingung dengan materi Web Development (HTML, CSS, atau JavaScript)? Tanyakan pertanyaanmu atau tempel potongan kodenya!</string>
 
     <!-- Materi Content Localization Notice -->
     <string name="materi_content_id_only">Konten materi hanya tersedia dalam Bahasa Indonesia</string>

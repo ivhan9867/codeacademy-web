@@ -78,8 +78,7 @@ Banyak desainer web menggambar denah kasar halaman di secarik kertas:
 
 Dengan `grid-template-areas`, kamu bisa menuliskan sketsa denah tersebut **langsung ke dalam kode CSS-mu** persis seperti gambar di atas!
 
-![Merancang Denah Halaman dengan grid-template-areas](asset:images/fe-css-02/grid-template-areas-denah.png)
-
+> **Ilustrasi Konsep:** Merancang Denah Halaman dengan grid-template-areas
 ## Dua Langkah Mudah Menerapkan Template Areas
 
 ### Langkah 1: Beri Nama Wilayah pada Elemen Anak

@@ -80,8 +80,7 @@ Pernahkah kamu menghadapi situasi di mana pada layar desktop sebuah gambar harus
 
 Dahulu kamu harus menulis ulang HTML atau menggunakan trik JavaScript. Di Flexbox, kamu cukup menggunakan satu properti sederhana: **`order`**.
 
-![Pengaturan Urutan Visual Elemen dengan Properti order](asset:images/fe-css-02/properti-order-flexbox.png)
-
+> **Ilustrasi Konsep:** Pengaturan Urutan Visual Elemen dengan Properti order
 ## Bagaimana Properti `order` Bekerja?
 
 Secara default, setiap elemen anak flex memiliki nilai **`order: 0`**.

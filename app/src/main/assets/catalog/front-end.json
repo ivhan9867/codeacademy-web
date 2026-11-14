@@ -160,7 +160,7 @@
           "sourceModuleId": "web-foundation-pend-3"
         },
         {
-          "id": 16,
+          "id": 11,
           "question": "Elemen mana yang tepat untuk daftar instruksi langkah demi langkah yang urutannya penting?",
           "options": [
             "<dl>",
@@ -173,7 +173,7 @@
           "sourceModuleId": "web-foundation-lanjutan-4"
         },
         {
-          "id": 17,
+          "id": 12,
           "question": "Atribut wajib pada <img> yang menentukan sumber gambarnya adalah...",
           "options": [
             "href",
@@ -186,7 +186,7 @@
           "sourceModuleId": "web-foundation-lanjutan-6"
         },
         {
-          "id": 18,
+          "id": 13,
           "question": "Elemen apa yang dipakai untuk kutipan panjang yang berdiri sendiri sebagai blok?",
           "options": [
             "<q>",
@@ -199,7 +199,7 @@
           "sourceModuleId": "web-foundation-lanjutan-8"
         },
         {
-          "id": 19,
+          "id": 14,
           "question": "Berapa banyak elemen <main> yang boleh ada dalam satu halaman HTML?",
           "options": [
             "Maksimal tiga",
@@ -212,7 +212,7 @@
           "sourceModuleId": "web-foundation-lanjutan-13"
         },
         {
-          "id": 20,
+          "id": 15,
           "question": "Kenapa <div class=\"header\"> dianggap kurang baik dibanding <header>?",
           "options": [
             "Browser dan mesin pencari sulit mengenali perannya secara semantik",
@@ -225,7 +225,7 @@
           "sourceModuleId": "web-foundation-lanjutan-12"
         },
         {
-          "id": 21,
+          "id": 16,
           "question": "Tiga elemen dasar penyusun tabel HTML adalah...",
           "options": [
             "table, tr, dan td atau th",
@@ -238,7 +238,7 @@
           "sourceModuleId": "web-foundation-lanjutan-18"
         },
         {
-          "id": 22,
+          "id": 17,
           "question": "Atribut apa yang membuat satu sel tabel menjangkau beberapa kolom sekaligus?",
           "options": [
             "colspan",
@@ -251,7 +251,7 @@
           "sourceModuleId": "web-foundation-lanjutan-19"
         },
         {
-          "id": 23,
+          "id": 18,
           "question": "Apa akibatnya jika sebuah <input> di dalam form tidak diberi atribut name?",
           "options": [
             "Formulir gagal ditampilkan",
@@ -264,7 +264,7 @@
           "sourceModuleId": "web-foundation-lanjutan-23"
         },
         {
-          "id": 24,
+          "id": 19,
           "question": "Perbedaan utama metode GET dan POST pada elemen form adalah...",
           "options": [
             "GET tidak bisa dipakai untuk mengirim data sama sekali",
@@ -277,7 +277,7 @@
           "sourceModuleId": "web-foundation-lanjutan-24"
         },
         {
-          "id": 25,
+          "id": 20,
           "question": "Manakah character reference yang benar untuk tanda '<' agar tidak dibaca sebagai awal tag?",
           "options": [
             "&copy;",
@@ -2011,8 +2011,161 @@
           "sourceModuleId": "css-layout-lanjutan-6"
         }
       ],
-      "sectionQuizzes": [],
-      "cheatSheetMarkdown": null
+      "sectionQuizzes": [
+        {
+          "id": "css-layout-quiz-inti",
+          "courseId": "fe-css-02",
+          "section": "INTI",
+          "title": "Kuis Inti Flexbox",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Properti CSS mana yang mengaktifkan mode Flexbox pada sebuah kontainer?",
+              "options": [
+                "display: flex;",
+                "position: flex;",
+                "layout: flexbox;",
+                "float: flex;"
+              ],
+              "correctIndex": 0,
+              "explanation": "display: flex; mengubah elemen menjadi flex container dan anak langsungnya menjadi flex items.",
+              "sourceModuleId": "css-layout-inti-1"
+            },
+            {
+              "id": 2,
+              "question": "Jika flex-direction bernilai row, ke arah mana Main Axis berjalan?",
+              "options": [
+                "Vertikal (atas ke bawah)",
+                "Horizontal (kiri ke kanan)",
+                "Diagonal",
+                "Acak mengikuti tinggi elemen"
+              ],
+              "correctIndex": 1,
+              "explanation": "Pada flex-direction: row (default), Main Axis berjalan horizontal dan Cross Axis berjalan vertikal.",
+              "sourceModuleId": "css-layout-inti-2"
+            },
+            {
+              "id": 3,
+              "question": "Properti mana yang mengatur perataan item sepanjang Main Axis pada Flexbox?",
+              "options": [
+                "align-items",
+                "justify-content",
+                "place-self",
+                "text-align"
+              ],
+              "correctIndex": 1,
+              "explanation": "justify-content mengatur distribusi ruang dan perataan sepanjang Main Axis.",
+              "sourceModuleId": "css-layout-inti-3"
+            },
+            {
+              "id": 4,
+              "question": "Nilai apa yang diberikan agar flex items otomatis turun ke baris baru saat ruang sempit?",
+              "options": [
+                "flex-wrap: wrap;",
+                "flex-flow: overflow;",
+                "align-content: wrap;",
+                "white-space: wrap;"
+              ],
+              "correctIndex": 0,
+              "explanation": "flex-wrap: wrap; mengizinkan item membungkus ke baris berikutnya daripada menyusut paksa.",
+              "sourceModuleId": "css-layout-inti-5"
+            },
+            {
+              "id": 5,
+              "question": "Properti modern mana yang memberi jarak antar-item Flexbox maupun Grid tanpa margin hack?",
+              "options": [
+                "spacing",
+                "gutter",
+                "gap",
+                "padding-between"
+              ],
+              "correctIndex": 2,
+              "explanation": "Properti gap memberi jarak konsisten hanya di antara item, bukan di tepi luar.",
+              "sourceModuleId": "css-layout-inti-6"
+            }
+          ]
+        },
+        {
+          "id": "css-layout-quiz-lanjutan",
+          "courseId": "fe-css-02",
+          "section": "LANJUTAN",
+          "title": "Kuis Lanjutan CSS Grid & Responsif",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Apa keunggulan utama CSS Grid dibanding Flexbox?",
+              "options": [
+                "Hanya untuk teks",
+                "Mengatur tata letak 2-dimensi (baris dan kolom sekaligus)",
+                "Tidak perlu browser modern",
+                "Menggantikan HTML sepenuhnya"
+              ],
+              "correctIndex": 1,
+              "explanation": "CSS Grid dirancang untuk tata letak 2-dimensi (baris dan kolom bersamaan), sedangkan Flexbox unggul di 1-dimensi.",
+              "sourceModuleId": "css-layout-lanjutan-1"
+            },
+            {
+              "id": 2,
+              "question": "Apa arti satuan fr pada grid-template-columns: 1fr 2fr;?",
+              "options": [
+                "Fixed Ratio dalam piksel",
+                "Fraction (fraksi) dari sisa ruang bebas yang tersedia",
+                "Frame rate animasi",
+                "Font relative"
+              ],
+              "correctIndex": 1,
+              "explanation": "1fr dan 2fr membagi sisa ruang bebas kontainer dengan rasio 1 banding 2.",
+              "sourceModuleId": "css-layout-lanjutan-2"
+            },
+            {
+              "id": 3,
+              "question": "Fungsi CSS mana yang membuat kolom galeri otomatis responsif tanpa media query?",
+              "options": [
+                "repeat(auto-fit, minmax(220px, 1fr))",
+                "columns: auto 220px;",
+                "flex: auto-grid;",
+                "grid-auto: responsive;"
+              ],
+              "correctIndex": 0,
+              "explanation": "Kombinasi repeat(auto-fit, minmax(...)) menyesuaikan jumlah kolom otomatis mengikuti lebar kontainer.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 4,
+              "question": "Aturan CSS mana yang dipakai untuk menerapkan gaya hanya pada lebar layar tertentu?",
+              "options": [
+                "@import",
+                "@keyframes",
+                "@media",
+                "@supports"
+              ],
+              "correctIndex": 2,
+              "explanation": "@media query memungkinkan breakpoint responsif berdasarkan ukuran viewport.",
+              "sourceModuleId": "css-layout-lanjutan-5"
+            },
+            {
+              "id": 5,
+              "question": "Properti CSS Grid mana yang memusatkan konten secara horizontal dan vertikal sekaligus?",
+              "options": [
+                "place-items: center;",
+                "float: center;",
+                "vertical-align: middle;",
+                "margin: 0;"
+              ],
+              "correctIndex": 0,
+              "explanation": "place-items: center; adalah shorthand untuk align-items: center dan justify-items: center.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            }
+          ]
+        }
+      ],
+      "cheatSheetMarkdown": "# Cheat Sheet CSS Layout Modern\n\n## Flexbox (1-Dimensi)\n- `display: flex;` — Aktifkan flex container\n- `flex-direction: row | column;` — Arah Main Axis\n- `justify-content: flex-start | center | space-between | space-evenly;` — Perataan Main Axis\n- `align-items: stretch | center | flex-start | flex-end;` — Perataan Cross Axis\n- `flex-wrap: wrap;` — Izinkan item turun baris\n- `gap: 16px;` — Jarak antar item\n\n## CSS Grid (2-Dimensi)\n- `display: grid;` — Aktifkan grid container\n- `grid-template-columns: repeat(3, 1fr);` — 3 kolom sama lebar\n- `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));` — Galeri responsif otomatis\n- `place-items: center;` — Tengah vertikal & horizontal\n\n## Responsif\n```css\n@media (max-width: 768px) {\n  .grid { grid-template-columns: 1fr; }\n}\n```"
     },
     {
       "id": "fe-js-03",
@@ -2299,8 +2452,161 @@
           "sourceModuleId": "js-inti-8"
         }
       ],
-      "sectionQuizzes": [],
-      "cheatSheetMarkdown": null
+      "sectionQuizzes": [
+        {
+          "id": "js-quiz-inti",
+          "courseId": "fe-js-03",
+          "section": "INTI",
+          "title": "Kuis Inti Logika & Struktur Data JS",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Kata kunci mana yang sebaiknya diprioritaskan untuk mendeklarasikan variabel yang nilainya tidak di-reassign?",
+              "options": [
+                "var",
+                "let",
+                "const",
+                "static"
+              ],
+              "correctIndex": 2,
+              "explanation": "Gunakan const secara default agar referensi variabel aman dari perubahan tidak sengaja; gunakan let hanya bila nilainya perlu diubah.",
+              "sourceModuleId": "js-pend-1"
+            },
+            {
+              "id": 2,
+              "question": "Operator perbandingan mana yang memeriksa kesamaan nilai sekaligus tipe data?",
+              "options": [
+                "==",
+                "=",
+                "===",
+                "!="
+              ],
+              "correctIndex": 2,
+              "explanation": "=== (strict equality) membandingkan nilai dan tipe data tanpa konversi tipe implisit.",
+              "sourceModuleId": "js-pend-3"
+            },
+            {
+              "id": 3,
+              "question": "Metode array mana yang menambahkan elemen baru ke bagian akhir array?",
+              "options": [
+                ".push()",
+                ".pop()",
+                ".shift()",
+                ".slice()"
+              ],
+              "correctIndex": 0,
+              "explanation": ".push() menambahkan satu atau lebih elemen ke akhir array.",
+              "sourceModuleId": "js-inti-8"
+            },
+            {
+              "id": 4,
+              "question": "Bagaimana cara mengakses properti nama dari objek const user = { nama: 'Rani' };?",
+              "options": [
+                "user->nama",
+                "user.nama",
+                "user::nama",
+                "user(nama)"
+              ],
+              "correctIndex": 1,
+              "explanation": "Di JavaScript, properti objek diakses menggunakan dot notation (user.nama) atau bracket notation (user['nama']).",
+              "sourceModuleId": "js-inti-7"
+            },
+            {
+              "id": 5,
+              "question": "Manakah sintaks Arrow Function yang valid di ES6?",
+              "options": [
+                "const sapa = (nama) => `Halo ${nama}`;",
+                "function => sapa(nama) {}",
+                "def sapa(nama) -> {}",
+                "arrow sapa(nama) {}"
+              ],
+              "correctIndex": 0,
+              "explanation": "Arrow function menggunakan sintaks (parameter) => ekspresi atau blok { ... }.",
+              "sourceModuleId": "js-inti-6"
+            }
+          ]
+        },
+        {
+          "id": "js-quiz-lanjutan",
+          "courseId": "fe-js-03",
+          "section": "LANJUTAN",
+          "title": "Kuis Lanjutan DOM & Event",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Metode DOM mana yang memilih elemen pertama yang cocok dengan selector CSS?",
+              "options": [
+                "document.querySelector()",
+                "document.selectCss()",
+                "window.getTag()",
+                "dom.findFirst()"
+              ],
+              "correctIndex": 0,
+              "explanation": "document.querySelector('#id' atau '.class') mengembalikan elemen pertama yang cocok dengan selector CSS.",
+              "sourceModuleId": "js-lanjutan-2"
+            },
+            {
+              "id": 2,
+              "question": "Properti mana yang lebih aman dipakai untuk mengubah isi teks elemen tanpa mengeksekusi HTML?",
+              "options": [
+                "innerHTML",
+                "textContent",
+                "outerHTML",
+                "scriptText"
+              ],
+              "correctIndex": 1,
+              "explanation": "textContent menyisipkan teks murni sehingga aman dari risiko XSS dibanding innerHTML.",
+              "sourceModuleId": "js-lanjutan-3"
+            },
+            {
+              "id": 3,
+              "question": "Metode mana yang dipakai untuk memasang penangan klik tombol pada elemen DOM?",
+              "options": [
+                ".onEvent('click', fn)",
+                ".addEventListener('click', fn)",
+                ".attachClick(fn)",
+                ".listen('click', fn)"
+              ],
+              "correctIndex": 1,
+              "explanation": "addEventListener('click', fn) adalah standar DOM modern untuk menangani event.",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 4,
+              "question": "Untuk apa event.preventDefault() sering dipanggil pada event submit form?",
+              "options": [
+                "Menghapus semua input",
+                "Mencegah halaman reload otomatis saat form dikirim",
+                "Menutup tab browser",
+                "Menonaktifkan CSS"
+              ],
+              "correctIndex": 1,
+              "explanation": "event.preventDefault() menahan perilaku bawaan form agar kita bisa memproses data lewat JavaScript tanpa reload.",
+              "sourceModuleId": "js-lanjutan-5"
+            },
+            {
+              "id": 5,
+              "question": "Metode array mana yang menghasilkan array baru berisi elemen yang lolos kondisi tertentu?",
+              "options": [
+                ".filter()",
+                ".push()",
+                ".join()",
+                ".reverse()"
+              ],
+              "correctIndex": 0,
+              "explanation": ".filter() mengembalikan array baru berisi elemen yang callback-nya bernilai true.",
+              "sourceModuleId": "js-lanjutan-1"
+            }
+          ]
+        }
+      ],
+      "cheatSheetMarkdown": "# Cheat Sheet JavaScript Fundamentals\n\n## Variabel & Tipe Data\n- `const nama = \"Budi\";` (nilai tetap, prioritas utama)\n- `let skor = 0;` (nilai dapat berubah)\n- Perbandingan ketat: `===` dan `!==`\n\n## Fungsi & Array\n```javascript\nconst tambah = (a, b) => a + b;\nconst angka = [1, 2, 3, 4];\nconst genap = angka.filter((n) => n % 2 === 0);\n```\n\n## Manipulasi DOM & Event\n```javascript\nconst btn = document.querySelector(\"#btn\");\nconst teks = document.querySelector(\"#hasil\");\n\nbtn.addEventListener(\"click\", () => {\n  teks.textContent = \"Tombol diklik!\";\n});\n```"
     }
   ]
 }

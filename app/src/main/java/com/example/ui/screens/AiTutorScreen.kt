@@ -80,6 +80,7 @@ fun AiTutorScreen(
     onSendMessage: (String) -> Unit,
     onBack: () -> Unit,
     onClearChat: () -> Unit = {},
+    onTryInPlayground: (String, String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     var textInput by remember { mutableStateOf("") }
@@ -264,7 +265,10 @@ fun AiTutorScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             items(messages, key = { it.id }) { message ->
-                ChatMessageBubble(message = message)
+                ChatMessageBubble(
+                    message = message,
+                    onTryInPlayground = onTryInPlayground
+                )
             }
 
             if (isThinking) {
@@ -294,6 +298,7 @@ fun AiTutorScreen(
 @Composable
 fun ChatMessageBubble(
     message: ChatMessage,
+    onTryInPlayground: (String, String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val isUser = message.isUser
@@ -329,7 +334,12 @@ fun ChatMessageBubble(
                 bottomEnd = if (isUser) 4.dp else 16.dp
             ),
             color = if (isUser) TealPrimary else MaterialTheme.colorScheme.surfaceVariant,
-            modifier = Modifier.widthIn(max = 300.dp)
+            modifier = Modifier
+                .weight(1f, fill = false)
+                .padding(
+                    start = if (isUser) 48.dp else 0.dp,
+                    end = if (isUser) 0.dp else 32.dp
+                )
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
                 // If message has code block ``` ... ```
@@ -344,6 +354,7 @@ fun ChatMessageBubble(
                             CodeBlockView(
                                 code = codeBody,
                                 language = lang,
+                                onTryInPlayground = { snippet -> onTryInPlayground(snippet, lang) },
                                 modifier = Modifier.padding(vertical = 4.dp)
                             )
                         } else if (part.trim().isNotEmpty()) {

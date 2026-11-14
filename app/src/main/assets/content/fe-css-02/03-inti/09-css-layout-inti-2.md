@@ -67,8 +67,7 @@ Untuk menguasai Flexbox, ada satu kunci rahasia yang harus selalu kamu bayangkan
 
 Arah sumbu ini dikendalikan oleh properti **`flex-direction`**.
 
-![Konsep Main Axis dan Cross Axis pada Flexbox](asset:images/fe-css-02/sumbu-flexbox-axis.png)
-
+> **Ilustrasi Konsep:** Konsep Main Axis dan Cross Axis pada Flexbox
 ## Dua Sumbu yang Berputar Bersama
 
 1. **Main Axis (Sumbu Utama)**:

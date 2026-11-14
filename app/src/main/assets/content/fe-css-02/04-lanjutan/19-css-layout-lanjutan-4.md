@@ -73,8 +73,7 @@ Namun, bagaimana jika kamu ingin membuat satu elemen yang lebih penting—sepert
 
 Kuncinya adalah mengarahkan elemen memakai nomor **Grid Lines (Garis Kisi)**!
 
-![Menempatkan Item Menggunakan grid-column dan grid-row Spanning](asset:images/fe-css-02/grid-lines-dan-spanning.png)
-
+> **Ilustrasi Konsep:** Menempatkan Item Menggunakan grid-column dan grid-row Spanning
 ## Sistem Penomoran Garis Kisi
 
 Jika kamu membuat 3 kolom:

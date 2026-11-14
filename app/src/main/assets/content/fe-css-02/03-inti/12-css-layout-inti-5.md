@@ -72,8 +72,7 @@ Bahkan jika lebar layar mengecil (misalnya di smartphone), item flex akan terus 
 
 Untuk mengatasi hal ini, kita membutuhkan dua penyelamat: **`flex-wrap`** dan **`gap`**.
 
-![Penggunaan flex-wrap dan properti gap](asset:images/fe-css-02/flex-wrap-dan-gap.png)
-
+> **Ilustrasi Konsep:** Penggunaan flex-wrap dan properti gap
 ## Mengizinkan Baris Baru dengan `flex-wrap`
 
 Properti `flex-wrap` diletakkan pada kontainer induk untuk menentukan apakah item boleh turun ke baris berikutnya saat ruang habis:

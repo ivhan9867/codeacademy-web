@@ -181,33 +181,23 @@ fun HomeScreen(
         }
     }
 
-    val (recommendedCourseId, recTitle, recDesc) = remember(courses, primaryUserTrack) {
-        val userTrack = primaryUserTrack
-        when (userTrack) {
-            "python" -> Triple(
-                "py-fund-01",
-                "Pemrograman Python: Logika & Otomasi",
-                "Kuasai dasar sintaksis Python, struktur data, dan otomasi script dengan latihan langsung."
+    val (recommendedCourseId, recTitle, recDesc) = remember(courses, progressList) {
+        val completedIds = progressList.filter { it.isCompleted }.map { it.courseId }.toSet()
+        when {
+            "fe-web-foundation-00" !in completedIds -> Triple(
+                "fe-web-foundation-00",
+                "Fondasi Web: Dari Nol ke Baris Kode Pertama",
+                "Mulai dari struktur HTML semantik dan styling CSS dasar langsung di smartphone."
             )
-            "back-end" -> Triple(
-                "be-node-01",
-                "Backend Modern: REST API & Database",
-                "Pelajari arsitektur server, manajemen API, dan integrasi database performa tinggi."
-            )
-            "c-lang" -> Triple(
-                "c-fund-01",
-                "Fondasi Bahasa C: Memori & Algoritma",
-                "Pahami cara kerja komputer dari tingkat rendah dengan manajemen memori dan pointer."
-            )
-            "cpp-lang" -> Triple(
-                "cpp-fund-01",
-                "Modern C++: OOP & Standard Library",
-                "Bangun aplikasi berperforma tinggi dengan konsep Object Oriented dan STL modern."
-            )
-            else -> Triple(
+            "fe-css-02" !in completedIds -> Triple(
                 "fe-css-02",
                 "CSS Layout Modern: Flexbox & Grid",
                 "Kuasai tata letak responsif dengan Flexbox & Grid langsung di smartphone dengan praktik instan."
+            )
+            else -> Triple(
+                "fe-js-03",
+                "JavaScript Fundamentals",
+                "Hidupkan halaman web dengan logika JavaScript ES6, manipulasi DOM, dan event listener."
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.example.data.remote
 
 import android.util.Log
+import com.example.data.local.CertificateEntity
 import com.example.data.local.ForumPostEntity
 import com.example.data.local.LeaderboardEntryCacheEntity
 import com.example.data.local.ProjectSubmissionEntity
@@ -22,6 +23,7 @@ class FirestoreForumAndLeaderboardService(
         const val FORUM_COLLECTION = "forum_posts"
         const val USERS_COLLECTION = "users"
         const val PROJECT_SUBMISSIONS_COLLECTION = "project_submissions"
+        const val CERTIFICATES_COLLECTION = "certificates"
         const val DEFAULT_PAGE_SIZE = 20L
     }
 
@@ -510,5 +512,34 @@ class FirestoreForumAndLeaderboardService(
             facilitatorScore = facilitatorScore,
             rubricScoresJson = rubricScoresJson
         )
+    }
+
+    // ==========================================
+    // 4. CLOUD SYNC SERTIFIKAT KELULUSAN
+    // ==========================================
+
+    suspend fun upsertCertificate(cert: CertificateEntity): Result<Unit> {
+        val firestore = getFirestore()
+            ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
+        return try {
+            val data = hashMapOf(
+                "certId" to cert.certId,
+                "accountId" to cert.accountId,
+                "courseId" to cert.courseId,
+                "courseTitle" to cert.courseTitle,
+                "userName" to cert.userName,
+                "issueDate" to cert.issueDate,
+                "scorePercent" to cert.scorePercent,
+                "updatedAt" to System.currentTimeMillis()
+            )
+            firestore.collection(CERTIFICATES_COLLECTION)
+                .document(cert.certId)
+                .set(data, SetOptions.merge())
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.w(TAG, "Error upserting certificate to Firestore: ${e.message}")
+            Result.failure(e)
+        }
     }
 }

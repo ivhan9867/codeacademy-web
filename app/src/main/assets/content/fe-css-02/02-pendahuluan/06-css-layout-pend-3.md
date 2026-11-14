@@ -80,8 +80,7 @@ playgroundTask: "Coba amati panel Live Preview: kotak pembungkus (.pembungkus) t
 ---
 Sebelum kita bersyukur atas kemudahan Flexbox dan Grid, penting untuk memahami "trauma kolektif" yang pernah dialami seluruh pengembang web di seluruh dunia: **membuat kolom dengan `float`**.
 
-![Fenomena Container Collapsing Akibat Float dan Mantra Clearfix](asset:images/fe-css-02/masalah-float-collapsing.png)
-
+> **Ilustrasi Konsep:** Fenomena Container Collapsing Akibat Float dan Mantra Clearfix
 ## Apa Sebenarnya Tujuan Awal `float`?
 
 Properti `float` (dengan nilai `left` atau `right`) diciptakan untuk meniru tata letak surat kabar:

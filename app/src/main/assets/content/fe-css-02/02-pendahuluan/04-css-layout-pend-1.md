@@ -14,8 +14,7 @@ Ketika web pertama kali diciptakan oleh Tim Berners-Lee pada awal tahun 1990-an,
 
 Namun, dalam dua dekade berikutnya, web bertransformasi menjadi platform aplikasi terbesar di dunia.
 
-![Evolusi Tata Letak Web dari Dokumen Teks ke Desain Responsif](asset:images/fe-css-02/evolusi-layout-web.png)
-
+> **Ilustrasi Konsep:** Evolusi Tata Letak Web dari Dokumen Teks ke Desain Responsif
 ## Gelombang Evolusi Tata Letak Web
 
 Perjalanan menata letak elemen di browser melewati beberapa era yang cukup menguras tenaga para pengembang web terdahulu:

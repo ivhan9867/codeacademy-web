@@ -335,7 +335,7 @@ class SocialRepository(
                 val completedModules = allProgress.count { it.isCompleted }
                 val estimatedUnlockedBadges = buildList {
                     if (completedModules >= 1) add("b1")
-                    if (allProgress.any { it.isCompleted && it.quizScore >= 80 }) add("b2")
+                    if (completedModules >= 3) add("b2")
                     if (profile.currentStreak >= 3) add("b3")
                     if (profile.totalXp >= 500) add("b4")
                     if (profile.currentStreak >= 7) add("b5")

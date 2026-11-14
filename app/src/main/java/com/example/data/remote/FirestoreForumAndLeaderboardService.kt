@@ -15,6 +15,18 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
 import java.util.UUID
 
+data class PublicUserProfile(
+    val userId: String,
+    val name: String,
+    val bio: String = "",
+    val role: String = "Siswa",
+    val level: Int = 1,
+    val totalXp: Int = 0,
+    val currentStreak: Int = 0,
+    val completedCoursesCount: Int = 0,
+    val unlockedBadgeIds: List<String> = emptyList()
+)
+
 class FirestoreForumAndLeaderboardService(
     private val customFirestore: FirebaseFirestore? = null
 ) {
@@ -196,18 +208,6 @@ class FirestoreForumAndLeaderboardService(
     // 2. LEADERBOARD (CLOUD DATA + QUERY EFISIEN)
     // ==========================================
 
-data class PublicUserProfile(
-    val userId: String,
-    val name: String,
-    val bio: String = "",
-    val role: String = "Siswa",
-    val level: Int = 1,
-    val totalXp: Int = 0,
-    val currentStreak: Int = 0,
-    val completedCoursesCount: Int = 0,
-    val unlockedBadgeIds: List<String> = emptyList()
-)
-
     /**
      * Sinkronisasikan profil XP user saat bertambah atau saat login ke Firestore.
      * Menyimpan totalXp, xpThisWeek, xpThisMonth, currentStreak, dan primaryTrack untuk multi-scope leaderboard.
@@ -228,7 +228,7 @@ data class PublicUserProfile(
     ): Result<Unit> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
-            val data = hashMapOf(
+            val data = hashMapOf<String, Any>(
                 "userId" to userId,
                 "name" to userName,
                 "totalXp" to totalXp,

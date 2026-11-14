@@ -7,8 +7,6 @@ import com.example.data.SocialRepository
 import com.example.data.local.ForumPostEntity
 import com.example.data.local.LeaderboardEntryCacheEntity
 import com.example.data.local.WeeklyChallengeEntity
-import com.example.data.model.FriendshipEntity
-import com.example.data.repository.CodeAcademyRepository
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -28,45 +25,10 @@ import kotlinx.coroutines.launch
 /**
  * Canonical ViewModel for social features across CodeAcademy:
  * - Community, leaderboard, weekly challenges, and course discussion forum (Firestore & local cache).
- * - Real-time friendship management and friend requests.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SocialViewModel(application: Application) : AndroidViewModel(application) {
     private val socialRepo: SocialRepository = SocialRepository.getInstance(application)
-    private val repository: CodeAcademyRepository = CodeAcademyRepository.getInstance(application)
-
-    init {
-        repository.acquireRealtime("social")
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        repository.releaseRealtime("social")
-    }
-
-    // ==========================================
-    // FRIENDSHIPS & SOCIAL (REALTIME)
-    // ==========================================
-    val currentUserId: StateFlow<String?> = repository.authService.currentUserFlow
-        .map { it?.id }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), repository.authService.currentUserId)
-
-    val friendships: StateFlow<List<FriendshipEntity>> = currentUserId.flatMapLatest { uid ->
-        if (uid != null) repository.getFriendshipsFlow(uid) else flowOf(emptyList())
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
-
-    fun sendFriendRequest(targetName: String) {
-        val uid = currentUserId.value ?: return
-        viewModelScope.launch {
-            repository.sendFriendRequest(uid, targetName)
-        }
-    }
-
-    fun acceptFriendRequest(requesterId: String, addresseeId: String) {
-        viewModelScope.launch {
-            repository.acceptFriendRequest(requesterId, addresseeId)
-        }
-    }
 
     // ==========================================
     // LEADERBOARD (CLOUD DATA + ROOM CACHE MULTI-SCOPE)

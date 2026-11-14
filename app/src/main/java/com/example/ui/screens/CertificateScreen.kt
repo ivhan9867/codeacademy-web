@@ -276,7 +276,7 @@ fun CertificateScreen(
                             action = Intent.ACTION_SEND
                             putExtra(
                                 Intent.EXTRA_TEXT,
-                                "🎓 Kelulusan Kursus ${certificate.courseTitle} oleh ${certificate.recipientName}!\nID Kredensial: ${certificate.certId}\nCek keaslian sertifikat di Portal Web CodeAcademy (verify.html?id=${certificate.certId})"
+                                "🎓 Kelulusan Kursus ${certificate.courseTitle} oleh ${certificate.userName}!\nID Kredensial: ${certificate.certId}\nCek keaslian sertifikat di Portal Web CodeAcademy (verify.html?id=${certificate.certId})"
                             )
                             type = "text/plain"
                         }

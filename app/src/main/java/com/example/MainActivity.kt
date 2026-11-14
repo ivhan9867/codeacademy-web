@@ -484,10 +484,85 @@ fun CodeAcademyApp(
                 )
             }
 
+            val launchGoogleAuth: (String) -> Unit = { fromRoute ->
+                val webClientIdRes = this@MainActivity.resources.getIdentifier(
+                    "default_web_client_id",
+                    "string",
+                    this@MainActivity.packageName
+                )
+                val webClientId = if (webClientIdRes != 0) {
+                    this@MainActivity.getString(webClientIdRes)
+                } else {
+                    ""
+                }
+                if (webClientId.isBlank()) {
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        "Aktifkan Google Sign-In di Firebase Console dan perbarui google-services.json terlebih dahulu.",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    coroutineScope.launch {
+                        try {
+                            val activity = this@MainActivity
+                            var authResult: Result<Boolean>? = null
+                            try {
+                                val credentialManager = androidx.credentials.CredentialManager.create(activity)
+                                val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
+                                    .build()
+                                val request = androidx.credentials.GetCredentialRequest.Builder()
+                                    .addCredentialOption(signInWithGoogleOption)
+                                    .build()
+                                val credResponse = credentialManager.getCredential(
+                                    context = activity,
+                                    request = request
+                                )
+                                val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+                                    .createFrom(credResponse.credential.data)
+                                authResult = viewModel.loginWithGoogle(
+                                    idToken = googleCred.idToken,
+                                    displayName = googleCred.displayName,
+                                    email = googleCred.id
+                                )
+                            } catch (credErr: Exception) {
+                                if (credErr is androidx.credentials.exceptions.GetCredentialCancellationException) {
+                                    return@launch
+                                }
+                                val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com").build()
+                                val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
+                                    .startActivityForSignInWithProvider(activity, provider)
+                                    .await()
+                                authResult = viewModel.completeGoogleLogin(
+                                    email = firebaseResult.user?.email,
+                                    displayName = firebaseResult.user?.displayName
+                                )
+                            }
+
+                            if (authResult.isSuccess) {
+                                val isOnboarded = authResult.getOrDefault(false)
+                                navController.navigate(if (isOnboarded) "home" else "onboarding") {
+                                    popUpTo(fromRoute) { inclusive = true }
+                                }
+                            } else {
+                                android.widget.Toast.makeText(
+                                    this@MainActivity,
+                                    authResult.exceptionOrNull()?.message ?: "Gagal masuk dengan Google.",
+                                    android.widget.Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            android.widget.Toast.makeText(
+                                this@MainActivity,
+                                "Gagal login Google: ${e.message ?: "periksa koneksi & Firebase Auth"}",
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+            }
+
             // 2. Login
             composable("login") {
-                val loginContext = LocalContext.current
-                val loginScope = rememberCoroutineScope()
                 LoginScreen(
                     onLoginSubmit = { email, password ->
                         val result = viewModel.login(email, password)
@@ -513,87 +588,7 @@ fun CodeAcademyApp(
                     onForgotPassword = {
                         navController.navigate("forgot_password")
                     },
-                    onGoogleSignIn = {
-                        val webClientIdRes = loginContext.resources.getIdentifier(
-                            "default_web_client_id",
-                            "string",
-                            loginContext.packageName
-                        )
-                        val webClientId = if (webClientIdRes != 0) {
-                            loginContext.getString(webClientIdRes)
-                        } else {
-                            ""
-                        }
-                        if (webClientId.isBlank()) {
-                            android.widget.Toast.makeText(
-                                loginContext,
-                                "Aktifkan Google Sign-In di Firebase Console dan perbarui google-services.json terlebih dahulu.",
-                                android.widget.Toast.LENGTH_LONG
-                            ).show()
-                        } else {
-                            loginScope.launch {
-                                try {
-                                    val activity = this@MainActivity
-
-                                    var authResult: Result<Boolean>? = null
-
-                                    // 1. Coba Firebase Web OAuth (Custom Tab) langsung jika CredentialManager gagal, dan tampilkan detail jika keduanya gagal
-                                    var credErrorMsg: String? = null
-                                    try {
-                                        val credentialManager = androidx.credentials.CredentialManager.create(activity)
-                                        val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
-                                            .build()
-                                        val request = androidx.credentials.GetCredentialRequest.Builder()
-                                            .addCredentialOption(signInWithGoogleOption)
-                                            .build()
-                                        val credResponse = credentialManager.getCredential(
-                                            context = activity,
-                                            request = request
-                                        )
-                                        val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-                                            .createFrom(credResponse.credential.data)
-                                        authResult = viewModel.loginWithGoogle(
-                                            idToken = googleCred.idToken,
-                                            displayName = googleCred.displayName,
-                                            email = googleCred.id
-                                        )
-                                    } catch (credErr: Exception) {
-                                        if (credErr is androidx.credentials.exceptions.GetCredentialCancellationException) {
-                                            return@launch
-                                        }
-                                        credErrorMsg = credErr.message
-                                        val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com").build()
-                                        val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
-                                            .startActivityForSignInWithProvider(activity, provider)
-                                            .await()
-                                        authResult = viewModel.completeGoogleLogin(
-                                            email = firebaseResult.user?.email,
-                                            displayName = firebaseResult.user?.displayName
-                                        )
-                                    }
-
-                                    if (authResult.isSuccess) {
-                                        val isOnboarded = authResult.getOrDefault(false)
-                                        navController.navigate(if (isOnboarded) "home" else "onboarding") {
-                                            popUpTo("login") { inclusive = true }
-                                        }
-                                    } else {
-                                        android.widget.Toast.makeText(
-                                            loginContext,
-                                            authResult.exceptionOrNull()?.message ?: "Gagal masuk dengan Google.",
-                                            android.widget.Toast.LENGTH_LONG
-                                        ).show()
-                                    }
-                                } catch (e: Exception) {
-                                    android.widget.Toast.makeText(
-                                        loginContext,
-                                        "Gagal login Google: ${e.message ?: "periksa koneksi & Firebase Auth"}",
-                                        android.widget.Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        }
-                    }
+                    onGoogleSignIn = { launchGoogleAuth("login") }
                 )
             }
 
@@ -629,7 +624,8 @@ fun CodeAcademyApp(
                     },
                     onNavigateToLogin = {
                         navController.popBackStack()
-                    }
+                    },
+                    onGoogleSignIn = { launchGoogleAuth("register") }
                 )
             }
 

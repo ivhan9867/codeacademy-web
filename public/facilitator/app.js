@@ -456,13 +456,14 @@ function renderTable() {
       <td>
         <span class="course-badge">${escapeHtml(sub.courseTitle)}</span>
       </td>
-      <td><span style="font-weight: 700; color: var(--teal-primary);">${sub.finalQuizScore}%</span></td>
+      <td><span style="font-family: var(--mono); font-weight: 700; color: var(--teal-deep);">${sub.finalQuizScore}%</span></td>
       <td><span class="status-badge ${statusClass}">${statusText}</span></td>
-      <td style="color: var(--text-muted); font-size: 11.5px;">${timeAgo}</td>
-      <td><span style="font-weight: 600;">Ke-${sub.attemptNumber || 1}</span></td>
-      <td>
+      <td style="color: var(--muted); font-size: 12.5px;">${timeAgo}</td>
+      <td><span style="font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--ink);">Ke-${sub.attemptNumber || 1}</span></td>
+      <td style="text-align: right;">
         <button class="btn-action-review" onclick="openReviewModal('${escapeHtml(sub.docId || sub.submissionId)}')">
-          <span>🔍</span> Tinjau
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Tinjau
         </button>
       </td>
     `;
@@ -600,9 +601,9 @@ async function executeReview(newStatus) {
       );
       closeModal();
       if (newStatus === "APPROVED") {
-        showToast(`✅ Proyek ${targetStudentName} DISETUJUI (tersinkron real-time ke Android)!`);
+        showToast(`Proyek ${targetStudentName} disetujui dan tersinkron real-time ke Android.`);
       } else {
-        showToast(`⚠️ Permintaan revisi dikirim real-time ke ${targetStudentName}.`);
+        showToast(`Permintaan revisi dikirim real-time ke ${targetStudentName}.`);
       }
       return;
     } catch (err) {
@@ -624,9 +625,9 @@ async function executeReview(newStatus) {
   closeModal();
 
   if (newStatus === "APPROVED") {
-    showToast(`✅ [Demo Lokal] Proyek ${targetStudentName} disetujui!`);
+    showToast(`[Demo Lokal] Proyek ${targetStudentName} disetujui.`);
   } else {
-    showToast(`⚠️ [Demo Lokal] Permintaan revisi dikirim ke ${targetStudentName}.`);
+    showToast(`[Demo Lokal] Permintaan revisi dikirim ke ${targetStudentName}.`);
   }
 }
 

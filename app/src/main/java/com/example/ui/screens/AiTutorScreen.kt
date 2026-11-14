@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,6 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -50,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.stringResource
@@ -75,6 +79,7 @@ fun AiTutorScreen(
     isThinking: Boolean,
     onSendMessage: (String) -> Unit,
     onBack: () -> Unit,
+    onClearChat: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var textInput by remember { mutableStateOf("") }
@@ -130,7 +135,8 @@ fun AiTutorScreen(
                                 text = "$courseTitle • $moduleTitle",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 1
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }
@@ -143,6 +149,16 @@ fun AiTutorScreen(
                         )
                     }
                 },
+                actions = {
+                    if (messages.size > 1) {
+                        IconButton(onClick = onClearChat) {
+                            Icon(
+                                imageVector = Icons.Default.DeleteOutline,
+                                contentDescription = "Bersihkan Riwayat Chat"
+                            )
+                        }
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
@@ -153,6 +169,8 @@ fun AiTutorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
+                    .navigationBarsPadding()
+                    .imePadding()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
                 // Quick suggested prompts

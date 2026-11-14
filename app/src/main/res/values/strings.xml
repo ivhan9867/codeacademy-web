@@ -577,7 +577,7 @@
     <string name="cert_view_back_cd">Kembali</string>
     <string name="cert_view_share_cd">Bagikan Sertifikat</string>
     <string name="cert_view_not_found">Data sertifikat tidak ditemukan.</string>
-    <string name="cert_view_header_org">NGODINGYUK ACADEMY</string>
+    <string name="cert_view_header_org">CODEACADEMY</string>
     <string name="cert_view_header_title">SERTIFIKAT KELULUSAN</string>
     <string name="cert_view_awarded_to">Diberikan secara resmi kepada:</string>
     <string name="cert_view_completion_desc">Atas keberhasilan menyelesaikan seluruh modul, evaluasi kuis akhir, dan proyek akhir terverifikasi fasilitator pada kelas:</string>

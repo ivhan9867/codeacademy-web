@@ -737,6 +737,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun clearAiChat() {
+        _chatMessages.value = listOf(
+            ChatMessage(
+                UUID.randomUUID().toString(),
+                "Halo! Saya AI Tutor CodeAcademy Indonesia. Ada konsep atau kode pemrograman yang ingin kamu tanyakan hari ini? 🚀",
+                false
+            )
+        )
+    }
+
     fun updateProfile(name: String, bio: String) {
         viewModelScope.launch {
             repo.updateProfile(name, bio)

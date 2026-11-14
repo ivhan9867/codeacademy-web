@@ -51,6 +51,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.ui.components.CodeAcademyMascot
+import com.example.ui.components.MascotMood
 import com.example.ui.theme.AmberGold
 import com.example.ui.theme.CodeDarkBg
 import com.example.ui.theme.CodeDarkBorder
@@ -90,9 +92,11 @@ fun WelcomeStep(
                 .padding(vertical = 12.dp),
             contentAlignment = Alignment.Center
         ) {
-            WelcomeHeroIllustration(
-                areAnimationsEnabled = areAnimationsEnabled,
-                modifier = Modifier.fillMaxSize()
+            CodeAcademyMascot(
+                size = 210.dp,
+                mood = MascotMood.HAPPY,
+                showWebBadges = true,
+                areAnimationsEnabled = areAnimationsEnabled
             )
         }
 
@@ -100,12 +104,12 @@ fun WelcomeStep(
         val title = if (userName.isNotBlank()) {
             "Selamat Datang, $userName!"
         } else {
-            "Kuasai Coding dari Nol"
+            "Kuasai Web Dev dari Nol"
         }
 
         OnboardingStepHeader(
             title = title,
-            subtitle = "Belajar pemrograman secara interaktif langkah demi langkah dan bangun portofolio kariermu.",
+            subtitle = "Belajar HTML, CSS, dan JavaScript secara interaktif langkah demi langkah untuk membangun web pertamamu.",
             modifier = Modifier.padding(bottom = 16.dp)
         )
     }

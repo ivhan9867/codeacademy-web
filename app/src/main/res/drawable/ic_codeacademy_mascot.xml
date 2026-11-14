@@ -1,0 +1,94 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="128dp"
+    android:height="128dp"
+    android:viewportWidth="128"
+    android:viewportHeight="128">
+
+    <!-- Soft Background Glow Circle -->
+    <path
+        android:fillColor="#1A389B9E"
+        android:pathData="M64,64m-56,0a56,56 0,1 1,112 0a56,56 0,1 1,-112 0" />
+
+    <!-- Antenna Stem -->
+    <path
+        android:fillColor="#104246"
+        android:pathData="M61,16h6v12h-6z" />
+    <!-- Antenna Tip (Coral Accent) -->
+    <path
+        android:fillColor="#DF7B56"
+        android:pathData="M64,14m-6,0a6,6 0,1 1,12 0a6,6 0,1 1,-12 0" />
+
+    <!-- Left Ear / Headphone -->
+    <path
+        android:fillColor="#DF7B56"
+        android:pathData="M18,52c0,-4.42 3.58,-8 8,-8h4v28h-4c-4.42,0 -8,-3.58 -8,-8V52z" />
+    <!-- Right Ear / Headphone -->
+    <path
+        android:fillColor="#DF7B56"
+        android:pathData="M110,52c0,-4.42 -3.58,-8 -8,-8h-4v28h4c4.42,0 8,-3.58 8,-8V52z" />
+
+    <!-- Robot Head Outer Shell -->
+    <path
+        android:fillColor="#1A6368"
+        android:pathData="M28,44c0,-9.94 8.06,-18 18,-18h36c9.94,0 18,8.06 18,18v32c0,9.94 -8.06,18 -18,18H46c-9.94,0 -18,-8.06 -18,-18V44z" />
+
+    <!-- Robot Head Highlight Rim -->
+    <path
+        android:fillColor="#389B9E"
+        android:pathData="M46,26h36c9.94,0 18,8.06 18,18v4c0,-9.94 -8.06,-18 -18,-18H46c-9.94,0 -18,8.06 -18,18v-4c0,-9.94 8.06,-18 18,-18z" />
+
+    <!-- Dark Visor Screen -->
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M36,46c0,-5.52 4.48,-10 10,-10h36c5.52,0 10,4.48 10,10v24c0,5.52 -4.48,10 -10,10H46c-5.52,0 -10,-4.48 -10,-10V46z" />
+
+    <!-- Left Eye (Glowing Cyan Bracket '<' style dot) -->
+    <path
+        android:fillColor="#2DD4BF"
+        android:pathData="M49,54m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M50.5,52.5m-1.8,0a1.8,1.8 0,1 1,3.6 0a1.8,1.8 0,1 1,-3.6 0" />
+
+    <!-- Right Eye (Glowing Cyan dot) -->
+    <path
+        android:fillColor="#2DD4BF"
+        android:pathData="M79,54m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M80.5,52.5m-1.8,0a1.8,1.8 0,1 1,3.6 0a1.8,1.8 0,1 1,-3.6 0" />
+
+    <!-- Happy Code Smile / Mouth (Coral) -->
+    <path
+        android:strokeColor="#DF7B56"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M56,66 Q64,73 72,66" />
+
+    <!-- Body / Torso -->
+    <path
+        android:fillColor="#104246"
+        android:pathData="M40,94h48c6.63,0 12,5.37 12,12v10H28v-10c0,-6.63 5.37,-12 12,-12z" />
+
+    <!-- Chest Code Badge '< />' -->
+    <path
+        android:fillColor="#1A6368"
+        android:pathData="M50,101h28c2.21,0 4,1.79 4,4v6c0,2.21 -1.79,4 -4,4H50c-2.21,0 -4,-1.79 -4,-4v-6c0,-2.21 1.79,-4 4,-4z" />
+    <path
+        android:strokeColor="#2DD4BF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M57,105 L53,108 L57,111" />
+    <path
+        android:strokeColor="#DF7B56"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:pathData="M62,111.5 L66,104.5" />
+    <path
+        android:strokeColor="#2DD4BF"
+        android:strokeWidth="2.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M71,105 L75,108 L71,111" />
+</vector>

@@ -1020,8 +1020,12 @@ fun CodeAcademyApp(
                         submission = submission,
                         onBack = { navController.popBackStack() },
                         onLoadPlaygroundDraft = {
-                            viewModel.getPlaygroundDraft(course.id)?.let {
-                                "\n<style></style>\n<script></script>"
+                            viewModel.getPlaygroundDraft(course.id)?.let { draft ->
+                                buildString {
+                                    if (draft.htmlCode.isNotBlank()) append(draft.htmlCode)
+                                    if (draft.cssCode.isNotBlank()) append("\n<style>\n${draft.cssCode}\n</style>")
+                                    if (draft.jsCode.isNotBlank()) append("\n<script>\n${draft.jsCode}\n</script>")
+                                }.ifBlank { null }
                             }
                         },
                         onSaveDraft = { code, repoUrl, notes, rubrics ->
@@ -1041,6 +1045,9 @@ fun CodeAcademyApp(
                                     onCertReady(cert?.certId)
                                 }
                             )
+                        },
+                        onAttachRealtimeListener = {
+                            viewModel.attachProjectSubmissionListener(course.id)
                         },
                         onViewCertificate = {
                             val cert = certificates.find { it.courseId == course.id }
@@ -1225,6 +1232,7 @@ fun CodeAcademyApp(
                     onSendMessage = { query ->
                         viewModel.askAi(query, courseTitle, moduleTitle)
                     },
+                    onClearChat = { viewModel.clearAiChat() },
                     onBack = { navController.popBackStack() }
                 )
             }

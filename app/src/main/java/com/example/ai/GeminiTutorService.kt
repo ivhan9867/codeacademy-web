@@ -44,7 +44,7 @@ class GeminiTutorService {
             return """
 Anda adalah AI Tutor resmi untuk CodeAcademy Indonesia, platform pembelajaran web development mobile-first.
 Tugas Anda:
-1. Menjawab pertanyaan seputar pemrograman web (HTML, CSS, JavaScript), Node.js, Python, atau C/C++ dalam $langName yang ramah, jelas, edukatif, dan mudah dipahami siswa.
+1. Menjawab pertanyaan seputar pemrograman Web Development (HTML, CSS, dan JavaScript) dalam $langName yang ramah, jelas, edukatif, dan mudah dipahami siswa.
 2. Konteks belajar pengguna saat ini: Kelas "$courseTitle", Modul "$moduleTitle".$contextAdditions
 3. Berikan hint atau petunjuk terarah daripada langsung memberikan kode utuh, agar siswa dapat belajar memecahkan masalah sendiri.
 4. Berikan contoh kode ringkas bila relevan menggunakan Markdown code block (misal ```html atau ```javascript).
@@ -71,7 +71,7 @@ Tugas Anda:
             )
 
             val generativeModel = Firebase.ai.generativeModel(
-                modelName = "gemini-3.8-flash",
+                modelName = "gemini-2.0-flash",
                 systemInstruction = content {
                     text(systemPrompt)
                 },

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Fasilitator — Penilaian Proyek Akhir CodeAcademy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PASSCODE / PIN AUTH OVERLAY -->
+  <div id="authOverlay" class="auth-overlay" data-particles data-colors="#1FB5B0,#3B6BFF,#8B5CF6,#EC4899,#E26D45,#F2A93B" data-alpha="0.5" data-density="22" data-radius="240">
+    <div class="auth-card">
+      <span class="auth-brand" aria-hidden="true">&lt;/&gt;</span>
+      <h2>Masuk sebagai fasilitator</h2>
+      <p>Masukkan PIN untuk membuka antrean penilaian proyek akhir.</p>
+
+      <form id="authForm">
+        <div class="auth-input-group">
+          <label for="pinInput">PIN</label>
+          <input type="password" id="pinInput" autocomplete="current-password" autofocus required>
+        </div>
+        <div id="authError" class="auth-error" role="alert" hidden>PIN tidak cocok. Periksa lagi, lalu coba sekali lagi.</div>
+        <button type="submit" class="btn-auth-submit">Masuk</button>
+      </form>
+      <a class="auth-back" href="../index.html">Kembali ke beranda</a>
+    </div>
+  </div>
+
+  <!-- TOP NAVBAR -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="logo-badge">&lt;/&gt;</div>
+      <div class="nav-title">
+        <h1>CodeAcademy Facilitator Portal</h1>
+        <span>Sistem Manajemen & Evaluasi Proyek Akhir Siswa</span>
+      </div>
+    </div>
+    <div class="nav-actions">
+      <span class="btn-mode-badge live" id="modeBadge">● Live Realtime Sync</span>
+      <a href="../verify.html" target="_blank" style="color: #FFFFFF; font-size: 12px; text-decoration: none; margin-right: 8px;">Portal Verifikasi ↗</a>
+      <button class="btn-logout" id="btnLogout">Keluar Sesi</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+    
+    <!-- STATS ROW -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-info">
+          <h3 id="statTotal">0</h3>
+          <p>Total Pengumpulan</p>
+        </div>
+        <div class="stat-icon all">📁</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <h3 id="statPending" style="color: #B45309;">0</h3>
+          <p>Menunggu Review</p>
+        </div>
+        <div class="stat-icon pending">⏳</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <h3 id="statRevision" style="color: var(--coral-accent);">0</h3>
+          <p>Perlu Revisi</p>
+        </div>
+        <div class="stat-icon revision">📝</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-info">
+          <h3 id="statApproved" style="color: var(--success);">0</h3>
+          <p>Lulus & Bersertifikat</p>
+        </div>
+        <div class="stat-icon approved">🏆</div>
+      </div>
+    </section>
+
+    <!-- CONTROL & FILTERS BAR -->
+    <section class="control-bar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Cari nama mahasiswa, email, atau kelas...">
+      </div>
+
+      <div class="filters-group">
+        <select class="select-filter" id="courseFilter">
+          <option value="all">Semua Kelas WebDev</option>
+          <option value="fe-web-foundation-00">Fondasi Web: HTML & CSS</option>
+          <option value="fe-css-02">CSS Layout: Flexbox & Grid</option>
+          <option value="fe-js-03">JavaScript Fundamentals</option>
+        </select>
+
+        <button class="btn-filter-pill active" data-status="all">Semua</button>
+        <button class="btn-filter-pill" data-status="PENDING_REVIEW">Menunggu Review</button>
+        <button class="btn-filter-pill" data-status="REVISION_REQUESTED">Perlu Revisi</button>
+        <button class="btn-filter-pill" data-status="APPROVED">Disetujui</button>
+      </div>
+    </section>
+
+    <!-- SUBMISSION TABLE -->
+    <section class="table-card">
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Mahasiswa</th>
+              <th>Mata Kuliah / Kelas</th>
+              <th>Skor Kuis (40%)</th>
+              <th>Status</th>
+              <th>Waktu Kirim</th>
+              <th>Percobaan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="submissionsTableBody">
+            <!-- Rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- REVIEW MODAL -->
+  <div id="reviewModal" class="modal-backdrop">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalStudentName">Nama Mahasiswa</h2>
+          <p><span id="modalCourseTitle">Kelas</span> • <span id="modalStudentEmail">email@kampus.ac.id</span></p>
+        </div>
+        <button class="btn-close-modal" id="btnCloseModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Student Notes & Project Links -->
+        <div class="review-section">
+          <h4>📌 Catatan Pengantar Siswa & Repositori</h4>
+          <p id="modalStudentNotes" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;"></p>
+          <a id="btnProjectUrl" href="#" target="_blank" class="btn-action-review" style="text-decoration: none;">
+            🔗 Buka Repositori / Demo Eksternal
+          </a>
+        </div>
+
+        <!-- Code Viewer & Live Preview -->
+        <div class="review-section">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <h4 style="margin: 0;">💻 Berkas Kode & Pratinjau Web</h4>
+            <div style="display: flex; gap: 6px;">
+              <button type="button" id="btnTabCode" class="btn-filter-pill active" style="padding: 4px 10px; font-size: 11px;">Kode Sumber</button>
+              <button type="button" id="btnTabPreview" class="btn-filter-pill" style="padding: 4px 10px; font-size: 11px;">▶ Live Preview</button>
+            </div>
+          </div>
+          <div id="codePane" class="code-container">
+            <button class="btn-copy-code" onclick="copyWorkspaceCode()">Salin Kode</button>
+            <pre><code id="modalWorkspaceCode"></code></pre>
+          </div>
+          <div id="previewPane" style="display: none; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; background: #FFFFFF;">
+            <iframe id="modalLivePreview" sandbox="allow-scripts" style="width: 100%; height: 280px; border: none;"></iframe>
+          </div>
+        </div>
+
+        <!-- Rubric Checklist -->
+        <div class="review-section">
+          <h4>📋 Kriteria & Rubrik Penilaian Proyek</h4>
+          <div id="rubricsContainer">
+            <!-- Dynamic Rubrics -->
+          </div>
+        </div>
+
+        <!-- Evaluation Form -->
+        <div class="review-section" style="background: #FFFFFF;">
+          <h4>⚖️ Form Penilaian Fasilitator</h4>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+            <div>
+              <label style="font-size: 11px; font-weight: 700;">Nama Fasilitator / Dosen Penilai</label>
+              <input type="text" id="facilitatorName" style="width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 13px; margin-top: 4px;">
+            </div>
+            <div>
+              <label style="font-size: 11px; font-weight: 700;">Skor Evaluasi Kuis Siswa (Bobot 40%)</label>
+              <div id="modalQuizScore" style="padding: 8px 12px; background: var(--bg-main); border-radius: 6px; font-weight: 800; color: var(--teal-primary); font-size: 14px; margin-top: 4px;">90%</div>
+            </div>
+          </div>
+
+          <!-- Score Calculator -->
+          <div class="score-calculator-card">
+            <div class="score-display">
+              <div class="number" id="calculatedFinalScore">88%</div>
+              <div class="label">Skor Akhir Sertifikat</div>
+            </div>
+
+            <div class="slider-wrapper">
+              <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 6px;">
+                <span>Nilai Fasilitator (Bobot 60%)</span>
+                <span><input type="number" id="scoreNumber" min="0" max="100" value="85" style="width: 55px; padding: 2px 6px; text-align: center; border-radius: 4px; border: 1px solid var(--border-color); font-weight: bold;"> / 100</span>
+              </div>
+              <input type="range" id="scoreSlider" min="0" max="100" value="85">
+            </div>
+          </div>
+
+          <!-- Feedback Section -->
+          <div style="margin-top: 16px;">
+            <label style="font-size: 11px; font-weight: 700; display: block; margin-bottom: 6px;">Catatan Umpan Balik (Feedback untuk Siswa):</label>
+            <div class="quick-feedback-tags">
+              <span class="btn-feedback-tag" data-text="Struktur kode sangat rapi, semantik, dan seluruh rubrik terpenuhi dengan sangat baik.">🌟 Kode Sangat Baik</span>
+              <span class="btn-feedback-tag" data-text="Mohon perbaiki tampilan CSS responsif pada layar ponsel agar elemen tidak bertumpuk.">⚠️ Perlu Perbaikan Responsivitas</span>
+              <span class="btn-feedback-tag" data-text="Logika program sudah berjalan baik, tambahkan penanganan error pada input pengguna.">💡 Tambahkan Error Handling</span>
+            </div>
+            <textarea id="facilitatorFeedback" class="feedback-input" placeholder="Tuliskan catatan evaluasi atau alasan permintaan revisi di sini..."></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" id="btnCancelModal">Tutup</button>
+        <button class="btn-revision" id="btnRequestRevision">📝 Minta Revisi</button>
+        <button class="btn-approve" id="btnApprove">✓ Setujui & Terbitkan Sertifikat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST FEEDBACK -->
+  <div id="toastMsg" class="toast-msg"></div>
+
+  <!-- Firebase SDK (Compat v10) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="../firebase-config.js"></script>
+  <script src="app.js"></script>
+  <script src="../assets/particles.js"></script>
+</body>
+</html>

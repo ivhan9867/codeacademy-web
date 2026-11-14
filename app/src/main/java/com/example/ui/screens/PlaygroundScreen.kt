@@ -3,6 +3,7 @@ package com.example.ui.screens
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.widget.Toast
 import androidx.compose.ui.res.stringResource
 import com.example.R
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +37,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -484,6 +487,52 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                         )
                     }
 
+                    // Export / Share code button
+                    IconButton(onClick = {
+                        try {
+                            val exportPayload = if (isPythonMode) {
+                                "# CodeAcademy Python Export\n\n$pythonCode"
+                            } else {
+                                buildString {
+                                    appendLine("<!DOCTYPE html>")
+                                    appendLine("<html lang=\"id\">")
+                                    appendLine("<head>")
+                                    appendLine("  <meta charset=\"UTF-8\">")
+                                    appendLine("  <title>CodeAcademy Export</title>")
+                                    if (cssCode.isNotBlank()) {
+                                        appendLine("  <style>")
+                                        appendLine(cssCode)
+                                        appendLine("  </style>")
+                                    }
+                                    appendLine("</head>")
+                                    appendLine("<body>")
+                                    appendLine(htmlCode)
+                                    if (jsCode.isNotBlank()) {
+                                        appendLine("  <script>")
+                                        appendLine(jsCode)
+                                        appendLine("  </script>")
+                                    }
+                                    appendLine("</body>")
+                                    appendLine("</html>")
+                                }
+                            }
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_SUBJECT, if (isPythonMode) "Kode Python CodeAcademy" else "Proyek Web CodeAcademy")
+                                putExtra(Intent.EXTRA_TEXT, exportPayload)
+                            }
+                            context.startActivity(Intent.createChooser(shareIntent, "Ekspor / Bagikan Kode"))
+                        } catch (e: Exception) {
+                            Toast.makeText(context, "Gagal mengekspor kode: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Ekspor / Bagikan Kode",
+                            tint = Color.White
+                        )
+                    }
+
                     // Reset code button
                     IconButton(onClick = {
                         if (isPythonMode) {
@@ -534,6 +583,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
+                .imePadding()
                 .background(CodeDarkBg)
         ) {
             if (userProfile != null && !viewModel.hasSeenCoachMark("playground_intro")) {

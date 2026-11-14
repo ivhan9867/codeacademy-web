@@ -41,11 +41,7 @@ object CourseCatalogParser {
     private val jsonAdapter = moshi.adapter(Any::class.java)
 
     val DEFAULT_TRACK_IDS = listOf(
-        "front-end",
-        "back-end",
-        "python",
-        "c-lang",
-        "cpp-lang"
+        "front-end"
     )
 
     private fun logWarning(msg: String, throwable: Throwable? = null) {

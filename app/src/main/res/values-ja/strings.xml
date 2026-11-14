@@ -813,7 +813,7 @@
     <string name="cert_view_back_cd">戻る</string>
     <string name="cert_view_share_cd">証明書を共有</string>
     <string name="cert_view_not_found">証明書データが見つかりません。</string>
-    <string name="cert_view_header_org">NGODINGYUK ACADEMY</string>
+    <string name="cert_view_header_org">CODEACADEMY</string>
     <string name="cert_view_header_title">CERTIFICATE OF COMPLETION</string>
     <string name="cert_view_awarded_to">以下の方に授与します:</string>
     <string name="cert_view_completion_desc">次のコースにおいて全モジュール、最終評価クイズ、およびファシリテーター承認の最終プロジェクトを修了したことを証します:</string>

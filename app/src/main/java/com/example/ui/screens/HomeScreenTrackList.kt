@@ -101,7 +101,7 @@ fun LearningTrackCard(
     track: LearningTrack,
     progressFraction: Float,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.width(210.dp)
 ) {
     val theme = remember(track.id) { getTrackVisualTheme(track.id) }
     val percent = remember(progressFraction) { (progressFraction * 100).toInt() }
@@ -120,7 +120,6 @@ fun LearningTrackCard(
 
     Card(
         modifier = modifier
-            .width(210.dp)
             .height(205.dp)
             .then(
                 if (animatedScale < 0.999f) {
@@ -310,17 +309,27 @@ fun HomeScreenTrackSection(
             )
         }
 
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(14.dp),
-            contentPadding = PaddingValues(horizontal = 2.dp)
-        ) {
-            items(visibleTracks, key = { it.id }) { track ->
-                val fraction = trackProgressMap[track.id] ?: 0f
-                LearningTrackCard(
-                    track = track,
-                    progressFraction = fraction,
-                    onClick = { onTrackClick(track.id) }
-                )
+        if (visibleTracks.size == 1) {
+            val singleTrack = visibleTracks.first()
+            LearningTrackCard(
+                track = singleTrack,
+                progressFraction = trackProgressMap[singleTrack.id] ?: 0f,
+                onClick = { onTrackClick(singleTrack.id) },
+                modifier = Modifier.fillMaxWidth()
+            )
+        } else {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
+                contentPadding = PaddingValues(horizontal = 2.dp)
+            ) {
+                items(visibleTracks, key = { it.id }) { track ->
+                    val fraction = trackProgressMap[track.id] ?: 0f
+                    LearningTrackCard(
+                        track = track,
+                        progressFraction = fraction,
+                        onClick = { onTrackClick(track.id) }
+                    )
+                }
             }
         }
     }

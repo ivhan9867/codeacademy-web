@@ -43,6 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.R
+import com.example.ui.components.CodeAcademyMascot
+import com.example.ui.components.MascotMood
 import com.example.ui.theme.TealPrimary
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -148,36 +150,15 @@ fun SplashScreen(
                 .alpha(alphaAnim)
                 .scale(scaleAnim)
         ) {
-            // App Logo Container with soft modern elevation and subtle border
-            Box(
-                modifier = Modifier
-                    .size(108.dp)
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(26.dp),
-                        spotColor = TealPrimary.copy(alpha = 0.15f),
-                        ambientColor = TealPrimary.copy(alpha = 0.1f)
-                    )
-                    .clip(RoundedCornerShape(26.dp))
-                    .background(MaterialTheme.colorScheme.surface)
-                    .border(
-                        width = 1.dp,
-                        color = TealPrimary.copy(alpha = 0.15f),
-                        shape = RoundedCornerShape(26.dp)
-                    )
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_codeacademy_logo),
-                    contentDescription = "CodeAcademy Logo",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(RoundedCornerShape(18.dp))
-                )
-            }
+            // Animated CodeAcademy WebDev Mascot ("Codi")
+            CodeAcademyMascot(
+                size = 152.dp,
+                mood = MascotMood.HAPPY,
+                showWebBadges = true,
+                areAnimationsEnabled = true
+            )
 
-            Spacer(modifier = Modifier.height(22.dp))
+            Spacer(modifier = Modifier.height(18.dp))
 
             // App Name with crisp solid dark color and subtle shimmer accent
             Text(

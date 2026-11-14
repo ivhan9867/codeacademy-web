@@ -221,7 +221,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _isAiThinking = MutableStateFlow(false)
     val isAiThinking: StateFlow<Boolean> = _isAiThinking.asStateFlow()
 
-    private val _aiConnectionStatus = MutableStateFlow("Gemini 2.0")
+    private val _aiConnectionStatus = MutableStateFlow("Gemini Live")
     val aiConnectionStatus: StateFlow<String> = _aiConnectionStatus.asStateFlow()
 
     // Course Catalog Search & Filter States
@@ -460,6 +460,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             Result.failure(result.exceptionOrNull() ?: Exception("Login gagal."))
         }
     }
+
+    suspend fun loginWithGoogle(
+        idToken: String,
+        displayName: String?,
+        email: String?
+    ): Result<Boolean> = repo.loginWithGoogleIdToken(idToken, displayName, email)
 
     suspend fun logout() = withContext(Dispatchers.IO) {
         repo.logoutLocalAccount()

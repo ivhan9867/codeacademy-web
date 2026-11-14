@@ -33,8 +33,13 @@ class GeminiTutorService {
 
     companion object {
         private const val TAG = "GeminiTutorService"
-        private const val GEMINI_ENDPOINT =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+        private val DIRECT_GEMINI_MODELS = listOf(
+            "gemini-3.8-flash",
+            "gemini-flash-latest",
+            "gemini-3.5-flash"
+        )
+        private fun directEndpoint(model: String) =
+            "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"
 
         fun resolveLanguageName(language: String?): String {
             return when (language?.lowercase()?.trim()) {
@@ -119,29 +124,32 @@ Tugas Anda:
         }
 
         if (apiKey.isNotBlank()) {
-            try {
-                val directReply = callDirectGeminiApi(
-                    apiKey = apiKey,
-                    systemPrompt = systemPrompt,
-                    userMessage = userMessage
-                )
-                if (!directReply.isNullOrBlank()) {
-                    return@withContext AiTutorResult(
-                        text = directReply,
-                        isLive = true,
-                        provider = "Gemini 2.0 Live"
+            for (modelName in DIRECT_GEMINI_MODELS) {
+                try {
+                    val directReply = callDirectGeminiApi(
+                        modelName = modelName,
+                        apiKey = apiKey,
+                        systemPrompt = systemPrompt,
+                        userMessage = userMessage
                     )
+                    if (!directReply.isNullOrBlank()) {
+                        return@withContext AiTutorResult(
+                            text = directReply,
+                            isLive = true,
+                            provider = "Gemini Live"
+                        )
+                    }
+                } catch (e: Throwable) {
+                    lastError = "Direct Gemini API ($modelName): ${e.message}"
+                    Log.e(TAG, lastError, e)
                 }
-            } catch (e: Throwable) {
-                lastError = "Direct Gemini API: ${e.message}"
-                Log.e(TAG, lastError, e)
             }
         }
 
         // 2. Secondary: Firebase AI Logic SDK
         try {
             val generativeModel = Firebase.ai.generativeModel(
-                modelName = "gemini-2.0-flash",
+                modelName = "gemini-3.8-flash",
                 systemInstruction = content {
                     text(systemPrompt)
                 },
@@ -175,15 +183,16 @@ Tugas Anda:
     }
 
     private fun callDirectGeminiApi(
+        modelName: String,
         apiKey: String,
         systemPrompt: String,
         userMessage: String
     ): String? {
-        val url = URL("$GEMINI_ENDPOINT?key=$apiKey")
+        val url = URL("${directEndpoint(modelName)}?key=$apiKey")
         val conn = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "POST"
             connectTimeout = 15_000
-            readTimeout = 25_000
+            readTimeout = 35_000
             doOutput = true
             setRequestProperty("Content-Type", "application/json; charset=UTF-8")
         }

@@ -12,7 +12,20 @@
           "package_name": "com.aistudio.codeacademy.mizeud"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "823377846566-oau5k81i2lu2hlsor082ti3ftcuq2hg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aistudio.codeacademy.mizeud",
+            "certificate_hash": "7df71a3caee3fe38849700587b524c7831e6227c"
+          }
+        },
+        {
+          "client_id": "823377846566-qcqen2phckunff0t6hbgs793q5v03fij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDNx48ix_LleFX6_gcJmYAubdbTLYNfBrs"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823377846566-qcqen2phckunff0t6hbgs793q5v03fij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -34,9 +34,11 @@ class GeminiTutorService {
     companion object {
         private const val TAG = "GeminiTutorService"
         private val DIRECT_GEMINI_MODELS = listOf(
+            "gemini-3-flash-preview",
+            "gemini-flash-lite-latest",
+            "gemini-3.5-flash-lite",
             "gemini-3.8-flash",
-            "gemini-flash-latest",
-            "gemini-3.5-flash"
+            "gemini-flash-latest"
         )
         private fun directEndpoint(model: String) =
             "https://generativelanguage.googleapis.com/v1beta/models/$model:generateContent"
@@ -191,8 +193,8 @@ Tugas Anda:
         val url = URL("${directEndpoint(modelName)}?key=$apiKey")
         val conn = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "POST"
-            connectTimeout = 15_000
-            readTimeout = 35_000
+            connectTimeout = 10_000
+            readTimeout = 20_000
             doOutput = true
             setRequestProperty("Content-Type", "application/json; charset=UTF-8")
         }

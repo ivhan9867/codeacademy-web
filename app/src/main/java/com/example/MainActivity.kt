@@ -533,15 +533,12 @@ fun CodeAcademyApp(
                         } else {
                             loginScope.launch {
                                 try {
-                                    val activity = generateSequence(loginContext) {
-                                        (it as? android.content.ContextWrapper)?.baseContext
-                                    }.filterIsInstance<android.app.Activity>().firstOrNull()
+                                    val activity = this@MainActivity
 
                                     var authResult: Result<Boolean>? = null
 
-                                    // 1. Coba CredentialManager (native bottom sheet) jika Activity tersedia
-                                    if (activity != null) {
-                                        try {
+                                    // 1. Coba CredentialManager (native bottom sheet)
+                                    try {
                                             val credentialManager = androidx.credentials.CredentialManager.create(activity)
                                             val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
                                                 .build()
@@ -573,7 +570,6 @@ fun CodeAcademyApp(
                                                 displayName = firebaseResult.user?.displayName
                                             )
                                         }
-                                    }
 
                                     if (authResult == null) {
                                         android.widget.Toast.makeText(

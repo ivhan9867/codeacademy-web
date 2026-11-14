@@ -121,7 +121,7 @@ Tugas Anda:
 
         // 1. Primary: Direct Gemini REST API via BuildConfig.GEMINI_API_KEY
         val apiKey = try {
-            BuildConfig.GEMINI_API_KEY.trim()
+            BuildConfig.GEMINI_API_KEY.trim().trim('"', '\'')
         } catch (t: Throwable) {
             directError = "BuildConfig.GEMINI_API_KEY error: ${t.message}"
             ""
@@ -148,7 +148,7 @@ Tugas Anda:
                         )
                     }
                 } catch (e: Throwable) {
-                    directError = "$modelName: ${e.message}"
+                    directError = "$modelName (key=${apiKey.take(6)}..len=${apiKey.length}): ${e.message}"
                     Log.e(TAG, "Direct Gemini API ($modelName) failed", e)
                 }
             }

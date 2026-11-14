@@ -1,14 +1,13 @@
 // Konfigurasi Firebase Web SDK untuk CodeAcademy Portal
-// Ambil nilai ini dari Firebase Console -> Project Settings -> Your apps (Web app)
-// Gunakan Project Firebase yang SAMA dengan file google-services.json di aplikasi Android.
+// Terhubung otomatis ke Firebase Project: codeacademy-6a361 (sama dengan app/google-services.json)
 
 window.CODEACADEMY_FIREBASE_CONFIG = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDNx48ix_LleFX6_gcJmYAubdbTLYNfBrs",
+  authDomain: "codeacademy-6a361.firebaseapp.com",
+  projectId: "codeacademy-6a361",
+  storageBucket: "codeacademy-6a361.firebasestorage.app",
+  messagingSenderId: "823377846566",
+  appId: "1:823377846566:android:c826094ec2ea97bb0ee1e7"
 };
 
 window.isFirebaseConfigured = function () {

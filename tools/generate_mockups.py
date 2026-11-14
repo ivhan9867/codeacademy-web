@@ -186,10 +186,10 @@ def gen_onboarding():
     d.text((s[0] + 25, s[1] + 92), "Pilih fokus utama yang ingin kamu kuasai pertama.", fill="#8C847A", font=get_font(10))
     
     tracks = [
-        ("Front-End Development", "HTML, CSS, JS, Flexbox & Grid", True),
-        ("Back-End Development", "Node.js, REST API, Database", False),
-        ("Python Programming", "Dasar Python, Otomasi & Data", False),
-        ("Bahasa C / C++", "Fondasi Komputasi & OOP", False),
+        ("Front-End Web Development", "HTML5 Semantik, CSS3, Flexbox & Grid", True),
+        ("Fondasi Web (106 Modul)", "Struktur Dokumen, Box Model & Styling", False),
+        ("CSS Layout Modern (24 Modul)", "Flexbox 1D, CSS Grid 2D & Responsif", False),
+        ("JavaScript Fundamentals (26 Modul)", "Logika ES6, Array/Object & DOM Event", False),
     ]
     ty = s[1] + 130
     for title, desc, sel in tracks:
@@ -322,10 +322,10 @@ def gen_courses():
     d.text((s[0] + 20, s[1] + 40), "Katalog Kelas", fill="#FFFFFF", font=get_font(16, bold=True))
     
     # Filter chips
-    chips = ["Semua", "Front-End", "Back-End", "Python"]
+    chips = ["Semua", "Berjalan", "Selesai", "Front-End"]
     cx = s[0] + 20
     for i, ch in enumerate(chips):
-        act = (i == 1)
+        act = (i == 0)
         w = len(ch) * 8 + 16
         d.rounded_rectangle([cx, s[1] + 75, cx + w, s[1] + 100], radius=12, fill="#1A6368" if act else "#262320", outline="#389B9E" if act else "#3B3632")
         d.text((cx + 8, s[1] + 81), ch, fill="#FFFFFF", font=get_font(9, bold=act))
@@ -333,9 +333,9 @@ def gen_courses():
         
     # Course Cards
     courses = [
-        ("Fondasi Web: HTML & CSS", "8 Modul • 45 Menit", "Pemula", "#1E3835", "#6AD3CA"),
-        ("CSS Layout Modern: Flexbox & Grid", "12 Modul • 60 Menit", "Menengah", "#3B2F22", "#F0BD7E"),
-        ("JavaScript Fundamentals", "15 Modul • 90 Menit", "Pemula", "#1E3835", "#6AD3CA"),
+        ("Fondasi Web: Dari Nol", "106 Modul • HTML & CSS Dasar", "Orientasi", "#1E3835", "#6AD3CA"),
+        ("CSS Layout Modern: Flexbox & Grid", "24 Modul • 2 Kuis Bab", "Menengah", "#3B2F22", "#F0BD7E"),
+        ("JavaScript Fundamentals", "26 Modul • 2 Kuis Bab", "Pemula", "#1E3835", "#6AD3CA"),
     ]
     cy = s[1] + 120
     for tit, inf, lvl, cbg, ctx in courses:

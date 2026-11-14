@@ -33,7 +33,7 @@
 Aplikasi **CodeAcademy** merupakan platform pembelajaran pemrograman dan web development berbasis *mobile-first* yang dirancang untuk memberikan pengalaman belajar coding terstruktur, fleksibel, dan interaktif langsung dari smartphone. Aplikasi ini ditujukan untuk memfasilitasi mahasiswa dan pembelajar pemula dalam menguasai keterampilan rekayasa perangkat lunak tanpa ketergantungan penuh pada laptop/komputer meja.
 
 ### Fitur-Fitur Utama:
-1. **Kurikulum Komprehensif Berjenjang:** Meliputi jalur spesialisasi *Front-End Web Development*, *Back-End Web Development*, *Python Programming*, serta *Bahasa C & C++*.
+1. **Kurikulum Komprehensif Berjenjang:** Fokus pada jalur spesialisasi **Front-End Web Development** yang mencakup 3 kelas utama: *Fondasi Web (HTML & CSS Dasar — 106 Modul)*, *CSS Layout Modern (Flexbox & Grid — 24 Modul)*, dan *JavaScript Fundamentals (ES6 & DOM — 26 Modul)*.
 2. **AI Tutor Cerdas (Didukung Google Gemini AI):** Asisten personal interaktif yang siap membantu menjelaskan konsep, menelusuri logika kode, dan melakukan *debugging* kesalahan sintaks secara real-time.
 3. **Interactive Code Playground:** Lingkungan eksperimen kode (*live sandbox*) multi-tab (HTML, CSS, JS) dengan *live preview* render tampilan visual langsung di layar ponsel.
 4. **Sistem Kuis & Evaluasi Berwaktu:** Ujian evaluasi di setiap akhir bab materi dengan *passing grade* kelulusan (minimal 70%).
@@ -111,15 +111,11 @@ Setelah registrasi berhasil, siswa akan disambut oleh alur interaktif *Onboardin
 ![Alur Onboarding](manual_book_assets/mockup_04_onboarding.png)
 *Gambar 4: Layar Pemilihan Jalur Belajar pada Onboarding*
 
-1. **Langkah 1 (Welcome Step):** Sambutan selamat datang serta penjelasan pengantar metode belajar *microlearning* di CodeAcademy.
-2. **Langkah 2 (Track Selection Step):** Siswa menentukan peminatan spesialisasi pertama yang ingin dikuasai:
-   - *Front-End Development:* Fondasi web, HTML, CSS, Flexbox & Grid, dan JavaScript.
-   - *Back-End Development:* Pemrograman server Node.js, REST API, dan manajemen basis data.
-   - *Python Programming:* Sintaks fundamental, skrip otomatisasi, pengolahan data, dan dasar OOP.
-   - *Bahasa C & C++:* Arsitektur sistem komputer, manipulasi memori pointer, dan struktur data STL.
-3. **Langkah 3 (Code Preview Step):** Demonstrasi antarmuka pembaca materi teknis dan blok kode sintaks.
-4. **Langkah 4 (Community Step):** Pengenalan ekosistem forum diskusi antar sesama pelajar dan kompetisi peringkat.
-5. **Langkah 5 (Plan Summary Step):** Ringkasan rencana belajar dan penetapan target komitmen harian.
+1. **Langkah 1 (Welcome Step):** Sambutan selamat datang bersama maskot Codi serta pengenalan metode belajar *microlearning* Web Development.
+2. **Langkah 2 (Code Preview Step):** Demonstrasi pratinjau penulisan kode HTML dan hasil tampilannya secara langsung.
+3. **Langkah 3 (Community Step):** Pengenalan ekosistem forum diskusi antar sesama pelajar dan papan peringkat mingguan.
+4. **Langkah 4 (Track Selection Step):** Konfirmasi jalur belajar aktif **Front-End Web Development** (HTML5, CSS3, Flexbox/Grid, dan JavaScript).
+5. **Langkah 5 (Plan Summary Step):** Ringkasan rencana belajar, pemilihan tujuan belajar, dan penetapan target komitmen waktu harian.
 
 ---
 
@@ -166,7 +162,7 @@ Menu **Kelas** menyajikan katalog kurikulum terstruktur yang disusun secara berj
 | *Gambar 7A: Katalog Kursus* | *Gambar 7B: Detail Silabus Kelas* |
 
 #### Keterangan Fitur:
-- **Filter Jalur Belajar:** Mengelompokkan kelas berdasarkan peminatan (*Semua*, *Front-End*, *Back-End*, *Python*, *C/C++*).
+- **Filter Status & Jalur Belajar:** Mengelompokkan kelas berdasarkan progres (*Semua*, *Berjalan*, *Selesai*) serta tingkat kesulitan (*Orientasi*, *Pemula*, *Pemula-Menengah*).
 - **Pill Tingkat Kesulitan:** Label penunjuk level kemahiran (*Pemula*, *Menengah*, atau *Lanjut*).
 - **Fast-Track Placement Test:** Bagi siswa yang telah menguasai konsep dasar, tersedia tes penempatan awal untuk melewati materi pendahuluan secara cepat (*fast-track*) dan meraih bonus XP.
 - **Silabus Berstruktur Bab:** Setiap kelas diorganisasikan ke dalam Bab Persiapan, Pendahuluan, Materi Inti, Lanjutan, dan Evaluasi Akhir.
@@ -197,11 +193,10 @@ Fitur *Playground* merupakan lingkungan koding terintegrasi (*live sandbox*) yan
 *Gambar 9: Layar Playground Interaktif*
 
 #### Keterangan Fitur Playground:
-- **Tab Editor Berkas:** Mendukung perpindahan cepat antara editor HTML, CSS, dan JavaScript.
-- **Editor Teks Ringan:** Dilengkapi penomoran baris (*line numbers*) untuk mempermudah identifikasi kode program.
-- **Live Preview Real-Time:** Menampilkan render visual halaman web secara instan begitu tombol **Jalankan** ditekan.
+- **Tab Editor Berkas:** Mendukung perpindahan cepat antara editor HTML (`index.html`), CSS (`style.css`), JavaScript (`script.js`), dan tab **Preview Web**.
+- **Editor Kode Khusus Pemrograman:** Mendukung pengetikan sintaks tanpa gangguan *auto-correct*, scroll vertikal & horizontal, serta penyimpanan draf otomatis (*auto-save*).
+- **Live Preview & Sandbox Aman:** Menampilkan render visual halaman web secara instan beserta panel **Output Console** (`console.log`) yang dapat digulir dan dibersihkan, serta proteksi tautan eksternal agar tetap berada di dalam sandbox.
 - **Tombol 'Tanya AI':** Mengirimkan kode yang sedang ditulis ke AI Tutor jika siswa menemui *bug* atau kesalahan sintaks.
-- **Dukungan Multi-Bahasa:** Mendukung penelusuran kode (*output trace mental execution*) untuk bahasa Python, C, dan C++.
 
 ---
 
@@ -216,7 +211,7 @@ AI Tutor bertindak sebagai asisten pemrograman pribadi siswa yang siap mendampin
 - **Konteks Sadar Materi (*Context-Aware*):** AI secara otomatis membaca judul modul atau kelas yang sedang dibuka siswa, sehingga respon yang diberikan sangat spesifik dan relevan.
 - **Prompt Pills (Rekomendasi Cepat):** Memberikan ide pertanyaan cerdas untuk memperdalam konsep koding dengan satu ketukan.
 - **Debugging & Pemecahan Error:** Siswa dapat menempelkan potongan kode yang bermasalah, dan AI Tutor akan mengidentifikasi letak kesalahan serta memberikan rekomendasi perbaikannya.
-- **Format Penjelasan Pedagogis:** Penjelasan disusun secara ramah pemula, menggunakan analogi sederhana dan contoh kode bertahap.
+- **Format Penjelasan Pedagogis & Coba di Playground:** Penjelasan disusun secara ramah pemula, menggunakan analogi sederhana, serta tombol **"Coba di Playground"** pada blok kode balasan untuk langsung mempraktikkan saran AI.
 
 ---
 
@@ -304,28 +299,28 @@ Halaman Profil memberikan kontrol penuh kepada siswa untuk mengatur preferensi t
 
 ## 16. PORTAL WEB FASILITATOR & PENILAIAN TUGAS AKHIR
 
-Untuk menjamin kenyamanan telaah kode sumber di layar lebar, integritas akademik, dan pemisahan hak akses antara siswa dan penilai, sistem evaluasi Proyek Akhir dipisahkan ke dalam **Portal Web Fasilitator** (`public/facilitator/index.html`).
+Untuk menjamin kenyamanan telaah kode sumber di layar lebar, integritas akademik, dan pemisahan hak akses antara siswa dan penilai, sistem evaluasi Proyek Akhir dipisahkan ke dalam **Portal Web Fasilitator** yang di-host di `https://ivhan9867.github.io/codeacademy-web/facilitator/index.html` (`public/facilitator/index.html`).
 
 ![Portal Web Fasilitator](manual_book_assets/mockup_16_facilitator_web.png)
 *Gambar 16: Antarmuka Dashboard Web Penilai / Fasilitator CodeAcademy*
 
 ### Fitur & Alur Penilaian Fasilitator:
-1. **Otentikasi Keamanan PIN Sesi:** Portal dilindungi dengan proteksi PIN khusus fasilitator untuk mencegah akses evaluasi oleh pihak luar yang tidak berwenang.
-2. **Antrean Pengumpulan Real-Time (*Cloud Firestore Sync*):** Daftar pengumpulan tugas akhir mahasiswa masuk dan tersinkronisasi secara langsung (*real-time listener*) tanpa perlu memuat ulang peramban (*reload page*).
-3. **Pemeriksa Kode (*Code Inspector*) & Live Preview:** Fasilitator dapat meneliti struktur kode sumber HTML, CSS, dan JavaScript secara berdampingan dengan kotak pratinjau (*sandboxed live preview*) aktif.
-4. **Formulir Rubrik Penilaian Terstruktur:** 
-   - **Skor Numerik (0–100):** Nilai acuan kelulusan dengan ambang batas (*passing grade*) minimal **70**.
-   - **Catatan & Feedback Edukatif:** Komentar kualitatif untuk memberikan arahan perbaikan teknis atau pujian logika koding.
-5. **Tombol Kelulusan (Luluskan / Minta Revisi):**
-   - **Luluskan (*Approved*):** Jika skor &ge; 70, sistem secara instan menerbitkan **Sertifikat Digital** resmi lengkap dengan ID Kredensial unik ke akun siswa.
-   - **Minta Revisi (*Rejected / Needs Revision*):** Jika tugas belum memenuhi kriteria, status kembali terbuka di aplikasi mobile siswa disertai catatan perbaikan dari fasilitator.
+1. **Otentikasi Keamanan Passcode Sesi:** Portal dilindungi dengan gerbang passcode khusus fasilitator (`CA-FAC-2026`) untuk mencegah akses evaluasi oleh pihak luar yang tidak berwenang.
+2. **Antrean Pengumpulan Real-Time (*Cloud Firestore Sync*):** Daftar pengumpulan tugas akhir mahasiswa dari project Firebase `codeacademy-6a361` masuk dan tersinkronisasi secara langsung (*real-time listener*) dengan indikator **`● Live Firestore Sync`**.
+3. **Pemeriksa Kode (*Code Source*) & Live Preview:** Fasilitator dapat meneliti kode sumber HTML/CSS/JS secara berdampingan dengan tab **Live Preview** terisolasi (`sandbox="allow-scripts"`).
+4. **Formulir Rubrik Penilaian & Kalkulator Skor:** 
+   - **Skor Proyek (0–100):** Digabung otomatis dengan skor Kuis Aplikasi (`35% Kuis + 65% Proyek`) untuk menentukan Nilai Akhir Sertifikat.
+   - **Tag Umpan Balik Cepat & Catatan:** Komentar kualitatif untuk memberikan arahan perbaikan teknis atau apresiasi kode.
+5. **Tombol Keputusan (`Setujui & Terbitkan` / `Minta Revisi`):**
+   - **Setujui & Terbitkan (*Approved*):** Menerbitkan status lulus dan menyinkronkan **Sertifikat Digital** resmi ke akun siswa serta Cloud Firestore.
+   - **Minta Revisi (*Revision*):** Mengembalikan status agar siswa dapat memperbaiki proyeknya di aplikasi Android disertai catatan perbaikan dari fasilitator.
 6. **Sinkronisasi Otomatis ke Smartphone Siswa:** Siswa yang sedang membuka layar *Final Project Submission* di aplikasi Android akan langsung melihat perubahan status dan catatan review secara instan tanpa perlu keluar aplikasi.
 
 ---
 
 ## 17. PORTAL WEB VERIFIKASI SERTIFIKAT & VALIDASI KREDENSIAL
 
-CodeAcademy menyediakan **Portal Verifikasi Kredensial Publik** (`public/verify.html`) yang dapat diakses secara bebas melalui peramban web untuk menjamin keaslian dan validitas sertifikat digital yang diperoleh oleh siswa.
+CodeAcademy menyediakan **Portal Verifikasi Kredensial Publik** di `https://ivhan9867.github.io/codeacademy-web/verify.html` (`public/verify.html`) yang dapat diakses secara bebas melalui peramban web untuk menjamin keaslian dan validitas sertifikat digital yang diperoleh oleh siswa.
 
 ![Portal Verifikasi Sertifikat](manual_book_assets/mockup_17_verify_web.png)
 *Gambar 17: Antarmuka Portal Verifikasi Sertifikat Digital Online*
@@ -339,8 +334,8 @@ CodeAcademy menyediakan **Portal Verifikasi Kredensial Publik** (`public/verify.
    - **Tanggal Kelulusan & Penerbitan Sertifikat**
    - **Skor Proyek Akhir & Predikat** (contoh: *Skor 92/100 - Sangat Memuaskan*)
 4. **Integrasi Tautan Langsung dari Aplikasi Mobile:**
-   - Tombol **Bagikan** (*Share Intent*) di layar Sertifikat aplikasi Android secara otomatis melampirkan URL verifikasi langsung, misal:  
-     `http://localhost:8080/verify.html?certId=CA-2026-88912`
+   - Tombol **Bagikan** (*Share Intent*) di layar Sertifikat aplikasi Android melampirkan detail dan ID kredensial untuk diverifikasi di portal resmi, misalnya:  
+     `https://ivhan9867.github.io/codeacademy-web/verify.html?certId=CA-2026-88912`
    - Penerima tautan cukup membuka link tersebut untuk langsung melihat lembar verifikasi resmi tanpa perlu mengetik ulang ID.
 5. **Proteksi Anti-Pemalsuan Dokumen:** Setiap sertifikat terhubung unik ke kombinasi `UID Siswa` dan `ID Kursus`, memastikan sertifikat tidak dapat dipalsukan atau digunakan oleh pihak lain.
 

@@ -532,18 +532,37 @@ fun CodeAcademyApp(
                         } else {
                             loginScope.launch {
                                 try {
-                                    val credentialManager = androidx.credentials.CredentialManager.create(loginContext)
-                                    val googleIdOption = com.google.android.libraries.identity.googleid.GetGoogleIdOption.Builder()
-                                        .setFilterByAuthorizedAccounts(false)
-                                        .setServerClientId(webClientId)
-                                        .build()
-                                    val request = androidx.credentials.GetCredentialRequest.Builder()
-                                        .addCredentialOption(googleIdOption)
-                                        .build()
-                                    val credResponse = credentialManager.getCredential(
-                                        context = loginContext,
-                                        request = request
-                                    )
+                                    val activityContext = generateSequence(loginContext) {
+                                        (it as? android.content.ContextWrapper)?.baseContext
+                                    }.filterIsInstance<android.app.Activity>().firstOrNull() ?: loginContext
+
+                                    val credentialManager = androidx.credentials.CredentialManager.create(activityContext)
+                                    val credResponse = try {
+                                        val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
+                                            .build()
+                                        val request = androidx.credentials.GetCredentialRequest.Builder()
+                                            .addCredentialOption(signInWithGoogleOption)
+                                            .build()
+                                        credentialManager.getCredential(
+                                            context = activityContext,
+                                            request = request
+                                        )
+                                    } catch (primaryErr: Exception) {
+                                        if (primaryErr is androidx.credentials.exceptions.GetCredentialCancellationException) {
+                                            throw primaryErr
+                                        }
+                                        val googleIdOption = com.google.android.libraries.identity.googleid.GetGoogleIdOption.Builder()
+                                            .setFilterByAuthorizedAccounts(false)
+                                            .setServerClientId(webClientId)
+                                            .build()
+                                        val fallbackReq = androidx.credentials.GetCredentialRequest.Builder()
+                                            .addCredentialOption(googleIdOption)
+                                            .build()
+                                        credentialManager.getCredential(
+                                            context = activityContext,
+                                            request = fallbackReq
+                                        )
+                                    }
                                     val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
                                         .createFrom(credResponse.credential.data)
                                     val authResult = viewModel.loginWithGoogle(
@@ -565,10 +584,16 @@ fun CodeAcademyApp(
                                     }
                                 } catch (e: androidx.credentials.exceptions.GetCredentialCancellationException) {
                                     // Pengguna membatalkan dialog Google
+                                } catch (e: androidx.credentials.exceptions.NoCredentialException) {
+                                    android.widget.Toast.makeText(
+                                        loginContext,
+                                        "Tidak ada akun Google aktif di perangkat/emulator ini. Tambahkan akun Google di Setelan HP terlebih dahulu.",
+                                        android.widget.Toast.LENGTH_LONG
+                                    ).show()
                                 } catch (e: Exception) {
                                     android.widget.Toast.makeText(
                                         loginContext,
-                                        "Gagal login Google: ${e.message ?: "periksa SHA-1 & Firebase Auth"}",
+                                        "Gagal login Google: ${e.message ?: "pastikan Google Play Services aktif"}",
                                         android.widget.Toast.LENGTH_LONG
                                     ).show()
                                 }

@@ -85,7 +85,8 @@ Sebelum dapat menyimpan progres belajar dan mengklaim sertifikat kelulusan, sisw
 1. Buka aplikasi CodeAcademy. Pada layar masuk, ketik alamat email Anda pada kolom **Email** [1].
 2. Masukkan kata sandi akun pada kolom **Kata Sandi** [1].
 3. Ketuk tombol **Masuk ke Akun** [3] untuk mengakses dashboard utama.
-4. Jika lupa kata sandi, ketuk tautan **Lupa Kata Sandi?** [2] untuk masuk ke alur pemulihan akun.
+4. **Alternatif Cepat (Masuk dengan Google):** Ketuk tombol **Masuk dengan Google** di bawah tombol masuk untuk login instan menggunakan akun Google yang terpasang di perangkat.
+5. Jika lupa kata sandi, ketuk tautan **Lupa Kata Sandi?** [2] untuk masuk ke alur pemulihan akun.
 
 ### Langkah Pendaftaran Akun Baru (Register):
 1. Pada bagian bawah form login, ketuk tautan **Daftar Sekarang** [4].
@@ -94,7 +95,8 @@ Sebelum dapat menyimpan progres belajar dan mengklaim sertifikat kelulusan, sisw
    - **Email:** Masukkan alamat email aktif (contoh: `nama@kampus.ac.id`).
    - **Kata Sandi:** Masukkan kata sandi baru (minimal 6 karakter).
    - **Konfirmasi Kata Sandi:** Masukkan ulang kata sandi untuk verifikasi kecocokan.
-3. Ketuk tombol **Daftar Akun**. Sistem akan memverifikasi data dan secara otomatis membawa Anda ke alur *Onboarding* siswa baru.
+3. Ketuk tombol **Daftar Akun** untuk membuat akun baru secara manual.
+4. **Alternatif Cepat (Daftar dengan Google):** Ketuk tombol **Daftar dengan Google** di bawah tombol daftar. Sistem akan memverifikasi akun Google Anda dan secara otomatis membuat profil siswa baru lalu membawa Anda ke alur *Onboarding*.
 
 #### Keterangan Gambar:
 - **[1] Kolom Input Email & Sandi:** Memasukkan kredensial autentikasi pengguna.
@@ -202,7 +204,7 @@ Fitur *Playground* merupakan lingkungan koding terintegrasi (*live sandbox*) yan
 
 ## 10. FITUR AI TUTOR CERDAS (DIDUKUNG GEMINI AI)
 
-AI Tutor bertindak sebagai asisten pemrograman pribadi siswa yang siap mendampingi proses belajar selama 24 jam penuh. Fitur ini ditenagai oleh Google Gemini AI API.
+AI Tutor bertindak sebagai asisten pemrograman pribadi siswa yang siap mendampingi proses belajar selama 24 jam penuh. Fitur ini ditenagai oleh **Firebase AI Logic (Google Gemini AI)**.
 
 ![AI Tutor](manual_book_assets/mockup_10_ai_tutor.png)
 *Gambar 10: Layar Percakapan Interaktif AI Tutor*

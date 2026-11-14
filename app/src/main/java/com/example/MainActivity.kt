@@ -1222,12 +1222,14 @@ fun CodeAcademyApp(
                 val moduleTitle = try { URLDecoder.decode(rawModuleTitle, "UTF-8") } catch (_: Exception) { rawModuleTitle }
                 val chatMessages by viewModel.chatMessages.collectAsStateWithLifecycle()
                 val isAiThinking by viewModel.isAiThinking.collectAsStateWithLifecycle()
+                val aiConnectionStatus by viewModel.aiConnectionStatus.collectAsStateWithLifecycle()
 
                 AiTutorScreen(
                     courseTitle = courseTitle,
                     moduleTitle = moduleTitle,
                     messages = chatMessages,
                     isThinking = isAiThinking,
+                    connectionStatus = aiConnectionStatus,
                     onSendMessage = { query ->
                         viewModel.askAi(query, courseTitle, moduleTitle)
                     },

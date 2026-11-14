@@ -498,15 +498,29 @@ fun StreakFlameGrid(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // 7-day grid (Sen - Min)
+            // 7-day grid (Sen - Min) mapped to actual current calendar week
             val days = listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min")
+            val todayCalDay = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK)
+            val todayMonIndex = when (todayCalDay) {
+                java.util.Calendar.MONDAY -> 0
+                java.util.Calendar.TUESDAY -> 1
+                java.util.Calendar.WEDNESDAY -> 2
+                java.util.Calendar.THURSDAY -> 3
+                java.util.Calendar.FRIDAY -> 4
+                java.util.Calendar.SATURDAY -> 5
+                else -> 6
+            }
+            val activeCount = currentStreak.coerceIn(0, 7)
+            val activeIndices = (0 until activeCount).map { offset ->
+                ((todayMonIndex - offset) + 7) % 7
+            }.toSet()
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 days.forEachIndexed { index, day ->
-                    // Simulate current streak highlighting active recent days
-                    val isActive = index <= currentStreak % 7 || (currentStreak >= 7)
+                    val isActive = index in activeIndices
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

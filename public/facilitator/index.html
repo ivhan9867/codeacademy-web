@@ -54,11 +54,22 @@
 
     <section class="page-header">
       <div>
-        <div class="page-eyebrow">Evaluasi Proyek Akhir</div>
-        <h1>Antrean Penilaian Peserta</h1>
-        <p>Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik, dan terbitkan sertifikat.</p>
+        <div class="page-eyebrow" id="pageEyebrow">Evaluasi Proyek Akhir</div>
+        <h1 id="pageTitle">Antrean Penilaian Peserta</h1>
+        <p id="pageSubtitle">Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik, dan terbitkan sertifikat.</p>
+      </div>
+      <div class="view-tabs" role="tablist" aria-label="Navigasi Portal Fasilitator">
+        <button type="button" class="view-tab active" data-view="submissions" role="tab" aria-selected="true">
+          Proyek Akhir
+        </button>
+        <button type="button" class="view-tab" data-view="forum" role="tab" aria-selected="false">
+          Forum Diskusi
+          <span class="tab-count" id="forumTotalBadge">0</span>
+        </button>
       </div>
     </section>
+
+    <div id="submissionsView">
 
     <!-- STATS SUMMARY -->
     <section class="stats-grid">
@@ -152,6 +163,46 @@
         </table>
       </div>
     </section>
+    </div>
+
+    <!-- FORUM DISKUSI VIEW -->
+    <div id="forumView" style="display: none;">
+      <section class="control-bar">
+        <div class="search-box">
+          <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="forumSearchInput" placeholder="Cari pertanyaan, nama peserta, atau isi diskusi...">
+        </div>
+        <div class="filters-group">
+          <select id="forumCourseFilter" class="select-filter">
+            <option value="all">Semua Kursus</option>
+            <option value="fe-web-foundation-00">Fondasi Web: Dari Nol</option>
+            <option value="web-html-01">HTML5 Semantic &amp; Aksesibilitas</option>
+            <option value="web-css-01">CSS3 Modern &amp; Flexbox/Grid</option>
+            <option value="web-js-01">JavaScript ES6 &amp; DOM</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="forum-compose-card">
+        <div class="forum-compose-header">
+          <strong>Buat Pengumuman atau Topik Baru sebagai Fasilitator</strong>
+          <select id="forumNewPostCourse" class="select-filter">
+            <option value="fe-web-foundation-00">Fondasi Web: Dari Nol</option>
+            <option value="web-html-01">HTML5 Semantic &amp; Aksesibilitas</option>
+            <option value="web-css-01">CSS3 Modern &amp; Flexbox/Grid</option>
+            <option value="web-js-01">JavaScript ES6 &amp; DOM</option>
+          </select>
+        </div>
+        <div class="forum-compose-row">
+          <textarea id="forumNewPostInput" rows="2" placeholder="Tulis tips belajar, klarifikasi materi, atau pengumuman untuk peserta kelas..."></textarea>
+          <button type="button" id="btnCreateForumPost" class="btn-primary-solid">Kirim Topik</button>
+        </div>
+      </section>
+
+      <section id="forumThreadsList" class="forum-threads-list">
+        <div class="forum-empty">Memuat diskusi kelas...</div>
+      </section>
+    </div>
 
   </main>
 

@@ -265,4 +265,43 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
             onError = onError
         )
     }
+
+    fun syncIncomingForumPosts(courseId: String, posts: List<ForumPostEntity>) {
+        viewModelScope.launch {
+            socialRepo.syncIncomingForumPosts(courseId, posts)
+        }
+    }
+
+    // ==========================================
+    // PUBLIC PROFILE POPUP
+    // ==========================================
+    private val _selectedPublicProfile = MutableStateFlow<com.example.data.remote.PublicUserProfile?>(null)
+    val selectedPublicProfile: StateFlow<com.example.data.remote.PublicUserProfile?> = _selectedPublicProfile.asStateFlow()
+
+    private val _isLoadingPublicProfile = MutableStateFlow(false)
+    val isLoadingPublicProfile: StateFlow<Boolean> = _isLoadingPublicProfile.asStateFlow()
+
+    fun openPublicProfile(
+        userId: String,
+        fallbackName: String = "Siswa",
+        fallbackLevel: Int = 1
+    ) {
+        _selectedPublicProfile.value = com.example.data.remote.PublicUserProfile(
+            userId = userId,
+            name = fallbackName,
+            role = if (userId == "facilitator-mentor") "Fasilitator" else "Siswa",
+            level = fallbackLevel
+        )
+        _isLoadingPublicProfile.value = true
+        viewModelScope.launch {
+            val loaded = socialRepo.fetchPublicUserProfile(userId, fallbackName, fallbackLevel)
+            _selectedPublicProfile.value = loaded
+            _isLoadingPublicProfile.value = false
+        }
+    }
+
+    fun dismissPublicProfile() {
+        _selectedPublicProfile.value = null
+        _isLoadingPublicProfile.value = false
+    }
 }

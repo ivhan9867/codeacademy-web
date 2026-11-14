@@ -77,6 +77,7 @@ fun AiTutorScreen(
     moduleTitle: String,
     messages: List<ChatMessage>,
     isThinking: Boolean,
+    connectionStatus: String = "Gemini 2.0",
     onSendMessage: (String) -> Unit,
     onBack: () -> Unit,
     onClearChat: () -> Unit = {},
@@ -127,11 +128,36 @@ fun AiTutorScreen(
                         }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
-                            Text(
-                                text = stringResource(R.string.ai_tutor_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.ai_tutor_title),
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Surface(
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = if (connectionStatus.contains("Offline", ignoreCase = true)) {
+                                        MaterialTheme.colorScheme.errorContainer
+                                    } else {
+                                        CyanAccent.copy(alpha = 0.18f)
+                                    }
+                                ) {
+                                    Text(
+                                        text = connectionStatus,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = if (connectionStatus.contains("Offline", ignoreCase = true)) {
+                                            MaterialTheme.colorScheme.onErrorContainer
+                                        } else {
+                                            TealPrimary
+                                        },
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                    )
+                                }
+                            }
                             Text(
                                 text = "$courseTitle • $moduleTitle",
                                 style = MaterialTheme.typography.bodySmall,

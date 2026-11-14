@@ -60,7 +60,7 @@ fun ProfileScreen(
         email = userProfile?.email ?: "siswa@codeacademy.id",
         bio = userProfile?.bio ?: "Belajar coding setiap hari untuk masa depan cerah!",
         totalXp = userProfile?.totalXp ?: 0,
-        streak = userProfile?.currentStreak ?: 1,
+        streak = userProfile?.currentStreak ?: 0,
         isDark = isDark,
         currentLanguage = currentLanguage,
         certificates = certificates,

@@ -3,7 +3,39 @@
 
 const DEFAULT_PIN = "admin123";
 const STORAGE_KEY = "codeacademy_facilitator_submissions_v2";
+const FORUM_STORAGE_KEY = "codeacademy_facilitator_forum_v1";
 const AUTH_KEY = "codeacademy_facilitator_logged_in";
+
+const SEED_FORUM_POSTS = [
+  {
+    postId: "demo_p1",
+    courseId: "web-html-01",
+    authorId: "101",
+    authorName: "Ahmad Fauzi",
+    content: "Permisi kak, kapan sebaiknya pakai tag <article> dibanding <section> di HTML5?",
+    timestamp: Date.now() - 1000 * 60 * 90,
+    likeCount: 3,
+    authorLevel: 4,
+    isMentor: false,
+    replyToPostId: null,
+    replyToAuthorName: null,
+    replyToContentSnippet: null
+  },
+  {
+    postId: "demo_p1_r1",
+    courseId: "web-html-01",
+    authorId: "facilitator-mentor",
+    authorName: "Fasilitator CodeAcademy",
+    content: "Gunakan <article> jika kontennya bisa berdiri sendiri (seperti postingan blog atau kartu produk), dan <section> untuk mengelompokkan bagian tematik dalam halaman.",
+    timestamp: Date.now() - 1000 * 60 * 60,
+    likeCount: 5,
+    authorLevel: 99,
+    isMentor: true,
+    replyToPostId: "demo_p1",
+    replyToAuthorName: "Ahmad Fauzi",
+    replyToContentSnippet: "Permisi kak, kapan sebaiknya pakai tag <article> dibanding <section>..."
+  }
+];
 
 // Initial Demo Submissions (Offline / Local Mock Fallback for WebDev Curriculum)
 const SEED_SUBMISSIONS = [
@@ -163,6 +195,12 @@ let searchQuery = "";
 let firestoreDb = null;
 let isFirebaseConnected = false;
 
+// Forum State
+let forumPosts = [];
+let activeView = "submissions";
+let forumCourseFilter = "all";
+let forumSearchQuery = "";
+
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
   checkAuth();
@@ -261,6 +299,8 @@ function initDataSource() {
             loadLocalFallback();
           }
         );
+      // Real-time listener matching Android Firestore collection 'forum_posts'
+      attachForumRealtimeListener();
       return;
     } catch (err) {
       console.warn("Gagal inisialisasi Firebase, menggunakan Demo Mode:", err);
@@ -273,6 +313,7 @@ function initDataSource() {
     modeBadge.classList.remove("live");
   }
   loadLocalFallback();
+  loadLocalForumFallback();
 }
 
 function loadLocalFallback() {
@@ -304,6 +345,34 @@ function setupEventListeners() {
     searchQuery = e.target.value.toLowerCase();
     renderTable();
   });
+
+  // View Switcher (Proyek Akhir vs Forum Diskusi)
+  document.querySelectorAll(".view-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      switchView(tab.dataset.view);
+    });
+  });
+
+  const forumSearchInput = document.getElementById("forumSearchInput");
+  if (forumSearchInput) {
+    forumSearchInput.addEventListener("input", (e) => {
+      forumSearchQuery = e.target.value.toLowerCase();
+      renderForumThreads();
+    });
+  }
+
+  const forumCourseFilterEl = document.getElementById("forumCourseFilter");
+  if (forumCourseFilterEl) {
+    forumCourseFilterEl.addEventListener("change", (e) => {
+      forumCourseFilter = e.target.value;
+      renderForumThreads();
+    });
+  }
+
+  const btnCreateForumPost = document.getElementById("btnCreateForumPost");
+  if (btnCreateForumPost) {
+    btnCreateForumPost.addEventListener("click", createFacilitatorPost);
+  }
 
   // Course filter
   document.getElementById("courseFilter").addEventListener("change", (e) => {
@@ -669,4 +738,339 @@ function getTimeAgo(timestamp) {
 function escapeHtml(str) {
   if (!str) return "";
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+
+// ==========================================
+// FORUM DISKUSI REAL-TIME & MODERASI
+// ==========================================
+function switchView(view) {
+  activeView = view;
+  const submissionsView = document.getElementById("submissionsView");
+  const forumView = document.getElementById("forumView");
+  const pageEyebrow = document.getElementById("pageEyebrow");
+  const pageTitle = document.getElementById("pageTitle");
+  const pageSubtitle = document.getElementById("pageSubtitle");
+
+  document.querySelectorAll(".view-tab").forEach((t) => {
+    const isActive = t.dataset.view === view;
+    t.classList.toggle("active", isActive);
+    t.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+
+  if (view === "forum") {
+    submissionsView.style.display = "none";
+    forumView.style.display = "block";
+    if (pageEyebrow) pageEyebrow.textContent = "Moderasi & Tanya Jawab Kelas";
+    if (pageTitle) pageTitle.textContent = "Forum Diskusi Peserta";
+    if (pageSubtitle) pageSubtitle.textContent = "Balas pertanyaan peserta secara real-time sebagai Fasilitator atau hapus pesan yang melanggar aturan.";
+    renderForumThreads();
+  } else {
+    submissionsView.style.display = "block";
+    forumView.style.display = "none";
+    if (pageEyebrow) pageEyebrow.textContent = "Evaluasi Proyek Akhir";
+    if (pageTitle) pageTitle.textContent = "Antrean Penilaian Peserta";
+    if (pageSubtitle) pageSubtitle.textContent = "Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik, dan terbitkan sertifikat.";
+  }
+}
+
+function attachForumRealtimeListener() {
+  if (!firestoreDb) return;
+  firestoreDb.collection("forum_posts")
+    .orderBy("timestamp", "desc")
+    .limit(120)
+    .onSnapshot(
+      (snapshot) => {
+        const items = [];
+        snapshot.forEach((doc) => {
+          const d = doc.data();
+          items.push({
+            postId: d.postId || doc.id,
+            courseId: d.courseId || "",
+            authorId: d.authorId || "",
+            authorName: d.authorName || "Siswa",
+            content: d.content || "",
+            timestamp: d.timestamp || Date.now(),
+            likeCount: d.likeCount || 0,
+            authorLevel: d.authorLevel || 1,
+            isMentor: Boolean(d.isMentor),
+            replyToPostId: d.replyToPostId || null,
+            replyToAuthorName: d.replyToAuthorName || null,
+            replyToContentSnippet: d.replyToContentSnippet || null
+          });
+        });
+        forumPosts = items;
+        updateForumCountBadge();
+        if (activeView === "forum") renderForumThreads();
+      },
+      (err) => {
+        console.warn("Firestore forum listener error:", err);
+        loadLocalForumFallback();
+      }
+    );
+}
+
+function loadLocalForumFallback() {
+  const raw = localStorage.getItem(FORUM_STORAGE_KEY);
+  if (raw) {
+    try {
+      forumPosts = JSON.parse(raw);
+    } catch {
+      forumPosts = [...SEED_FORUM_POSTS];
+      saveLocalForumPosts();
+    }
+  } else {
+    forumPosts = [...SEED_FORUM_POSTS];
+    saveLocalForumPosts();
+  }
+  updateForumCountBadge();
+  if (activeView === "forum") renderForumThreads();
+}
+
+function saveLocalForumPosts() {
+  localStorage.setItem(FORUM_STORAGE_KEY, JSON.stringify(forumPosts));
+}
+
+function updateForumCountBadge() {
+  const badge = document.getElementById("forumTotalBadge");
+  if (badge) badge.textContent = String(forumPosts.length);
+}
+
+function courseLabel(courseId) {
+  const map = {
+    "fe-web-foundation-00": "Fondasi Web",
+    "web-html-01": "HTML5 Semantic",
+    "web-css-01": "CSS3 Modern",
+    "web-js-01": "JavaScript ES6"
+  };
+  return map[courseId] || courseId || "Umum";
+}
+
+function resolveForumRootId(post, byId) {
+  let curr = post;
+  const seen = new Set();
+  while (curr.replyToPostId && !seen.has(curr.postId)) {
+    seen.add(curr.postId);
+    const parent = byId[curr.replyToPostId];
+    if (!parent) break;
+    curr = parent;
+  }
+  return curr.postId;
+}
+
+function renderForumThreads() {
+  const container = document.getElementById("forumThreadsList");
+  if (!container) return;
+
+  const byId = {};
+  forumPosts.forEach((p) => { byId[p.postId] = p; });
+
+  const topLevel = forumPosts.filter((p) => !p.replyToPostId);
+  const repliesByRoot = {};
+  forumPosts.filter((p) => p.replyToPostId).forEach((r) => {
+    const rootId = resolveForumRootId(r, byId);
+    if (!repliesByRoot[rootId]) repliesByRoot[rootId] = [];
+    repliesByRoot[rootId].push(r);
+  });
+
+  const filtered = topLevel.filter((p) => {
+    if (forumCourseFilter !== "all" && p.courseId !== forumCourseFilter) return false;
+    if (forumSearchQuery) {
+      const childMatch = (repliesByRoot[p.postId] || []).some(
+        (r) => r.content.toLowerCase().includes(forumSearchQuery) || r.authorName.toLowerCase().includes(forumSearchQuery)
+      );
+      const selfMatch = p.content.toLowerCase().includes(forumSearchQuery) || p.authorName.toLowerCase().includes(forumSearchQuery);
+      if (!selfMatch && !childMatch) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="forum-empty">Belum ada diskusi yang sesuai dengan filter saat ini.</div>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map((post) => {
+    const replies = (repliesByRoot[post.postId] || []).slice().sort((a, b) => a.timestamp - b.timestamp);
+    const initial = escapeHtml((post.authorName || "S").charAt(0).toUpperCase());
+    const mentorBadge = post.isMentor ? `<span class="forum-mentor-badge">Fasilitator</span>` : `<span class="forum-course-pill">Lv.${post.authorLevel || 1}</span>`;
+    const repliesHtml = replies.map((r) => {
+      const rInitial = escapeHtml((r.authorName || "S").charAt(0).toUpperCase());
+      const rBadge = r.isMentor ? `<span class="forum-mentor-badge">Fasilitator</span>` : `<span class="forum-course-pill">Lv.${r.authorLevel || 1}</span>`;
+      const replyTargetText = r.replyToAuthorName ? `<div style="font-size:11.5px;color:var(--teal-deep);font-weight:700;margin-bottom:4px;">Membalas @${escapeHtml(r.replyToAuthorName)}</div>` : "";
+      return `
+        <div class="forum-reply-card ${r.isMentor ? "mentor" : ""}">
+          <div class="forum-post-head" style="margin-bottom:6px;">
+            <div class="forum-author-meta">
+              <span class="forum-avatar ${r.isMentor ? "mentor" : ""}" style="width:26px;height:26px;font-size:11px;">${rInitial}</span>
+              <strong>${escapeHtml(r.authorName)}</strong>
+              ${rBadge}
+              <span style="font-size:12px;color:var(--muted);">${getTimeAgo(r.timestamp)}</span>
+            </div>
+            <button type="button" class="btn-danger-ghost" data-delete-post="${escapeHtml(r.postId)}">Hapus</button>
+          </div>
+          ${replyTargetText}
+          <div style="font-size:13.5px;line-height:1.5;white-space:pre-wrap;">${escapeHtml(r.content)}</div>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <article class="forum-thread-card">
+        <div class="forum-post-head">
+          <div class="forum-author-meta">
+            <span class="forum-avatar ${post.isMentor ? "mentor" : ""}">${initial}</span>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <strong>${escapeHtml(post.authorName)}</strong>
+                ${mentorBadge}
+                <span class="forum-course-pill">${escapeHtml(courseLabel(post.courseId))}</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);margin-top:2px;">${getTimeAgo(post.timestamp)} • ${replies.length} Balasan • ${post.likeCount || 0} Suka</div>
+            </div>
+          </div>
+          <button type="button" class="btn-danger-ghost" data-delete-post="${escapeHtml(post.postId)}">Hapus Topik</button>
+        </div>
+
+        <div class="forum-post-body">${escapeHtml(post.content)}</div>
+
+        ${replies.length > 0 ? `<div class="forum-replies-wrap">${repliesHtml}</div>` : ""}
+
+        <form class="forum-reply-form" data-reply-form="${escapeHtml(post.postId)}" data-course-id="${escapeHtml(post.courseId)}" data-author-name="${escapeHtml(post.authorName)}">
+          <input type="text" placeholder="Tulis balasan sebagai Fasilitator untuk @${escapeHtml(post.authorName)}..." required>
+          <button type="submit" class="btn-primary-solid">Balas</button>
+        </form>
+      </article>
+    `;
+  }).join("");
+
+  container.querySelectorAll("[data-delete-post]").forEach((btn) => {
+    btn.addEventListener("click", () => deleteForumPost(btn.dataset.deletePost));
+  });
+
+  container.querySelectorAll("[data-reply-form]").forEach((form) => {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = form.querySelector("input");
+      const text = input.value.trim();
+      if (!text) return;
+      const parentId = form.dataset.replyForm;
+      const parentPost = byId[parentId];
+      submitFacilitatorReply(
+        parentId,
+        form.dataset.courseId,
+        form.dataset.authorName,
+        parentPost ? parentPost.content : "",
+        text
+      );
+      input.value = "";
+    });
+  });
+}
+
+async function createFacilitatorPost() {
+  const input = document.getElementById("forumNewPostInput");
+  const courseSelect = document.getElementById("forumNewPostCourse");
+  const content = (input?.value || "").trim();
+  if (!content) {
+    showToast("Tulis isi topik terlebih dahulu.");
+    return;
+  }
+  const postId = `fac_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  const payload = {
+    postId,
+    courseId: courseSelect.value,
+    authorId: "facilitator-mentor",
+    authorName: "Fasilitator CodeAcademy",
+    content,
+    timestamp: Date.now(),
+    likeCount: 0,
+    authorLevel: 99,
+    isMentor: true,
+    replyToPostId: null,
+    replyToAuthorName: null,
+    replyToContentSnippet: null
+  };
+
+  if (isFirebaseConnected && firestoreDb) {
+    try {
+      await firestoreDb.collection("forum_posts").doc(postId).set(payload);
+      input.value = "";
+      showToast("Topik fasilitator berhasil dikirim ke aplikasi!");
+    } catch (err) {
+      console.error(err);
+      showToast("Gagal mengirim topik ke Firestore.");
+    }
+  } else {
+    forumPosts.unshift(payload);
+    saveLocalForumPosts();
+    updateForumCountBadge();
+    renderForumThreads();
+    input.value = "";
+    showToast("[Demo Lokal] Topik fasilitator ditambahkan.");
+  }
+}
+
+async function submitFacilitatorReply(parentPostId, courseId, parentAuthorName, parentContent, replyText) {
+  const postId = `fac_rep_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+  const snippet = parentContent.length > 60 ? parentContent.slice(0, 57) + "..." : parentContent;
+  const payload = {
+    postId,
+    courseId,
+    authorId: "facilitator-mentor",
+    authorName: "Fasilitator CodeAcademy",
+    content: replyText,
+    timestamp: Date.now(),
+    likeCount: 0,
+    authorLevel: 99,
+    isMentor: true,
+    replyToPostId: parentPostId,
+    replyToAuthorName: parentAuthorName,
+    replyToContentSnippet: snippet
+  };
+
+  if (isFirebaseConnected && firestoreDb) {
+    try {
+      await firestoreDb.collection("forum_posts").doc(postId).set(payload);
+      showToast("Balasan Fasilitator terkirim real-time ke aplikasi!");
+    } catch (err) {
+      console.error(err);
+      showToast("Gagal mengirim balasan ke Firestore.");
+    }
+  } else {
+    forumPosts.push(payload);
+    saveLocalForumPosts();
+    updateForumCountBadge();
+    renderForumThreads();
+    showToast("[Demo Lokal] Balasan Fasilitator terkirim.");
+  }
+}
+
+async function deleteForumPost(postId) {
+  if (!postId) return;
+  if (!confirm("Hapus pesan diskusi ini? Jika ini topik utama, semua balasannya juga akan dihapus.")) return;
+
+  const childIds = forumPosts.filter((p) => p.replyToPostId === postId).map((p) => p.postId);
+  const idsToDelete = [postId, ...childIds];
+
+  if (isFirebaseConnected && firestoreDb) {
+    try {
+      const batch = firestoreDb.batch();
+      idsToDelete.forEach((id) => {
+        batch.delete(firestoreDb.collection("forum_posts").doc(id));
+      });
+      await batch.commit();
+      showToast("Pesan diskusi berhasil dihapus.");
+    } catch (err) {
+      console.error(err);
+      showToast("Gagal menghapus pesan dari Firestore.");
+    }
+  } else {
+    const deleteSet = new Set(idsToDelete);
+    forumPosts = forumPosts.filter((p) => !deleteSet.has(p.postId));
+    saveLocalForumPosts();
+    updateForumCountBadge();
+    renderForumThreads();
+    showToast("[Demo Lokal] Pesan diskusi dihapus.");
+  }
 }

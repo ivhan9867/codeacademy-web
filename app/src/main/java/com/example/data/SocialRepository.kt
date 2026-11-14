@@ -175,6 +175,20 @@ class SocialRepository(
         firestoreService.toggleLikePost(post.postId, newLiked)
     }
 
+    suspend fun syncIncomingForumPosts(
+        courseId: String,
+        incomingPosts: List<ForumPostEntity>
+    ) = withContext(Dispatchers.IO) {
+        val existingLikedIds = forumPostDao.getPostsByCourse(courseId).first()
+            .filter { it.isLikedByMe }
+            .map { it.postId }
+            .toSet()
+        val merged = incomingPosts.map { post ->
+            if (post.postId in existingLikedIds) post.copy(isLikedByMe = true) else post
+        }
+        forumPostDao.replacePostsForCourse(courseId, merged)
+    }
+
     private fun getSeedForumPosts(courseId: String): List<ForumPostEntity> {
         val now = System.currentTimeMillis()
         val course = CourseCatalog.courses.firstOrNull { it.id == courseId }
@@ -317,17 +331,66 @@ class SocialRepository(
             val accountId = getActiveAccountId()
             val profile = userDao?.getUserProfileOnce(accountId)
             if (profile != null) {
+                val allProgress = moduleProgressDao?.getAllProgress(accountId)?.first().orEmpty()
+                val completedModules = allProgress.count { it.isCompleted }
+                val estimatedUnlockedBadges = buildList {
+                    if (completedModules >= 1) add("b1")
+                    if (allProgress.any { it.isCompleted && it.quizScore >= 80 }) add("b2")
+                    if (profile.currentStreak >= 3) add("b3")
+                    if (profile.totalXp >= 500) add("b4")
+                    if (profile.currentStreak >= 7) add("b5")
+                    if (profile.level >= 5) add("b8")
+                    if (profile.totalXp >= 1000) add("b9")
+                }
                 firestoreService.syncUserXp(
                     userId = profile.id.toString(),
                     userName = profile.name,
                     totalXp = profile.totalXp,
                     level = profile.level,
-                    currentStreak = profile.currentStreak
+                    currentStreak = profile.currentStreak,
+                    bio = profile.bio,
+                    role = "Siswa",
+                    unlockedBadgeIds = estimatedUnlockedBadges
                 )
             }
         } catch (e: Exception) {
             android.util.Log.e("SocialRepository", "Gagal sinkronisasi XP pengguna ke Firestore", e)
         }
+    }
+
+    suspend fun fetchPublicUserProfile(
+        userId: String,
+        fallbackName: String = "Siswa",
+        fallbackLevel: Int = 1
+    ): com.example.data.remote.PublicUserProfile = withContext(Dispatchers.IO) {
+        val remote = firestoreService.fetchPublicUserProfile(userId)
+        if (remote.isSuccess) {
+            return@withContext remote.getOrThrow()
+        }
+        val activeId = getActiveAccountId()
+        if (userId == activeId.toString()) {
+            val local = userDao?.getUserProfileOnce(activeId)
+            if (local != null) {
+                return@withContext com.example.data.remote.PublicUserProfile(
+                    userId = userId,
+                    name = local.name,
+                    bio = local.bio,
+                    role = "Siswa",
+                    level = local.level,
+                    totalXp = local.totalXp,
+                    currentStreak = local.currentStreak
+                )
+            }
+        }
+        val cachedEntry = leaderboardDao.getAllCachedLeaderboard().first().find { it.userId == userId }
+        com.example.data.remote.PublicUserProfile(
+            userId = userId,
+            name = cachedEntry?.userName ?: fallbackName,
+            bio = "Peserta aktif CodeAcademy WebDev Studio.",
+            role = if (userId == "facilitator-mentor") "Fasilitator" else "Siswa",
+            level = cachedEntry?.level ?: fallbackLevel,
+            totalXp = cachedEntry?.totalXp ?: 0
+        )
     }
 
     private suspend fun seedDefaultLeaderboardIfEmpty(

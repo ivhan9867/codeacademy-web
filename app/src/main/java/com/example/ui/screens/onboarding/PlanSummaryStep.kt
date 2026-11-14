@@ -6,8 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,19 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccessTime
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.LocalFireDepartment
-import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.rounded.AutoStories
+import androidx.compose.material.icons.rounded.CalendarToday
+import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
@@ -37,27 +28,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.CourseCatalog
-import com.example.ui.theme.Dimens
-import com.example.ui.theme.FlameOrange
-import com.example.ui.theme.SuccessGreen
 import com.example.ui.theme.TealPrimary
+import kotlin.math.ceil
 
-/**
- * Step 5: Target Belajar Harian & Ringkasan.
- * Lets user pick daily time commitment, learning objective, and shows a crisp personalized roadmap preview.
- */
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PlanSummaryStep(
     selectedTrack: String,
@@ -67,274 +50,199 @@ fun PlanSummaryStep(
     onSelectMinutes: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val goals = remember { listOf("Karier", "Skill Baru", "Hobi / Proyek") }
-    val minuteOptions = remember {
-        listOf(
-            10 to "Santai",
-            20 to "Ideal",
-            30 to "Serius",
-            45 to "Intensif"
-        )
-    }
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val borderCol = if (isDark) MaterialTheme.colorScheme.outlineVariant else Color(0xFFD5E3E2)
+    val cardBg = if (isDark) MaterialTheme.colorScheme.surface else Color.White
 
-    val matchedTrack = remember(selectedTrack) {
-        CourseCatalog.tracks.firstOrNull { it.id == selectedTrack } ?: CourseCatalog.tracks.first()
-    }
+    val goals = listOf("Karier Web Dev", "Upgrade Skill", "Bangun Portofolio")
+    val minuteOptions = listOf(
+        10 to "Santai",
+        20 to "Ideal",
+        30 to "Serius",
+        45 to "Intensif"
+    )
 
-    val firstCourse = remember(selectedTrack) {
-        CourseCatalog.courses.firstOrNull { it.trackId == selectedTrack }
-    }
-
-    val totalReadingMinutes = remember(firstCourse) {
-        if (firstCourse != null) {
-            val modulesSum = firstCourse.modules.sumOf { it.readingMinutes }
-            if (modulesSum > 0) modulesSum else firstCourse.durationMinutes
-        } else {
-            0
-        }
-    }
-
-    val estimatedDays = remember(totalReadingMinutes, selectedDailyMinutes) {
-        if (totalReadingMinutes > 0 && selectedDailyMinutes > 0) {
-            ((totalReadingMinutes + selectedDailyMinutes - 1) / selectedDailyMinutes).coerceAtLeast(1)
-        } else {
-            3
-        }
-    }
+    val courses = CourseCatalog.courses.filter { it.trackId == selectedTrack }
+        .ifEmpty { CourseCatalog.courses }
+    val firstCourse = courses.firstOrNull()
+    val totalMinutes = firstCourse?.durationMinutes ?: 180
+    val estimatedDays = ceil(totalMinutes.toDouble() / selectedDailyMinutes.coerceAtLeast(10)).toInt()
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 8.dp),
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 4.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.Center
     ) {
-        // Main content area with scroll for smaller devices
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(vertical = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+        Text(
+            text = "Atur Ritme Belajarmu",
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.onBackground,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = "Belajar singkat namun konsisten setiap hari jauh lebih efektif daripada maraton sesekali.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Daily time selector
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            // 1. Time commitment chips
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+            Icon(
+                imageVector = Icons.Rounded.Schedule,
+                contentDescription = null,
+                tint = TealPrimary,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Target Waktu Harian",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            minuteOptions.forEach { (mins, label) ->
+                val isSelected = selectedDailyMinutes == mins
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = if (isSelected) Color(0xFF104246) else cardBg,
+                    border = BorderStroke(1.dp, if (isSelected) Color(0xFF104246) else borderCol),
+                    modifier = Modifier
+                        .weight(1f)
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable { onSelectMinutes(mins) }
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.AccessTime,
-                        contentDescription = null,
-                        tint = TealPrimary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Text(
-                        text = "Waktu Belajar Harian",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    minuteOptions.forEach { (minutes, label) ->
-                        val isSelected = selectedDailyMinutes == minutes
-                        Surface(
-                            shape = Dimens.CardDefaultShape,
-                            color = if (isSelected) TealPrimary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surface,
-                            border = BorderStroke(
-                                width = if (isSelected) 2.dp else 1.dp,
-                                color = if (isSelected) TealPrimary else MaterialTheme.colorScheme.outlineVariant
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(58.dp)
-                                .clip(Dimens.CardDefaultShape)
-                                .clickable { onSelectMinutes(minutes) }
-                                .testTag("time_chip_$minutes")
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(vertical = 6.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "$minutes mnt",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isSelected) TealPrimary else MaterialTheme.colorScheme.onSurface
-                                )
-                                Text(
-                                    text = label,
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontSize = 10.sp,
-                                    color = if (isSelected) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 2. Goal selector
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Flag,
-                        contentDescription = null,
-                        tint = TealPrimary,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Text(
-                        text = "Tujuan Utama",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    goals.forEach { goal ->
-                        val isSelected = selectedGoal == goal
-                        FilterChip(
-                            selected = isSelected,
-                            onClick = { onSelectGoal(goal) },
-                            label = {
-                                Text(
-                                    text = goal,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
-                                )
-                            },
-                            shape = RoundedCornerShape(10.dp),
-                            colors = FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = TealPrimary.copy(alpha = 0.15f),
-                                selectedLabelColor = TealPrimary
-                            ),
-                            border = BorderStroke(
-                                width = 1.dp,
-                                color = if (isSelected) TealPrimary else MaterialTheme.colorScheme.outlineVariant
-                            ),
-                            modifier = Modifier.height(38.dp)
-                        )
-                    }
-                }
-            }
-
-            // 3. Crisp Personalized Summary Card
-            Card(
-                shape = Dimens.CardDefaultShape,
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier.padding(vertical = 10.dp, horizontal = 4.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Ringkasan Rencanamu",
-                            style = MaterialTheme.typography.labelLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = TealPrimary
-                        )
-
-                        Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = FlameOrange.copy(alpha = 0.12f)
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(4.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.LocalFireDepartment,
-                                    contentDescription = null,
-                                    tint = FlameOrange,
-                                    modifier = Modifier.size(14.dp)
-                                )
-                                Text(
-                                    text = "+50 XP Bonus",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = FlameOrange
-                                )
-                            }
-                        }
-                    }
-
-                    // Selected Track Row
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(text = matchedTrack.iconEmoji, fontSize = 18.sp)
-                        Column {
-                            Text(
-                                text = matchedTrack.name,
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            if (firstCourse != null) {
-                                Text(
-                                    text = "Kelas awal: ${firstCourse.title}",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-
-                    // Target Days
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.CalendarToday,
-                            contentDescription = null,
-                            tint = TealPrimary,
-                            modifier = Modifier.size(16.dp)
+                            text = "${mins}m",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Target selesai kelas pertama: ~$estimatedDays hari ($selectedDailyMinutes menit/hari)",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            text = label,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isSelected) Color(0xFFD9EEEC) else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
             }
         }
 
-        // Headline & Subtext (max 2 lines each)
-        OnboardingStepHeader(
-            title = "Rencanamu Siap!",
-            subtitle = "Komitmen harian teratur membawa hasil maksimal. Kamu bisa mengubah target kapan saja di profil.",
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // Goal selector
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.AutoStories,
+                contentDescription = null,
+                tint = TealPrimary,
+                modifier = Modifier.size(18.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "Fokus Tujuan Utama",
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            goals.forEach { goal ->
+                val selected = selectedGoal == goal
+                FilterChip(
+                    selected = selected,
+                    onClick = { onSelectGoal(goal) },
+                    label = {
+                        Text(
+                            text = goal,
+                            fontSize = 11.5.sp,
+                            fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
+                            maxLines = 1
+                        )
+                    },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = Color(0xFFD9EEEC),
+                        selectedLabelColor = Color(0xFF104246)
+                    )
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        // Calm summary card (no fake +50 XP badge)
+        Surface(
+            shape = RoundedCornerShape(16.dp),
+            color = if (isDark) TealPrimary.copy(alpha = 0.14f) else Color(0xFFEEF6F5),
+            border = BorderStroke(1.dp, if (isDark) TealPrimary.copy(alpha = 0.4f) else Color(0xFFB4CDCC)),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = "RINGKASAN RENCANA",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = TealPrimary
+                )
+                Spacer(modifier = Modifier.height(6.dp))
+                Text(
+                    text = "Front-End Web Development",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                if (firstCourse != null) {
+                    Text(
+                        text = "Kelas awal: ${firstCourse.title}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Rounded.CalendarToday,
+                        contentDescription = null,
+                        tint = TealPrimary,
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = "Estimasi selesai kelas pertama: ~$estimatedDays hari ($selectedDailyMinutes menit/hari)",
+                        style = MaterialTheme.typography.bodySmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
+        }
     }
 }

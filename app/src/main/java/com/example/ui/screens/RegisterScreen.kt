@@ -37,12 +37,15 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
@@ -125,6 +128,7 @@ import kotlinx.coroutines.launch
 fun RegisterScreen(
     onRegisterSubmit: suspend (name: String, email: String, password: String) -> Result<Unit>,
     onNavigateToLogin: () -> Unit,
+    onGoogleSignIn: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     // Pastikan ikon status bar & navigation bar selalu gelap (terbaca jelas di atas latar cream LightBg),
@@ -291,6 +295,7 @@ fun RegisterScreen(
                     isLoading = isLoading,
                     errorMessage = errorMessage,
                     onSubmit = submitRegister,
+                    onGoogleSignIn = onGoogleSignIn,
                     focusManager = focusManager
                 )
             }
@@ -900,6 +905,7 @@ private fun RegisterFormCard(
     isLoading: Boolean,
     errorMessage: String?,
     onSubmit: () -> Unit,
+    onGoogleSignIn: () -> Unit = {},
     focusManager: FocusManager,
     modifier: Modifier = Modifier
 ) {
@@ -1074,6 +1080,57 @@ private fun RegisterFormCard(
                     loading = isLoading,
                     onClick = onSubmit
                 )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        thickness = 0.8.dp,
+                        color = LightBorder
+                    )
+                    Text(
+                        text = stringResource(R.string.login_divider_or),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = LightTextSecondary,
+                        modifier = Modifier.padding(horizontal = 14.dp)
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.weight(1f),
+                        thickness = 0.8.dp,
+                        color = LightBorder
+                    )
+                }
+
+                OutlinedButton(
+                    onClick = onGoogleSignIn,
+                    shape = RoundedCornerShape(14.dp),
+                    border = BorderStroke(1.dp, LightBorder),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = LightSurfaceVariant.copy(alpha = 0.35f)
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .testTag("register_google_signin_button")
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        GoogleLogoIcon(modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Daftar dengan Google",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = LightTextPrimary
+                        )
+                    }
+                }
             }
         }
     }

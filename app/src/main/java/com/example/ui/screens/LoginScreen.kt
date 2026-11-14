@@ -1237,7 +1237,7 @@ private fun LoginFooter(onNavigateToRegister: () -> Unit) {
  * Clean multi-color Google "G" vector drawn on Canvas for the secondary sign-in button.
  */
 @Composable
-private fun GoogleLogoIcon(modifier: Modifier = Modifier) {
+internal fun GoogleLogoIcon(modifier: Modifier = Modifier) {
     Canvas(modifier = modifier) {
         val strokeWidth = size.minDimension * 0.20f
         val radius = (size.minDimension - strokeWidth) / 2f

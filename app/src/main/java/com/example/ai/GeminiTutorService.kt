@@ -155,30 +155,32 @@ Tugas Anda:
         }
 
         // 2. Secondary: Firebase AI Logic SDK
-        try {
-            val generativeModel = Firebase.ai.generativeModel(
-                modelName = "gemini-3-flash-preview",
-                systemInstruction = content {
-                    text(systemPrompt)
-                },
-                generationConfig = generationConfig {
-                    temperature = 0.7f
-                    maxOutputTokens = 800
-                }
-            )
-
-            val response = generativeModel.generateContent(userMessage)
-            val replyText = response.text
-            if (!replyText.isNullOrBlank()) {
-                return@withContext AiTutorResult(
-                    text = replyText,
-                    isLive = true,
-                    provider = "Firebase AI Live"
+        for (fbModel in listOf("gemini-2.5-flash", "gemini-3-flash-preview", "gemini-2.0-flash")) {
+            try {
+                val generativeModel = Firebase.ai.generativeModel(
+                    modelName = fbModel,
+                    systemInstruction = content {
+                        text(systemPrompt)
+                    },
+                    generationConfig = generationConfig {
+                        temperature = 0.7f
+                        maxOutputTokens = 800
+                    }
                 )
+
+                val response = generativeModel.generateContent(userMessage)
+                val replyText = response.text
+                if (!replyText.isNullOrBlank()) {
+                    return@withContext AiTutorResult(
+                        text = replyText,
+                        isLive = true,
+                        provider = "Firebase AI Live"
+                    )
+                }
+            } catch (e: Throwable) {
+                firebaseError = "FirebaseAI ($fbModel): ${e.message}"
+                Log.e(TAG, firebaseError, e)
             }
-        } catch (e: Throwable) {
-            firebaseError = "FirebaseAI: ${e.message}"
-            Log.e(TAG, firebaseError, e)
         }
 
         val combinedError = listOfNotNull(directError, firebaseError).joinToString(" | ")

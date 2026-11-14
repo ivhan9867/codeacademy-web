@@ -1275,6 +1275,52 @@ class CodeAcademyRepository(
         Result.success(account)
     }
 
+    suspend fun loginWithGoogleIdToken(
+        idToken: String,
+        fallbackName: String?,
+        fallbackEmail: String?
+    ): Result<Boolean> = withContext(Dispatchers.IO) {
+        try {
+            ensureInitialUserSeeded()
+            val credential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = com.google.firebase.auth.FirebaseAuth.getInstance()
+                .signInWithCredential(credential)
+                .await()
+            val firebaseUser = authResult.user
+            val cleanEmail = (firebaseUser?.email ?: fallbackEmail)?.trim()?.lowercase(Locale.ROOT)
+                ?: return@withContext Result.failure(Exception("Email akun Google tidak tersedia."))
+            val cleanName = (firebaseUser?.displayName ?: fallbackName)?.trim()
+                ?.takeIf { it.isNotBlank() } ?: cleanEmail.substringBefore("@")
+
+            val existing = accountDao.getAccountByEmail(cleanEmail)
+            val accountId = if (existing != null) {
+                sessionManager.saveSession(
+                    accountId = existing.id,
+                    email = existing.email,
+                    displayName = existing.displayName
+                )
+                existing.id
+            } else {
+                val regResult = registerLocalAccount(
+                    displayName = cleanName,
+                    email = cleanEmail,
+                    password = UUID.randomUUID().toString()
+                )
+                if (regResult.isFailure) {
+                    return@withContext Result.failure(
+                        regResult.exceptionOrNull() ?: Exception("Gagal membuat akun lokal Google.")
+                    )
+                }
+                regResult.getOrThrow().id
+            }
+
+            val profile = userDao.getUserProfileOnce(accountId)
+            Result.success(profile?.isOnboarded == true)
+        } catch (e: Exception) {
+            Result.failure(Exception("Gagal masuk dengan Google: ${e.message ?: "kesalahan autentikasi"}"))
+        }
+    }
+
     suspend fun resetLocalAccountPassword(
         email: String,
         displayName: String,

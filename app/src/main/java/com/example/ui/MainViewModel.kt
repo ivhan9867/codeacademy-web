@@ -221,6 +221,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _isAiThinking = MutableStateFlow(false)
     val isAiThinking: StateFlow<Boolean> = _isAiThinking.asStateFlow()
 
+    private val _aiConnectionStatus = MutableStateFlow("Gemini 2.0")
+    val aiConnectionStatus: StateFlow<String> = _aiConnectionStatus.asStateFlow()
+
     // Course Catalog Search & Filter States
     private val _searchKeyword = MutableStateFlow("")
     val searchKeyword: StateFlow<String> = _searchKeyword.asStateFlow()
@@ -705,7 +708,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
 
-                val responseText = aiService.askTutor(
+                val result = aiService.askTutorDetailed(
                     userMessage = query,
                     courseTitle = courseTitle,
                     moduleTitle = moduleTitle,
@@ -713,9 +716,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     currentPlaygroundCode = codeContext,
                     language = appLanguage.value.code
                 )
+                _aiConnectionStatus.value = result.provider
                 val aiMsg = ChatMessage(
                     id = UUID.randomUUID().toString(),
-                    text = responseText,
+                    text = result.text,
                     isUser = false
                 )
                 _chatMessages.value = _chatMessages.value + aiMsg

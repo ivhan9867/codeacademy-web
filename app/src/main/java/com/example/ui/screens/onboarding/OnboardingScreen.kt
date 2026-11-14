@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +22,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.unit.dp
@@ -32,7 +33,7 @@ import com.example.data.local.sessionDataStore
 import kotlinx.coroutines.launch
 
 /**
- * Modern, clean, and motivating 5-step onboarding screen.
+ * Calm, bright, purposeful 4-step onboarding tailored for Front-End Web Development.
  */
 @Composable
 fun OnboardingScreen(
@@ -56,14 +57,22 @@ fun OnboardingScreen(
         }
     }
 
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 5 })
-
-    val safeInitialTrack = if (initialTrack.isNotBlank() && initialTrack != "ui-ux") initialTrack else "front-end"
-    var selectedTrack by remember { mutableStateOf(safeInitialTrack) }
-    var selectedGoal by remember { mutableStateOf("Karier") }
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 4 })
+    val selectedTrack = if (initialTrack.isNotBlank()) initialTrack else "front-end"
+    var selectedGoal by remember { mutableStateOf("Karier Web Dev") }
     var selectedDailyMinutes by remember { mutableIntStateOf(20) }
 
-    // Intercept hardware/system back button
+    val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
+    val calmBgBrush = if (isDark) {
+        Brush.verticalGradient(
+            listOf(MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.surface)
+        )
+    } else {
+        Brush.verticalGradient(
+            listOf(Color(0xFFEEF6F5), Color(0xFFF7FAFA))
+        )
+    }
+
     BackHandler(enabled = pagerState.currentPage > 0) {
         coroutineScope.launch {
             pagerState.animateScrollToPage(pagerState.currentPage - 1)
@@ -73,15 +82,14 @@ fun OnboardingScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(calmBgBrush)
             .padding(horizontal = 20.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // 1. Top Navigation Bar
         OnboardingTopBar(
             canGoBack = pagerState.currentPage > 0,
-            canSkip = pagerState.currentPage in 1..3,
+            canSkip = pagerState.currentPage in 1..2,
             onBackClick = {
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(pagerState.currentPage - 1)
@@ -92,22 +100,20 @@ fun OnboardingScreen(
                     onSkipOnboarding()
                 } else {
                     coroutineScope.launch {
-                        pagerState.animateScrollToPage(4)
+                        pagerState.animateScrollToPage(3)
                     }
                 }
             }
         )
 
-        // 2. Segmented Progress Bar (5 steps)
         OnboardingProgressBar(
             currentPage = pagerState.currentPage,
-            totalPages = 5,
+            totalPages = 4,
             areAnimationsEnabled = areAnimationsEnabled
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-        // 3. Central Pager Content
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -122,14 +128,8 @@ fun OnboardingScreen(
                 1 -> CodePreviewStep(
                     areAnimationsEnabled = areAnimationsEnabled
                 )
-                2 -> CommunityStep(
-                    areAnimationsEnabled = areAnimationsEnabled
-                )
-                3 -> TrackSelectionStep(
-                    selectedTrackId = selectedTrack,
-                    onSelectTrack = { selectedTrack = it }
-                )
-                4 -> PlanSummaryStep(
+                2 -> RoadmapStep()
+                3 -> PlanSummaryStep(
                     selectedTrack = selectedTrack,
                     selectedGoal = selectedGoal,
                     selectedDailyMinutes = selectedDailyMinutes,
@@ -141,17 +141,16 @@ fun OnboardingScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 4. Bottom Action CTA Button
         val buttonText = when (pagerState.currentPage) {
             0 -> "Mulai"
-            in 1..3 -> "Lanjut"
+            in 1..2 -> "Lanjut"
             else -> "Mulai Belajar"
         }
 
         OnboardingActionButton(
             text = buttonText,
             onClick = {
-                if (pagerState.currentPage < 4) {
+                if (pagerState.currentPage < 3) {
                     coroutineScope.launch {
                         pagerState.animateScrollToPage(pagerState.currentPage + 1)
                     }
@@ -163,10 +162,8 @@ fun OnboardingScreen(
                                 prefs[KEY_DAILY_STUDY_MINUTES] = selectedDailyMinutes
                             }
                         } catch (_: Exception) {
-                            // Non-critical persistence error handled gracefully
                         }
-                        val finalTrack = if (selectedTrack.isNotBlank() && selectedTrack != "ui-ux") selectedTrack else "front-end"
-                        onFinishOnboarding(finalTrack)
+                        onFinishOnboarding("front-end")
                     }
                 }
             }

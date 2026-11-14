@@ -1,19 +1,41 @@
 package com.example.ai
 
+import android.util.Log
+import com.example.BuildConfig
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.content
 import com.google.firebase.ai.type.generationConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
+
+data class AiTutorResult(
+    val text: String,
+    val isLive: Boolean,
+    val provider: String,
+    val errorDetail: String? = null
+)
 
 /**
- * AI Tutor Service powered by Firebase AI Logic SDK (com.google.firebase:firebase-ai)
- * protected with Firebase App Check. No API keys are exposed or bundled on the client.
+ * Dual-Engine AI Tutor Service:
+ * 1. Direct Gemini 2.0 Flash REST API using GEMINI_API_KEY from `.env` (Secrets Gradle Plugin).
+ * 2. Firebase AI Logic SDK (`com.google.firebase:firebase-ai`) fallback if key is unset.
+ * 3. Context-aware localized offline fallback if both cloud providers are unavailable.
  */
 class GeminiTutorService {
 
     companion object {
+        private const val TAG = "GeminiTutorService"
+        private const val GEMINI_ENDPOINT =
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
+
         fun resolveLanguageName(language: String?): String {
             return when (language?.lowercase()?.trim()) {
                 "en" -> "English"
@@ -60,16 +82,64 @@ Tugas Anda:
         moduleContent: String? = null,
         currentPlaygroundCode: String? = null,
         language: String = "id"
-    ): String = withContext(Dispatchers.IO) {
-        try {
-            val systemPrompt = buildSystemPrompt(
-                courseTitle = courseTitle,
-                moduleTitle = moduleTitle,
-                moduleContent = moduleContent,
-                currentPlaygroundCode = currentPlaygroundCode,
-                language = language
-            )
+    ): String {
+        return askTutorDetailed(
+            userMessage = userMessage,
+            courseTitle = courseTitle,
+            moduleTitle = moduleTitle,
+            moduleContent = moduleContent,
+            currentPlaygroundCode = currentPlaygroundCode,
+            language = language
+        ).text
+    }
 
+    suspend fun askTutorDetailed(
+        userMessage: String,
+        courseTitle: String,
+        moduleTitle: String,
+        moduleContent: String? = null,
+        currentPlaygroundCode: String? = null,
+        language: String = "id"
+    ): AiTutorResult = withContext(Dispatchers.IO) {
+        val systemPrompt = buildSystemPrompt(
+            courseTitle = courseTitle,
+            moduleTitle = moduleTitle,
+            moduleContent = moduleContent,
+            currentPlaygroundCode = currentPlaygroundCode,
+            language = language
+        )
+
+        var lastError: String? = null
+
+        // 1. Primary: Direct Gemini REST API via BuildConfig.GEMINI_API_KEY
+        val apiKey = try {
+            BuildConfig.GEMINI_API_KEY.trim()
+        } catch (_: Throwable) {
+            ""
+        }
+
+        if (apiKey.isNotBlank()) {
+            try {
+                val directReply = callDirectGeminiApi(
+                    apiKey = apiKey,
+                    systemPrompt = systemPrompt,
+                    userMessage = userMessage
+                )
+                if (!directReply.isNullOrBlank()) {
+                    return@withContext AiTutorResult(
+                        text = directReply,
+                        isLive = true,
+                        provider = "Gemini 2.0 Live"
+                    )
+                }
+            } catch (e: Throwable) {
+                lastError = "Direct Gemini API: ${e.message}"
+                Log.e(TAG, lastError, e)
+            }
+        }
+
+        // 2. Secondary: Firebase AI Logic SDK
+        try {
             val generativeModel = Firebase.ai.generativeModel(
                 modelName = "gemini-2.0-flash",
                 systemInstruction = content {
@@ -84,85 +154,174 @@ Tugas Anda:
             val response = generativeModel.generateContent(userMessage)
             val replyText = response.text
             if (!replyText.isNullOrBlank()) {
-                return@withContext replyText
+                return@withContext AiTutorResult(
+                    text = replyText,
+                    isLive = true,
+                    provider = "Firebase AI Live"
+                )
             }
         } catch (e: Throwable) {
-            // Graceful fallback to localized smart engine if Firebase AI is offline/unreachable
+            lastError = "Firebase AI: ${e.message}"
+            Log.e(TAG, lastError, e)
         }
 
-        // High-fidelity localized fallback tutor
-        return@withContext generateSmartFallbackResponse(userMessage, courseTitle, moduleTitle)
+        // 3. Fallback: Smart localized engine (clearly flagged as offline)
+        return@withContext AiTutorResult(
+            text = generateSmartFallbackResponse(userMessage, courseTitle, moduleTitle, moduleContent),
+            isLive = false,
+            provider = "Mode Offline",
+            errorDetail = lastError
+        )
+    }
+
+    private fun callDirectGeminiApi(
+        apiKey: String,
+        systemPrompt: String,
+        userMessage: String
+    ): String? {
+        val url = URL("$GEMINI_ENDPOINT?key=$apiKey")
+        val conn = (url.openConnection() as HttpURLConnection).apply {
+            requestMethod = "POST"
+            connectTimeout = 15_000
+            readTimeout = 25_000
+            doOutput = true
+            setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+        }
+
+        val payload = JSONObject().apply {
+            put("system_instruction", JSONObject().apply {
+                put("parts", JSONArray().apply {
+                    put(JSONObject().apply { put("text", systemPrompt) })
+                })
+            })
+            put("contents", JSONArray().apply {
+                put(JSONObject().apply {
+                    put("role", "user")
+                    put("parts", JSONArray().apply {
+                        put(JSONObject().apply { put("text", userMessage) })
+                    })
+                })
+            })
+            put("generationConfig", JSONObject().apply {
+                put("temperature", 0.7)
+                put("maxOutputTokens", 800)
+            })
+        }
+
+        return try {
+            OutputStreamWriter(conn.outputStream, Charsets.UTF_8).use { writer ->
+                writer.write(payload.toString())
+                writer.flush()
+            }
+
+            val code = conn.responseCode
+            val stream = if (code in 200..299) conn.inputStream else conn.errorStream
+            val body = BufferedReader(InputStreamReader(stream, Charsets.UTF_8)).use { it.readText() }
+
+            if (code !in 200..299) {
+                throw IllegalStateException("HTTP $code: $body")
+            }
+
+            val json = JSONObject(body)
+            val candidates = json.optJSONArray("candidates") ?: return null
+            if (candidates.length() == 0) return null
+            val contentObj = candidates.getJSONObject(0).optJSONObject("content") ?: return null
+            val parts = contentObj.optJSONArray("parts") ?: return null
+            if (parts.length() == 0) return null
+            parts.getJSONObject(0).optString("text").takeIf { it.isNotBlank() }
+        } finally {
+            conn.disconnect()
+        }
     }
 
     private fun generateSmartFallbackResponse(
         query: String,
         courseTitle: String,
-        moduleTitle: String
+        moduleTitle: String,
+        moduleContent: String? = null
     ): String {
         val q = query.lowercase()
+        val moduleHint = moduleContent
+            ?.lineSequence()
+            ?.map { it.trim() }
+            ?.firstOrNull { it.length > 40 && !it.startsWith("#") && !it.startsWith("```") && !it.startsWith("---") }
+            ?.let { "\n\n**Ringkasan Modul ($moduleTitle):**\n> $it" }
+            .orEmpty()
+
         return when {
             q.contains("flexbox") || q.contains("flex") -> """
 **CSS Flexbox** adalah model tata letak satu dimensi yang memudahkan penyusunan elemen secara horizontal (baris) atau vertikal (kolom).
 
-Contoh sederhana Flexbox:
 ```css
 .wadah {
   display: flex;
-  justify-content: center; /* Meratakan ke tengah secara horizontal */
-  align-items: center;     /* Meratakan ke tengah secara vertikal */
-  gap: 16px;               /* Jarak antar item */
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
 }
 ```
-*Tips CodeAcademy:* Gunakan `justify-content: space-between;` untuk membuat menu navigasi navbar yang rapi di smartphone!
+*Tips CodeAcademy:* Gunakan `justify-content: space-between;` untuk navbar yang rapi di layar ponsel.
+            """.trimIndent()
+
+            q.contains("grid") -> """
+**CSS Grid** ideal untuk tata letak dua dimensi (baris dan kolom sekaligus).
+
+```css
+.galeri {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+```
+Kombinasi `auto-fit` dan `minmax()` membuat jumlah kolom otomatis responsif tanpa media query.
             """.trimIndent()
 
             q.contains("html") || q.contains("tag") || q.contains("elemen") -> """
 Di HTML, elemen disusun dari **Tag Pembuka**, **Konten**, dan **Tag Penutup**.
 
-Contoh:
 ```html
-<button class="btn-utama">Mulai Belajar</button>
+<main>
+  <button class="btn-utama">Mulai Belajar</button>
+</main>
 ```
-Dalam modul **$moduleTitle**, pastikan kamu menggunakan tag semantik seperti `<header>`, `<main>`, dan `<footer>` agar struktur dokumen mudah diindeks oleh mesin pencari Google!
+Dalam modul **$moduleTitle**, gunakan tag semantik seperti `<header>`, `<main>`, `<section>`, dan `<footer>` agar struktur halaman rapi dan aksesibel.
             """.trimIndent()
 
-            q.contains("js") || q.contains("javascript") || q.contains("variabel") -> """
-Dalam JavaScript modern (ES6+), ada 2 cara utama membuat variabel:
-1. `const` — Untuk nilai tetap yang tidak akan diubah lagi nilainya.
-2. `let` — Untuk variabel yang nilainya bisa berubah sewaktu-waktu.
+            q.contains("js") || q.contains("javascript") || q.contains("variabel") || q.contains("dom") -> """
+Dalam JavaScript modern (ES6+), utamakan `const` untuk nilai tetap dan `let` untuk nilai yang berubah, serta `querySelector` untuk manipulasi DOM:
 
-Contoh:
 ```javascript
-const namaSiswa = "Rafi";
-let skor = 80;
-skor += 20; // sekarang skor 100!
-console.log(`Halo ${'$'}{namaSiswa}, skormu: ${'$'}{skor}`);
+const tombol = document.querySelector("#btn-aksi");
+let hitung = 0;
+
+tombol.addEventListener("click", () => {
+  hitung += 1;
+  tombol.textContent = `Diklik ${'$'}{hitung}x`;
+});
 ```
-Hindari menggunakan `var` karena memiliki sifat *hoisting* yang membingungkan.
             """.trimIndent()
 
             q.contains("contoh kode") || q.contains("kode") -> """
-Berikut adalah contoh struktur web interaktif yang relevan dengan **$moduleTitle**:
+Berikut contoh kode interaktif yang relevan dengan **$moduleTitle**:
 
 ```html
 <div class="card">
-  <h2>Halo dari CodeAcademy!</h2>
-  <p>Tekan tombol di bawah untuk melihat aksi JavaScript.</p>
-  <button onclick="alert('Kode bekerja!')">Klik Saya</button>
+  <h2>Halo dari CodeAcademy</h2>
+  <p>Tekan tombol di bawah untuk menguji aksi JavaScript.</p>
+  <button onclick="console.log('Berjalan!')">Uji Kode</button>
 </div>
 ```
-Kamu juga bisa langsung menguji kode ini di menu **Playground**! 🚀
+Kamu bisa langsung mengujinya lewat tombol **Coba di Playground**.
             """.trimIndent()
 
             else -> """
-Pertanyaan yang sangat bagus untuk modul **$moduleTitle** pada kelas **$courseTitle**! 💡
+*(Mode Offline — koneksi ke Gemini AI sedang tidak tersedia)*
 
-Konsep ini sangat penting dipahami karena menjadi dasar pengembangan aplikasi web modern. Pastikan kamu:
-1. Mencoba langsung kode di tab **Playground**.
-2. Memeriksa hasil preview di layar.
-3. Mencoba bereksperimen dengan mengubah nilai atribut atau menambahkan fungsi baru!
+Untuk modul **$moduleTitle** di kelas **$courseTitle**, kamu bisa mencoba langkah berikut:$moduleHint
 
-Apakah ada baris kode tertentu yang ingin kamu tanyakan atau bingungkan? Tuliskan saja kodenya di sini! 😊
+1. Uji langsung cuplikan kode di **Playground** lalu cek tab **Preview Web** & **Output Console**.
+2. Periksa penulisan tag pembuka/penutup HTML, titik koma (`;`) CSS, dan nama selector di JavaScript.
+3. Jika sudah terhubung internet, kirim ulang pertanyaanmu agar Gemini 2.0 menganalisisnya secara langsung.
             """.trimIndent()
         }
     }

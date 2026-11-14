@@ -298,7 +298,9 @@ class CodeAcademyRepository(
         val user = userDao.getUserProfileOnce(accountId) ?: return@withContext
         val today = getTodayDateString()
         if (user.lastActiveDate != today) {
-            val newStreak = user.currentStreak + 1
+            val cal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.DAY_OF_YEAR, -1) }
+            val yesterday = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.time)
+            val newStreak = if (user.lastActiveDate == yesterday) user.currentStreak + 1 else 1
             val newLongest = maxOf(newStreak, user.longestStreak)
             userDao.updateStreak(accountId, newStreak, newLongest, today)
         }
@@ -1156,6 +1158,11 @@ class CodeAcademyRepository(
         val accountId = getActiveAccountId()
         val tracksStr = if (selectedTrackId.isNotBlank()) selectedTrackId else "front-end"
         userDao.updateOnboardingStatus(accountId, isOnboarded = true, selectedTracks = tracksStr)
+        val savedGoal = context.sessionDataStore.data.firstOrNull()
+            ?.get(androidx.datastore.preferences.core.stringPreferencesKey("user_goal"))
+        if (!savedGoal.isNullOrBlank()) {
+            userDao.updateUserGoal(accountId, savedGoal)
+        }
     }
 
     suspend fun markCoachMarkSeen(coachMarkId: String) = withContext(Dispatchers.IO) {
@@ -1335,12 +1342,12 @@ class CodeAcademyRepository(
                     "b2" -> totalCompleted >= 3 // Pelajar Baru
                     "b3" -> streak >= 7 // Konsisten 7 hari
                     "b4" -> streak >= 30 // Api Abadi 30 hari
-                    "b5" -> true // Petualang
+                    "b5" -> progress.map { it.courseId }.distinct().size >= 2 // Petualang Web
                     "b6" -> certs.any { it.scorePercent == 100 } // Penguji Ulung
-                    "b7" -> user?.dailyQuestCompleted == true // Pejuang Misi
+                    "b7" -> user?.dailyQuestCompleted == true && streak >= 7 // Pejuang Misi
                     "b8" -> level >= 10 // Code Master
-                    "b9" -> certCount >= 1 // Kolektor
-                    "b10" -> true // AI Enthusiast
+                    "b9" -> certCount >= 3 // Kolektor
+                    "b10" -> totalCompleted >= 3 && (user?.totalXp ?: 0) >= 60 // Pembelajar Aktif
                     "b11" -> bmarks.isNotEmpty() // Penyelamat
                     "b12" -> {
                         val webDevCourseIds = setOf("fe-web-foundation-00", "fe-css-02", "fe-js-03")

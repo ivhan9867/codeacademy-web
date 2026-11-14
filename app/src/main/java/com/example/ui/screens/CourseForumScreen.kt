@@ -36,12 +36,17 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.rounded.ChatBubbleOutline
+import androidx.compose.material.icons.rounded.ExpandLess
+import androidx.compose.material.icons.rounded.ExpandMore
+import androidx.compose.material.icons.rounded.School
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -107,57 +112,56 @@ private val MentorBadgeBg = AmberGold.copy(alpha = 0.18f)
 private val AvatarOtherBg = CyanAccent.copy(alpha = 0.7f)
 private val LikeActiveRed = Color(0xFFFF5252)
 
-private fun levelTierEmoji(level: Int): String = when {
-    level >= 20 -> "👑"
-    level >= 10 -> "🚀"
-    level >= 5 -> "📘"
-    else -> "🌱"
-}
-
 @Composable
 private fun levelTierLabel(level: Int): String = com.example.util.localization.DataLabelMappings.levelTierLabel(level)
 
 @Immutable
-data class ThreadedPostItem(
-    val post: ForumPostEntity,
-    val depth: Int,
-    val indentationDp: Dp
+data class ForumThreadGroup(
+    val parent: ForumPostEntity,
+    val replies: List<ForumPostEntity>
 )
 
-private fun buildThreadedPostList(posts: List<ForumPostEntity>): List<ThreadedPostItem> {
-    val repliesByParent = posts.filter { it.replyToPostId != null }
-        .groupBy { it.replyToPostId }
-    val topLevel = posts.filter { it.replyToPostId == null }
-    val result = mutableListOf<ThreadedPostItem>()
+private fun resolveRootPostId(
+    post: ForumPostEntity,
+    postById: Map<String, ForumPostEntity>
+): String {
+    var current = post
     val visited = mutableSetOf<String>()
+    while (current.replyToPostId != null && visited.add(current.postId)) {
+        val parent = postById[current.replyToPostId] ?: break
+        current = parent
+    }
+    return current.postId
+}
 
-    fun appendWithReplies(post: ForumPostEntity, depth: Int) {
-        if (post.postId in visited) return
-        visited += post.postId
-        val indent = when (depth) {
-            0 -> 0.dp
-            1 -> 16.dp
-            else -> 28.dp // max indent for depth >= 2 to keep layout comfortable on mobile
+private fun buildForumThreadGroups(posts: List<ForumPostEntity>): List<ForumThreadGroup> {
+    val postById = posts.associateBy { it.postId }
+    val topLevel = posts.filter { it.replyToPostId == null }
+    val topLevelIds = topLevel.map { it.postId }.toSet()
+
+    val repliesByRoot = mutableMapOf<String, MutableList<ForumPostEntity>>()
+    val orphanReplies = mutableListOf<ForumPostEntity>()
+
+    posts.filter { it.replyToPostId != null }.forEach { reply ->
+        val rootId = resolveRootPostId(reply, postById)
+        if (rootId in topLevelIds) {
+            repliesByRoot.getOrPut(rootId) { mutableListOf() }.add(reply)
+        } else {
+            orphanReplies.add(reply)
         }
-        result += ThreadedPostItem(
-            post = post,
-            depth = depth,
-            indentationDp = indent
-        )
-        val directReplies = repliesByParent[post.postId].orEmpty().sortedBy { it.timestamp }
-        directReplies.forEach { reply -> appendWithReplies(reply, (depth + 1).coerceAtMost(2)) }
     }
 
-    topLevel.forEach { appendWithReplies(it, 0) }
-    // Reply "yatim" (induknya belum termuat, misal kasus pagination) tetap ditampilkan di akhir dengan indent flat 16.dp
-    posts.filter { it.postId !in visited }.forEach { orphan ->
-        result += ThreadedPostItem(
-            post = orphan,
-            depth = 1,
-            indentationDp = 16.dp
+    val groups = topLevel.map { parent ->
+        ForumThreadGroup(
+            parent = parent,
+            replies = repliesByRoot[parent.postId].orEmpty().sortedBy { it.timestamp }
         )
+    }.toMutableList()
+
+    orphanReplies.sortedByDescending { it.timestamp }.forEach { orphan ->
+        groups.add(ForumThreadGroup(parent = orphan, replies = emptyList()))
     }
-    return result
+    return groups
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -172,8 +176,19 @@ fun CourseForumScreen(
     val coroutineScope = rememberCoroutineScope()
     val postsFlow = remember(course.id) { socialViewModel.getCourseForumPosts(course.id) }
     val posts by postsFlow.collectAsStateWithLifecycle(initialValue = emptyList())
-    val threadedPosts = remember(posts) { buildThreadedPostList(posts) }
+    val threadGroups = remember(posts) { buildForumThreadGroups(posts) }
+    var expandedThreadIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
+    val selectedPublicProfile by socialViewModel.selectedPublicProfile.collectAsStateWithLifecycle()
+    val isLoadingPublicProfile by socialViewModel.isLoadingPublicProfile.collectAsStateWithLifecycle()
+
+    selectedPublicProfile?.let { publicProfile ->
+        com.example.ui.components.UserPublicProfileDialog(
+            profile = publicProfile,
+            isLoading = isLoadingPublicProfile,
+            onDismiss = { socialViewModel.dismissPublicProfile() }
+        )
+    }
 
     var loadError by remember { mutableStateOf<String?>(null) }
     var retryTrigger by remember { mutableIntStateOf(0) }
@@ -200,7 +215,7 @@ fun CourseForumScreen(
             },
             onUpdate = { updatedPosts ->
                 loadError = null
-                // In case of real-time incoming posts, Room is reactive and postsFlow emits automatically
+                socialViewModel.syncIncomingForumPosts(course.id, updatedPosts)
             }
         )
 
@@ -394,8 +409,14 @@ fun CourseForumScreen(
                                         if (success) {
                                             postInput = ""
                                             replyingToPost = null
-                                            coroutineScope.launch {
-                                                listState.animateScrollToItem(0)
+                                            if (replyTarget != null) {
+                                                val postById = posts.associateBy { it.postId }
+                                                val rootId = resolveRootPostId(replyTarget, postById)
+                                                expandedThreadIds = expandedThreadIds + rootId
+                                            } else {
+                                                coroutineScope.launch {
+                                                    listState.animateScrollToItem(0)
+                                                }
                                             }
                                         }
                                     }
@@ -549,20 +570,32 @@ fun CourseForumScreen(
                         .testTag("forum_list")
                 ) {
                     items(
-                        items = threadedPosts,
-                        key = { it.post.postId }
-                    ) { threadedItem ->
-                        val post = threadedItem.post
+                        items = threadGroups,
+                        key = { it.parent.postId }
+                    ) { group ->
+                        val post = group.parent
+                        val isExpanded = post.postId in expandedThreadIds
                         ForumPostCard(
                             post = post,
-                            indentationDp = threadedItem.indentationDp,
+                            replies = group.replies,
+                            isThreadExpanded = isExpanded,
                             currentUserId = userProfile?.id?.toString() ?: "",
                             isHighlighted = highlightedPostId == post.postId,
+                            onToggleExpandReplies = {
+                                expandedThreadIds = if (isExpanded) {
+                                    expandedThreadIds - post.postId
+                                } else {
+                                    expandedThreadIds + post.postId
+                                }
+                            },
                             onReplyClick = {
                                 replyingToPost = post
                             },
+                            onReplyToPost = { targetPost ->
+                                replyingToPost = targetPost
+                            },
                             onQuoteClick = { targetPostId ->
-                                val targetIndex = threadedPosts.indexOfFirst { it.post.postId == targetPostId }
+                                val targetIndex = threadGroups.indexOfFirst { it.parent.postId == targetPostId }
                                 if (targetIndex >= 0) {
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(targetIndex)
@@ -577,6 +610,21 @@ fun CourseForumScreen(
                                     postId = post.postId,
                                     currentLikes = post.likeCount,
                                     isLiked = !post.isLikedByMe
+                                )
+                            },
+                            onToggleLikePost = { targetPost ->
+                                socialViewModel.toggleLikeForumPost(
+                                    postId = targetPost.postId,
+                                    currentLikes = targetPost.likeCount,
+                                    isLiked = !targetPost.isLikedByMe
+                                )
+                            },
+                            onAuthorClick = { authorId ->
+                                val target = if (post.authorId == authorId) post else group.replies.find { it.authorId == authorId }
+                                socialViewModel.openPublicProfile(
+                                    userId = authorId,
+                                    fallbackName = target?.authorName ?: "Siswa",
+                                    fallbackLevel = target?.authorLevel ?: 1
                                 )
                             }
                         )
@@ -632,11 +680,17 @@ fun CourseForumScreen(
 fun ForumPostCard(
     post: ForumPostEntity,
     indentationDp: Dp = 0.dp,
+    replies: List<ForumPostEntity> = emptyList(),
+    isThreadExpanded: Boolean = false,
     currentUserId: String,
     isHighlighted: Boolean = false,
+    onToggleExpandReplies: () -> Unit = {},
     onReplyClick: () -> Unit = {},
+    onReplyToPost: ((ForumPostEntity) -> Unit)? = null,
     onQuoteClick: ((String) -> Unit)? = null,
     onToggleLike: () -> Unit,
+    onToggleLikePost: ((ForumPostEntity) -> Unit)? = null,
+    onAuthorClick: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val isAuthorMe = post.authorId == currentUserId
@@ -664,10 +718,16 @@ fun ForumPostCard(
             .testTag("forum_post_item_${post.postId}")
     ) {
         Column(modifier = Modifier.padding(14.dp)) {
-            // Author info row
+            // Author info row (clickable to open public profile)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+                    .clickable(enabled = post.authorId.isNotBlank()) {
+                        onAuthorClick(post.authorId)
+                    }
+                    .padding(vertical = 2.dp)
             ) {
                 // Avatar circle
                 Box(
@@ -734,52 +794,293 @@ fun ForumPostCard(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Footer (Reply button + Like button & count)
+            // Footer: Social-media style Comment count pill (left) + Balas & Like (right)
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                TextButton(
-                    onClick = onReplyClick,
-                    modifier = Modifier.testTag("reply_button_${post.postId}"),
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Reply,
-                        contentDescription = "Balas",
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                if (replies.isNotEmpty()) {
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = if (isThreadExpanded) {
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.14f)
+                        } else {
+                            MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+                        },
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .clickable(onClick = onToggleExpandReplies)
+                            .testTag("toggle_replies_${post.postId}")
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.ChatBubbleOutline,
+                                contentDescription = "Lihat Balasan",
+                                modifier = Modifier.size(15.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            Text(
+                                text = "${replies.size} Balasan",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.width(2.dp))
+                            Icon(
+                                imageVector = if (isThreadExpanded) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
+                                contentDescription = null,
+                                modifier = Modifier.size(16.dp),
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                } else {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Rounded.ChatBubbleOutline,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "0 Balasan",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        )
+                    }
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(
+                        onClick = onReplyClick,
+                        modifier = Modifier.testTag("reply_button_${post.postId}"),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Reply,
+                            contentDescription = "Balas",
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "Balas",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
                     Spacer(modifier = Modifier.width(4.dp))
+
+                    IconButton(
+                        onClick = onToggleLike,
+                        modifier = Modifier
+                            .size(34.dp)
+                            .testTag("like_button_${post.postId}")
+                    ) {
+                        Icon(
+                            imageVector = if (post.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = if (post.isLikedByMe) "Batal Suka" else "Sukai",
+                            tint = if (post.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                     Text(
-                        text = "Balas",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = post.likeCount.toString(),
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (post.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
 
-                Spacer(modifier = Modifier.width(8.dp))
-
-                IconButton(
-                    onClick = onToggleLike,
+            // Expandable Social-Media-Style Replies Drawer
+            AnimatedVisibility(visible = isThreadExpanded && replies.isNotEmpty()) {
+                Column(
                     modifier = Modifier
-                        .size(36.dp)
-                        .testTag("like_button_${post.postId}")
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
                 ) {
-                    Icon(
-                        imageVector = if (post.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = if (post.isLikedByMe) "Batal Suka" else "Sukai",
-                        tint = if (post.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.size(18.dp)
+                    HorizontalDivider(
+                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f),
+                        modifier = Modifier.padding(bottom = 10.dp)
+                    )
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 6.dp)
+                    ) {
+                        replies.forEach { reply ->
+                            ForumReplyItem(
+                                reply = reply,
+                                currentUserId = currentUserId,
+                                onReplyClick = { onReplyToPost?.invoke(reply) },
+                                onToggleLike = { onToggleLikePost?.invoke(reply) },
+                                onAuthorClick = onAuthorClick
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ForumReplyItem(
+    reply: ForumPostEntity,
+    currentUserId: String,
+    onReplyClick: () -> Unit,
+    onToggleLike: () -> Unit,
+    onAuthorClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val isAuthorMe = reply.authorId == currentUserId
+    val formattedTime = remember(reply.timestamp) { formatTimestamp(reply.timestamp) }
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("forum_reply_item_${reply.postId}")
+    ) {
+        // Subtle vertical thread line
+        Box(
+            modifier = Modifier
+                .width(2.5.dp)
+                .height(64.dp)
+                .background(
+                    color = if (reply.authorIsMentor) AmberGold.copy(alpha = 0.7f) else TealPrimary.copy(alpha = 0.4f),
+                    shape = ForumQuoteBarShape
+                )
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Surface(
+            shape = RoundedCornerShape(12.dp),
+            color = if (reply.authorIsMentor) {
+                AmberGold.copy(alpha = 0.08f)
+            } else {
+                MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+            },
+            border = if (reply.authorIsMentor) {
+                BorderStroke(1.dp, AmberGold.copy(alpha = 0.3f))
+            } else null,
+            modifier = Modifier.weight(1f)
+        ) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable(enabled = reply.authorId.isNotBlank()) {
+                            onAuthorClick(reply.authorId)
+                        }
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(26.dp)
+                            .clip(CircleShape)
+                            .background(if (isAuthorMe) TealPrimary else AvatarOtherBg)
+                    ) {
+                        val initial = reply.authorName.firstOrNull()?.uppercaseChar()?.toString() ?: "S"
+                        Text(
+                            text = initial,
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = reply.authorName,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            ForumAuthorBadges(
+                                isAuthorMe = isAuthorMe,
+                                authorIsMentor = reply.authorIsMentor,
+                                authorLevel = reply.authorLevel
+                            )
+                        }
+                        Text(
+                            text = formattedTime,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                if (!reply.replyToAuthorName.isNullOrBlank()) {
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = "Membalas @${reply.replyToAuthorName}",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.primary
                     )
                 }
+
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = post.likeCount.toString(),
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = if (post.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant
+                    text = reply.content,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    lineHeight = 18.sp
                 )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    TextButton(
+                        onClick = onReplyClick,
+                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
+                        modifier = Modifier.height(28.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Reply,
+                            contentDescription = "Balas",
+                            modifier = Modifier.size(13.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = "Balas",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    IconButton(
+                        onClick = onToggleLike,
+                        modifier = Modifier.size(28.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (reply.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = "Sukai",
+                            tint = if (reply.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(14.dp)
+                        )
+                    }
+                    Text(
+                        text = reply.likeCount.toString(),
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (reply.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }
@@ -869,12 +1170,17 @@ private fun ForumAuthorBadges(
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                 ) {
-                    Text(text = "🎓", fontSize = 10.sp)
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Icon(
+                        imageVector = Icons.Rounded.School,
+                        contentDescription = null,
+                        tint = AmberGold,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
                     Text(
-                        text = "Mentor",
+                        text = "Fasilitator",
                         style = MaterialTheme.typography.labelSmall,
                         color = AmberGold,
                         fontWeight = FontWeight.Bold
@@ -888,11 +1194,11 @@ private fun ForumAuthorBadges(
                 color = levelBadgeBg
             ) {
                 Text(
-                    text = "${levelTierEmoji(authorLevel)} ${levelTierLabel(authorLevel)}",
+                    text = "Lv.$authorLevel • ${levelTierLabel(authorLevel)}",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 1.dp)
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
                 )
             }
         }

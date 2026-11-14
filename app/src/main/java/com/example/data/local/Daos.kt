@@ -36,6 +36,9 @@ interface UserDao {
     @Query("UPDATE user_profile SET isOnboarded = :isOnboarded, selectedTracks = :selectedTracks WHERE accountId = :accountId")
     suspend fun updateOnboardingStatus(accountId: Long, isOnboarded: Boolean, selectedTracks: String)
 
+    @Query("UPDATE user_profile SET goal = :goal WHERE accountId = :accountId")
+    suspend fun updateUserGoal(accountId: Long, goal: String)
+
     @Query("UPDATE user_profile SET seenCoachMarks = :seenCoachMarks WHERE accountId = :accountId")
     suspend fun updateSeenCoachMarks(accountId: Long, seenCoachMarks: String)
 
@@ -173,6 +176,14 @@ interface ForumPostDao {
 
     @Query("DELETE FROM forum_posts WHERE courseId = :courseId")
     suspend fun clearPostsForCourse(courseId: String)
+
+    @Transaction
+    suspend fun replacePostsForCourse(courseId: String, posts: List<ForumPostEntity>) {
+        clearPostsForCourse(courseId)
+        if (posts.isNotEmpty()) {
+            insertPosts(posts)
+        }
+    }
 }
 
 @Dao

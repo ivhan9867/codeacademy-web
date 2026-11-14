@@ -22,6 +22,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.rounded.AutoAwesome
+import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.rounded.Code
+import androidx.compose.material.icons.rounded.EmojiEvents
+import androidx.compose.material.icons.rounded.Flag
+import androidx.compose.material.icons.rounded.Forum
+import androidx.compose.material.icons.rounded.LocalFireDepartment
+import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.RocketLaunch
+import androidx.compose.material.icons.rounded.School
+import androidx.compose.material.icons.rounded.Verified
+import androidx.compose.material.icons.rounded.WorkspacePremium
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -53,6 +66,20 @@ import com.example.ui.theme.TealLight
 import com.example.ui.theme.TealPrimary
 import androidx.compose.ui.res.stringResource
 import com.example.R
+
+internal fun badgeVectorIcon(badgeId: String): ImageVector = when (badgeId) {
+    "b1" -> Icons.Rounded.Flag
+    "b2" -> Icons.Rounded.Code
+    "b3" -> Icons.Rounded.LocalFireDepartment
+    "b4" -> Icons.Rounded.AutoAwesome
+    "b5" -> Icons.Rounded.Bolt
+    "b6" -> Icons.Rounded.Forum
+    "b7" -> Icons.Rounded.Verified
+    "b8" -> Icons.Rounded.School
+    "b9" -> Icons.Rounded.WorkspacePremium
+    "b10" -> Icons.Rounded.RocketLaunch
+    else -> Icons.Rounded.EmojiEvents
+}
 
 @Composable
 fun ProfileBadgesCard(
@@ -129,9 +156,11 @@ fun ProfileBadgesCard(
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = if (badge.isUnlocked) badge.emoji else "🔒",
-                                fontSize = 18.sp
+                            Icon(
+                                imageVector = if (badge.isUnlocked) badgeVectorIcon(badge.id) else Icons.Rounded.Lock,
+                                contentDescription = badge.title,
+                                tint = if (badge.isUnlocked) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
                             Column {
@@ -172,9 +201,11 @@ fun ProfileBadgeDetailDialog(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = if (badge.isUnlocked) badge.emoji else "🔒",
-                    fontSize = 32.sp
+                Icon(
+                    imageVector = if (badge.isUnlocked) badgeVectorIcon(badge.id) else Icons.Rounded.Lock,
+                    contentDescription = badge.title,
+                    tint = if (badge.isUnlocked) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.size(32.dp)
                 )
             }
         },
@@ -305,9 +336,11 @@ fun ProfileAllBadgesSheet(
                                     ),
                                 contentAlignment = Alignment.Center
                             ) {
-                                Text(
-                                    text = if (badge.isUnlocked) badge.emoji else "🔒",
-                                    fontSize = 24.sp
+                                Icon(
+                                    imageVector = if (badge.isUnlocked) badgeVectorIcon(badge.id) else Icons.Rounded.Lock,
+                                    contentDescription = badge.title,
+                                    tint = if (badge.isUnlocked) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                                    modifier = Modifier.size(24.dp)
                                 )
                             }
 

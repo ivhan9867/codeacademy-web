@@ -49,6 +49,16 @@ fun DiskusiHangatScreen(
 ) {
     val forumHighlights by socialViewModel.forumHighlights.collectAsStateWithLifecycle()
     val isForumLoading by socialViewModel.isForumHighlightsLoading.collectAsStateWithLifecycle()
+    val selectedPublicProfile by socialViewModel.selectedPublicProfile.collectAsStateWithLifecycle()
+    val isLoadingPublicProfile by socialViewModel.isLoadingPublicProfile.collectAsStateWithLifecycle()
+
+    selectedPublicProfile?.let { publicProfile ->
+        com.example.ui.components.UserPublicProfileDialog(
+            profile = publicProfile,
+            isLoading = isLoadingPublicProfile,
+            onDismiss = { socialViewModel.dismissPublicProfile() }
+        )
+    }
 
     LaunchedEffect(Unit) {
         socialViewModel.refreshForumHighlights()
@@ -165,7 +175,14 @@ fun DiskusiHangatScreen(
                 items(forumHighlights, key = { it.postId }) { post ->
                     ForumHighlightCard(
                         post = post,
-                        onClick = { onCourseForumClick(post.courseId) }
+                        onClick = { onCourseForumClick(post.courseId) },
+                        onAuthorClick = { target ->
+                            socialViewModel.openPublicProfile(
+                                userId = target.authorId,
+                                fallbackName = target.authorName,
+                                fallbackLevel = target.authorLevel
+                            )
+                        }
                     )
                 }
             }

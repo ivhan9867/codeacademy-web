@@ -196,6 +196,18 @@ class FirestoreForumAndLeaderboardService(
     // 2. LEADERBOARD (CLOUD DATA + QUERY EFISIEN)
     // ==========================================
 
+data class PublicUserProfile(
+    val userId: String,
+    val name: String,
+    val bio: String = "",
+    val role: String = "Siswa",
+    val level: Int = 1,
+    val totalXp: Int = 0,
+    val currentStreak: Int = 0,
+    val completedCoursesCount: Int = 0,
+    val unlockedBadgeIds: List<String> = emptyList()
+)
+
     /**
      * Sinkronisasikan profil XP user saat bertambah atau saat login ke Firestore.
      * Menyimpan totalXp, xpThisWeek, xpThisMonth, currentStreak, dan primaryTrack untuk multi-scope leaderboard.
@@ -208,7 +220,11 @@ class FirestoreForumAndLeaderboardService(
         currentStreak: Int = 0,
         xpThisWeek: Int = (totalXp % 350 + 50),
         xpThisMonth: Int = (totalXp % 900 + 150),
-        primaryTrack: String = "front-end"
+        primaryTrack: String = "front-end",
+        bio: String = "",
+        role: String = "Siswa",
+        completedCoursesCount: Int = 0,
+        unlockedBadgeIds: List<String> = emptyList()
     ): Result<Unit> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
@@ -221,8 +237,12 @@ class FirestoreForumAndLeaderboardService(
                 "level" to level,
                 "currentStreak" to currentStreak,
                 "primaryTrack" to primaryTrack,
+                "role" to role,
                 "updatedAt" to System.currentTimeMillis()
             )
+            if (bio.isNotBlank()) data["bio"] = bio
+            if (completedCoursesCount > 0) data["completedCoursesCount"] = completedCoursesCount
+            if (unlockedBadgeIds.isNotEmpty()) data["unlockedBadgeIds"] = unlockedBadgeIds
             firestore.collection(USERS_COLLECTION)
                 .document(userId)
                 .set(data, SetOptions.merge())
@@ -230,6 +250,49 @@ class FirestoreForumAndLeaderboardService(
             Result.success(Unit)
         } catch (e: Exception) {
             Log.w(TAG, "Error syncing user XP to Firestore: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    suspend fun fetchPublicUserProfile(userId: String): Result<PublicUserProfile> {
+        if (userId == "facilitator-mentor") {
+            return Result.success(
+                PublicUserProfile(
+                    userId = userId,
+                    name = "Fasilitator CodeAcademy",
+                    bio = "Mentor & Reviewer Resmi CodeAcademy WebDev Studio.",
+                    role = "Fasilitator",
+                    level = 99,
+                    totalXp = 9999,
+                    currentStreak = 30,
+                    completedCoursesCount = 4,
+                    unlockedBadgeIds = listOf("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10")
+                )
+            )
+        }
+        val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
+        return try {
+            val doc = firestore.collection(USERS_COLLECTION).document(userId).get().await()
+            if (!doc.exists()) {
+                return Result.failure(NoSuchElementException("Profil publik tidak ditemukan"))
+            }
+            @Suppress("UNCHECKED_CAST")
+            val badges = (doc.get("unlockedBadgeIds") as? List<*>)?.mapNotNull { it as? String }.orEmpty()
+            Result.success(
+                PublicUserProfile(
+                    userId = doc.getString("userId") ?: doc.id,
+                    name = doc.getString("name") ?: "Siswa",
+                    bio = doc.getString("bio") ?: "",
+                    role = doc.getString("role") ?: "Siswa",
+                    level = (doc.getLong("level") ?: 1L).toInt(),
+                    totalXp = (doc.getLong("totalXp") ?: 0L).toInt(),
+                    currentStreak = (doc.getLong("currentStreak") ?: 0L).toInt(),
+                    completedCoursesCount = (doc.getLong("completedCoursesCount") ?: 0L).toInt(),
+                    unlockedBadgeIds = badges
+                )
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "Error fetching public profile for $userId: ${e.message}")
             Result.failure(e)
         }
     }

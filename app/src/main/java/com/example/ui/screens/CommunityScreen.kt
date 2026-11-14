@@ -159,6 +159,17 @@ fun CommunityScreen(
     val weeklyChallenge by socialViewModel.weeklyChallenge.collectAsStateWithLifecycle()
     val weeklyProgressCount by socialViewModel.weeklyChallengeProgress.collectAsStateWithLifecycle()
 
+    val selectedPublicProfile by socialViewModel.selectedPublicProfile.collectAsStateWithLifecycle()
+    val isLoadingPublicProfile by socialViewModel.isLoadingPublicProfile.collectAsStateWithLifecycle()
+
+    selectedPublicProfile?.let { publicProfile ->
+        com.example.ui.components.UserPublicProfileDialog(
+            profile = publicProfile,
+            isLoading = isLoadingPublicProfile,
+            onDismiss = { socialViewModel.dismissPublicProfile() }
+        )
+    }
+
     val context = LocalContext.current
     val isInspectionMode = LocalInspectionMode.current
     val areAnimationsEnabled = remember(context, isInspectionMode) {
@@ -537,7 +548,14 @@ fun CommunityScreen(
                         isStreak = selectedPeriod == "streak",
                         itemIndex = index,
                         areAnimationsEnabled = areAnimationsEnabled,
-                        hasAlreadyAnimated = podiumHasAnimated
+                        hasAlreadyAnimated = podiumHasAnimated,
+                        onClick = {
+                            socialViewModel.openPublicProfile(
+                                userId = entry.userId,
+                                fallbackName = entry.userName,
+                                fallbackLevel = entry.level
+                            )
+                        }
                     )
                 }
             }
@@ -759,6 +777,7 @@ fun WeeklyChallengeCard(
 fun ForumHighlightCard(
     post: ForumPostEntity,
     onClick: () -> Unit,
+    onAuthorClick: ((ForumPostEntity) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -778,7 +797,15 @@ fun ForumHighlightCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = if (onAuthorClick != null && post.authorId.isNotBlank()) {
+                        Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { onAuthorClick(post) }
+                            .padding(2.dp)
+                    } else Modifier
+                ) {
                     Box(
                         modifier = Modifier
                             .size(32.dp)
@@ -1391,6 +1418,7 @@ fun LeaderboardRowItem(
     itemIndex: Int = 0,
     areAnimationsEnabled: Boolean = true,
     hasAlreadyAnimated: Boolean = false,
+    onClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     var itemRevealed by remember(hasAlreadyAnimated, areAnimationsEnabled) {
@@ -1454,6 +1482,7 @@ fun LeaderboardRowItem(
             .fillMaxWidth()
             .offset(y = itemSlideOffsetY.dp)
             .alpha(itemAlpha)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .testTag("leaderboard_row_${entry.rank}"),
         shape = RowCardShape,
         colors = CardDefaults.cardColors(

@@ -125,40 +125,33 @@ fun ActivityHeatmapCard(
     var showFullHistory by remember { mutableStateOf(false) }
 
     val currentLanguage = LocalAppLanguage.current
-    val heatmapData = remember(progressList.size, streakDays, currentLanguage) {
+    val heatmapData = remember(progressList, currentLanguage) {
         val locale = currentLanguage.toLocale()
         val sdf = SimpleDateFormat("EEE, d MMM yyyy", locale)
         val dayNameFormat = SimpleDateFormat("EEEE", locale)
+        val keyFormat = SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US)
+        val countsByDate = progressList
+            .filter { it.isCompleted && it.completedAt > 0L }
+            .groupingBy { keyFormat.format(Date(it.completedAt)) }
+            .eachCount()
+        val maxDailyCount = countsByDate.values.maxOrNull() ?: 0
         val list = ArrayList<HeatmapDayInfo>(daysCount)
-
-        // Peak / busiest day placed on a Saturday (e.g. 14 days ago)
-        val peakDayOffset = 14
 
         for (i in (daysCount - 1) downTo 0) {
             val cal = Calendar.getInstance().apply {
                 add(Calendar.DAY_OF_YEAR, -i)
             }
+            val dateKey = keyFormat.format(cal.time)
             val formatted = sdf.format(cal.time)
             val dayName = dayNameFormat.format(cal.time)
-
-            // Realistic activity pattern based on user's streak and completed modules
-            val isRecentStreakDay = i < streakDays
-            val activityCount = when {
-                i == peakDayOffset -> 6 // 🔥 Rekor terbanyak: 6 modul diselesaikan
-                i == 0 -> if (streakDays > 0) 2 else 0 // Hari ini
-                isRecentStreakDay -> if (i % 2 == 0) 3 else 2
-                (i % 3 == 0 && i < 30) -> 1
-                (i % 7 == 0 && i < 60) -> 2
-                (i % 5 == 0 && i < 45) -> 3
-                else -> 0
-            }
+            val activityCount = countsByDate[dateKey] ?: 0
 
             val intensity = when {
-                activityCount >= 4 -> 4 // Rekor terbanyak / hari tersibuk
-                activityCount == 3 -> 3 // Banyak
-                activityCount == 2 -> 2 // Sedang
-                activityCount == 1 -> 1 // Sedikit
-                else -> 0 // Tidak ada
+                activityCount >= 4 -> 4
+                activityCount == 3 -> 3
+                activityCount == 2 -> 2
+                activityCount == 1 -> 1
+                else -> 0
             }
 
             list.add(
@@ -168,7 +161,7 @@ fun ActivityHeatmapCard(
                     dayName = dayName,
                     activityCount = activityCount,
                     intensity = intensity,
-                    isBusiestDay = (activityCount >= 6)
+                    isBusiestDay = (maxDailyCount > 0 && activityCount == maxDailyCount)
                 )
             )
         }
@@ -235,9 +228,9 @@ fun ActivityHeatmapCard(
                         ) {
                             Text(
                                 text = if (busiestDay != null && busiestDay.activityCount > 0) {
-                                    "🔥 Hari tersibuk: ${busiestDay.dayName}, ${busiestDay.activityCount} modul diselesaikan"
+                                    "Hari tersibuk: ${busiestDay.dayName}, ${busiestDay.activityCount} modul diselesaikan"
                                 } else {
-                                    "🔥 Mulai belajar hari ini untuk menyalakan apimu!"
+                                    "Selesaikan modul pertamamu untuk menyalakan peta semangat!"
                                 },
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,
@@ -564,7 +557,7 @@ fun HeatmapDayDetailDialog(
                         modifier = Modifier.padding(bottom = 10.dp)
                     ) {
                         Text(
-                            text = "🏆 Hari Tersibuk!",
+                            text = "Hari Tersibuk!",
                             color = FlameOrange,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp,
@@ -574,7 +567,7 @@ fun HeatmapDayDetailDialog(
                 }
                 Text(
                     text = if (dayInfo.activityCount > 0) {
-                        "🔥 ${dayInfo.activityCount} aktivitas belajar diselesaikan (+${dayInfo.activityCount * 20} XP didapatkan)"
+                        "${dayInfo.activityCount} modul diselesaikan (+${dayInfo.activityCount * 20} XP)"
                     } else {
                         "Tidak ada aktivitas belajar tercatat pada hari ini."
                     },

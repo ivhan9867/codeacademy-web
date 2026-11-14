@@ -68,8 +68,7 @@ Di masa lalu saat memakai persentase (`33.33%`), jika kamu menambahkan `gap: 20p
 
 CSS Grid menyelesaikan penderitaan ini dengan menciptakan satuan baru: **`fr` (Fractional Unit / Unit Fraksi)**.
 
-![Satuan fr dan Fungsi repeat() pada CSS Grid](asset:images/fe-css-02/satuan-fr-dan-repeat.png)
-
+> **Ilustrasi Konsep:** Satuan fr dan Fungsi repeat() pada CSS Grid
 ## Apa itu Satuan `fr`?
 
 Satu unit `1fr` mewakili **"satu bagian dari sisa ruang kosong yang tersedia"**.

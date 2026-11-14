@@ -193,8 +193,7 @@ Saatnya menguji kemampuanmu dengan merakit proyek puncak kelas ini: **Halaman Da
 
 Perhatikan bagaimana halaman ini menggabungkan semua materi yang telah kamu pelajari menjadi satu kesatuan yang solid:
 
-![Arsitektur Halaman Dasbor: CSS Grid Makro dan Flexbox Mikro](asset:images/fe-css-02/arsitektur-proyek-dasbor.png)
-
+> **Ilustrasi Konsep:** Arsitektur Halaman Dasbor: CSS Grid Makro dan Flexbox Mikro
 ## Bedah Arsitektur Proyek
 
 ### 1. Fondasi Makro: CSS Grid dengan `grid-template-areas`

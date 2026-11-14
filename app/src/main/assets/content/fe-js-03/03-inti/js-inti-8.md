@@ -43,8 +43,7 @@ Kode ini sangat merepotkan untuk dikelola. Bagaimana jika jumlah siswanya bertam
 
 Untuk menyimpan kumpulan banyak data di dalam satu nama variabel, JavaScript menyediakan wadah spesial bernama **Array**.
 
-![Indeks Array Berbasis Nol](asset:images/fe-js-03/array-indeks.png)
-
+> **Ilustrasi Konsep:** Indeks Array Berbasis Nol
 ---
 
 ## Analogi Rak Bernomor

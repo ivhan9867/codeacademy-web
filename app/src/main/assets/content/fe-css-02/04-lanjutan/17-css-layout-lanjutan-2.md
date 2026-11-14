@@ -70,8 +70,7 @@ Setelah menyalakan `display: grid`, langkah berikutnya adalah memberitahu browse
 
 Pertanyaan ini dijawab oleh dua properti fundamental: **`grid-template-columns`** dan **`grid-template-rows`**.
 
-![Membagi Kolom dan Baris pada CSS Grid](asset:images/fe-css-02/grid-template-columns-rows.png)
-
+> **Ilustrasi Konsep:** Membagi Kolom dan Baris pada CSS Grid
 ## Menentukan Kolom: `grid-template-columns`
 
 Setiap nilai yang kamu pisahkan dengan spasi mewakili **satu lajur kolom**:

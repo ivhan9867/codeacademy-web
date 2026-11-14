@@ -14,7 +14,9 @@ Selamat datang di kelas **CSS Layout Modern: Flexbox & Grid**!
 
 Jika di kelas Fondasi Web kamu sudah belajar menyusun kerangka dokumen dengan tag HTML semantik dan mempercantik warna serta teks dengan CSS dasar, sekarang saatnya kamu naik kelas ke tingkat arsitektur antarmuka (*UI Layout*).
 
-![Peta Alur Belajar CSS Layout Modern](asset:images/fe-css-02/roadmap-layout-modern.png)
+```text
+[1. Persiapan & Box Model] -> [2. Flexbox 1D] -> [3. CSS Grid 2D] -> [4. Responsif & Media Query] -> [5. Evaluasi Proyek]
+```
 
 ## Pergeseran Pola Pikir: Dari Halaman Teks ke Antarmuka Aplikasi
 

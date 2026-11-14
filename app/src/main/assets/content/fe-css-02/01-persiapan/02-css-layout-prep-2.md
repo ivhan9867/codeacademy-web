@@ -14,8 +14,7 @@ Salah satu pertanyaan paling sering dari pemula adalah: *"Kalau sudah ada Grid y
 
 Jawabannya: **keduanya saling melengkapi, bukan saling bersaing**. Pengembang web profesional menggunakan Flexbox dan Grid berdampingan di halaman yang sama.
 
-![Analogi Flexbox 1 Dimensi vs CSS Grid 2 Dimensi](asset:images/fe-css-02/analogi-flexbox-vs-grid.png)
-
+> **Ilustrasi Konsep:** Analogi Flexbox 1 Dimensi vs CSS Grid 2 Dimensi
 ## Analogi 1: Rak Buku vs Denah Kursi Bioskop
 
 Bayangkan dua situasi di dunia nyata:

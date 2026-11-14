@@ -79,8 +79,7 @@ Sebelum kita masuk ke keajaiban Flexbox dan Grid, mari segarkan kembali ingatanm
 
 Sistem alami ini disebut **Normal Flow (Aliran Normal)**.
 
-![Kilas Balik Box Model dan Aliran Normal Browser](asset:images/fe-css-02/box-model-normal-flow.png)
-
+> **Ilustrasi Konsep:** Kilas Balik Box Model dan Aliran Normal Browser
 ## 1. Dua Karakter Utama: Block vs Inline
 
 Secara default, elemen HTML terbagi ke dalam dua dunia tampilan (*display*):

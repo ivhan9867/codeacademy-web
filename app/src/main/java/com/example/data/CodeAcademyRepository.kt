@@ -390,6 +390,11 @@ class CodeAcademyRepository(
                 )
             }
             projectSubmissionDao.upsertSubmission(updatedSubmission)
+            try {
+                firestoreService.upsertProjectSubmission(updatedSubmission)
+            } catch (_: Throwable) {
+                // Offline-first fallback: sync later when submitting project
+            }
 
             if (ProjectSubmissionStatus.fromString(updatedSubmission.status) == ProjectSubmissionStatus.APPROVED) {
                 val facScore = updatedSubmission.facilitatorScore ?: 85
@@ -436,6 +441,11 @@ class CodeAcademyRepository(
             scorePercent = bestScore
         )
         certDao.insertCertificate(entity)
+        try {
+            firestoreService.upsertCertificate(entity)
+        } catch (_: Throwable) {
+            // Keep local Room copy if offline
+        }
 
         if (existing == null) {
             notifDao.insertNotification(
@@ -483,8 +493,8 @@ class CodeAcademyRepository(
             studentName = user?.name ?: "Siswa CodeAcademy",
             studentEmail = user?.email ?: "",
             courseTitle = course.title,
-            finalQuizScore = 80,
-            status = ProjectSubmissionStatus.DRAFT.name,
+            finalQuizScore = 0,
+            status = ProjectSubmissionStatus.LOCKED.name,
             workspaceCode = draftCode
         )
         projectSubmissionDao.upsertSubmission(created)
@@ -696,6 +706,20 @@ class CodeAcademyRepository(
 
     suspend fun generateSectionQuizQuestions(quiz: SectionQuiz): List<QuizQuestion> = withContext(Dispatchers.IO) {
         val userId = getActiveAccountId().toString()
+        val existingSession = activeSectionQuizSessionDao.getActiveSession(userId, quiz.id)
+        if (existingSession != null && !existingSession.isTerminated) {
+            try {
+                val jsonArr = JSONArray(existingSession.questionIdsJson)
+                val poolMap = quiz.questionPool.associateBy { it.id }
+                val restored = (0 until jsonArr.length()).mapNotNull { poolMap[jsonArr.getInt(it)] }
+                if (restored.isNotEmpty()) {
+                    return@withContext restored
+                }
+            } catch (_: Exception) {
+                // Fall through to generate fresh questions if session JSON is malformed
+            }
+        }
+
         val lastAttempt = sectionQuizAttemptDao.getLastAttempt(userId, quiz.id)
         val lastIds = if (lastAttempt != null) {
             try {
@@ -1318,7 +1342,12 @@ class CodeAcademyRepository(
                     "b9" -> certCount >= 1 // Kolektor
                     "b10" -> true // AI Enthusiast
                     "b11" -> bmarks.isNotEmpty() // Penyelamat
-                    "b12" -> progress.any { it.courseId.startsWith("fe") } && progress.any { it.courseId.startsWith("be") } // Full-Stack Hero
+                    "b12" -> {
+                        val webDevCourseIds = setOf("fe-web-foundation-00", "fe-css-02", "fe-js-03")
+                        webDevCourseIds.all { cid ->
+                            progress.any { it.courseId == cid && it.isCompleted }
+                        }
+                    } // Web Master
                     else -> false
                 }
                 badge.copy(isUnlocked = unlocked)

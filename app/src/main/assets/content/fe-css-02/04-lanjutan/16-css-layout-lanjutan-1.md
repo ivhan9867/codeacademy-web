@@ -65,8 +65,7 @@ Jika Flexbox adalah raja tata letak **satu dimensi** (kamu memilih mengatur elem
 
 Dengan CSS Grid, kamu bisa mendikte posisi elemen pada **baris (*rows*) dan kolom (*columns*) secara bersamaan**.
 
-![Anatomi Elemen CSS Grid Dua Dimensi](asset:images/fe-css-02/anatomi-css-grid.png)
-
+> **Ilustrasi Konsep:** Anatomi Elemen CSS Grid Dua Dimensi
 ## Anatomi Kosakata CSS Grid
 
 Agar kita bisa berbicara dalam bahasa yang sama, mari pahami 4 istilah penting di dunia Grid:

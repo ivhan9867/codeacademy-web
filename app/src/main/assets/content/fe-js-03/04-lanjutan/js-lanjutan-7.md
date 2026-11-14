@@ -50,8 +50,7 @@ Sebuah website menjadi benar-benar hidup ketika dapat merespons tindakan yang di
 
 Di dunia browser, setiap aksi interaksi pengguna tersebut disebut sebagai **Event (Peristiwa)**.
 
-![Alur Kerja Event Listener](asset:images/fe-js-03/event-listener-flow.png)
-
+> **Ilustrasi Konsep:** Alur Kerja Event Listener
 ---
 
 ## Memasang "Telinga Pendengar": addEventListener

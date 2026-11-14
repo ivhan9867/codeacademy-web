@@ -73,8 +73,7 @@ Di era CSS klasik, ada satu lelucon terkenal di kalangan programmer: *"Cara pali
 
 Dengan hadirnya Flexbox, masalah itu selesai selamanya berkat properti **`align-items`**.
 
-![Penyelarasan Sumbu Silang dengan align-items](asset:images/fe-css-02/align-items-cross-axis.png)
-
+> **Ilustrasi Konsep:** Penyelarasan Sumbu Silang dengan align-items
 ## Apa itu `align-items`?
 
 Jika `justify-content` bertugas di **Sumbu Utama (Main Axis)**, maka `align-items` bertugas mengatur posisi item pada **Sumbu Silang (Cross Axis)** yang tegak lurus dengannya.

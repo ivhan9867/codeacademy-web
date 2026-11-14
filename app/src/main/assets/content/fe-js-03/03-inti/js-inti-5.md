@@ -42,8 +42,7 @@ Program komputer tidak hanya menjalankan baris kode secara lurus dari atas ke ba
 
 Kemampuan memilih jalur ini disebut **Percabangan (Control Flow)**.
 
-![Alur Pengambilan Keputusan If Else](asset:images/fe-js-03/alur-percabangan.png)
-
+> **Ilustrasi Konsep:** Alur Pengambilan Keputusan If Else
 ---
 
 ## 1. Percabangan Dasar: if dan else

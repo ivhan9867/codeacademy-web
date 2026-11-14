@@ -112,7 +112,7 @@
     <string name="ai_tutor_code_attached">已附加代码 (%1$d 行)</string>
     <string name="ai_tutor_error_communication">抱歉，连接 AI 导师时发生错误 (%1$s)。请尝试重新发送您的消息。</string>
     <string name="ai_tutor_welcome_title">CodeAcademy AI 导师</string>
-    <string name="ai_tutor_welcome_desc">你好！我是你的专属 AI 导师。对 Web 开发、Python、C 或 C++ 感到困惑吗？提出你的问题或粘贴代码片段吧！</string>
+    <string name="ai_tutor_welcome_desc">你好！我是你的专属 AI 导师。对 Web 开发（HTML、CSS 或 JavaScript）感到困惑吗？提出你的问题或粘贴代码片段吧！</string>
 
     <!-- Materi Content Localization Notice -->
     <string name="materi_content_id_only">课程内容目前仅提供印尼语版本</string>

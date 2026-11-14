@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -98,16 +99,7 @@ fun SectionQuizScreen(
     onSubmitSuccess: (attemptId: Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Acak urutan soal dan urutan opsi jawaban sekali per attempt berdasarkan quiz.id
-    // Explanation dan sourceModuleId tetap utuh karena terikat pada objek QuizQuestion
-    val activeQuestions = remember(quiz.id) {
-        questions.shuffled().map { q ->
-            val correctOptionText = q.options.getOrElse(q.correctIndex) { "" }
-            val shuffledOptions = q.options.shuffled()
-            val newCorrectIdx = shuffledOptions.indexOf(correctOptionText).coerceAtLeast(0)
-            q.copy(options = shuffledOptions, correctIndex = newCorrectIdx)
-        }
-    }
+    val activeQuestions = remember(quiz.id, questions) { questions }
 
     if (activeQuestions.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -319,6 +311,7 @@ fun SectionQuizScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .navigationBarsPadding()
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically

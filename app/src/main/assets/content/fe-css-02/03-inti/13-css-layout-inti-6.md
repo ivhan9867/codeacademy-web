@@ -73,8 +73,7 @@ Sejauh ini kita lebih banyak memberi perintah pada **Kontainer Induk**. Sekarang
 
 Kekuatan ini dikendalikan oleh tiga serangkai: **`flex-grow`**, **`flex-shrink`**, dan **`flex-basis`**.
 
-![Konsep flex-grow, flex-shrink, dan flex-basis](asset:images/fe-css-02/flex-trio-grow-shrink-basis.png)
-
+> **Ilustrasi Konsep:** Konsep flex-grow, flex-shrink, dan flex-basis
 ## 1. `flex-basis`: Ukuran Awal Sebelum Fleksibel
 
 `flex-basis` adalah ukuran ideal awal suatu item sebelum sisa ruang kosong dibagikan.

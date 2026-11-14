@@ -14,7 +14,10 @@ Selamat! Kamu telah menyelesaikan seluruh 24 modul pembelajaran di kelas **CSS L
 
 Kini kamu memiliki fondasi yang sangat kokoh dalam merancang antarmuka web masa kini. Mari kita simpan intisari materi ini ke dalam memori jangka panjangmu.
 
-![Peta Rangkuman Mental Flexbox dan CSS Grid](asset:images/fe-css-02/rangkuman-mental-layout.png)
+```text
+Flexbox (1-Dimensi):  Baris ATAU Kolom  -> Navbar, tombol sejajar, centering kartu
+CSS Grid (2-Dimensi): Baris DAN Kolom   -> Galeri produk, dashboard, layout halaman penuh
+```
 
 ## Tabel Sontekan Cepat (*Cheat Sheet*)
 

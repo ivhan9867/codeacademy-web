@@ -1284,15 +1284,29 @@ class CodeAcademyRepository(
         fallbackEmail: String?
     ): Result<Boolean> = withContext(Dispatchers.IO) {
         try {
-            ensureInitialUserSeeded()
             val credential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, null)
             val authResult = com.google.firebase.auth.FirebaseAuth.getInstance()
                 .signInWithCredential(credential)
                 .await()
             val firebaseUser = authResult.user
-            val cleanEmail = (firebaseUser?.email ?: fallbackEmail)?.trim()?.lowercase(Locale.ROOT)
+            completeGoogleLoginForFirebaseUser(
+                email = firebaseUser?.email ?: fallbackEmail,
+                displayName = firebaseUser?.displayName ?: fallbackName
+            )
+        } catch (e: Exception) {
+            Result.failure(Exception("Gagal masuk dengan Google: ${e.message ?: "kesalahan autentikasi"}"))
+        }
+    }
+
+    suspend fun completeGoogleLoginForFirebaseUser(
+        email: String?,
+        displayName: String?
+    ): Result<Boolean> = withContext(Dispatchers.IO) {
+        try {
+            ensureInitialUserSeeded()
+            val cleanEmail = email?.trim()?.lowercase(Locale.ROOT)
                 ?: return@withContext Result.failure(Exception("Email akun Google tidak tersedia."))
-            val cleanName = (firebaseUser?.displayName ?: fallbackName)?.trim()
+            val cleanName = displayName?.trim()
                 ?.takeIf { it.isNotBlank() } ?: cleanEmail.substringBefore("@")
 
             val existing = accountDao.getAccountByEmail(cleanEmail)

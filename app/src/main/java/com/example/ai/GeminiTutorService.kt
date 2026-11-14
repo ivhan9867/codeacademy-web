@@ -116,16 +116,22 @@ Tugas Anda:
             language = language
         )
 
-        var lastError: String? = null
+        var directError: String? = null
+        var firebaseError: String? = null
 
         // 1. Primary: Direct Gemini REST API via BuildConfig.GEMINI_API_KEY
         val apiKey = try {
             BuildConfig.GEMINI_API_KEY.trim()
-        } catch (_: Throwable) {
+        } catch (t: Throwable) {
+            directError = "BuildConfig.GEMINI_API_KEY error: ${t.message}"
             ""
         }
 
-        if (apiKey.isNotBlank()) {
+        if (apiKey.isBlank()) {
+            if (directError == null) {
+                directError = "GEMINI_API_KEY kosong di BuildConfig (.env tidak terbaca saat build)"
+            }
+        } else {
             for (modelName in DIRECT_GEMINI_MODELS) {
                 try {
                     val directReply = callDirectGeminiApi(
@@ -142,8 +148,8 @@ Tugas Anda:
                         )
                     }
                 } catch (e: Throwable) {
-                    lastError = "Direct Gemini API ($modelName): ${e.message}"
-                    Log.e(TAG, lastError, e)
+                    directError = "$modelName: ${e.message}"
+                    Log.e(TAG, "Direct Gemini API ($modelName) failed", e)
                 }
             }
         }
@@ -151,7 +157,7 @@ Tugas Anda:
         // 2. Secondary: Firebase AI Logic SDK
         try {
             val generativeModel = Firebase.ai.generativeModel(
-                modelName = "gemini-3.8-flash",
+                modelName = "gemini-3-flash-preview",
                 systemInstruction = content {
                     text(systemPrompt)
                 },
@@ -171,16 +177,20 @@ Tugas Anda:
                 )
             }
         } catch (e: Throwable) {
-            lastError = "Firebase AI: ${e.message}"
-            Log.e(TAG, lastError, e)
+            firebaseError = "FirebaseAI: ${e.message}"
+            Log.e(TAG, firebaseError, e)
         }
+
+        val combinedError = listOfNotNull(directError, firebaseError).joinToString(" | ")
+        val fallbackBase = generateSmartFallbackResponse(userMessage, courseTitle, moduleTitle, moduleContent)
+        val diagnosticNote = if (combinedError.isNotBlank()) "\n\n---\n_Info koneksi: ${combinedError.take(220)}_" else ""
 
         // 3. Fallback: Smart localized engine (clearly flagged as offline)
         return@withContext AiTutorResult(
-            text = generateSmartFallbackResponse(userMessage, courseTitle, moduleTitle, moduleContent),
+            text = fallbackBase + diagnosticNote,
             isLive = false,
             provider = "Mode Offline",
-            errorDetail = lastError
+            errorDetail = combinedError
         )
     }
 

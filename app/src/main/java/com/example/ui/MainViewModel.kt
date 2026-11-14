@@ -467,6 +467,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         email: String?
     ): Result<Boolean> = repo.loginWithGoogleIdToken(idToken, displayName, email)
 
+    suspend fun completeGoogleLogin(
+        email: String?,
+        displayName: String?
+    ): Result<Boolean> = repo.completeGoogleLoginForFirebaseUser(email, displayName)
+
     suspend fun logout() = withContext(Dispatchers.IO) {
         repo.logoutLocalAccount()
     }

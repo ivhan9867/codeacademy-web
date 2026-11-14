@@ -200,13 +200,14 @@ Tugas Anda:
         systemPrompt: String,
         userMessage: String
     ): String? {
-        val url = URL("${directEndpoint(modelName)}?key=$apiKey")
+        val url = URL(directEndpoint(modelName))
         val conn = (url.openConnection() as HttpURLConnection).apply {
             requestMethod = "POST"
             connectTimeout = 10_000
             readTimeout = 20_000
             doOutput = true
             setRequestProperty("Content-Type", "application/json; charset=UTF-8")
+            setRequestProperty("x-goog-api-key", apiKey)
         }
 
         val payload = JSONObject().apply {

@@ -690,6 +690,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         moduleContent: String? = null,
         currentPlaygroundCode: String? = null
     ) {
+        if (_isAiThinking.value) return
         val query = userQuery.ifBlank { "Halo AI Tutor" }
         val userMsg = ChatMessage(
             id = UUID.randomUUID().toString(),
@@ -734,7 +735,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     isUser = false
                 )
                 _chatMessages.value = _chatMessages.value + aiMsg
-            } catch (e: Exception) {
+            } catch (e: kotlinx.coroutines.CancellationException) {
+                throw e
+            } catch (e: Throwable) {
                 android.util.Log.e("MainViewModel", "AI Tutor communication error", e)
                 val fallbackMsg = getApplication<Application>().getString(
                     com.example.R.string.ai_tutor_error_communication,

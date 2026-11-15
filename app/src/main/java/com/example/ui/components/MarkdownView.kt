@@ -208,9 +208,10 @@ fun AnnotatedString.Builder.appendMarkdownInline(
             }
         }
 
-        // 4. Regular plain text run until next markdown symbol
+        // 4. Regular plain text run until next markdown symbol.
+        // Start scanning at i + 1 so an unmatched '*', '_', or '`' at index i is consumed as literal text.
         var nextSpecial = len
-        for (j in i until len) {
+        for (j in (i + 1) until len) {
             val c = text[j]
             if (c == '*' || c == '_' || c == '`') {
                 nextSpecial = j

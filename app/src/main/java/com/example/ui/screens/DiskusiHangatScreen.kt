@@ -1,5 +1,8 @@
 package com.example.ui.screens
 
+import androidx.compose.ui.res.stringResource
+import com.example.R
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -71,19 +74,19 @@ fun DiskusiHangatScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+                            contentDescription = stringResource(R.string.common_back)
                         )
                     }
                 },
                 title = {
                     Column {
                         Text(
-                            text = "Diskusi Hangat",
+                            text = stringResource(R.string.trending_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Tips & insight terpopuler dari forum diskusi kelas",
+                            text = stringResource(R.string.trending_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -103,7 +106,7 @@ fun DiskusiHangatScreen(
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Perbarui"
+                                contentDescription = stringResource(R.string.trending_refresh)
                             )
                         }
                     }
@@ -130,7 +133,7 @@ fun DiskusiHangatScreen(
                         modifier = Modifier.size(40.dp)
                     )
                     Text(
-                        text = "Belum ada diskusi ramai minggu ini",
+                        text = stringResource(R.string.trending_empty),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 8.dp)
@@ -164,7 +167,7 @@ fun DiskusiHangatScreen(
                         ) {
                             CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                             Text(
-                                text = "Memuat sorotan forum...",
+                                text = stringResource(R.string.trending_loading),
                                 style = MaterialTheme.typography.bodySmall,
                                 modifier = Modifier.padding(start = 12.dp)
                             )

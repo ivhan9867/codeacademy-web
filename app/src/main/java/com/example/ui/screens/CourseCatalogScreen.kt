@@ -388,14 +388,15 @@ fun CourseCatalogScreen(
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                        modifier = Modifier.size(44.dp)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    com.example.ui.components.CodeAcademyMascot(
+                        size = 88.dp,
+                        mood = com.example.ui.components.MascotMood.HAPPY
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = stringResource(R.string.catalog_empty_title),
                         style = MaterialTheme.typography.titleMedium,
@@ -461,7 +462,19 @@ fun CourseCardItem(
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        val accentColors = when {
+            course.title.contains("JavaScript", ignoreCase = true) -> listOf(AmberGold, FlameOrange)
+            course.title.contains("CSS", ignoreCase = true) || course.title.contains("Layout", ignoreCase = true) -> listOf(CyanAccent, TealPrimary)
+            else -> listOf(TealPrimary, CyanAccent)
+        }
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(5.dp)
+                    .background(androidx.compose.ui.graphics.Brush.horizontalGradient(accentColors))
+            )
+            Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -522,7 +535,9 @@ fun CourseCardItem(
                 text = course.title,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -531,7 +546,8 @@ fun CourseCardItem(
                 text = com.example.util.localization.DataLabelMappings.courseDescription(course),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 2
+                maxLines = 2,
+                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
 
             Spacer(modifier = Modifier.height(12.dp))
@@ -592,6 +608,7 @@ fun CourseCardItem(
                     }
                 }
             }
+        }
         }
     }
 }

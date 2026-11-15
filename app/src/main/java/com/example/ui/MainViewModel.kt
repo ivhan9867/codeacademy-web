@@ -98,12 +98,42 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = AppLanguage.INDONESIAN
+            initialValue = AppLanguage.fromCode(repo.sessionManager.getCachedLanguageCode())
         )
 
     fun setAppLanguage(language: AppLanguage) {
         viewModelScope.launch {
             repo.sessionManager.saveAppLanguage(language.code)
+        }
+    }
+
+    private fun todayIsoDate(): String {
+        return java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date())
+    }
+
+    val isDailyMicroChallengeCompletedToday: StateFlow<Boolean> =
+        repo.sessionManager.lastMicroChallengeDate
+            .map { it == todayIsoDate() }
+            .distinctUntilChanged()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = false
+            )
+
+    fun claimDailyMicroChallenge(xpReward: Int = 15) {
+        viewModelScope.launch {
+            val today = todayIsoDate()
+            repo.sessionManager.markMicroChallengeCompleted(today)
+            val (_, leveledUp) = repo.addXp(xpReward, "Daily 1-Minute Code Challenge")
+            if (leveledUp) {
+                userProfile.value?.let { user ->
+                    val nextLevel = GamificationLevels.getLevelForXp(user.totalXp + xpReward)
+                    if (nextLevel.level > user.level) {
+                        _levelUpDialogInfo.value = Pair(nextLevel.level, nextLevel.name)
+                    }
+                }
+            }
         }
     }
 
@@ -206,12 +236,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _levelUpDialogInfo = MutableStateFlow<Pair<Int, String>?>(null)
     val levelUpDialogInfo: StateFlow<Pair<Int, String>?> = _levelUpDialogInfo.asStateFlow()
 
+    private fun aiGreetingFor(lang: AppLanguage): String = when (lang) {
+        AppLanguage.ENGLISH -> "Hi! I'm the CodeAcademy AI Tutor. Any coding concept or bug you'd like to explore today? 🚀"
+        AppLanguage.JAPANESE -> "こんにちは！CodeAcademy AIチューターです。今日質問したいプログラミングの概念やコードはありますか？🚀"
+        AppLanguage.CHINESE -> "你好！我是 CodeAcademy AI 导师。今天有什么编程概念或代码问题想问吗？🚀"
+        AppLanguage.INDONESIAN -> "Halo! Saya AI Tutor CodeAcademy Indonesia. Ada konsep atau kode pemrograman yang ingin kamu tanyakan hari ini? 🚀"
+    }
+
     // AI Tutor Chat state
     private val _chatMessages = MutableStateFlow<List<ChatMessage>>(
         listOf(
             ChatMessage(
                 UUID.randomUUID().toString(),
-                "Halo! Saya AI Tutor CodeAcademy Indonesia. Ada konsep atau kode pemrograman yang ingin kamu tanyakan hari ini? 🚀",
+                aiGreetingFor(appLanguage.value),
                 false
             )
         )
@@ -256,7 +293,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     course.description.contains(query, ignoreCase = true)
 
             val matchesTrack = category == null || course.trackId == category
-            val matchesLevel = level.isBlank() || level == "Semua" || course.level == level
+            val matchesLevel = level.isBlank() || level == "Semua" || level == "All" || level == "ALL" || course.level == level
 
             val completedCount = course.modules.count { mod ->
                 (course.id to mod.id) in completedKeys
@@ -759,7 +796,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _chatMessages.value = listOf(
             ChatMessage(
                 UUID.randomUUID().toString(),
-                "Halo! Saya AI Tutor CodeAcademy Indonesia. Ada konsep atau kode pemrograman yang ingin kamu tanyakan hari ini? 🚀",
+                aiGreetingFor(appLanguage.value),
                 false
             )
         )

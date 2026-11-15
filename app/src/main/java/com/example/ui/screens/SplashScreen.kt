@@ -42,6 +42,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.example.R
 import com.example.ui.components.CodeAcademyMascot
 import com.example.ui.components.MascotMood
@@ -174,7 +175,7 @@ fun SplashScreen(
 
             // Tagline in theme secondary color
             Text(
-                text = "Belajar Koding Interaktif & Terarah",
+                text = stringResource(R.string.splash_tagline),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontWeight = FontWeight.Medium
@@ -194,7 +195,7 @@ fun SplashScreen(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "Menyiapkan ruang belajar...",
+                    text = stringResource(R.string.splash_preparing),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

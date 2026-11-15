@@ -57,6 +57,8 @@ import com.example.data.models.Course
 import com.example.data.models.LearningTrack
 import com.example.ui.MainViewModel
 import com.example.ui.components.CoachMarkBubble
+import com.example.ui.components.CodiDailyTipCard
+import com.example.ui.components.DailyCodeChallengeCard
 import com.example.ui.components.DailyQuestCard
 import com.example.ui.components.HomeScreenSkeleton
 import com.example.ui.components.StreakFlameGrid
@@ -73,6 +75,8 @@ fun HomeTabScreen(
     onTrackClick: (String) -> Unit = {},
     onQuestClick: () -> Unit = {},
     onMenuClick: () -> Unit = {},
+    onAskAi: (String) -> Unit = {},
+    onTryInPlayground: (String, String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
@@ -96,6 +100,8 @@ fun HomeTabScreen(
             onTrackClick = onTrackClick,
             onQuestClick = onQuestClick,
             onLeaderboardClick = onNavigateToLeaderboard,
+            onAskAi = onAskAi,
+            onTryInPlayground = onTryInPlayground,
             modifier = Modifier.weight(1f)
         )
     }
@@ -108,6 +114,8 @@ fun HomeScreen(
     onTrackClick: (String) -> Unit = {},
     onQuestClick: () -> Unit = {},
     onLeaderboardClick: () -> Unit = {},
+    onAskAi: (String) -> Unit = {},
+    onTryInPlayground: (String, String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
@@ -134,6 +142,8 @@ fun HomeScreen(
             onTrackClick = onTrackClick,
             onQuestClick = onQuestClick,
             onLeaderboardClick = onLeaderboardClick,
+            onAskAi = onAskAi,
+            onTryInPlayground = onTryInPlayground,
             userProfile = userProfile,
             viewModel = viewModel,
             modifier = modifier
@@ -158,6 +168,8 @@ fun HomeScreen(
     onTrackClick: (String) -> Unit,
     onQuestClick: () -> Unit,
     onLeaderboardClick: () -> Unit = {},
+    onAskAi: (String) -> Unit = {},
+    onTryInPlayground: (String, String) -> Unit = { _, _ -> },
     userProfile: UserProfileEntity? = null,
     viewModel: MainViewModel? = null,
     modifier: Modifier = Modifier
@@ -314,6 +326,24 @@ fun HomeScreen(
                 target = 1,
                 isCompleted = questCompleted,
                 onClaimOrDo = onQuestClick
+            )
+        }
+
+        // Codi Daily Tip Card (Interactive Mascot in Home)
+        item(key = "codi_daily_tip_card") {
+            CodiDailyTipCard(
+                onAskAi = onAskAi,
+                onTryInPlayground = onTryInPlayground
+            )
+        }
+
+        // Daily 1-Minute Code Challenge (+15 XP)
+        item(key = "daily_code_challenge_card") {
+            val isChallengeDone by (viewModel?.isDailyMicroChallengeCompletedToday
+                ?: kotlinx.coroutines.flow.MutableStateFlow(false)).collectAsStateWithLifecycle()
+            DailyCodeChallengeCard(
+                isCompletedToday = isChallengeDone,
+                onClaimReward = { viewModel?.claimDailyMicroChallenge(15) }
             )
         }
 

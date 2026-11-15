@@ -1,5 +1,8 @@
 package com.example.ui.screens
 
+import androidx.compose.ui.res.stringResource
+import com.example.R
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -79,7 +82,7 @@ fun BookmarksScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Tersimpan (${bookmarks.size})",
+                        text = stringResource(R.string.bm_title_format, bookmarks.size),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -88,7 +91,7 @@ fun BookmarksScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+                            contentDescription = stringResource(R.string.common_back)
                         )
                     }
                 },
@@ -115,7 +118,11 @@ fun BookmarksScreen(
                     )
                 }
             ) {
-                listOf("Semua", "Kelas", "Modul").forEachIndexed { index, title ->
+                listOf(
+                    stringResource(R.string.bm_tab_all),
+                    stringResource(R.string.bm_tab_courses),
+                    stringResource(R.string.bm_tab_modules)
+                ).forEachIndexed { index, title ->
                     Tab(
                         selected = selectedTab == index,
                         onClick = { selectedTab = index },
@@ -146,12 +153,12 @@ fun BookmarksScreen(
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = "Belum ada item tersimpan",
+                            text = stringResource(R.string.bm_empty_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Simpan modul atau kelas untuk dibaca kembali nanti.",
+                            text = stringResource(R.string.bm_empty_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -186,7 +193,7 @@ fun BookmarksScreen(
                                     shape = RoundedCornerShape(8.dp)
                                 ) {
                                     Text(
-                                        text = if (item.type == "CLASS") "KELAS" else "MODUL",
+                                        text = if (item.type == "CLASS") stringResource(R.string.bm_badge_class) else stringResource(R.string.bm_badge_module),
                                         color = MaterialTheme.colorScheme.primary,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
@@ -213,7 +220,7 @@ fun BookmarksScreen(
                                 IconButton(onClick = { onRemoveBookmark(item.itemId) }) {
                                     Icon(
                                         imageVector = Icons.Default.Delete,
-                                        contentDescription = "Hapus",
+                                        contentDescription = stringResource(R.string.bm_delete_cd),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(20.dp)
                                     )

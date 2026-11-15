@@ -291,12 +291,12 @@ fun ProgressScreen(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Detail Progres Belajar",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_detail_title),
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "Kurikulum dan riwayat kelasmu",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_detail_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -306,7 +306,7 @@ fun ProgressScreen(
                         onClick = { showDetailTrackSheet = false },
                         modifier = Modifier.testTag("btn_close_track_sheet")
                     ) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = "Tutup")
+                        Icon(imageVector = Icons.Default.Close, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.prog_close))
                     }
                 }
 
@@ -823,7 +823,7 @@ fun ProgressScreen(
                     Spacer(modifier = Modifier.width(6.dp))
                 }
                 Text(
-                    text = "Progres Belajar",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_title),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
@@ -834,7 +834,7 @@ fun ProgressScreen(
         if (viewModel != null && userProfile != null && !viewModel.hasSeenCoachMark("progress_intro")) {
             item(key = "coach_mark_progress") {
                 CoachMarkBubble(
-                    message = "Tiap modul yang kamu selesaikan nambah XP dan bisa naikin level. Streak-mu juga kelihatan di sini!",
+                    message = androidx.compose.ui.res.stringResource(com.example.R.string.prog_coachmark),
                     onDismiss = { viewModel.markCoachMarkSeen("progress_intro") }
                 )
             }
@@ -879,7 +879,7 @@ fun ProgressScreen(
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Gelar Belajar Saat Ini",
+                                    text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_current_title_label),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -970,12 +970,12 @@ fun ProgressScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Column {
                                     Text(
-                                        text = "$currentStreak Hari",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_streak_days_format, currentStreak),
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.titleSmall
                                     )
                                     Text(
-                                        text = "Streak Aktif",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_streak_active_label),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -1003,12 +1003,12 @@ fun ProgressScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Column {
                                     Text(
-                                        text = "${certificates.size} Sertifikat",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_cert_count_format, certificates.size),
                                         fontWeight = FontWeight.Bold,
                                         style = MaterialTheme.typography.titleSmall
                                     )
                                     Text(
-                                        text = "Lihat Kelulusan ↗",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_view_graduation),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -1060,13 +1060,17 @@ fun ProgressScreen(
                             Spacer(modifier = Modifier.width(12.dp))
                             Column {
                                 Text(
-                                    text = if (nextLearningTarget.isInProgress) "Lanjutkan Belajar" else "Target Modul Berikutnya",
+                                    text = if (nextLearningTarget.isInProgress) {
+                                        androidx.compose.ui.res.stringResource(com.example.R.string.prog_continue_learning)
+                                    } else {
+                                        androidx.compose.ui.res.stringResource(com.example.R.string.prog_next_target_title)
+                                    },
                                     style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "Jalur: ${nextLearningTarget.track?.name ?: "Belajar"}",
+                                    text = nextLearningTarget.track?.name ?: "CodeAcademy",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -1083,9 +1087,12 @@ fun ProgressScreen(
                         ) {
                             Text(
                                 text = if (nextLearningTarget.isInProgress) {
-                                    "${(nextLearningTarget.completedCount.toFloat() / nextLearningTarget.totalCount * 100).toInt()}% Selesai"
+                                    androidx.compose.ui.res.stringResource(
+                                        com.example.R.string.prog_percent_done_format,
+                                        (nextLearningTarget.completedCount.toFloat() / nextLearningTarget.totalCount * 100).toInt()
+                                    )
                                 } else {
-                                    "Mulai Sekarang"
+                                    androidx.compose.ui.res.stringResource(com.example.R.string.prog_start_now)
                                 },
                                 style = MaterialTheme.typography.labelSmall,
                                 color = if (nextLearningTarget.isInProgress) MaterialTheme.colorScheme.primary else AmberGold,
@@ -1101,7 +1108,9 @@ fun ProgressScreen(
                         text = nextLearningTarget.course.title,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     if (nextLearningTarget.nextModule != null) {
@@ -1149,7 +1158,11 @@ fun ProgressScreen(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = if (nextLearningTarget.isInProgress) "Lanjutkan Modul" else "Buka Kelas",
+                                text = if (nextLearningTarget.isInProgress) {
+                                    androidx.compose.ui.res.stringResource(com.example.R.string.prog_continue_module)
+                                } else {
+                                    androidx.compose.ui.res.stringResource(com.example.R.string.prog_open_course)
+                                },
                                 fontWeight = FontWeight.SemiBold,
                                 style = MaterialTheme.typography.labelLarge
                             )
@@ -1270,13 +1283,13 @@ fun ProgressScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Aktivitas Belajar Terbaru",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_recent_activity_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Text(
-                    text = "${progressList.size} Modul Selesai",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_modules_done_count_format, progressList.size),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -1298,22 +1311,21 @@ fun ProgressScreen(
                             .padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.MenuBook,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                            modifier = Modifier.size(40.dp)
+                        com.example.ui.components.CodeAcademyMascot(
+                            size = 82.dp,
+                            mood = com.example.ui.components.MascotMood.CODING
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Belum Ada Modul yang Diselesaikan",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_no_modules_title),
                             fontWeight = FontWeight.Bold,
                             style = MaterialTheme.typography.bodyMedium
                         )
                         Text(
-                            text = "Mulai belajar modul pertamamu untuk mengumpulkan poin XP!",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_no_modules_desc),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
@@ -1323,63 +1335,97 @@ fun ProgressScreen(
                 val course = CourseCatalog.getCourseById(item.courseId) ?: CourseCatalog.courses.find { it.id == item.courseId }
                 val module = course?.modules?.find { it.id == item.moduleId }
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            onCourseClick(if (item.courseId == "fe-html-01") "fe-web-foundation-00" else item.courseId)
-                        },
-                    shape = RoundedCornerShape(14.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.padding(14.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    // Vertical timeline node & connector
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.padding(end = 10.dp)
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(40.dp)
+                                .width(2.dp)
+                                .height(10.dp)
+                                .background(SuccessGreen.copy(alpha = 0.35f))
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(14.dp)
                                 .clip(CircleShape)
-                                .background(SuccessGreen.copy(alpha = 0.15f)),
-                            contentAlignment = Alignment.Center
+                                .background(SuccessGreen)
+                        )
+                        Box(
+                            modifier = Modifier
+                                .width(2.dp)
+                                .height(10.dp)
+                                .background(SuccessGreen.copy(alpha = 0.35f))
+                        )
+                    }
+
+                    Card(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable {
+                                onCourseClick(if (item.courseId == "fe-html-01") "fe-web-foundation-00" else item.courseId)
+                            },
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.CheckCircle,
-                                contentDescription = null,
-                                tint = SuccessGreen,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                            Box(
+                                modifier = Modifier
+                                    .size(38.dp)
+                                    .clip(CircleShape)
+                                    .background(SuccessGreen.copy(alpha = 0.15f)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = null,
+                                    tint = SuccessGreen,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
 
-                        Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
 
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = module?.title ?: "Modul Coding",
-                                style = MaterialTheme.typography.bodyMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = course?.title ?: "Kelas Dasar",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = module?.title ?: "Coding Module",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Text(
+                                    text = course?.title ?: "CodeAcademy",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
 
-                        Surface(
-                            color = AmberGold.copy(alpha = 0.15f),
-                            shape = RoundedCornerShape(6.dp)
-                        ) {
-                            Text(
-                                text = "+20 XP",
-                                color = AmberGold,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
+                            Surface(
+                                color = AmberGold.copy(alpha = 0.15f),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                Text(
+                                    text = "+20 XP",
+                                    color = AmberGold,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 11.sp,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
                         }
                     }
                 }

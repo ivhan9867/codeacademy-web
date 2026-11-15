@@ -139,6 +139,7 @@ fun CommunityScreen(
     socialViewModel: SocialViewModel = viewModel(),
     onCourseForumClick: (String) -> Unit = {},
     onExploreCourses: () -> Unit = {},
+    onOpenTrendingDiscussions: () -> Unit = onExploreCourses,
     onMenuClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -257,7 +258,7 @@ fun CommunityScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu Navigasi",
+                                contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.comm_menu_nav),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -267,7 +268,7 @@ fun CommunityScreen(
                     Column {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                text = "Papan Peringkat",
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_leaderboard_title),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -280,9 +281,11 @@ fun CommunityScreen(
                             )
                         }
                         Text(
-                            text = "Leaderboard & Quest Tantangan Mingguan",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_leaderboard_subtitle),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                         )
                     }
                 },
@@ -303,7 +306,7 @@ fun CommunityScreen(
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Perbarui Peringkat"
+                                contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.comm_refresh)
                             )
                         }
                     }
@@ -350,6 +353,7 @@ fun CommunityScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .androidx.compose.foundation.layout.navigationBarsPadding()
                             .padding(horizontal = 16.dp, vertical = 10.dp)
                     ) {
                         val isProfileEmpty = userProfile == null && myEntryInTop50 == null
@@ -470,7 +474,7 @@ fun CommunityScreen(
             if (userProfile != null && !viewModel.hasSeenCoachMark("leaderboard_intro")) {
                 item(key = "coach_mark_leaderboard") {
                     CoachMarkBubble(
-                        message = "Ini papan peringkat semua pelajar. Selesaikan misi mingguan buat naik peringkat!",
+                        message = androidx.compose.ui.res.stringResource(com.example.R.string.comm_coachmark),
                         onDismiss = { viewModel.markCoachMarkSeen("leaderboard_intro") }
                     )
                 }
@@ -496,7 +500,7 @@ fun CommunityScreen(
             if (leaderboardError != null && leaderboardEntries.isEmpty()) {
                 item(key = "leaderboard_error_state") {
                     ErrorRetryView(
-                        message = leaderboardError ?: "Gagal memuat papan peringkat. Periksa koneksi internetmu.",
+                        message = leaderboardError ?: androidx.compose.ui.res.stringResource(com.example.R.string.comm_load_error),
                         onRetry = {
                             socialViewModel.refreshLeaderboard(selectedPeriod, selectedTrack, force = true)
                         },
@@ -569,15 +573,64 @@ fun CommunityScreen(
                         socialViewModel.claimWeeklyChallengeReward(cId) { success ->
                             coroutineScope.launch {
                                 if (success) {
-                                    snackbarHostState.showSnackbar("🎉 Selamat! Bonus +${weeklyChallenge?.rewardXp ?: 100} XP berhasil diklaim!")
+                                    snackbarHostState.showSnackbar(
+                                        context.getString(
+                                            com.example.R.string.comm_claim_success_format,
+                                            weeklyChallenge?.rewardXp ?: 100
+                                        )
+                                    )
                                 } else {
-                                    snackbarHostState.showSnackbar("Gagal mengklaim reward.")
+                                    snackbarHostState.showSnackbar(
+                                        context.getString(com.example.R.string.comm_claim_error)
+                                    )
                                 }
                             }
                         }
                     },
                     onStartLearning = onExploreCourses
                 )
+            }
+
+            // 3. SECTION: SOROTAN DISKUSI HANGAT CTA
+            item(key = "section_trending_highlight") {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onOpenTrendingDiscussions() },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = BorderStroke(1.dp, CyanAccent.copy(alpha = 0.35f)),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_trending_highlight_title),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_trending_highlight_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Text(
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_open_trending_btn) + " →",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    }
+                }
             }
 
             item(key = "community_footer_spacer") {
@@ -616,7 +669,12 @@ fun WeeklyChallengeCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Box(
                         modifier = Modifier
                             .size(34.dp)
@@ -636,10 +694,12 @@ fun WeeklyChallengeCard(
                         Text(
                             text = challenge.title,
                             style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                         )
                         Text(
-                            text = "Reset setiap minggu",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_weekly_reset),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -662,7 +722,7 @@ fun WeeklyChallengeCard(
                     ) {
                         if (challenge.isClaimed) {
                             Text(
-                                text = "Klaim Selesai",
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_claim_done),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = SuccessGreen
@@ -676,14 +736,14 @@ fun WeeklyChallengeCard(
                             )
                         } else if (isCompleted) {
                             Text(
-                                text = "Tercapai!",
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_achieved),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = AmberGold
                             )
                         } else {
                             Text(
-                                text = "Aktif",
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_active),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
@@ -710,7 +770,7 @@ fun WeeklyChallengeCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Progres: ${minOf(currentProgress, target)} / $target Modul",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_progress_modules_format, minOf(currentProgress, target), target),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -751,7 +811,7 @@ fun WeeklyChallengeCard(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Klaim Bonus +${challenge.rewardXp} XP",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_claim_bonus_format, challenge.rewardXp),
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
@@ -763,7 +823,7 @@ fun WeeklyChallengeCard(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Lanjutkan Belajar Modul",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_continue_module),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontWeight = FontWeight.Bold
                     )
@@ -880,7 +940,7 @@ fun ForumHighlightCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Buka Diskusi Forum →",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_open_forum_cta),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
@@ -913,30 +973,20 @@ fun EmptyLeaderboardView(
                 .padding(28.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(CircleShape)
-                    .background(AmberGold.copy(alpha = 0.15f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Default.EmojiEvents,
-                    contentDescription = null,
-                    tint = AmberGold,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-            Spacer(modifier = Modifier.height(12.dp))
+            com.example.ui.components.CodeAcademyMascot(
+                size = 86.dp,
+                mood = com.example.ui.components.MascotMood.HAPPY
+            )
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = "Belum Ada Peringkat",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_empty_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Spacer(modifier = Modifier.height(6.dp))
             Text(
-                text = "Belum ada entri untuk filter $selectedPeriodLabel. Selesaikan modul materi untuk menjadi juara pertama di track ini!",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_empty_desc_format, selectedPeriodLabel),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = androidx.compose.ui.text.style.TextAlign.Center

@@ -129,6 +129,7 @@ fun RegisterScreen(
     onRegisterSubmit: suspend (name: String, email: String, password: String) -> Result<Unit>,
     onNavigateToLogin: () -> Unit,
     onGoogleSignIn: () -> Unit = {},
+    isGoogleLoading: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     // Pastikan ikon status bar & navigation bar selalu gelap (terbaca jelas di atas latar cream LightBg),
@@ -296,6 +297,7 @@ fun RegisterScreen(
                     errorMessage = errorMessage,
                     onSubmit = submitRegister,
                     onGoogleSignIn = onGoogleSignIn,
+                    isGoogleLoading = isGoogleLoading,
                     focusManager = focusManager
                 )
             }
@@ -906,6 +908,7 @@ private fun RegisterFormCard(
     errorMessage: String?,
     onSubmit: () -> Unit,
     onGoogleSignIn: () -> Unit = {},
+    isGoogleLoading: Boolean = false,
     focusManager: FocusManager,
     modifier: Modifier = Modifier
 ) {
@@ -1107,6 +1110,7 @@ private fun RegisterFormCard(
 
                 OutlinedButton(
                     onClick = onGoogleSignIn,
+                    enabled = !isLoading && !isGoogleLoading,
                     shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(1.dp, LightBorder),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -1121,14 +1125,29 @@ private fun RegisterFormCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        GoogleLogoIcon(modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Daftar dengan Google",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = LightTextPrimary
-                        )
+                        if (isGoogleLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(18.dp),
+                                strokeWidth = 2.dp,
+                                color = TealPrimary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.google_auth_processing),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = LightTextPrimary
+                            )
+                        } else {
+                            GoogleLogoIcon(modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.register_google_signin),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = LightTextPrimary
+                            )
+                        }
                     }
                 }
             }

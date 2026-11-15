@@ -131,7 +131,8 @@ fun LoginScreen(
     onNavigateToRegister: () -> Unit,
     modifier: Modifier = Modifier,
     onForgotPassword: () -> Unit = {},
-    onGoogleSignIn: () -> Unit = {}
+    onGoogleSignIn: () -> Unit = {},
+    isGoogleLoading: Boolean = false
 ) {
     // Pastikan status bar & navigation bar berikon gelap (terbaca kontras di atas latar cream LightBg)
     val view = LocalView.current
@@ -274,6 +275,7 @@ fun LoginScreen(
                     onSubmit = submitLogin,
                     onForgotPassword = onForgotPassword,
                     onGoogleSignIn = onGoogleSignIn,
+                    isGoogleLoading = isGoogleLoading,
                     focusManager = focusManager
                 )
             }
@@ -883,6 +885,7 @@ private fun LoginFormCard(
     onSubmit: () -> Unit,
     onForgotPassword: () -> Unit,
     onGoogleSignIn: () -> Unit,
+    isGoogleLoading: Boolean = false,
     focusManager: androidx.compose.ui.focus.FocusManager
 ) {
     val fieldColors = loginFixedFieldColors()
@@ -992,6 +995,7 @@ private fun LoginFormCard(
                 // Secondary Action: Google Sign-In (slimmer, outlined, clearly secondary)
                 OutlinedButton(
                     onClick = onGoogleSignIn,
+                    enabled = !isLoading && !isGoogleLoading,
                     shape = RoundedCornerShape(14.dp),
                     border = BorderStroke(
                         1.dp,
@@ -1009,14 +1013,29 @@ private fun LoginFormCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        GoogleLogoIcon(modifier = Modifier.size(18.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = stringResource(R.string.login_google_signin),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = LightTextPrimary // SENGAJA FIXED
-                        )
+                        if (isGoogleLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(18.dp),
+                                strokeWidth = 2.dp,
+                                color = TealPrimary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.google_auth_processing),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = LightTextPrimary // SENGAJA FIXED
+                            )
+                        } else {
+                            GoogleLogoIcon(modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = stringResource(R.string.login_google_signin),
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = LightTextPrimary // SENGAJA FIXED
+                            )
+                        }
                     }
                 }
             }

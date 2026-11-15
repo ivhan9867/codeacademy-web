@@ -157,6 +157,8 @@
     <string name="login_divider_or">or</string>
     <!-- TODO terjemahan -->
     <string name="login_google_signin">Sign in with Google</string>
+    <string name="register_google_signin">Googleで登録</string>
+    <string name="google_auth_processing">Googleに接続中...</string>
     <!-- TODO terjemahan -->
     <string name="login_footer_no_account">Don\'t have an account?</string>
     <!-- TODO terjemahan -->

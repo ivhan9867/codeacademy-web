@@ -10,6 +10,9 @@ window.CODEACADEMY_FIREBASE_CONFIG = {
   appId: "1:823377846566:android:c826094ec2ea97bb0ee1e7"
 };
 
+// Alias kompatibilitas untuk modul web portal
+window.firebaseConfig = window.CODEACADEMY_FIREBASE_CONFIG;
+
 window.isFirebaseConfigured = function () {
   const cfg = window.CODEACADEMY_FIREBASE_CONFIG;
   return Boolean(cfg && cfg.projectId && cfg.projectId !== "YOUR_PROJECT_ID" && cfg.apiKey && cfg.apiKey !== "YOUR_API_KEY");

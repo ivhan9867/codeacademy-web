@@ -209,7 +209,7 @@ fun ActivityHeatmapCard(
                         }
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Peta Semangat Belajarmu",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -229,9 +229,13 @@ fun ActivityHeatmapCard(
                         ) {
                             Text(
                                 text = if (busiestDay != null && busiestDay.activityCount > 0) {
-                                    "Hari tersibuk: ${busiestDay.dayName}, ${busiestDay.activityCount} modul diselesaikan"
+                                    androidx.compose.ui.res.stringResource(
+                                        com.example.R.string.heatmap_busiest_format,
+                                        busiestDay.dayName,
+                                        busiestDay.activityCount
+                                    )
                                 } else {
-                                    "Selesaikan modul pertamamu untuk menyalakan peta semangat!"
+                                    androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_empty_prompt)
                                 },
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,
@@ -243,7 +247,7 @@ fun ActivityHeatmapCard(
                     Spacer(modifier = Modifier.height(4.dp))
 
                     Text(
-                        text = "$totalContributions modul diselesaikan dalam 3 bulan terakhir",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_summary_3m_format, totalContributions),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -282,7 +286,11 @@ fun ActivityHeatmapCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = if (showFullHistory) "Tutup riwayat 12 minggu ↑" else "Lihat riwayat 12 minggu →",
+                    text = if (showFullHistory) {
+                        androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_collapse)
+                    } else {
+                        androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_expand)
+                    },
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold
@@ -298,10 +306,13 @@ fun ActivityHeatmapCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Ketuk kotak untuk melihat detail",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_tap_hint),
                     style = MaterialTheme.typography.labelSmall,
                     color = onSurfaceVariant,
-                    fontSize = 10.sp
+                    fontSize = 10.sp,
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
 
                 Row(
@@ -309,7 +320,7 @@ fun ActivityHeatmapCard(
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
-                        text = "Kurang",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_less),
                         fontSize = 10.sp,
                         color = onSurfaceVariant
                     )
@@ -326,7 +337,7 @@ fun ActivityHeatmapCard(
 
                     Spacer(modifier = Modifier.width(2.dp))
                     Text(
-                        text = "Lebih",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_more),
                         fontSize = 10.sp,
                         color = onSurfaceVariant
                     )
@@ -558,7 +569,7 @@ fun HeatmapDayDetailDialog(
                         modifier = Modifier.padding(bottom = 10.dp)
                     ) {
                         Text(
-                            text = "Hari Tersibuk!",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_busiest_dialog_title),
                             color = FlameOrange,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp,
@@ -568,9 +579,13 @@ fun HeatmapDayDetailDialog(
                 }
                 Text(
                     text = if (dayInfo.activityCount > 0) {
-                        "${dayInfo.activityCount} modul diselesaikan (+${dayInfo.activityCount * 20} XP)"
+                        androidx.compose.ui.res.stringResource(
+                            com.example.R.string.heatmap_day_detail_format,
+                            dayInfo.activityCount,
+                            dayInfo.activityCount * 20
+                        )
                     } else {
-                        "Tidak ada aktivitas belajar tercatat pada hari ini."
+                        androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_day_empty)
                     },
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -585,7 +600,11 @@ fun HeatmapDayDetailDialog(
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = FlameOrange)
             ) {
-                Text("Mengerti", color = Color.White, fontWeight = FontWeight.Bold)
+                Text(
+                    androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_understood),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     )

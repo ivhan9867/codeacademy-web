@@ -329,7 +329,7 @@ private fun FaqSection() {
                 onValueChange = { searchQuery = it },
                 placeholder = {
                     Text(
-                        text = "Cari pertanyaan atau kata kunci...",
+                        text = stringResource(R.string.help_search_placeholder),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                     )
@@ -378,14 +378,14 @@ private fun FaqSection() {
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Pertanyaan Tidak Ditemukan",
+                            text = stringResource(R.string.help_not_found_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Coba gunakan kata kunci lain atau hubungi tim bantuan lewat tab Kontak.",
+                            text = stringResource(R.string.help_not_found_desc),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.Center
@@ -469,7 +469,7 @@ private fun FaqSection() {
                             ) {
                                 Icon(
                                     imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                    contentDescription = if (isExpanded) "Tutup" else "Buka",
+                                    contentDescription = if (isExpanded) stringResource(R.string.help_faq_close) else stringResource(R.string.help_faq_open),
                                     tint = if (isExpanded) (if (isDark) CyanAccent else TealPrimary) else MaterialTheme.colorScheme.onSurfaceVariant,
                                     modifier = Modifier.size(20.dp)
                                 )

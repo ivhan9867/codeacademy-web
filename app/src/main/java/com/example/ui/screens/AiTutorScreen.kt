@@ -88,12 +88,16 @@ fun AiTutorScreen(
     val listState = rememberLazyListState()
 
     // Contextual suggestion prompt chips with stable unique IDs
-    val suggestions = remember(courseTitle, moduleTitle) {
+    val pAnalogy = stringResource(R.string.ai_prompt_analogy_format, moduleTitle)
+    val pExample = stringResource(R.string.ai_prompt_example_format, courseTitle)
+    val pMistakes = stringResource(R.string.ai_prompt_mistakes)
+    val pTroubleshoot = stringResource(R.string.ai_prompt_troubleshoot)
+    val suggestions = remember(pAnalogy, pExample, pMistakes, pTroubleshoot) {
         listOf(
-            PromptSuggestion("analogi", "Jelaskan $moduleTitle dengan analogi sederhana"),
-            PromptSuggestion("contoh_kode", "Beri contoh kode praktik untuk $courseTitle"),
-            PromptSuggestion("kesalahan_pemula", "Apa kesalahan umum yang sering dilakukan pemula?"),
-            PromptSuggestion("troubleshoot", "Bagaimana cara memecahkan masalah ini?")
+            PromptSuggestion("analogi", pAnalogy),
+            PromptSuggestion("contoh_kode", pExample),
+            PromptSuggestion("kesalahan_pemula", pMistakes),
+            PromptSuggestion("troubleshoot", pTroubleshoot)
         )
     }
 
@@ -181,7 +185,7 @@ fun AiTutorScreen(
                         IconButton(onClick = onClearChat) {
                             Icon(
                                 imageVector = Icons.Default.DeleteOutline,
-                                contentDescription = "Bersihkan Riwayat Chat"
+                                contentDescription = stringResource(R.string.ai_clear_chat_cd)
                             )
                         }
                     }

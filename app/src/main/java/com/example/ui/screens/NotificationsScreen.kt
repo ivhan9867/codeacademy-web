@@ -1,5 +1,8 @@
 package com.example.ui.screens
 
+import androidx.compose.ui.res.stringResource
+import com.example.R
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -81,7 +84,7 @@ fun NotificationsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Notifikasi",
+                        text = stringResource(R.string.notif_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -90,7 +93,7 @@ fun NotificationsScreen(
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+                            contentDescription = stringResource(R.string.common_back)
                         )
                     }
                 },
@@ -104,7 +107,7 @@ fun NotificationsScreen(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Baca Semua",
+                            text = stringResource(R.string.notif_read_all),
                             color = MaterialTheme.colorScheme.primary,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
@@ -134,7 +137,7 @@ fun NotificationsScreen(
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        text = "Belum ada notifikasi baru",
+                        text = stringResource(R.string.notif_empty),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )

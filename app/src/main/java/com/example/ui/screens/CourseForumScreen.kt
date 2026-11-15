@@ -211,7 +211,7 @@ fun CourseForumScreen(
         val listenerRegistration = socialViewModel.attachForumListener(
             courseId = course.id,
             onError = {
-                loadError = "Gagal memuat diskusi. Periksa koneksi internetmu."
+                loadError = context.getString(com.example.R.string.forum_load_error)
             },
             onUpdate = { updatedPosts ->
                 loadError = null
@@ -239,7 +239,7 @@ fun CourseForumScreen(
                 title = {
                     Column {
                         Text(
-                            text = "Forum Diskusi",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -259,7 +259,7 @@ fun CourseForumScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+                            contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.common_back)
                         )
                     }
                 },
@@ -284,7 +284,7 @@ fun CourseForumScreen(
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Refresh,
-                                contentDescription = "Segarkan Forum"
+                                contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_refresh)
                             )
                         }
                     }
@@ -328,7 +328,7 @@ fun CourseForumScreen(
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(
-                                        text = "Membalas ${replyTarget.authorName}",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_replying_to_format, replyTarget.authorName),
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.primary
@@ -349,7 +349,7 @@ fun CourseForumScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Close,
-                                        contentDescription = "Batal Balas",
+                                        contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_cancel_reply),
                                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.size(16.dp)
                                     )
@@ -369,7 +369,11 @@ fun CourseForumScreen(
                             onValueChange = { if (it.length <= 500) postInput = it },
                             placeholder = {
                                 Text(
-                                    text = if (replyingToPost != null) "Tulis balasan..." else "Tulis pertanyaan atau diskusi...",
+                                    text = if (replyingToPost != null) {
+                                        androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_placeholder)
+                                    } else {
+                                        androidx.compose.ui.res.stringResource(com.example.R.string.forum_post_placeholder)
+                                    },
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                                 )
@@ -440,7 +444,7 @@ fun CourseForumScreen(
                             } else {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.Send,
-                                    contentDescription = "Kirim Post",
+                                    contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_send_post),
                                     tint = if (postInput.isNotBlank()) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -458,7 +462,7 @@ fun CourseForumScreen(
         ) {
             if (userProfile != null && !viewModel.hasSeenCoachMark("forum_intro")) {
                 CoachMarkBubble(
-                    message = "Tanya apa aja soal materi kelas ini, atau bantu jawab pertanyaan siswa lain.",
+                    message = androidx.compose.ui.res.stringResource(com.example.R.string.forum_coachmark),
                     onDismiss = { viewModel.markCoachMarkSeen("forum_intro") },
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
                 )
@@ -498,13 +502,13 @@ fun CourseForumScreen(
 
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            text = "Ruang Diskusi Kelas",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_room_title),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = "Tanya jawab seputar materi dan kode di kelas ini.",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_room_subtitle),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -515,7 +519,7 @@ fun CourseForumScreen(
             if (loadError != null && posts.isEmpty()) {
                 // Error state with retry
                 ErrorRetryView(
-                    message = loadError ?: "Gagal memuat diskusi. Periksa koneksi internetmu.",
+                    message = loadError ?: androidx.compose.ui.res.stringResource(com.example.R.string.forum_load_error),
                     onRetry = {
                         retryTrigger++
                     },
@@ -537,21 +541,19 @@ fun CourseForumScreen(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Forum,
-                            contentDescription = null,
-                            tint = TealLight.copy(alpha = 0.6f),
-                            modifier = Modifier.size(64.dp)
+                        com.example.ui.components.CodeAcademyMascot(
+                            size = 86.dp,
+                            mood = com.example.ui.components.MascotMood.WAVING
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(14.dp))
                         Text(
-                            text = "Belum Ada Diskusi",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_empty_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Jadilah yang pertama bertanya di kelas ${course.title}!",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_empty_desc),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -864,13 +866,13 @@ fun ForumPostCard(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Reply,
-                            contentDescription = "Balas",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_btn),
                             modifier = Modifier.size(16.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Balas",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_btn),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -886,7 +888,11 @@ fun ForumPostCard(
                     ) {
                         Icon(
                             imageVector = if (post.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = if (post.isLikedByMe) "Batal Suka" else "Sukai",
+                            contentDescription = if (post.isLikedByMe) {
+                                androidx.compose.ui.res.stringResource(com.example.R.string.forum_unlike_cd)
+                            } else {
+                                androidx.compose.ui.res.stringResource(com.example.R.string.forum_like_cd)
+                            },
                             tint = if (post.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(18.dp)
                         )

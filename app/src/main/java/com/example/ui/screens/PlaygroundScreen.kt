@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -395,14 +396,14 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
             },
             title = {
                 Text(
-                    text = "Reset ke Contoh Modul?",
+                    text = stringResource(R.string.pg_reset_title),
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium
                 )
             },
             text = {
                 Text(
-                    text = "Draft kode project kamu saat ini akan dikembalikan ke kode awal bawaan modul ini. Yakin ingin melanjutkan?",
+                    text = stringResource(R.string.pg_reset_desc),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
@@ -428,13 +429,13 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                             executedCss = cssCode
                             executedJs = jsCode
                             consoleLogs.clear()
-                            Toast.makeText(context, "Kode project direset ke contoh modul", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.pg_reset_done), Toast.LENGTH_SHORT).show()
                         }
                     },
                     shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = FlameOrange)
                 ) {
-                    Text("Reset Sekarang", color = Color.White, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.pg_reset_now), color = Color.White, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -443,7 +444,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                     shape = RoundedCornerShape(12.dp),
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
                 ) {
-                    Text("Batal")
+                    Text(stringResource(R.string.common_cancel))
                 }
             }
         )
@@ -635,7 +636,10 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.weight(1f),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             text = "main.py",
                             color = Color(0xFFA5D6FF),
@@ -881,7 +885,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(210.dp)
+                                .heightIn(min = 120.dp, max = 190.dp)
                                 .background(Color(0xFF0D1117))
                                 .padding(10.dp)
                         ) {

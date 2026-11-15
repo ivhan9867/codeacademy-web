@@ -693,6 +693,15 @@ fun CodeAcademyApp(
                     onQuestClick = {
                         navController.navigate("classDetail/fe-web-foundation-00")
                     },
+                    onAskAi = { topic ->
+                        val encodedCourse = URLEncoder.encode("Front-End Web Development", "UTF-8")
+                        val encodedMod = URLEncoder.encode(topic, "UTF-8")
+                        navController.navigate("aiTutor/$encodedCourse/$encodedMod")
+                    },
+                    onTryInPlayground = { snippet, lang ->
+                        val encodedCode = URLEncoder.encode(snippet, "UTF-8")
+                        navController.navigate("playground/fe-web-foundation-00?code=$encodedCode&lang=$lang")
+                    },
                     onMenuClick = openDrawer
                 )
             }
@@ -739,6 +748,9 @@ fun CodeAcademyApp(
                     },
                     onExploreCourses = {
                         navigateToTab("courses")
+                    },
+                    onOpenTrendingDiscussions = {
+                        navController.navigate("diskusiHangat")
                     },
                     onMenuClick = openDrawer
                 )

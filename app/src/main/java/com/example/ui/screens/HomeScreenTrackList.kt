@@ -120,7 +120,7 @@ fun LearningTrackCard(
 
     Card(
         modifier = modifier
-            .height(205.dp)
+            .androidx.compose.foundation.layout.heightIn(min = 205.dp)
             .then(
                 if (animatedScale < 0.999f) {
                     Modifier.graphicsLayer {

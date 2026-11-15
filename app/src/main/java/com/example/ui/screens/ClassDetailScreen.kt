@@ -302,7 +302,18 @@ fun ClassDetailScreen(
                     border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(6.dp)
+                                .background(
+                                    androidx.compose.ui.graphics.Brush.horizontalGradient(
+                                        listOf(TealPrimary, CyanAccent, FlameOrange)
+                                    )
+                                )
+                        )
+                        Column(modifier = Modifier.padding(18.dp)) {
                         // Level and Rating
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -439,6 +450,7 @@ fun ClassDetailScreen(
                                 )
                             }
                         }
+                    }
                     }
                 }
             }
@@ -1586,7 +1598,9 @@ private fun ModuleItemCardContent(
                     text = module.title,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = colors.titleColor
+                    color = colors.titleColor,
+                    maxLines = 2,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                 )
                 if (lockState == ModuleLockState.LOCKED && previousRequirementTitle != null) {
                     Spacer(modifier = Modifier.height(2.dp))

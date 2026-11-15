@@ -1,5 +1,8 @@
 package com.example.ui.components
 
+import androidx.compose.ui.res.stringResource
+import com.example.R
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -125,7 +128,7 @@ fun CoachMarkBubble(
                         modifier = Modifier.testTag("coach_mark_dismiss_button")
                     ) {
                         Text(
-                            text = "Oke, Mengerti",
+                            text = stringResource(R.string.coachmark_got_it),
                             color = Color.White,
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = FontWeight.Bold

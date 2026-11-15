@@ -430,7 +430,8 @@ fun MateriScreen(
                                 text = currentModule.title,
                                 style = MaterialTheme.typography.titleSmall,
                                 fontWeight = FontWeight.Bold,
-                                maxLines = 1
+                                maxLines = 1,
+                                overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                             )
                         }
                     },
@@ -473,7 +474,7 @@ fun MateriScreen(
                             .fillMaxWidth()
                             .navigationBarsPadding()
                             .padding(horizontal = 16.dp, vertical = 12.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         if (hasPrevious) {
@@ -483,14 +484,18 @@ fun MateriScreen(
                                     val prevMod = course.modules[currentModuleIndex - 1]
                                     onSelectModule(prevMod.id)
                                 },
-                                icon = Icons.AutoMirrored.Filled.ArrowBack
+                                icon = Icons.AutoMirrored.Filled.ArrowBack,
+                                modifier = Modifier.weight(0.42f)
                             )
                         } else {
                             Spacer(modifier = Modifier.width(1.dp))
                         }
 
                         if (!isVerified) {
-                            Column(horizontalAlignment = Alignment.End) {
+                            Column(
+                                horizontalAlignment = Alignment.End,
+                                modifier = if (hasPrevious) Modifier.weight(0.58f) else Modifier.fillMaxWidth()
+                            ) {
                                 val missingRulesText = currentModule.verificationRules.joinToString(", ")
                                 Text(
                                     text = stringResource(R.string.materi_verify_rule_notice_format, missingRulesText),
@@ -545,7 +550,9 @@ fun MateriScreen(
                                 icon = if (hasNext) Icons.AutoMirrored.Filled.ArrowForward else Icons.Default.Check,
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
-                                modifier = Modifier.testTag("finish_and_continue_button")
+                                modifier = Modifier
+                                    .then(if (hasPrevious) Modifier.weight(0.58f) else Modifier.fillMaxWidth())
+                                    .testTag("finish_and_continue_button")
                             )
                         }
                     }

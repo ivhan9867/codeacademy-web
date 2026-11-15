@@ -21,15 +21,36 @@ class SessionManager(private val context: Context) {
         val KEY_CURRENT_ACCOUNT_EMAIL = stringPreferencesKey("current_account_email")
         val KEY_CURRENT_DISPLAY_NAME = stringPreferencesKey("current_display_name")
         val KEY_APP_LANGUAGE = stringPreferencesKey("app_language")
+        val KEY_LAST_MICRO_CHALLENGE_DATE = stringPreferencesKey("last_micro_challenge_date")
+        private const val SYNC_PREFS_NAME = "codeacademy_sync_prefs"
+    }
+
+    private val syncPrefs by lazy {
+        context.getSharedPreferences(SYNC_PREFS_NAME, Context.MODE_PRIVATE)
+    }
+
+    fun getCachedLanguageCode(): String {
+        return syncPrefs.getString("app_language", "id") ?: "id"
     }
 
     val appLanguageCode: Flow<String> = context.sessionDataStore.data.map { prefs ->
-        prefs[KEY_APP_LANGUAGE] ?: "id"
+        prefs[KEY_APP_LANGUAGE] ?: getCachedLanguageCode()
     }
 
     suspend fun saveAppLanguage(code: String) {
+        syncPrefs.edit().putString("app_language", code).apply()
         context.sessionDataStore.edit { prefs ->
             prefs[KEY_APP_LANGUAGE] = code
+        }
+    }
+
+    val lastMicroChallengeDate: Flow<String> = context.sessionDataStore.data.map { prefs ->
+        prefs[KEY_LAST_MICRO_CHALLENGE_DATE] ?: ""
+    }
+
+    suspend fun markMicroChallengeCompleted(dateStr: String) {
+        context.sessionDataStore.edit { prefs ->
+            prefs[KEY_LAST_MICRO_CHALLENGE_DATE] = dateStr
         }
     }
 

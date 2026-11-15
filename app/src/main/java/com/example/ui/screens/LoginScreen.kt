@@ -229,7 +229,7 @@ fun LoginScreen(
                 .fillMaxSize()
                 .imePadding()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 22.dp)
+                .padding(horizontal = 16.dp)
                 .padding(top = 16.dp, bottom = 32.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

@@ -157,7 +157,7 @@ fun HomeScreenTopCarousel(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .androidx.compose.foundation.layout.heightIn(min = 188.dp)
+                .heightIn(min = 188.dp)
                 .testTag("home_top_carousel_pager"),
             contentPadding = PaddingValues(horizontal = 0.dp),
             pageSpacing = 12.dp

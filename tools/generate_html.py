@@ -481,7 +481,7 @@ html_content = """<!DOCTYPE html>
             </svg>
 
             <div class="cover-footer">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="CodeAcademy Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="CodeAcademy Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="cover-footer-text">
                     <h3>CodeAcademy Mobile</h3>
                     <p>Platform Pembelajaran Web Development & Coding Mobile-First</p>
@@ -604,7 +604,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -645,7 +645,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -693,7 +693,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -724,7 +724,7 @@ html_content = """<!DOCTYPE html>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">3</span>
-                            <span><strong>Tombol Masuk ke Akun:</strong> Menjalankan proses autentikasi lokal terenkripsi dan membuka Beranda utama.</span>
+                            <span><strong>Tombol Masuk &amp; Google Sign-In:</strong> Masuk memakai email/sandi atau autentikasi instan <strong>Masuk / Daftar dengan Google</strong> menuju Onboarding &amp; Beranda.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">4</span>
@@ -742,7 +742,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -780,7 +780,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -818,7 +818,7 @@ html_content = """<!DOCTYPE html>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">5</span>
-                            <span><strong>Bilah Navigasi Bawah:</strong> Navigasi cepat ke 5 menu utama: Beranda, Kelas, Progres, Komunitas, dan Profil.</span>
+                            <span><strong>Bilah Navigasi Bawah &amp; Codi Challenge:</strong> Akses cepat 5 menu inti (Beranda, Kelas, Progres, Komunitas, Profil) plus <strong>Codi Daily Tip</strong> &amp; <strong>Tantangan 1 Menit (+15 XP)</strong>.</span>
                         </div>
                     </div>
                 </div>
@@ -832,7 +832,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -881,7 +881,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -930,7 +930,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -982,7 +982,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1030,7 +1030,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1078,7 +1078,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1127,7 +1127,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1175,7 +1175,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1197,15 +1197,15 @@ html_content = """<!DOCTYPE html>
                     <div class="keterangan-list">
                         <div class="keterangan-item">
                             <span class="callout-badge">1</span>
-                            <span><strong>Tab Diskusi Hangat:</strong> Menyoroti thread pertanyaan paling populer dengan vote dan balasan terbanyak.</span>
+                            <span><strong>Tab Diskusi Hangat &amp; Hub Forum Kelas:</strong> Sorotan thread terpopuler dan hub akses ke forum masing-masing kelas WebDev.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">2</span>
-                            <span><strong>Tab Forum Kelas:</strong> Diskusi terfokus yang dikelompokkan secara spesifik per mata kuliah / materi modul.</span>
+                            <span><strong>Filter Diskusi &amp; Lencana Fasilitator:</strong> Menyaring <em>Semua</em>, <em>Terjawab Fasilitator</em>, <em>Milik Saya</em>, dan <em>Populer</em> secara real-time.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">3</span>
-                            <span><strong>Sistem Upvote & Apresiasi:</strong> Siswa dapat memberikan upvote pada pertanyaan atau jawaban yang bermanfaat.</span>
+                            <span><strong>Sistem Upvote, Hapus &amp; Sinkronisasi:</strong> Beri like, hapus komentar sendiri, dan sinkron langsung dengan Portal Web Fasilitator.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">4</span>
@@ -1223,7 +1223,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1257,7 +1257,7 @@ html_content = """<!DOCTYPE html>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">4</span>
-                            <span><strong>ID Kredensial Unik:</strong> Kode verifikasi (misal: CA-2026-88912) untuk validasi keaslian sertifikat kelulusan.</span>
+                            <span><strong>ID Kredensial Unik:</strong> Kode verifikasi (misal: CC-2026110101-A9K3P2) untuk validasi keaslian sertifikat kelulusan.</span>
                         </div>
                     </div>
                 </div>
@@ -1271,7 +1271,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE)</span>
@@ -1323,7 +1323,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE & PORTAL WEB)</span>
@@ -1345,23 +1345,23 @@ html_content = """<!DOCTYPE html>
                     <div class="keterangan-list">
                         <div class="keterangan-item">
                             <span class="callout-badge">1</span>
-                            <span><strong>Otentikasi PIN Fasilitator:</strong> Melindungi portal dari akses tidak sah dengan sistem validasi PIN sesi penilai.</span>
+                            <span><strong>Login Firebase Auth &amp; Allowlist:</strong> Melindungi portal dengan Email/Password atau Google Sign-In terverifikasi pada koleksi <code>/facilitators/{email}</code> (+ Mode Demo Offline).</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">2</span>
-                            <span><strong>Antrean Pengumpulan Real-Time:</strong> Daftar submission siswa tersinkron otomatis via Firestore tanpa perlu reload.</span>
+                            <span><strong>Antrean, Forum &amp; Broadcast Pengumuman:</strong> Tab Proyek Akhir real-time, Forum Diskusi (*Belum Dijawab*), Pengumuman Kelas ke Notifikasi Android, dan Sertifikat Terbit.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">3</span>
-                            <span><strong>Code Inspector & Live Preview:</strong> Menelaah struktur sintaks HTML, CSS, dan JS dengan frame visual interaktif.</span>
+                            <span><strong>Code Inspector &amp; Live Preview Aman:</strong> Menelaah kode HTML/CSS/JS berdampingan (layout 2-kolom) dengan frame sandbox terisolasi CSP.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">4</span>
-                            <span><strong>Form Rubrik Evaluasi:</strong> Input skor numerik (0-100) serta catatan umpan balik kualitatif perbaikan bagi siswa.</span>
+                            <span><strong>Form Rubrik &amp; Bobot Nilai 40/60:</strong> Checklist rubrik tersimpan ke Firestore dengan perhitungan Nilai Akhir (<strong>40% Kuis + 60% Proyek</strong>).</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">5</span>
-                            <span><strong>Penerbitan Sertifikat Otomatis:</strong> Tugas yang berstatus LULUS (skor &ge; 70) otomatis menerbitkan sertifikat digital di aplikasi siswa.</span>
+                            <span><strong>Penerbitan Sertifikat Otomatis:</strong> Tugas yang disetujui (skor &ge; 70) menulis sertifikat <code>CC-...</code> secara atomik ke Firestore &amp; aplikasi siswa.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">6</span>
@@ -1379,7 +1379,7 @@ html_content = """<!DOCTYPE html>
              ========================================== -->
         <div class="page">
             <div class="page-header">
-                <img src="../app/src/main/res/drawable/ic_codeacademy_logo.webp" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
+                <img src="../assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
                 <div class="page-header-text">
                     <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
                     <span class="subtitle">(VERSI MOBILE & PORTAL WEB)</span>
@@ -1401,7 +1401,7 @@ html_content = """<!DOCTYPE html>
                     <div class="keterangan-list">
                         <div class="keterangan-item">
                             <span class="callout-badge">1</span>
-                            <span><strong>Pencarian ID Kredensial Unik:</strong> Memvalidasi kode sertifikat resmi (misal: CA-2026-88912) ke pusat database sertifikat.</span>
+                            <span><strong>Pencarian ID Kredensial Unik:</strong> Memvalidasi kode sertifikat resmi berawalan <code>CC-</code> (misal: CC-2026110101-A9K3P2) langsung ke koleksi <code>certificates</code> Firestore.</span>
                         </div>
                         <div class="keterangan-item">
                             <span class="callout-badge">2</span>
@@ -1436,7 +1436,15 @@ html_content = """<!DOCTYPE html>
 </html>
 """
 
-with open(HTML_PATH, "w", encoding="utf-8") as f:
+PUBLIC_HTML_PATH = r"public\docs\Manual_Book_CodeAcademy.html"
+
+os.makedirs(os.path.dirname(HTML_PATH), exist_ok=True)
+os.makedirs(os.path.dirname(PUBLIC_HTML_PATH), exist_ok=True)
+
+with open(PUBLIC_HTML_PATH, "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print(f"HTML Manual Book generated successfully at: {HTML_PATH}")
+with open(HTML_PATH, "w", encoding="utf-8") as f:
+    f.write(html_content.replace('src="../assets/logo.png"', 'src="../public/assets/logo.png"'))
+
+print(f"HTML Manual Book generated successfully at: {HTML_PATH} and {PUBLIC_HTML_PATH}")

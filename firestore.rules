@@ -1,0 +1,117 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasValidEmail() {
+      return isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email_verified == true;
+    }
+
+    // Verified facilitator allowlist keyed by lowercase email
+    function isFacilitator() {
+      return hasValidEmail()
+        && exists(/databases/$(database)/documents/facilitators/$(request.auth.token.email));
+    }
+
+    function validSubmissionStatus(status) {
+      return status in ['PENDING_REVIEW', 'REVISION_REQUESTED', 'APPROVED'];
+    }
+
+    // Facilitator allowlist (manageable via Firebase Console / Admin SDK only)
+    match /facilitators/{email} {
+      allow read: if isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email == email;
+      allow write: if false;
+    }
+
+    // Student & Facilitator Final Project Submissions
+    match /project_submissions/{submissionId} {
+      allow read: if isSignedIn();
+
+      allow create: if isSignedIn()
+        && request.resource.data.firebaseUid == request.auth.uid
+        && request.resource.data.accountId is string
+        && request.resource.data.courseId is string
+        && request.resource.data.status == 'PENDING_REVIEW';
+
+      allow update: if isFacilitator()
+        && validSubmissionStatus(request.resource.data.status)
+        && (request.resource.data.facilitatorScore == null
+            || (request.resource.data.facilitatorScore is number
+                && request.resource.data.facilitatorScore >= 0
+                && request.resource.data.facilitatorScore <= 100));
+
+      allow update: if isSignedIn()
+        && resource.data.firebaseUid == request.auth.uid
+        && request.resource.data.firebaseUid == request.auth.uid
+        && request.resource.data.status == 'PENDING_REVIEW'
+        && request.resource.data.facilitatorScore == resource.data.facilitatorScore
+        && request.resource.data.feedback == resource.data.feedback;
+
+      allow delete: if isFacilitator();
+    }
+
+    // Course Forum Posts & Replies
+    match /forum_posts/{postId} {
+      allow read: if isSignedIn();
+
+      allow create: if isSignedIn()
+        && request.resource.data.firebaseUid == request.auth.uid
+        && request.resource.data.courseId is string
+        && request.resource.data.content is string
+        && request.resource.data.content.size() > 0
+        && request.resource.data.content.size() <= 4000
+        && (isFacilitator()
+            || (request.resource.data.authorIsMentor != true
+                && request.resource.data.isMentor != true));
+
+      // Author can delete own post; facilitator can delete any post
+      allow delete: if isFacilitator()
+        || (isSignedIn() && resource.data.firebaseUid == request.auth.uid);
+
+      // Authenticated users may update likes/content on own post, or facilitators moderate
+      allow update: if isFacilitator()
+        || (isSignedIn()
+            && resource.data.firebaseUid == request.auth.uid
+            && request.resource.data.firebaseUid == request.auth.uid
+            && request.resource.data.authorIsMentor == resource.data.authorIsMentor
+            && request.resource.data.isMentor == resource.data.isMentor)
+        || (isSignedIn()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likeCount', 'likedByAccountIds']));
+    }
+
+    // Issued Certificates (public read for Verification Portal verify.html)
+    match /certificates/{certId} {
+      allow read: if true;
+      allow create, update: if isFacilitator()
+        || (isSignedIn()
+            && request.resource.data.firebaseUid == request.auth.uid
+            && request.resource.data.certId == certId
+            && request.resource.data.finalScore is number
+            && request.resource.data.finalScore >= 70
+            && request.resource.data.finalScore <= 100);
+      allow delete: if isFacilitator();
+    }
+
+    // Facilitator Class Announcements
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow create, update, delete: if isFacilitator();
+    }
+
+    // Leaderboard & Public User Profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isFacilitator()
+        || (isSignedIn()
+            && (request.resource.data.firebaseUid == request.auth.uid
+                || userId == request.auth.uid));
+    }
+  }
+}

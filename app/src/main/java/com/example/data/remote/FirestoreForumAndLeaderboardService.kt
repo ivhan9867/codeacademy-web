@@ -1,6 +1,7 @@
 package com.example.data.remote
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.example.data.local.CertificateEntity
 import com.example.data.local.ForumPostEntity
 import com.example.data.local.LeaderboardEntryCacheEntity
@@ -27,6 +28,15 @@ data class PublicUserProfile(
     val unlockedBadgeIds: List<String> = emptyList()
 )
 
+data class CloudAnnouncement(
+    val id: String,
+    val title: String,
+    val message: String,
+    val courseId: String? = null,
+    val authorName: String = "Fasilitator",
+    val createdAt: Long = System.currentTimeMillis()
+)
+
 class FirestoreForumAndLeaderboardService(
     private val customFirestore: FirebaseFirestore? = null
 ) {
@@ -36,7 +46,22 @@ class FirestoreForumAndLeaderboardService(
         const val USERS_COLLECTION = "users"
         const val PROJECT_SUBMISSIONS_COLLECTION = "project_submissions"
         const val CERTIFICATES_COLLECTION = "certificates"
+        const val ANNOUNCEMENTS_COLLECTION = "announcements"
         const val DEFAULT_PAGE_SIZE = 20L
+    }
+
+    fun getCurrentFirebaseUid(): String? = runCatching {
+        FirebaseAuth.getInstance().currentUser?.uid
+    }.getOrNull()
+
+    suspend fun tryEnsureAnonymousOrCurrentUid(): String? {
+        getCurrentFirebaseUid()?.let { return it }
+        return try {
+            FirebaseAuth.getInstance().signInAnonymously().await().user?.uid
+        } catch (t: Throwable) {
+            Log.w(TAG, "Anonymous FirebaseAuth unavailable: ${t.message}")
+            null
+        }
     }
 
     private fun getFirestore(): FirebaseFirestore? {
@@ -143,6 +168,7 @@ class FirestoreForumAndLeaderboardService(
     ): Result<ForumPostEntity> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
             val postId = UUID.randomUUID().toString()
             val timestamp = System.currentTimeMillis()
             val postData = hashMapOf<String, Any>(
@@ -153,8 +179,11 @@ class FirestoreForumAndLeaderboardService(
                 "content" to content.trim(),
                 "timestamp" to timestamp,
                 "likeCount" to 0,
-                "authorLevel" to authorLevel
+                "authorLevel" to authorLevel,
+                "isMentor" to false,
+                "authorIsMentor" to false
             )
+            if (!firebaseUid.isNullOrBlank()) postData["firebaseUid"] = firebaseUid
             if (replyToPostId != null) postData["replyToPostId"] = replyToPostId
             if (replyToAuthorName != null) postData["replyToAuthorName"] = replyToAuthorName
             if (replyToContentSnippet != null) postData["replyToContentSnippet"] = replyToContentSnippet
@@ -204,6 +233,29 @@ class FirestoreForumAndLeaderboardService(
         }
     }
 
+    /**
+     * Hapus postingan forum beserta balasan langsungnya di Firestore.
+     */
+    suspend fun deletePost(postId: String): Result<Unit> {
+        val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
+        return try {
+            val childrenSnap = firestore.collection(FORUM_COLLECTION)
+                .whereEqualTo("replyToPostId", postId)
+                .get()
+                .await()
+            val batch = firestore.batch()
+            batch.delete(firestore.collection(FORUM_COLLECTION).document(postId))
+            childrenSnap.documents.forEach { child ->
+                batch.delete(child.reference)
+            }
+            batch.commit().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.w(TAG, "Error deleting forum post $postId: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
     // ==========================================
     // 2. LEADERBOARD (CLOUD DATA + QUERY EFISIEN)
     // ==========================================
@@ -228,6 +280,7 @@ class FirestoreForumAndLeaderboardService(
     ): Result<Unit> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
             val data = hashMapOf<String, Any>(
                 "userId" to userId,
                 "name" to userName,
@@ -240,6 +293,7 @@ class FirestoreForumAndLeaderboardService(
                 "role" to role,
                 "updatedAt" to System.currentTimeMillis()
             )
+            if (!firebaseUid.isNullOrBlank()) data["firebaseUid"] = firebaseUid
             if (bio.isNotBlank()) data["bio"] = bio
             if (completedCoursesCount > 0) data["completedCoursesCount"] = completedCoursesCount
             if (unlockedBadgeIds.isNotEmpty()) data["unlockedBadgeIds"] = unlockedBadgeIds
@@ -420,7 +474,7 @@ class FirestoreForumAndLeaderboardService(
         val replyToAuthorName = doc.getString("replyToAuthorName")
         val replyToContentSnippet = doc.getString("replyToContentSnippet")
         val authorLevel = (doc.getLong("authorLevel") ?: 1L).toInt().coerceAtLeast(1)
-        val authorIsMentor = doc.getBoolean("isMentor") ?: false
+        val authorIsMentor = (doc.getBoolean("authorIsMentor") ?: doc.getBoolean("isMentor")) ?: false
 
         return ForumPostEntity(
             postId = postId,
@@ -443,13 +497,21 @@ class FirestoreForumAndLeaderboardService(
     // 4. PROJECT SUBMISSIONS (MOBILE APP <-> FACILITATOR WEB)
     // ==========================================
 
-    fun buildSubmissionDocId(accountId: Long, courseId: String): String = "${accountId}_${courseId}"
+    fun buildSubmissionDocId(
+        accountId: Long,
+        courseId: String,
+        firebaseUid: String? = getCurrentFirebaseUid()
+    ): String {
+        val ownerKey = firebaseUid?.takeIf { it.isNotBlank() } ?: accountId.toString()
+        return "${ownerKey}_${courseId}"
+    }
 
     suspend fun upsertProjectSubmission(submission: ProjectSubmissionEntity): Result<Unit> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
-            val docId = buildSubmissionDocId(submission.accountId, submission.courseId)
-            val data = mapOf(
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val docId = buildSubmissionDocId(submission.accountId, submission.courseId, firebaseUid)
+            val data = mutableMapOf<String, Any?>(
                 "submissionId" to submission.submissionId,
                 "accountId" to submission.accountId,
                 "courseId" to submission.courseId,
@@ -471,6 +533,9 @@ class FirestoreForumAndLeaderboardService(
                 "rubricScoresJson" to submission.rubricScoresJson,
                 "updatedAt" to System.currentTimeMillis()
             )
+            if (!firebaseUid.isNullOrBlank()) {
+                data["firebaseUid"] = firebaseUid
+            }
             firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
                 .document(docId)
                 .set(data, SetOptions.merge())
@@ -485,11 +550,21 @@ class FirestoreForumAndLeaderboardService(
     suspend fun fetchProjectSubmission(accountId: Long, courseId: String): Result<ProjectSubmissionEntity?> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
-            val docId = buildSubmissionDocId(accountId, courseId)
-            val doc = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
+            val firebaseUid = getCurrentFirebaseUid()
+            val docId = buildSubmissionDocId(accountId, courseId, firebaseUid)
+            var doc = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
                 .document(docId)
                 .get()
                 .await()
+            if (!doc.exists() && !firebaseUid.isNullOrBlank()) {
+                val legacyDoc = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
+                    .document("${accountId}_${courseId}")
+                    .get()
+                    .await()
+                if (legacyDoc.exists()) {
+                    doc = legacyDoc
+                }
+            }
             if (doc.exists()) {
                 Result.success(mapDocumentToSubmission(doc))
             } else {
@@ -581,11 +656,32 @@ class FirestoreForumAndLeaderboardService(
     // 4. CLOUD SYNC SERTIFIKAT KELULUSAN
     // ==========================================
 
+    suspend fun fetchPreferredCertIdForSubmission(accountId: Long, courseId: String): String? {
+        val firestore = getFirestore() ?: return null
+        return try {
+            val docId = buildSubmissionDocId(accountId, courseId, getCurrentFirebaseUid())
+            val subDoc = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION).document(docId).get().await()
+            val fromSub = subDoc.getString("certificateId")?.takeIf { it.isNotBlank() }
+            if (fromSub != null) return fromSub
+
+            val certSnap = firestore.collection(CERTIFICATES_COLLECTION)
+                .whereEqualTo("submissionDocId", docId)
+                .limit(1)
+                .get()
+                .await()
+            certSnap.documents.firstOrNull()?.getString("certId")?.takeIf { it.isNotBlank() }
+        } catch (e: Exception) {
+            Log.w(TAG, "Error fetching preferred certId: ${e.message}")
+            null
+        }
+    }
+
     suspend fun upsertCertificate(cert: CertificateEntity): Result<Unit> {
         val firestore = getFirestore()
             ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
-            val data = hashMapOf(
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val data = hashMapOf<String, Any>(
                 "certId" to cert.certId,
                 "accountId" to cert.accountId,
                 "courseId" to cert.courseId,
@@ -593,8 +689,12 @@ class FirestoreForumAndLeaderboardService(
                 "userName" to cert.userName,
                 "issueDate" to cert.issueDate,
                 "scorePercent" to cert.scorePercent,
+                "submissionDocId" to buildSubmissionDocId(cert.accountId, cert.courseId, firebaseUid),
                 "updatedAt" to System.currentTimeMillis()
             )
+            if (!firebaseUid.isNullOrBlank()) {
+                data["firebaseUid"] = firebaseUid
+            }
             firestore.collection(CERTIFICATES_COLLECTION)
                 .document(cert.certId)
                 .set(data, SetOptions.merge())
@@ -602,6 +702,37 @@ class FirestoreForumAndLeaderboardService(
             Result.success(Unit)
         } catch (e: Exception) {
             Log.w(TAG, "Error upserting certificate to Firestore: ${e.message}")
+            Result.failure(e)
+        }
+    }
+
+    // ==========================================
+    // 5. PENGUMUMAN FASILITATOR (WEB -> NOTIFIKASI APP)
+    // ==========================================
+
+    suspend fun fetchAnnouncements(limit: Long = 20L): Result<List<CloudAnnouncement>> {
+        val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
+        return try {
+            val snapshot = firestore.collection(ANNOUNCEMENTS_COLLECTION)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(limit)
+                .get()
+                .await()
+            val list = snapshot.documents.mapNotNull { doc ->
+                val title = doc.getString("title")?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                val message = doc.getString("message")?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                CloudAnnouncement(
+                    id = doc.id,
+                    title = title,
+                    message = message,
+                    courseId = doc.getString("courseId"),
+                    authorName = doc.getString("authorName") ?: "Fasilitator",
+                    createdAt = doc.getLong("createdAt") ?: System.currentTimeMillis()
+                )
+            }
+            Result.success(list)
+        } catch (e: Exception) {
+            Log.w(TAG, "Error fetching announcements: ${e.message}")
             Result.failure(e)
         }
     }

@@ -216,6 +216,17 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
+    fun deleteForumPost(postId: String, onComplete: (Boolean) -> Unit = {}) {
+        viewModelScope.launch {
+            val res = socialRepo.deleteForumPost(postId)
+            onComplete(res.isSuccess)
+        }
+    }
+
+    fun getCurrentForumUserId(fallbackAccountId: Long? = null): String {
+        return socialRepo.getCurrentForumUserId(fallbackAccountId)
+    }
+
     fun attachForumListener(
         courseId: String,
         onError: (Exception) -> Unit = {},

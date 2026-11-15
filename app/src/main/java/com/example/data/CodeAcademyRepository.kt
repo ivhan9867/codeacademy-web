@@ -427,11 +427,12 @@ class CodeAcademyRepository(
         accountId: Long,
         course: Course,
         studentName: String,
-        finalScorePercent: Int
+        finalScorePercent: Int,
+        preferredCertId: String? = null
     ): Certificate {
         val existingCerts = certDao.getAllCertificates(accountId).firstOrNull().orEmpty()
         val existing = existingCerts.find { it.courseId == course.id }
-        val certNumber = existing?.certId ?: generateCertificateId(course.id)
+        val certNumber = existing?.certId ?: preferredCertId ?: generateCertificateId(course.id)
         val certDate = existing?.issueDate
             ?: SimpleDateFormat("dd MMMM yyyy", com.example.util.localization.AppLanguage.INDONESIAN.toLocale()).format(Date())
         val bestScore = maxOf(existing?.scorePercent ?: 0, finalScorePercent)
@@ -585,7 +586,8 @@ class CodeAcademyRepository(
                 addXp(course.finalProject?.xpReward ?: 100, "Lulus Proyek Akhir ${course.title}")
                 val facScore = remote.facilitatorScore ?: 85
                 val certScore = CourseUnlockUtils.computeFinalCertificateScore(remote.finalQuizScore, facScore)
-                issueCourseCertificate(remote.accountId, course, remote.studentName, certScore)
+                val preferredCertId = firestoreService.fetchPreferredCertIdForSubmission(remote.accountId, remote.courseId)
+                issueCourseCertificate(remote.accountId, course, remote.studentName, certScore, preferredCertId)
             } else if (newStatus == ProjectSubmissionStatus.REVISION_REQUESTED) {
                 notifDao.insertNotification(
                     NotificationEntity(
@@ -1443,27 +1445,12 @@ class CodeAcademyRepository(
     ): Result<Pair<List<ForumPostEntity>, com.google.firebase.firestore.DocumentSnapshot?>> = withContext(Dispatchers.IO) {
         val result = firestoreService.fetchPosts(courseId, null, limit)
         if (result.isSuccess) {
-            val (posts, lastDoc) = result.getOrThrow()
+            val (posts, _) = result.getOrThrow()
             if (posts.isNotEmpty()) {
                 forumPostDao.insertPosts(posts)
-            } else {
-                // If cloud is empty and local cache is empty, seed initial welcome post
-                val localPosts = forumPostDao.getPostsByCourse(courseId).first()
-                if (localPosts.isEmpty()) {
-                    val seeds = getSeedForumPosts(courseId)
-                    forumPostDao.insertPosts(seeds)
-                }
             }
-            result
-        } else {
-            // Offline fallback: ensure initial seeds if empty
-            val localPosts = forumPostDao.getPostsByCourse(courseId).first()
-            if (localPosts.isEmpty()) {
-                val seeds = getSeedForumPosts(courseId)
-                forumPostDao.insertPosts(seeds)
-            }
-            result
         }
+        result
     }
 
     suspend fun loadMoreForumPosts(
@@ -1538,34 +1525,6 @@ class CodeAcademyRepository(
         val newLikes = if (isLiked) currentLikes + 1 else (currentLikes - 1).coerceAtLeast(0)
         forumPostDao.updateLikeStatus(postId, newLikes, isLiked)
         firestoreService.toggleLikePost(postId, isLiked)
-    }
-
-    private fun getSeedForumPosts(courseId: String): List<ForumPostEntity> {
-        val now = System.currentTimeMillis()
-        val course = CourseCatalog.courses.firstOrNull { it.id == courseId }
-        val courseTitle = course?.title ?: "Kelas Ini"
-        return listOf(
-            ForumPostEntity(
-                postId = "seed_${courseId}_1",
-                courseId = courseId,
-                authorId = "mentor_1",
-                authorName = "Mentor Budi 👨‍🏫",
-                content = "Selamat datang di Forum Diskusi $courseTitle! Silakan diskusikan materi, ajukan pertanyaan seputar modul, atau bagikan kode solusi kalian di sini.",
-                timestamp = now - 86400000L,
-                likeCount = 8,
-                isLikedByMe = false
-            ),
-            ForumPostEntity(
-                postId = "seed_${courseId}_2",
-                courseId = courseId,
-                authorId = "peer_2",
-                authorName = "Siti Nurhaliza",
-                content = "Tips untuk modul praktik: jangan lupa cek debugger/console dan selalu perhatikan sintaks kodenya ya teman-teman!",
-                timestamp = now - 18000000L,
-                likeCount = 4,
-                isLikedByMe = false
-            )
-        )
     }
 
     // ==========================================
@@ -1769,43 +1728,44 @@ class CodeAcademyRepository(
 
     suspend fun getTopForumHighlights(limit: Long = 3L): List<ForumPostEntity> = withContext(Dispatchers.IO) {
         val cloudResult = firestoreService.fetchTopForumHighlights(limit)
-        if (cloudResult.isSuccess && cloudResult.getOrThrow().isNotEmpty()) {
+        if (cloudResult.isSuccess) {
             return@withContext cloudResult.getOrThrow()
         }
+        emptyList()
+    }
 
-        // Offline / Seed Fallback: Return best curated discussion posts
-        listOf(
-            ForumPostEntity(
-                postId = "highlight_1",
-                courseId = "fe-web-foundation-00",
-                authorId = "mentor_1",
-                authorName = "Mentor Budi 👨‍🏫",
-                content = "Tips penting: Gunakan semantic HTML seperti <header>, <main>, dan <footer> agar aplikasi web kamu ramah SEO dan mudah diakses screen reader!",
-                timestamp = System.currentTimeMillis() - 7200000L,
-                likeCount = 24,
-                isLikedByMe = false
-            ),
-            ForumPostEntity(
-                postId = "highlight_2",
-                courseId = "fe-css-02",
-                authorId = "peer_2",
-                authorName = "Clarissa Chen",
-                content = "Bagi yang bingung beda Flexbox dan CSS Grid: Flexbox cocok untuk layout 1 dimensi (baris/kolom), sedangkan Grid sangat powerful untuk layout 2 dimensi yang kompleks! 💡",
-                timestamp = System.currentTimeMillis() - 14400000L,
-                likeCount = 18,
-                isLikedByMe = false
-            ),
-            ForumPostEntity(
-                postId = "highlight_3",
-                courseId = "fe-js-03",
-                authorId = "peer_1",
-                authorName = "Farhan Maulana",
-                content = "Tips manipulasi DOM di JavaScript: gunakan `document.querySelector()` dan `addEventListener()` alih-alih onclick inline agar kode HTML dan JS tetap bersih dan terpisah!",
-                timestamp = System.currentTimeMillis() - 28800000L,
-                likeCount = 15,
-                isLikedByMe = false
-            )
-        )
+    suspend fun syncCloudAnnouncements() = withContext(Dispatchers.IO) {
+        try {
+            firestoreService.tryEnsureAnonymousOrCurrentUid()
+            val accountId = getActiveAccountId()
+            val existingIds = notifDao.getNotificationIdsForAccount(accountId).toSet()
+            val result = firestoreService.fetchAnnouncements(20L)
+            if (result.isSuccess) {
+                val announcements = result.getOrThrow()
+                val fmt = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+                announcements.forEach { ann ->
+                    val notifId = "ann_${ann.id}_${accountId}"
+                    if (notifId !in existingIds) {
+                        val courseTag = ann.courseId?.takeIf { it.isNotBlank() && it != "all" }
+                            ?.let { cid -> getCourseById(cid)?.title ?: cid }
+                        val header = if (courseTag != null) "📢 [$courseTag] ${ann.title}" else "📢 ${ann.title}"
+                        notifDao.insertNotification(
+                            NotificationEntity(
+                                id = notifId,
+                                accountId = accountId,
+                                title = header,
+                                message = "${ann.message} — ${ann.authorName}",
+                                type = "ANNOUNCEMENT",
+                                timestamp = fmt.format(Date(ann.createdAt)),
+                                isRead = false
+                            )
+                        )
+                    }
+                }
+            }
+        } catch (_: Throwable) {
+            // Silently ignore when offline
+        }
     }
 }
 

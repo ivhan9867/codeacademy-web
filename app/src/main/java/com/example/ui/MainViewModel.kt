@@ -826,6 +826,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun syncAnnouncements() {
+        viewModelScope.launch {
+            repo.syncCloudAnnouncements()
+        }
+    }
+
+    init {
+        syncAnnouncements()
+    }
+
     fun dismissLevelUpDialog() {
         _levelUpDialogInfo.value = null
     }

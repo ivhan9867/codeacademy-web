@@ -129,11 +129,12 @@ Beranda adalah pusat aktivitas utama tempat siswa memantau progres, melanjutkan 
 *Gambar 5: Halaman Beranda (Home Dashboard)*
 
 #### Keterangan Gambar:
-- **[1] Menu Samping (Drawer):** Membuka menu navigasi cepat menuju fitur Cari Materi, Tersimpan, dan Playground.
+- **[1] Menu Samping (Drawer):** Membuka menu navigasi cepat menuju fitur Cari Materi, Tersimpan, Notifikasi, dan Playground.
 - **[2] Badge Runtutan (Streak Harian):** Menghitung jumlah hari belajar berturut-turut untuk menjaga kedisiplinan koding.
 - **[3] Carousel Banner Promosi:** Kartu interaktif yang menampilkan modul rekomendasi dan capaian target XP mingguan.
 - **[4] Kartu Lanjutkan Belajar:** Pintasan instan menuju modul terakhir yang sedang dikerjakan agar siswa tidak kehilangan alur belajar.
 - **[5] Bilah Navigasi Bawah (Bottom Navigation Bar):** Menu akses cepat ke 5 fitur inti: *Beranda*, *Kelas*, *Progres*, *Komunitas*, dan *Profil*.
+- **[6] Codi Daily Tip & Tantangan 1 Menit:** Kartu maskot Codi dengan tips belajar harian yang dapat dimuat ulang serta tantangan kuis cepat 1 menit berhadiah **+15 XP**.
 
 ---
 
@@ -260,9 +261,10 @@ Menu Komunitas menyediakan wadah sosial edukatif bagi seluruh siswa untuk berkol
 *Gambar 13: Layar Forum Diskusi Komunitas*
 
 #### Fitur Komunitas:
-- **Tab Diskusi Hangat (*Trending*):** Menampilkan thread pertanyaan paling aktif yang memperoleh apresiasi upvote terbanyak dari sesama siswa.
-- **Tab Forum Kelas:** Diskusi terfokus yang dikelompokkan secara spesifik per mata kuliah / materi modul.
-- **Tombol 'Tanya Baru':** Formulir pembuatan pertanyaan baru lengkap dengan judul kendala, kategori kelas, dan lampiran potongan kode.
+- **Tab Diskusi Hangat (*Trending*):** Menampilkan thread pertanyaan paling aktif yang memperoleh apresiasi *like* dan balasan terbanyak dari sesama siswa serta Fasilitator.
+- **Hub Forum Diskusi Kelas:** Kartu akses langsung ke masing-masing forum kelas (*Fondasi Web*, *CSS Layout Modern*, *JavaScript Fundamentals*).
+- **Filter Diskusi Cerdas:** Menyaring thread berdasarkan kategori *Semua*, *Terjawab Fasilitator*, *Milik Saya*, dan *Populer*, dilengkapi lencana **`Dijawab Fasilitator`**.
+- **Hapus Postingan Sendiri & Sinkronisasi Real-Time:** Penulis dapat menghapus postingan atau balasan miliknya sendiri, dan setiap diskusi tersinkronisasi dua arah dengan **Portal Web Fasilitator** via Cloud Firestore.
 - **Sistem Upvote & Komentar Solutif:** Memberikan apresiasi pada jawaban terbaik dan membangun budaya belajar gotong-royong.
 
 ---
@@ -278,7 +280,7 @@ Fitur Progres dan Papan Peringkat dirancang untuk menjaga motivasi dan konsisten
 1. **Papan Peringkat Pelajar (*Leaderboard*):** Menampilkan peringkat siswa teratas (Top 50) mingguan dan global berdasarkan akumulasi perolehan XP.
 2. **Sistem Medali (🥇🥈🥉):** Apresiasi khusus bagi peringkat 3 besar pembelajar teraktif.
 3. **Koleksi Lencana (*Badges*):** Penghargaan digital atas pencapaian tertentu (contoh: *Langkah Pertama*, *Api Abadi*, *AI Enthusiast*, *Full-Stack Hero*).
-4. **Sertifikat Kelulusan Resmi:** Dokumen digital resmi yang memuat nama siswa, kelas yang diselesaikan, dan **ID Kredensial Unik** (contoh: `CA-2026-88912`) untuk validasi keabsahan sertifikat secara daring.
+4. **Sertifikat Kelulusan Resmi:** Dokumen digital resmi yang memuat nama siswa, kelas yang diselesaikan, dan **ID Kredensial Unik** (contoh: `CC-2026110101-A9K3P2`) untuk validasi keabsahan sertifikat secara daring.
 
 ---
 
@@ -307,16 +309,16 @@ Untuk menjamin kenyamanan telaah kode sumber di layar lebar, integritas akademik
 *Gambar 16: Antarmuka Dashboard Web Penilai / Fasilitator CodeAcademy*
 
 ### Fitur & Alur Penilaian Fasilitator:
-1. **Otentikasi Keamanan Passcode Sesi:** Portal dilindungi dengan gerbang passcode khusus fasilitator (`CA-FAC-2026`) untuk mencegah akses evaluasi oleh pihak luar yang tidak berwenang.
-2. **Antrean Pengumpulan Real-Time (*Cloud Firestore Sync*):** Daftar pengumpulan tugas akhir mahasiswa dari project Firebase `codeacademy-6a361` masuk dan tersinkronisasi secara langsung (*real-time listener*) dengan indikator **`● Live Firestore Sync`**.
-3. **Pemeriksa Kode (*Code Source*) & Live Preview:** Fasilitator dapat meneliti kode sumber HTML/CSS/JS secara berdampingan dengan tab **Live Preview** terisolasi (`sandbox="allow-scripts"`).
-4. **Formulir Rubrik Penilaian & Kalkulator Skor:** 
-   - **Skor Proyek (0–100):** Digabung otomatis dengan skor Kuis Aplikasi (`35% Kuis + 65% Proyek`) untuk menentukan Nilai Akhir Sertifikat.
+1. **Otentikasi Firebase Auth & Allowlist Fasilitator:** Portal dilindungi login **Email/Password** atau **Masuk dengan Google** via Firebase Auth dan diverifikasi terhadap koleksi Firestore `/facilitators/{email}` (terdapat pula opsi terpisah **Mode Demo Offline** yang tidak menulis data ke Firebase).
+2. **Antrean Pengumpulan Real-Time (*Cloud Firestore Sync*):** Daftar pengumpulan tugas akhir mahasiswa dari project Firebase `codeacademy-6a361` masuk dan tersinkronisasi secara langsung (*real-time listener*) dengan indikator **`● Live Firebase`**.
+3. **Pemeriksa Kode (*Code Source*) & Live Preview Aman:** Fasilitator menelaah kode sumber HTML/CSS/JS berdampingan (layout 2 kolom di layar lebar) dengan tab **Live Preview** terisolasi CSP (`sandbox="allow-scripts"`).
+4. **Formulir Rubrik Penilaian & Kalkulator Skor (40/60):**
+   - **Skor Proyek (0–100):** Dapat diisi melalui checklist rubrik terhubung Firestore, slider, atau kotak angka, lalu digabung otomatis dengan skor Kuis Aplikasi (**`40% Kuis + 60% Proyek`**) untuk menentukan Nilai Akhir Sertifikat (`>= 70`).
    - **Tag Umpan Balik Cepat & Catatan:** Komentar kualitatif untuk memberikan arahan perbaikan teknis atau apresiasi kode.
 5. **Tombol Keputusan (`Setujui & Terbitkan` / `Minta Revisi`):**
-   - **Setujui & Terbitkan (*Approved*):** Menerbitkan status lulus dan menyinkronkan **Sertifikat Digital** resmi ke akun siswa serta Cloud Firestore.
-   - **Minta Revisi (*Revision*):** Mengembalikan status agar siswa dapat memperbaiki proyeknya di aplikasi Android disertai catatan perbaikan dari fasilitator.
-6. **Sinkronisasi Otomatis ke Smartphone Siswa:** Siswa yang sedang membuka layar *Final Project Submission* di aplikasi Android akan langsung melihat perubahan status dan catatan review secara instan tanpa perlu keluar aplikasi.
+   - **Setujui & Terbitkan (*Approved*):** Menerbitkan status lulus dan menulis **Sertifikat Digital** resmi (`CC-...`) secara atomik ke koleksi `certificates` Firestore sekaligus menyinkronkan ID sertifikat tersebut ke aplikasi siswa.
+   - **Minta Revisi (*Revision*):** Mengembalikan status `REVISION_REQUESTED` agar siswa dapat memperbaiki proyeknya di aplikasi Android disertai catatan perbaikan dari fasilitator.
+6. **Moderasi Forum, Broadcast Pengumuman & Registri Sertifikat:** Fasilitator memiliki tab **Forum Diskusi** (dengan filter *Belum Dijawab Fasilitator*), tab **Pengumuman** (mengirim informasi kelas langsung ke layar **Notifikasi** aplikasi Android), serta tab **Sertifikat** untuk meninjau sertifikat terbit.
 
 ---
 
@@ -328,18 +330,18 @@ CodeAcademy menyediakan **Portal Verifikasi Kredensial Publik** di `https://ivha
 *Gambar 17: Antarmuka Portal Verifikasi Sertifikat Digital Online*
 
 ### Fitur & Cara Validasi Sertifikat:
-1. **Pencarian Kode Kredensial Instan:** Memungkinkan siapa saja (dosen pembimbing, pihak kampus, recruiter perusahaan) memasukkan ID Kredensial unik (contoh: `CA-2026-88912`) untuk mencari rekaman asli di basis data Firestore.
-2. **Lencana Keabsahan (*Verified Authentic*):** Sertifikat yang sah akan menampilkan lencana hijau centang resmi yang menyatakan dokumen terdaftar dan valid.
+1. **Pencarian Kode Kredensial Langsung ke Firestore:** Memungkinkan siapa saja (dosen pembimbing, pihak kampus, rekruter perusahaan) memasukkan ID Kredensial berawalan `CC-` (contoh: `CC-2026110101-A9K3P2`) untuk memeriksa rekaman asli di koleksi `certificates` Firestore (tanpa *bypass wildcard* statis).
+2. **Lencana Keabsahan (*Verified Authentic*):** Sertifikat yang sah menampilkan lencana hijau centang resmi yang menyatakan dokumen terdaftar dan valid di Firestore.
 3. **Transparansi Detail Kelulusan:**
-   - **Nama Lengkap Siswa**
-   - **Jalur Spesialisasi Kursus** (misal: *Front-End Web Development*)
-   - **Tanggal Kelulusan & Penerbitan Sertifikat**
-   - **Skor Proyek Akhir & Predikat** (contoh: *Skor 92/100 - Sangat Memuaskan*)
+   - **ID Kredensial** & **Nama Lengkap Siswa**
+   - **Jalur Spesialisasi Kursus** (misal: *Fondasi Web* / *CSS Layout Modern* / *JavaScript Fundamentals*)
+   - **Tanggal Kelulusan & Nama Fasilitator Penilai**
+   - **Nilai Akhir (40% Kuis + 60% Proyek) & Predikat** (contoh: *90/100 - Dengan Pujian*)
 4. **Integrasi Tautan Langsung dari Aplikasi Mobile:**
    - Tombol **Bagikan** (*Share Intent*) di layar Sertifikat aplikasi Android melampirkan detail dan ID kredensial untuk diverifikasi di portal resmi, misalnya:  
-     `https://ivhan9867.github.io/codeacademy-web/verify.html?certId=CA-2026-88912`
+     `https://ivhan9867.github.io/codeacademy-web/verify.html?id=CC-2026110101-A9K3P2`
    - Penerima tautan cukup membuka link tersebut untuk langsung melihat lembar verifikasi resmi tanpa perlu mengetik ulang ID.
-5. **Proteksi Anti-Pemalsuan Dokumen:** Setiap sertifikat terhubung unik ke kombinasi `UID Siswa` dan `ID Kursus`, memastikan sertifikat tidak dapat dipalsukan atau digunakan oleh pihak lain.
+5. **Proteksi Anti-Pemalsuan Dokumen:** Setiap sertifikat dilindungi oleh aturan keamanan `firestore.rules` dan terikat unik pada identitas siswa serta ID kursus terdaftar.
 
 ---
 

@@ -1121,7 +1121,6 @@ fun CodeAcademyApp(
 
                     LaunchedEffect(course.id) {
                         viewModel.ensureProjectSubmissionInitialized(course.id)
-                        viewModel.attachProjectSubmissionListener(course.id)
                     }
 
                     FinalProjectSubmissionScreen(
@@ -1416,6 +1415,25 @@ fun CodeAcademyApp(
                         viewModel = viewModel,
                         onBack = { navController.popBackStack() }
                     )
+                } else {
+                    androidx.compose.foundation.layout.Box(
+                        modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                        contentAlignment = androidx.compose.ui.Alignment.Center
+                    ) {
+                        androidx.compose.foundation.layout.Column(
+                            horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+                            modifier = androidx.compose.ui.Modifier.padding(24.dp)
+                        ) {
+                            androidx.compose.material3.Text(
+                                text = androidx.compose.ui.res.stringResource(R.string.forum_course_not_found),
+                                style = androidx.compose.material3.MaterialTheme.typography.titleMedium
+                            )
+                            androidx.compose.foundation.layout.Spacer(modifier = androidx.compose.ui.Modifier.height(12.dp))
+                            androidx.compose.material3.Button(onClick = { navController.popBackStack() }) {
+                                androidx.compose.material3.Text(androidx.compose.ui.res.stringResource(R.string.common_back))
+                            }
+                        }
+                    }
                 }
             }
 

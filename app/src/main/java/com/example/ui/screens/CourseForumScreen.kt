@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -32,6 +34,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Forum
@@ -40,12 +43,14 @@ import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.School
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -57,6 +62,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.runtime.mutableIntStateOf
 import kotlinx.coroutines.delay
 import androidx.compose.material3.TopAppBar
@@ -164,6 +172,10 @@ private fun buildForumThreadGroups(posts: List<ForumPostEntity>): List<ForumThre
     return groups
 }
 
+private enum class ForumFilterMode {
+    ALL, FACILITATOR, MINE, POPULAR
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseForumScreen(
@@ -173,14 +185,57 @@ fun CourseForumScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val postsFlow = remember(course.id) { socialViewModel.getCourseForumPosts(course.id) }
     val posts by postsFlow.collectAsStateWithLifecycle(initialValue = emptyList())
     val threadGroups = remember(posts) { buildForumThreadGroups(posts) }
     var expandedThreadIds by remember { mutableStateOf<Set<String>>(emptySet()) }
+    var selectedFilter by remember { mutableStateOf(ForumFilterMode.ALL) }
+    var postToDelete by remember { mutableStateOf<ForumPostEntity?>(null) }
     val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
+    val currentUserId = remember(userProfile?.id) {
+        socialViewModel.getCurrentForumUserId(userProfile?.id)
+    }
+    val filteredThreadGroups = remember(threadGroups, selectedFilter, currentUserId) {
+        when (selectedFilter) {
+            ForumFilterMode.ALL -> threadGroups
+            ForumFilterMode.FACILITATOR -> threadGroups.filter { grp ->
+                grp.parent.authorIsMentor || grp.replies.any { it.authorIsMentor }
+            }
+            ForumFilterMode.MINE -> threadGroups.filter { grp ->
+                grp.parent.authorId == currentUserId || grp.replies.any { it.authorId == currentUserId }
+            }
+            ForumFilterMode.POPULAR -> threadGroups.sortedByDescending { it.parent.likeCount + it.replies.size }
+        }
+    }
     val selectedPublicProfile by socialViewModel.selectedPublicProfile.collectAsStateWithLifecycle()
     val isLoadingPublicProfile by socialViewModel.isLoadingPublicProfile.collectAsStateWithLifecycle()
+
+    if (postToDelete != null) {
+        val targetDelete = postToDelete!!
+        AlertDialog(
+            onDismissRequest = { postToDelete = null },
+            title = { Text(stringResource(R.string.forum_delete_title), fontWeight = FontWeight.Bold) },
+            text = { Text(stringResource(R.string.forum_delete_desc)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        socialViewModel.deleteForumPost(targetDelete.postId)
+                        postToDelete = null
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
+                ) {
+                    Text(stringResource(R.string.forum_delete_confirm), color = Color.White)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { postToDelete = null }) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            }
+        )
+    }
 
     selectedPublicProfile?.let { publicProfile ->
         com.example.ui.components.UserPublicProfileDialog(
@@ -516,6 +571,36 @@ fun CourseForumScreen(
                 }
             }
 
+            // Filter Chips Bar
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                FilterChip(
+                    selected = selectedFilter == ForumFilterMode.ALL,
+                    onClick = { selectedFilter = ForumFilterMode.ALL },
+                    label = { Text(stringResource(R.string.forum_filter_all)) }
+                )
+                FilterChip(
+                    selected = selectedFilter == ForumFilterMode.FACILITATOR,
+                    onClick = { selectedFilter = ForumFilterMode.FACILITATOR },
+                    label = { Text(stringResource(R.string.forum_filter_facilitator)) }
+                )
+                FilterChip(
+                    selected = selectedFilter == ForumFilterMode.MINE,
+                    onClick = { selectedFilter = ForumFilterMode.MINE },
+                    label = { Text(stringResource(R.string.forum_filter_mine)) }
+                )
+                FilterChip(
+                    selected = selectedFilter == ForumFilterMode.POPULAR,
+                    onClick = { selectedFilter = ForumFilterMode.POPULAR },
+                    label = { Text(stringResource(R.string.forum_filter_popular)) }
+                )
+            }
+
             if (loadError != null && posts.isEmpty()) {
                 // Error state with retry
                 ErrorRetryView(
@@ -528,8 +613,8 @@ fun CourseForumScreen(
                         .weight(1f)
                         .padding(24.dp)
                 )
-            } else if (posts.isEmpty()) {
-                // Empty state
+            } else if (filteredThreadGroups.isEmpty()) {
+                // Empty state (either no posts yet or filter yielded no match)
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -547,17 +632,23 @@ fun CourseForumScreen(
                         )
                         Spacer(modifier = Modifier.height(14.dp))
                         Text(
-                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_empty_title),
+                            text = if (posts.isEmpty()) {
+                                stringResource(R.string.forum_empty_title)
+                            } else {
+                                stringResource(R.string.forum_filter_empty)
+                            },
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_empty_desc),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
+                        if (posts.isEmpty()) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = stringResource(R.string.forum_empty_desc),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                        }
                     }
                 }
             } else {
@@ -572,7 +663,7 @@ fun CourseForumScreen(
                         .testTag("forum_list")
                 ) {
                     items(
-                        items = threadGroups,
+                        items = filteredThreadGroups,
                         key = { it.parent.postId }
                     ) { group ->
                         val post = group.parent
@@ -581,7 +672,7 @@ fun CourseForumScreen(
                             post = post,
                             replies = group.replies,
                             isThreadExpanded = isExpanded,
-                            currentUserId = userProfile?.id?.toString() ?: "",
+                            currentUserId = currentUserId,
                             isHighlighted = highlightedPostId == post.postId,
                             onToggleExpandReplies = {
                                 expandedThreadIds = if (isExpanded) {
@@ -597,7 +688,7 @@ fun CourseForumScreen(
                                 replyingToPost = targetPost
                             },
                             onQuoteClick = { targetPostId ->
-                                val targetIndex = threadGroups.indexOfFirst { it.parent.postId == targetPostId }
+                                val targetIndex = filteredThreadGroups.indexOfFirst { it.parent.postId == targetPostId }
                                 if (targetIndex >= 0) {
                                     coroutineScope.launch {
                                         listState.animateScrollToItem(targetIndex)
@@ -620,6 +711,9 @@ fun CourseForumScreen(
                                     currentLikes = targetPost.likeCount,
                                     isLiked = !targetPost.isLikedByMe
                                 )
+                            },
+                            onDeletePost = { targetPost ->
+                                postToDelete = targetPost
                             },
                             onAuthorClick = { authorId ->
                                 val target = if (post.authorId == authorId) post else group.replies.find { it.authorId == authorId }
@@ -662,7 +756,7 @@ fun CourseForumScreen(
                                         modifier = Modifier.testTag("forum_load_more_button")
                                     ) {
                                         Text(
-                                            text = "Muat diskusi lebih lama...",
+                                            text = stringResource(R.string.forum_load_more),
                                             style = MaterialTheme.typography.bodyMedium,
                                             color = MaterialTheme.colorScheme.primary,
                                             fontWeight = FontWeight.SemiBold
@@ -692,10 +786,12 @@ fun ForumPostCard(
     onQuoteClick: ((String) -> Unit)? = null,
     onToggleLike: () -> Unit,
     onToggleLikePost: ((ForumPostEntity) -> Unit)? = null,
+    onDeletePost: ((ForumPostEntity) -> Unit)? = null,
     onAuthorClick: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val isAuthorMe = post.authorId == currentUserId
+    val hasFacilitatorReply = remember(replies) { replies.any { it.authorIsMentor } }
     val formattedTime = remember(post.timestamp) {
         formatTimestamp(post.timestamp)
     }
@@ -771,6 +867,38 @@ fun ForumPostCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+
+                if (hasFacilitatorReply && !post.authorIsMentor) {
+                    Surface(
+                        shape = ForumBadgeShape,
+                        color = TealPrimary.copy(alpha = 0.14f),
+                        modifier = Modifier.padding(end = if (isAuthorMe && onDeletePost != null) 4.dp else 0.dp)
+                    ) {
+                        Text(
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_answered_by_facilitator),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = TealPrimary,
+                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp)
+                        )
+                    }
+                }
+
+                if (isAuthorMe && onDeletePost != null) {
+                    IconButton(
+                        onClick = { onDeletePost(post) },
+                        modifier = Modifier
+                            .size(32.dp)
+                            .testTag("delete_post_${post.postId}")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DeleteOutline,
+                            contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_delete_cd),
+                            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.85f),
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -821,13 +949,13 @@ fun ForumPostCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.ChatBubbleOutline,
-                                contentDescription = "Lihat Balasan",
+                                contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_show_replies_cd),
                                 modifier = Modifier.size(15.dp),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(
-                                text = "${replies.size} Balasan",
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_replies_count_format, replies.size),
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.SemiBold,
                                 color = MaterialTheme.colorScheme.primary
@@ -851,7 +979,7 @@ fun ForumPostCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "0 Balasan",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_zero_replies),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                         )
@@ -929,6 +1057,9 @@ fun ForumPostCard(
                                 currentUserId = currentUserId,
                                 onReplyClick = { onReplyToPost?.invoke(reply) },
                                 onToggleLike = { onToggleLikePost?.invoke(reply) },
+                                onDeleteClick = if (reply.authorId == currentUserId && onDeletePost != null) {
+                                    { onDeletePost(reply) }
+                                } else null,
                                 onAuthorClick = onAuthorClick
                             )
                         }
@@ -945,6 +1076,7 @@ private fun ForumReplyItem(
     currentUserId: String,
     onReplyClick: () -> Unit,
     onToggleLike: () -> Unit,
+    onDeleteClick: (() -> Unit)? = null,
     onAuthorClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -1026,12 +1158,25 @@ private fun ForumReplyItem(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
+                    if (isAuthorMe && onDeleteClick != null) {
+                        IconButton(
+                            onClick = onDeleteClick,
+                            modifier = Modifier.size(28.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DeleteOutline,
+                                contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_delete_cd),
+                                tint = MaterialTheme.colorScheme.error.copy(alpha = 0.85f),
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
                 }
 
                 if (!reply.replyToAuthorName.isNullOrBlank()) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Membalas @${reply.replyToAuthorName}",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_replying_at_format, reply.replyToAuthorName),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
@@ -1058,13 +1203,13 @@ private fun ForumReplyItem(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Reply,
-                            contentDescription = "Balas",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_btn),
                             modifier = Modifier.size(13.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.width(3.dp))
                         Text(
-                            text = "Balas",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_btn),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1075,7 +1220,11 @@ private fun ForumReplyItem(
                     ) {
                         Icon(
                             imageVector = if (reply.isLikedByMe) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = "Sukai",
+                            contentDescription = if (reply.isLikedByMe) {
+                                androidx.compose.ui.res.stringResource(com.example.R.string.forum_unlike_cd)
+                            } else {
+                                androidx.compose.ui.res.stringResource(com.example.R.string.forum_like_cd)
+                            },
                             tint = if (reply.isLikedByMe) LikeActiveRed else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(14.dp)
                         )
@@ -1161,7 +1310,7 @@ private fun ForumAuthorBadges(
                 color = SayaBadgeBg
             ) {
                 Text(
-                    text = "Saya",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_badge_me),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
@@ -1186,7 +1335,7 @@ private fun ForumAuthorBadges(
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
-                        text = "Fasilitator",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_badge_facilitator),
                         style = MaterialTheme.typography.labelSmall,
                         color = AmberGold,
                         fontWeight = FontWeight.Bold
@@ -1252,7 +1401,7 @@ fun ErrorRetryView(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Koneksi Terputus",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_disconnected_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -1279,7 +1428,7 @@ fun ErrorRetryView(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Coba Lagi",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_retry_btn),
                     fontWeight = FontWeight.Bold
                 )
             }

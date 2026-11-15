@@ -789,8 +789,9 @@ fun FinalProjectSubmissionScreen(
                 }
             }
 
-            // 8. Facilitator Review Section / Simulator Toggle
-            item(key = "facilitator_simulator_card") {
+            // 8. Facilitator Review Section / Simulator Toggle (Debug-only)
+            if (com.example.BuildConfig.DEBUG) {
+                item(key = "facilitator_simulator_card") {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(18.dp),
@@ -933,6 +934,7 @@ fun FinalProjectSubmissionScreen(
                         }
                     }
                 }
+            }
             }
         }
     }

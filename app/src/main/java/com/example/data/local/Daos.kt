@@ -138,6 +138,9 @@ interface NotificationDao {
     @Query("UPDATE notifications SET isRead = 1 WHERE accountId = :accountId")
     suspend fun markAllAsRead(accountId: Long)
 
+    @Query("SELECT id FROM notifications WHERE accountId = :accountId")
+    suspend fun getNotificationIdsForAccount(accountId: Long): List<String>
+
     @Query("DELETE FROM notifications WHERE accountId = :accountId")
     suspend fun deleteAllForAccount(accountId: Long)
 }
@@ -173,6 +176,9 @@ interface ForumPostDao {
 
     @Query("UPDATE forum_posts SET likeCount = :likeCount, isLikedByMe = :isLiked WHERE postId = :postId")
     suspend fun updateLikeStatus(postId: String, likeCount: Int, isLiked: Boolean)
+
+    @Query("DELETE FROM forum_posts WHERE postId = :postId OR replyToPostId = :postId")
+    suspend fun deletePostAndDirectReplies(postId: String)
 
     @Query("DELETE FROM forum_posts WHERE courseId = :courseId")
     suspend fun clearPostsForCourse(courseId: String)

@@ -68,6 +68,10 @@ class SocialRepository(
         return forumPostDao.getPostsByCourse(courseId)
     }
 
+    fun getCurrentForumUserId(fallbackAccountId: Long? = null): String {
+        return firestoreService.getCurrentFirebaseUid() ?: fallbackAccountId?.toString() ?: ""
+    }
+
     suspend fun refreshForumPosts(
         courseId: String,
         limit: Long = 20L
@@ -77,22 +81,9 @@ class SocialRepository(
             val (posts, _) = result.getOrThrow()
             if (posts.isNotEmpty()) {
                 forumPostDao.insertPosts(posts)
-            } else {
-                val localPosts = forumPostDao.getPostsByCourse(courseId).first()
-                if (localPosts.isEmpty()) {
-                    val seeds = getSeedForumPosts(courseId)
-                    forumPostDao.insertPosts(seeds)
-                }
             }
-            result
-        } else {
-            val localPosts = forumPostDao.getPostsByCourse(courseId).first()
-            if (localPosts.isEmpty()) {
-                val seeds = getSeedForumPosts(courseId)
-                forumPostDao.insertPosts(seeds)
-            }
-            result
         }
+        result
     }
 
     suspend fun loadMoreForumPosts(
@@ -120,7 +111,7 @@ class SocialRepository(
         val accountId = getActiveAccountId()
         val user = userDao?.getUserProfileOnce(accountId)
         val authorName = user?.name ?: "Siswa"
-        val authorId = accountId.toString()
+        val authorId = firestoreService.tryEnsureAnonymousOrCurrentUid() ?: accountId.toString()
         val authorLevel = user?.level ?: 1
 
         val cloudResult = firestoreService.createPost(
@@ -189,32 +180,9 @@ class SocialRepository(
         forumPostDao.replacePostsForCourse(courseId, merged)
     }
 
-    private fun getSeedForumPosts(courseId: String): List<ForumPostEntity> {
-        val now = System.currentTimeMillis()
-        val course = CourseCatalog.courses.firstOrNull { it.id == courseId }
-        val courseTitle = course?.title ?: "Kelas Ini"
-        return listOf(
-            ForumPostEntity(
-                postId = "seed_${courseId}_1",
-                courseId = courseId,
-                authorId = "mentor_1",
-                authorName = "Mentor Budi 👨‍🏫",
-                content = "Selamat datang di Forum Diskusi $courseTitle! Silakan diskusikan materi, ajukan pertanyaan seputar modul, atau bagikan kode solusi kalian di sini.",
-                timestamp = now - 86400000L,
-                likeCount = 8,
-                isLikedByMe = false
-            ),
-            ForumPostEntity(
-                postId = "seed_${courseId}_2",
-                courseId = courseId,
-                authorId = "peer_2",
-                authorName = "Siti Nurhaliza",
-                content = "Tips untuk modul praktik: jangan lupa cek debugger/console dan selalu perhatikan sintaks kodenya ya teman-teman!",
-                timestamp = now - 18000000L,
-                likeCount = 4,
-                isLikedByMe = false
-            )
-        )
+    suspend fun deleteForumPost(postId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        forumPostDao.deletePostAndDirectReplies(postId)
+        firestoreService.deletePost(postId)
     }
 
     // ==========================================
@@ -223,42 +191,10 @@ class SocialRepository(
 
     suspend fun getTopForumHighlights(limit: Long = 3L): List<ForumPostEntity> = withContext(Dispatchers.IO) {
         val cloudResult = firestoreService.fetchTopForumHighlights(limit)
-        if (cloudResult.isSuccess && cloudResult.getOrThrow().isNotEmpty()) {
+        if (cloudResult.isSuccess) {
             return@withContext cloudResult.getOrThrow()
         }
-
-        listOf(
-            ForumPostEntity(
-                postId = "highlight_1",
-                courseId = "fe-web-foundation-00",
-                authorId = "mentor_1",
-                authorName = "Mentor Budi 👨‍🏫",
-                content = "Tips penting: Gunakan semantic HTML seperti <header>, <main>, dan <footer> agar aplikasi web kamu ramah SEO dan mudah diakses screen reader!",
-                timestamp = System.currentTimeMillis() - 7200000L,
-                likeCount = 24,
-                isLikedByMe = false
-            ),
-            ForumPostEntity(
-                postId = "highlight_2",
-                courseId = "fe-css-02",
-                authorId = "peer_2",
-                authorName = "Clarissa Chen",
-                content = "Bagi yang bingung beda Flexbox dan CSS Grid: Flexbox cocok untuk layout 1 dimensi (baris/kolom), sedangkan Grid sangat powerful untuk layout 2 dimensi yang kompleks! 💡",
-                timestamp = System.currentTimeMillis() - 14400000L,
-                likeCount = 18,
-                isLikedByMe = false
-            ),
-            ForumPostEntity(
-                postId = "highlight_3",
-                courseId = "py-foundations-01",
-                authorId = "peer_1",
-                authorName = "Farhan Maulana",
-                content = "List comprehension di Python bikin kodenya ringkas banget! Jangan lupa cek efisiensi memori kalau data yang diproses sangat besar ya.",
-                timestamp = System.currentTimeMillis() - 28800000L,
-                likeCount = 15,
-                isLikedByMe = false
-            )
-        )
+        emptyList()
     }
 
     // ==========================================
@@ -310,9 +246,10 @@ class SocialRepository(
         trackId: String? = null
     ): Int = withContext(Dispatchers.IO) {
         val scopeKey = "${period}_${trackId ?: "global"}"
-        val accountId = getActiveAccountId().toString()
+        val accountId = getActiveAccountId()
+        val cloudUserId = getCurrentForumUserId(accountId)
         val cached = leaderboardDao.getCachedLeaderboard(scopeKey).first()
-        val myCachedEntry = cached.find { it.userId == accountId }
+        val myCachedEntry = cached.find { it.userId == cloudUserId || it.userId == accountId.toString() }
         if (myCachedEntry != null) {
             return@withContext myCachedEntry.rank
         }
@@ -343,7 +280,7 @@ class SocialRepository(
                     if (profile.totalXp >= 1000) add("b9")
                 }
                 firestoreService.syncUserXp(
-                    userId = profile.id.toString(),
+                    userId = getCurrentForumUserId(profile.id),
                     userName = profile.name,
                     totalXp = profile.totalXp,
                     level = profile.level,
@@ -368,7 +305,7 @@ class SocialRepository(
             return@withContext remote.getOrThrow()
         }
         val activeId = getActiveAccountId()
-        if (userId == activeId.toString()) {
+        if (userId == activeId.toString() || userId == getCurrentForumUserId(activeId)) {
             val local = userDao?.getUserProfileOnce(activeId)
             if (local != null) {
                 return@withContext com.example.data.remote.PublicUserProfile(

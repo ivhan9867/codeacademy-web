@@ -26,6 +26,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DoneAll
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,11 +63,16 @@ fun NotificationsScreen(
 ) {
     val notifications by viewModel.notifications.collectAsStateWithLifecycle()
 
+    LaunchedEffect(Unit) {
+        viewModel.syncAnnouncements()
+    }
+
     NotificationsScreen(
         notifications = notifications,
         onBack = onBack,
         onMarkAsRead = { notifId -> viewModel.markNotifRead(notifId) },
         onMarkAllAsRead = { viewModel.markAllNotifsRead() },
+        onSyncAnnouncements = { viewModel.syncAnnouncements() },
         modifier = modifier
     )
 }
@@ -77,6 +84,7 @@ fun NotificationsScreen(
     onBack: () -> Unit,
     onMarkAsRead: (String) -> Unit,
     onMarkAllAsRead: () -> Unit,
+    onSyncAnnouncements: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Scaffold(
@@ -98,6 +106,13 @@ fun NotificationsScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = onSyncAnnouncements) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = stringResource(R.string.notif_sync_cd),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                     TextButton(onClick = onMarkAllAsRead) {
                         Icon(
                             imageVector = Icons.Default.DoneAll,

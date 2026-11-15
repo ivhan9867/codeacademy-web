@@ -125,6 +125,8 @@
     <string name="login_submit_button">Masuk ke Akun</string>
     <string name="login_divider_or">atau</string>
     <string name="login_google_signin">Masuk dengan Google</string>
+    <string name="register_google_signin">Daftar dengan Google</string>
+    <string name="google_auth_processing">Menghubungkan Google...</string>
     <string name="login_footer_no_account">Belum punya akun?</string>
     <string name="login_footer_register_now">Daftar Sekarang</string>
 

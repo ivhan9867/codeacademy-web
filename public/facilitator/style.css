@@ -1326,6 +1326,63 @@ textarea.feedback-input:focus {
   padding: 40px 20px;
   text-align: center;
   color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.empty-state {
+  padding: 44px 20px;
+  text-align: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.empty-state-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--mint);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.empty-state svg,
+.forum-empty svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--teal-deep);
+  fill: none;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.empty-state h4,
+.forum-empty h4 {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0;
+}
+
+.empty-state p,
+.forum-empty p {
+  font-size: 13.5px;
+  color: var(--muted);
+  max-width: 420px;
+  margin: 0;
 }
 
 .auth-status {

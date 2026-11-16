@@ -36,23 +36,24 @@ service cloud.firestore {
 
       allow create: if isSignedIn()
         && request.resource.data.firebaseUid == request.auth.uid
-        && request.resource.data.accountId is string
+        && (request.resource.data.accountId is int || request.resource.data.accountId is string)
         && request.resource.data.courseId is string
         && request.resource.data.status == 'PENDING_REVIEW';
 
       allow update: if isFacilitator()
         && validSubmissionStatus(request.resource.data.status)
-        && (request.resource.data.facilitatorScore == null
+        && (request.resource.data.get('facilitatorScore', null) == null
             || (request.resource.data.facilitatorScore is number
                 && request.resource.data.facilitatorScore >= 0
                 && request.resource.data.facilitatorScore <= 100));
 
       allow update: if isSignedIn()
-        && resource.data.firebaseUid == request.auth.uid
+        && (!('firebaseUid' in resource.data) || resource.data.firebaseUid == request.auth.uid)
         && request.resource.data.firebaseUid == request.auth.uid
         && request.resource.data.status == 'PENDING_REVIEW'
-        && request.resource.data.facilitatorScore == resource.data.facilitatorScore
-        && request.resource.data.feedback == resource.data.feedback;
+        && request.resource.data.get('facilitatorScore', null) == resource.data.get('facilitatorScore', null)
+        && request.resource.data.get('facilitatorFeedback', null) == resource.data.get('facilitatorFeedback', null)
+        && request.resource.data.get('feedback', null) == resource.data.get('feedback', null);
 
       allow delete: if isFacilitator();
     }
@@ -68,8 +69,8 @@ service cloud.firestore {
         && request.resource.data.content.size() > 0
         && request.resource.data.content.size() <= 4000
         && (isFacilitator()
-            || (request.resource.data.authorIsMentor != true
-                && request.resource.data.isMentor != true));
+            || (request.resource.data.get('authorIsMentor', false) != true
+                && request.resource.data.get('isMentor', false) != true));
 
       // Author can delete own post; facilitator can delete any post
       allow delete: if isFacilitator()
@@ -80,8 +81,8 @@ service cloud.firestore {
         || (isSignedIn()
             && resource.data.firebaseUid == request.auth.uid
             && request.resource.data.firebaseUid == request.auth.uid
-            && request.resource.data.authorIsMentor == resource.data.authorIsMentor
-            && request.resource.data.isMentor == resource.data.isMentor)
+            && request.resource.data.get('authorIsMentor', false) == resource.data.get('authorIsMentor', false)
+            && request.resource.data.get('isMentor', false) == resource.data.get('isMentor', false))
         || (isSignedIn()
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likeCount', 'likedByAccountIds']));
     }
@@ -93,9 +94,12 @@ service cloud.firestore {
         || (isSignedIn()
             && request.resource.data.firebaseUid == request.auth.uid
             && request.resource.data.certId == certId
-            && request.resource.data.finalScore is number
-            && request.resource.data.finalScore >= 70
-            && request.resource.data.finalScore <= 100);
+            && ((request.resource.data.get('finalScore', 0) is number
+                    && request.resource.data.get('finalScore', 0) >= 70
+                    && request.resource.data.get('finalScore', 0) <= 100)
+                || (request.resource.data.get('scorePercent', 0) is number
+                    && request.resource.data.get('scorePercent', 0) >= 70
+                    && request.resource.data.get('scorePercent', 0) <= 100)));
       allow delete: if isFacilitator();
     }
 

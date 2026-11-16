@@ -88,6 +88,7 @@ class FirestoreForumAndLeaderboardService(
     ): Result<Pair<List<ForumPostEntity>, DocumentSnapshot?>> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
+            tryEnsureAnonymousOrCurrentUid()
             var query = firestore.collection(FORUM_COLLECTION)
                 .whereEqualTo("courseId", courseId)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -326,6 +327,7 @@ class FirestoreForumAndLeaderboardService(
         }
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
+            tryEnsureAnonymousOrCurrentUid()
             val doc = firestore.collection(USERS_COLLECTION).document(userId).get().await()
             if (!doc.exists()) {
                 return Result.failure(NoSuchElementException("Profil publik tidak ditemukan"))
@@ -364,6 +366,7 @@ class FirestoreForumAndLeaderboardService(
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         val scopeKey = "${period}_${trackId ?: "global"}"
         return try {
+            tryEnsureAnonymousOrCurrentUid()
             val sortField = when (period) {
                 "weekly" -> "xpThisWeek"
                 "monthly" -> "xpThisMonth"
@@ -412,6 +415,7 @@ class FirestoreForumAndLeaderboardService(
     ): Result<Int> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
+            tryEnsureAnonymousOrCurrentUid()
             val sortField = when (period) {
                 "weekly" -> "xpThisWeek"
                 "monthly" -> "xpThisMonth"
@@ -446,6 +450,7 @@ class FirestoreForumAndLeaderboardService(
     suspend fun fetchTopForumHighlights(limit: Long = 3L): Result<List<ForumPostEntity>> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
+            tryEnsureAnonymousOrCurrentUid()
             val snapshot = firestore.collection(FORUM_COLLECTION)
                 .orderBy("likeCount", Query.Direction.DESCENDING)
                 .limit(limit)
@@ -550,7 +555,7 @@ class FirestoreForumAndLeaderboardService(
     suspend fun fetchProjectSubmission(accountId: Long, courseId: String): Result<ProjectSubmissionEntity?> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
-            val firebaseUid = getCurrentFirebaseUid()
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
             val docId = buildSubmissionDocId(accountId, courseId, firebaseUid)
             var doc = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
                 .document(docId)
@@ -659,7 +664,8 @@ class FirestoreForumAndLeaderboardService(
     suspend fun fetchPreferredCertIdForSubmission(accountId: Long, courseId: String): String? {
         val firestore = getFirestore() ?: return null
         return try {
-            val docId = buildSubmissionDocId(accountId, courseId, getCurrentFirebaseUid())
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val docId = buildSubmissionDocId(accountId, courseId, firebaseUid)
             val subDoc = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION).document(docId).get().await()
             val fromSub = subDoc.getString("certificateId")?.takeIf { it.isNotBlank() }
             if (fromSub != null) return fromSub
@@ -688,7 +694,9 @@ class FirestoreForumAndLeaderboardService(
                 "courseTitle" to cert.courseTitle,
                 "userName" to cert.userName,
                 "issueDate" to cert.issueDate,
+                "issuedAt" to System.currentTimeMillis(),
                 "scorePercent" to cert.scorePercent,
+                "finalScore" to cert.scorePercent,
                 "submissionDocId" to buildSubmissionDocId(cert.accountId, cert.courseId, firebaseUid),
                 "updatedAt" to System.currentTimeMillis()
             )
@@ -720,7 +728,8 @@ class FirestoreForumAndLeaderboardService(
                 .await()
             val list = snapshot.documents.mapNotNull { doc ->
                 val title = doc.getString("title")?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
-                val message = doc.getString("message")?.takeIf { it.isNotBlank() } ?: return@mapNotNull null
+                val message = (doc.getString("message") ?: doc.getString("body"))?.takeIf { it.isNotBlank() }
+                    ?: return@mapNotNull null
                 CloudAnnouncement(
                     id = doc.id,
                     title = title,

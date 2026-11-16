@@ -833,6 +833,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
+        viewModelScope.launch {
+            repo.ensureCloudAuthSession()
+        }
         syncAnnouncements()
     }
 

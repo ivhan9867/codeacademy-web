@@ -902,7 +902,9 @@ function renderTable() {
       <tr>
         <td colspan="7">
           <div class="empty-state">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            <div class="empty-state-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            </div>
             <h4>Tidak ada pengajuan proyek ditemukan</h4>
             <p>Ubah filter pencarian atau tunggu peserta mengirimkan proyek dari aplikasi Android.</p>
           </div>
@@ -1221,6 +1223,10 @@ function renderForum() {
   if (filtered.length === 0) {
     forumThreadsList.innerHTML = `
       <div class="forum-empty">
+        <div class="empty-state-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h4>${forumOnlyUnanswered ? "Semua Pertanyaan Sudah Terjawab" : "Belum Ada Diskusi"}</h4>
         <p>${forumOnlyUnanswered ? "Semua pertanyaan diskusi sudah mendapat jawaban Fasilitator." : "Belum ada topik diskusi yang sesuai dengan filter ini."}</p>
       </div>
     `;
@@ -1428,13 +1434,22 @@ function renderAnnouncements() {
     announcementsTotalBadge.textContent = String(announcements.length);
   }
   if (announcements.length === 0) {
-    announcementsList.innerHTML = `<div class="forum-empty"><p>Belum ada pengumuman yang diterbitkan.</p></div>`;
+    announcementsList.innerHTML = `
+      <div class="forum-empty">
+        <div class="empty-state-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h4>Belum Ada Pengumuman</h4>
+        <p>Terbitkan pengumuman di atas agar langsung muncul di layar Notifikasi peserta Android.</p>
+      </div>
+    `;
     return;
   }
 
   announcementsList.innerHTML = announcements
     .map((ann) => {
       const courseLabel = ann.courseId && ann.courseId !== "all" ? getCourseLabel(ann.courseId) : "Semua Kelas / Umum";
+      const annText = ann.message || ann.body || "";
       return `
       <article class="announcement-item">
         <div style="flex: 1; min-width: 240px;">
@@ -1442,7 +1457,7 @@ function renderAnnouncements() {
             <strong style="font-size:15px; color:var(--ink);">${escapeHtml(ann.title || "Pengumuman")}</strong>
             <span class="forum-course-pill">${escapeHtml(courseLabel)}</span>
           </div>
-          <p style="font-size:13.5px; color:var(--ink); line-height:1.5; white-space:pre-wrap;">${escapeHtml(ann.body || "")}</p>
+          <p style="font-size:13.5px; color:var(--ink); line-height:1.5; white-space:pre-wrap;">${escapeHtml(annText)}</p>
           <div style="font-size:12px; color:var(--muted); margin-top:8px;">
             Oleh ${escapeHtml(ann.authorName || "Fasilitator")} • ${escapeHtml(formatDate(ann.createdAt))}
           </div>
@@ -1468,6 +1483,7 @@ async function publishAnnouncement() {
   const docData = {
     id: annId,
     title,
+    message: body,
     body,
     courseId,
     courseTitle: courseId === "all" ? "Semua Kelas / Umum" : getCourseLabel(courseId),
@@ -1532,7 +1548,15 @@ function renderCertificates() {
   });
 
   if (filtered.length === 0) {
-    certificatesList.innerHTML = `<div class="forum-empty"><p>Belum ada sertifikat yang sesuai filter.</p></div>`;
+    certificatesList.innerHTML = `
+      <div class="forum-empty">
+        <div class="empty-state-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+        </div>
+        <h4>Belum Ada Sertifikat Terbit</h4>
+        <p>Sertifikat resmi berawalan CC- akan otomatis muncul di sini saat proyek akhir peserta disetujui.</p>
+      </div>
+    `;
     return;
   }
 

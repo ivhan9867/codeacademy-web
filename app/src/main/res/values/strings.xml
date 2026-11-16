@@ -1052,4 +1052,7 @@
     <string name="comm_course_forums_subtitle">Pilih kelas untuk bertanya langsung ke Fasilitator &amp; teman belajar</string>
     <string name="trending_pick_course">Mulai diskusi di salah satu forum kelas:</string>
     <string name="notif_sync_cd">Perbarui pengumuman</string>
+    <string name="google_auth_cancelled">Pemilihan akun Google dibatalkan.</string>
+    <string name="google_auth_failed_format">Gagal login Google: %1$s</string>
+    <string name="google_auth_generic_error">periksa koneksi &amp; layanan Google Sign-In di Firebase Console</string>
 </resources>

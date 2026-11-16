@@ -1288,4 +1288,7 @@
     <string name="comm_course_forums_subtitle">选择课程，向导师和同学们直接提问交流</string>
     <string name="trending_pick_course">前往以下课程论坛发起讨论：</string>
     <string name="notif_sync_cd">刷新公告</string>
+    <string name="google_auth_cancelled">已取消选择 Google 账号。</string>
+    <string name="google_auth_failed_format">Google 登录失败：%1$s</string>
+    <string name="google_auth_generic_error">请检查网络连接及 Firebase Console 中的 Google 登录配置</string>
 </resources>

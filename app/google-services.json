@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "823377846566-fl2smci1obuf1ke6nuibusu3ejpfjujh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aistudio.codeacademy.mizeud",
+            "certificate_hash": "55ad7d4a51f957ba87f674ca9b25c491ad810b5d"
+          }
+        },
+        {
           "client_id": "823377846566-oau5k81i2lu2hlsor082ti3ftcuq2hg0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -121,18 +121,29 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 initialValue = false
             )
 
+    private var isClaimingMicroChallenge = false
+
     fun claimDailyMicroChallenge(xpReward: Int = 15) {
+        if (isClaimingMicroChallenge) return
+        isClaimingMicroChallenge = true
         viewModelScope.launch {
-            val today = todayIsoDate()
-            repo.sessionManager.markMicroChallengeCompleted(today)
-            val (_, leveledUp) = repo.addXp(xpReward, "Daily 1-Minute Code Challenge")
-            if (leveledUp) {
-                userProfile.value?.let { user ->
-                    val nextLevel = GamificationLevels.getLevelForXp(user.totalXp + xpReward)
-                    if (nextLevel.level > user.level) {
-                        _levelUpDialogInfo.value = Pair(nextLevel.level, nextLevel.name)
+            try {
+                val today = todayIsoDate()
+                if (repo.sessionManager.lastMicroChallengeDate.first() == today) {
+                    return@launch
+                }
+                repo.sessionManager.markMicroChallengeCompleted(today)
+                val (_, leveledUp) = repo.addXp(xpReward, "Daily 1-Minute Code Challenge")
+                if (leveledUp) {
+                    userProfile.value?.let { user ->
+                        val nextLevel = GamificationLevels.getLevelForXp(user.totalXp + xpReward)
+                        if (nextLevel.level > user.level) {
+                            _levelUpDialogInfo.value = Pair(nextLevel.level, nextLevel.name)
+                        }
                     }
                 }
+            } finally {
+                isClaimingMicroChallenge = false
             }
         }
     }

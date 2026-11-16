@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -451,12 +452,14 @@ fun DailyCodeChallengeCard(
                             else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
                         }
 
+                        val optionLabel = ('A' + idx).toString()
                         Surface(
                             shape = RoundedCornerShape(12.dp),
                             color = bgColor,
                             border = BorderStroke(1.dp, borderColor),
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .heightIn(min = 48.dp)
                                 .clickable(enabled = !isCompletedToday && !isCorrectSelected) {
                                     selectedOption = idx
                                     if (idx == item.correctIndex && !isCompletedToday) {
@@ -464,19 +467,53 @@ fun DailyCodeChallengeCard(
                                     }
                                 }
                         ) {
-                            Text(
-                                text = opt,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = if (isPicked) FontWeight.Bold else FontWeight.Medium,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = when {
+                                        isPicked && isRight -> SuccessGreen
+                                        isPicked && !isRight -> ErrorRed
+                                        else -> MaterialTheme.colorScheme.surfaceVariant
+                                    }
+                                ) {
+                                    Text(
+                                        text = optionLabel,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isPicked) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Text(
+                                    text = opt,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = if (isPicked) FontWeight.Bold else FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                if (isPicked) {
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Icon(
+                                        imageVector = if (isRight) Icons.Default.CheckCircle else androidx.compose.material.icons.Icons.Default.Cancel,
+                                        contentDescription = null,
+                                        tint = if (isRight) SuccessGreen else ErrorRed,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
 
                 AnimatedVisibility(visible = selectedOption != -1) {
+                    val explanationText = if (isEnLike) item.explanationEn else item.explanationId
                     Column(modifier = Modifier.padding(top = 10.dp)) {
                         Text(
                             text = if (isCorrectSelected) {
@@ -490,7 +527,11 @@ fun DailyCodeChallengeCard(
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = if (isEnLike) item.explanationEn else item.explanationId,
+                            text = formatInlineCode(
+                                text = explanationText,
+                                codeBg = MaterialTheme.colorScheme.surfaceVariant,
+                                codeColor = MaterialTheme.colorScheme.primary
+                            ),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

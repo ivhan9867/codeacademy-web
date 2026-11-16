@@ -495,9 +495,19 @@ fun WeeklyXpCard(
 
                     Spacer(modifier = Modifier.width(12.dp))
 
+                    val animatedDisplayXp by androidx.compose.animation.core.animateIntAsState(
+                        targetValue = displayXp,
+                        animationSpec = androidx.compose.animation.core.tween(durationMillis = 550),
+                        label = "weekly_xp_countup"
+                    )
+                    val animatedTotalXp by androidx.compose.animation.core.animateIntAsState(
+                        targetValue = totalXp,
+                        animationSpec = androidx.compose.animation.core.tween(durationMillis = 550),
+                        label = "total_xp_countup"
+                    )
                     Column {
                         Text(
-                            text = androidx.compose.ui.res.stringResource(com.example.R.string.carousel_weekly_xp_plus_format, displayXp),
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.carousel_weekly_xp_plus_format, animatedDisplayXp),
                             style = MaterialTheme.typography.headlineMedium.copy(
                                 fontWeight = FontWeight.ExtraBold,
                                 color = AmberGold
@@ -505,7 +515,7 @@ fun WeeklyXpCard(
                             fontSize = 24.sp
                         )
                         Text(
-                            text = androidx.compose.ui.res.stringResource(com.example.R.string.carousel_weekly_xp_account_total, totalXp),
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.carousel_weekly_xp_account_total, animatedTotalXp),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             fontWeight = FontWeight.Medium

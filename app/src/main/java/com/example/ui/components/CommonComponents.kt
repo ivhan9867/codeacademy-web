@@ -232,7 +232,7 @@ fun CodeBlockView(
                     clipboard.setPrimaryClip(clip)
                     Toast.makeText(context, context.getString(R.string.comp_code_copied_toast), Toast.LENGTH_SHORT).show()
                 },
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(48.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.ContentCopy,

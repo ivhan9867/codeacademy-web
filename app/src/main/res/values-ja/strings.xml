@@ -1283,6 +1283,17 @@
     <string name="forum_delete_confirm">はい、削除</string>
     <string name="forum_filter_empty">このフィルターに一致する投稿はありません。</string>
     <string name="forum_disconnected_title">接続が切れました</string>
+    <string name="error_session_title">セッションまたは権限エラー</string>
+    <string name="error_session_desc">クラウドセッションが無効か権限がありません。セッションを再読み込みしてください。</string>
+    <string name="error_session_retry">セッション再読込</string>
+    <string name="error_server_title">サーバーエラー</string>
+    <string name="error_server_desc">サーバーで一時的な問題が発生しました。しばらくしてから再試行してください。</string>
+    <string name="forum_input_disabled_error">接続またはセッションに問題があるため送信できません。</string>
+    <string name="profile_edit_name_error">名前は2文字以上で、数字で始めることはできません。</string>
+    <string name="profile_edit_bio_counter_format">%1$d/100 文字</string>
+    <string name="profile_danger_zone_title">危険な操作</string>
+    <string name="profile_delete_confirm_input_label">確認のため DELETE と入力</string>
+    <string name="profile_delete_confirm_keyword">DELETE</string>
     <string name="forum_retry_btn">再試行</string>
     <string name="comm_course_forums_title">クラス別フォーラム</string>
     <string name="comm_course_forums_subtitle">クラスを選んで講師や仲間と直接質問・相談できます</string>

@@ -1383,6 +1383,16 @@ class CodeAcademyRepository(
 
     suspend fun deleteCurrentAccount(): Result<Unit> = withContext(Dispatchers.IO) {
         val accountId = sessionManager.accountId.first() ?: return@withContext Result.failure(Exception("Tidak ada akun aktif."))
+        // Best-effort cleanup of own Firestore profile document while still signed in
+        runCatching {
+            val uid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+            if (!uid.isNullOrBlank()) {
+                com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                    .collection("users")
+                    .document(uid)
+                    .delete()
+            }
+        }
         signOutCloudSessions()
         accountDao.deleteAccountById(accountId)
         userDao.deleteUserProfile(accountId)

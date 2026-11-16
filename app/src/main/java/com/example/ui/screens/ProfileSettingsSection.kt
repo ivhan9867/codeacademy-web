@@ -139,11 +139,16 @@ fun ProfilePreferencesSection(
                     onClick = onNavigateToNotifications
                 )
 
+                val languageSubtitle = if (currentLanguage.nativeName.equals(currentLanguage.displayName, ignoreCase = true)) {
+                    "${currentLanguage.flagEmoji} ${currentLanguage.nativeName}"
+                } else {
+                    "${currentLanguage.flagEmoji} ${currentLanguage.nativeName} (${currentLanguage.displayName})"
+                }
                 ProfileMenuItem(
                     icon = Icons.Default.Language,
                     iconTint = Color(0xFF3B82F6),
                     title = stringResource(R.string.profile_language_title),
-                    subtitle = "${currentLanguage.flagEmoji} ${currentLanguage.nativeName} (${currentLanguage.displayName})",
+                    subtitle = languageSubtitle,
                     onClick = onSelectLanguageClick
                 )
 
@@ -218,21 +223,32 @@ fun ProfilePreferencesSection(
                     subtitle = stringResource(R.string.profile_logout_subtitle),
                     onClick = onLogoutClick
                 )
-
-                HorizontalDivider(
-                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f),
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 2.dp)
-                )
-
-                // Delete Account item (Google Play Policy Compliance)
-                ProfileMenuItem(
-                    icon = Icons.Default.DeleteForever,
-                    iconTint = Color(0xFFDC2626),
-                    title = stringResource(R.string.profile_delete_account_title),
-                    subtitle = stringResource(R.string.profile_delete_account_subtitle),
-                    onClick = onDeleteAccountClick
-                )
             }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = stringResource(R.string.profile_danger_zone_title),
+            style = MaterialTheme.typography.titleSmall,
+            fontWeight = FontWeight.Bold,
+            color = ErrorRed
+        )
+
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = ErrorRed.copy(alpha = 0.05f)),
+            border = BorderStroke(1.dp, ErrorRed.copy(alpha = 0.35f)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            ProfileMenuItem(
+                icon = Icons.Default.DeleteForever,
+                iconTint = ErrorRed,
+                title = stringResource(R.string.profile_delete_account_title),
+                subtitle = stringResource(R.string.profile_delete_account_subtitle),
+                onClick = onDeleteAccountClick
+            )
         }
     }
 }
@@ -354,6 +370,12 @@ fun ProfileDeleteAccountDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ) {
+    var confirmInput by remember { mutableStateOf("") }
+    val requiredKeyword = stringResource(R.string.profile_delete_confirm_keyword)
+    val isConfirmed = confirmInput.trim().equals(requiredKeyword, ignoreCase = true) ||
+        confirmInput.trim().equals("DELETE", ignoreCase = true) ||
+        confirmInput.trim().equals("HAPUS", ignoreCase = true)
+
     AppDialog(
         onDismissRequest = onDismiss,
         icon = {
@@ -380,17 +402,28 @@ fun ProfileDeleteAccountDialog(
             )
         },
         text = {
-            Text(
-                text = stringResource(R.string.profile_delete_account_dialog_desc),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                lineHeight = 20.sp
-            )
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    text = stringResource(R.string.profile_delete_account_dialog_desc),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                    lineHeight = 20.sp
+                )
+                OutlinedTextField(
+                    value = confirmInput,
+                    onValueChange = { confirmInput = it },
+                    label = { Text(stringResource(R.string.profile_delete_confirm_input_label)) },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         },
         confirmButton = {
             Button(
                 onClick = onConfirm,
+                enabled = isConfirmed,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = ErrorRed)
             ) {

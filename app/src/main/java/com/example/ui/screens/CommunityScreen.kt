@@ -153,6 +153,7 @@ fun CommunityScreen(
     val selectedTrack by socialViewModel.selectedLeaderboardTrack.collectAsStateWithLifecycle()
     val leaderboardEntries by socialViewModel.leaderboardEntries.collectAsStateWithLifecycle()
     val leaderboardError by socialViewModel.leaderboardError.collectAsStateWithLifecycle()
+    val leaderboardErrorKind by socialViewModel.leaderboardErrorKind.collectAsStateWithLifecycle()
     val isLeaderboardRefreshing by socialViewModel.isLeaderboardRefreshing.collectAsStateWithLifecycle()
     val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
     val calculatedRank by socialViewModel.myLeaderboardRank.collectAsStateWithLifecycle()
@@ -506,6 +507,7 @@ fun CommunityScreen(
                 item(key = "leaderboard_error_state") {
                     ErrorRetryView(
                         message = leaderboardError ?: androidx.compose.ui.res.stringResource(com.example.R.string.comm_load_error),
+                        errorKind = leaderboardErrorKind ?: com.example.util.NetworkErrorKind.OFFLINE,
                         onRetry = {
                             socialViewModel.refreshLeaderboard(selectedPeriod, selectedTrack, force = true)
                         },

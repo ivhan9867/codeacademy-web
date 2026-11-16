@@ -15,7 +15,7 @@ service cloud.firestore {
     // Verified facilitator allowlist keyed by lowercase email
     function isFacilitator() {
       return hasValidEmail()
-        && exists(/databases/$(database)/documents/facilitators/$(request.auth.token.email));
+        && exists(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower()));
     }
 
     function validSubmissionStatus(status) {
@@ -26,7 +26,7 @@ service cloud.firestore {
     match /facilitators/{email} {
       allow read: if isSignedIn()
         && request.auth.token.email != null
-        && request.auth.token.email == email;
+        && request.auth.token.email.lower() == email;
       allow write: if false;
     }
 

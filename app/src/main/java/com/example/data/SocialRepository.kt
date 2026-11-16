@@ -110,7 +110,7 @@ class SocialRepository(
     ): Result<ForumPostEntity> = withContext(Dispatchers.IO) {
         val accountId = getActiveAccountId()
         val user = userDao?.getUserProfileOnce(accountId)
-        val authorName = user?.name ?: "Siswa"
+        val authorName = com.example.util.NameUtils.sanitizeDisplayName(user?.name)
         val authorId = firestoreService.tryEnsureAnonymousOrCurrentUid() ?: accountId.toString()
         val authorLevel = user?.level ?: 1
 
@@ -281,10 +281,12 @@ class SocialRepository(
                 }
                 firestoreService.syncUserXp(
                     userId = getCurrentForumUserId(profile.id),
-                    userName = profile.name,
+                    userName = com.example.util.NameUtils.sanitizeDisplayName(profile.name),
                     totalXp = profile.totalXp,
                     level = profile.level,
                     currentStreak = profile.currentStreak,
+                    xpThisWeek = profile.totalXp,
+                    xpThisMonth = profile.totalXp,
                     bio = profile.bio,
                     role = "Siswa",
                     unlockedBadgeIds = estimatedUnlockedBadges

@@ -78,6 +78,8 @@ fun ProfileIdentityCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 // Avatar circle
+                val cleanName = remember(name) { com.example.util.NameUtils.sanitizeDisplayName(name) }
+                val avatarInitial = remember(cleanName) { com.example.util.NameUtils.extractInitial(cleanName) }
                 Box(
                     modifier = Modifier
                         .size(64.dp)
@@ -86,7 +88,7 @@ fun ProfileIdentityCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = name.take(1).uppercase(),
+                        text = avatarInitial,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -97,7 +99,7 @@ fun ProfileIdentityCard(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = name,
+                        text = cleanName,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,

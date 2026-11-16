@@ -121,7 +121,6 @@ fun LearningTrackCard(
 
     Card(
         modifier = modifier
-            .heightIn(min = 205.dp)
             .then(
                 if (animatedScale < 0.999f) {
                     Modifier.graphicsLayer {
@@ -144,9 +143,9 @@ fun LearningTrackCard(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // Top Row: Emblem & Course Count Pill
             Row(

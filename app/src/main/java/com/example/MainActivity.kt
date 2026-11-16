@@ -499,16 +499,20 @@ fun CodeAcademyApp(
                         )
                     },
                     text = {
-                        Text(
-                            text = this@MainActivity.getString(
-                                com.example.R.string.google_auth_cert_dialog_body_format,
-                                errMsg,
-                                fpInfo.packageName,
-                                fpInfo.sha1Colon,
-                                fpInfo.sha256Colon
-                            ),
-                            style = MaterialTheme.typography.bodySmall
-                        )
+                        androidx.compose.foundation.text.selection.SelectionContainer {
+                            Text(
+                                text = this@MainActivity.getString(
+                                    com.example.R.string.google_auth_cert_dialog_body_format,
+                                    errMsg,
+                                    fpInfo.packageName,
+                                    fpInfo.sha1Colon,
+                                    fpInfo.sha256Colon
+                                ),
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                                )
+                            )
+                        }
                     },
                     confirmButton = {
                         Button(

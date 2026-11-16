@@ -1291,4 +1291,9 @@
     <string name="google_auth_cancelled">已取消选择 Google 账号。</string>
     <string name="google_auth_failed_format">Google 登录失败：%1$s</string>
     <string name="google_auth_generic_error">请检查网络连接及 Firebase Console 中的 Google 登录配置</string>
+    <string name="google_auth_cert_dialog_title">APK 证书指纹未匹配</string>
+    <string name="google_auth_cert_dialog_body_format">Firebase Auth 拒绝了 Google 登录，因为当前 APK 构建使用的签名指纹尚未注册到 Firebase Console。\n\n错误：%1$s\n\nPackage Name：\n%2$s\n\n当前 APK SHA-1：\n%3$s\n\n当前 APK SHA-256：\n%4$s\n\n请将以上 SHA-1 和 SHA-256 添加到 Firebase Console → Project Settings → Android 应用中。</string>
+    <string name="google_auth_cert_copy_btn">复制 SHA-1 与 SHA-256</string>
+    <string name="google_auth_cert_copied_toast">已复制包名及 SHA-1/SHA-256 到剪贴板。</string>
+    <string name="google_auth_cert_close_btn">关闭</string>
 </resources>

@@ -1291,4 +1291,9 @@
     <string name="google_auth_cancelled">Googleアカウントの選択がキャンセルされました。</string>
     <string name="google_auth_failed_format">Googleログインに失敗しました: %1$s</string>
     <string name="google_auth_generic_error">接続とFirebase ConsoleのGoogle Sign-In設定を確認してください</string>
+    <string name="google_auth_cert_dialog_title">APK証明書フィンガープリントの不一致</string>
+    <string name="google_auth_cert_dialog_body_format">このAPKビルドの署名フィンガープリントがFirebase Consoleに登録されていないため、Googleログインが拒否されました。\n\nエラー: %1$s\n\nPackage Name:\n%2$s\n\nSHA-1:\n%3$s\n\nSHA-256:\n%4$s\n\nFirebase Console → Project Settings → Androidアプリ に上記のSHA-1とSHA-256を追加してください。</string>
+    <string name="google_auth_cert_copy_btn">SHA-1とSHA-256をコピー</string>
+    <string name="google_auth_cert_copied_toast">パッケージ名とSHA-1/SHA-256をコピーしました。</string>
+    <string name="google_auth_cert_close_btn">閉じる</string>
 </resources>

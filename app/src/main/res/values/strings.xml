@@ -1055,4 +1055,9 @@
     <string name="google_auth_cancelled">Pemilihan akun Google dibatalkan.</string>
     <string name="google_auth_failed_format">Gagal login Google: %1$s</string>
     <string name="google_auth_generic_error">periksa koneksi &amp; layanan Google Sign-In di Firebase Console</string>
+    <string name="google_auth_cert_dialog_title">Sidik Jari Sertifikat APK Belum Cocok</string>
+    <string name="google_auth_cert_dialog_body_format">Firebase Auth menolak login Google karena sertifikat penanda APK ini belum terdaftar di Firebase Console.\n\nError: %1$s\n\nPackage Name:\n%2$s\n\nSHA-1 APK Aktif:\n%3$s\n\nSHA-256 APK Aktif:\n%4$s\n\nTambahkan SHA-1 &amp; SHA-256 di atas ke Firebase Console → Project Settings → Your apps (Android), lalu download ulang google-services.json bila diperlukan.</string>
+    <string name="google_auth_cert_copy_btn">Salin SHA-1 &amp; SHA-256</string>
+    <string name="google_auth_cert_copied_toast">Package &amp; SHA-1/SHA-256 disalin ke clipboard.</string>
+    <string name="google_auth_cert_close_btn">Tutup</string>
 </resources>

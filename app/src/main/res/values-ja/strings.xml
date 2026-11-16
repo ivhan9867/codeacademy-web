@@ -1288,4 +1288,7 @@
     <string name="comm_course_forums_subtitle">クラスを選んで講師や仲間と直接質問・相談できます</string>
     <string name="trending_pick_course">クラスフォーラムで質問を始める：</string>
     <string name="notif_sync_cd">お知らせを更新</string>
+    <string name="google_auth_cancelled">Googleアカウントの選択がキャンセルされました。</string>
+    <string name="google_auth_failed_format">Googleログインに失敗しました: %1$s</string>
+    <string name="google_auth_generic_error">接続とFirebase ConsoleのGoogle Sign-In設定を確認してください</string>
 </resources>

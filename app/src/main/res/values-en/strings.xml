@@ -1052,4 +1052,7 @@
     <string name="comm_course_forums_subtitle">Pick a class to ask Facilitators &amp; peers directly</string>
     <string name="trending_pick_course">Start a discussion in a class forum:</string>
     <string name="notif_sync_cd">Refresh announcements</string>
+    <string name="google_auth_cancelled">Google account selection was cancelled.</string>
+    <string name="google_auth_failed_format">Google sign-in failed: %1$s</string>
+    <string name="google_auth_generic_error">check your connection &amp; Google Sign-In in Firebase Console</string>
 </resources>

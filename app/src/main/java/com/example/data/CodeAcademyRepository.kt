@@ -1306,10 +1306,19 @@ class CodeAcademyRepository(
     ): Result<Boolean> = withContext(Dispatchers.IO) {
         try {
             ensureInitialUserSeeded()
-            val cleanEmail = email?.trim()?.lowercase(Locale.ROOT)
+            val firebaseUser = runCatching {
+                com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+            }.getOrNull()
+            val resolvedEmail = email?.trim()?.takeIf { it.isNotBlank() }
+                ?: firebaseUser?.email?.trim()?.takeIf { it.isNotBlank() }
+                ?: firebaseUser?.providerData?.firstNotNullOfOrNull { info ->
+                    info.email?.trim()?.takeIf { it.isNotBlank() }
+                }
+            val cleanEmail = resolvedEmail?.lowercase(Locale.ROOT)
                 ?: return@withContext Result.failure(Exception("Email akun Google tidak tersedia."))
-            val cleanName = displayName?.trim()
-                ?.takeIf { it.isNotBlank() } ?: cleanEmail.substringBefore("@")
+            val resolvedName = displayName?.trim()?.takeIf { it.isNotBlank() }
+                ?: firebaseUser?.displayName?.trim()?.takeIf { it.isNotBlank() }
+            val cleanName = resolvedName ?: cleanEmail.substringBefore("@")
 
             val existing = accountDao.getAccountByEmail(cleanEmail)
             val accountId = if (existing != null) {
@@ -1356,12 +1365,20 @@ class CodeAcademyRepository(
         Result.success(Unit)
     }
 
+    private fun signOutCloudSessions() {
+        runCatching {
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+        }
+    }
+
     suspend fun logoutLocalAccount() = withContext(Dispatchers.IO) {
+        signOutCloudSessions()
         sessionManager.clearSession()
     }
 
     suspend fun deleteCurrentAccount(): Result<Unit> = withContext(Dispatchers.IO) {
         val accountId = sessionManager.accountId.first() ?: return@withContext Result.failure(Exception("Tidak ada akun aktif."))
+        signOutCloudSessions()
         accountDao.deleteAccountById(accountId)
         userDao.deleteUserProfile(accountId)
         progressDao.deleteAllForAccount(accountId)

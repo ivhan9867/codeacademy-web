@@ -486,92 +486,111 @@ fun CodeAcademyApp(
 
             var isGoogleAuthLoading by remember { mutableStateOf(false) }
 
-            val launchGoogleAuth: (String) -> Unit = { fromRoute ->
-                if (!isGoogleAuthLoading) {
-                    val webClientIdRes = this@MainActivity.resources.getIdentifier(
-                        "default_web_client_id",
-                        "string",
-                        this@MainActivity.packageName
-                    )
-                    val webClientId = if (webClientIdRes != 0) {
-                        this@MainActivity.getString(webClientIdRes)
-                    } else {
-                        ""
-                    }
-                    if (webClientId.isBlank()) {
-                        android.widget.Toast.makeText(
-                            this@MainActivity,
-                            "Aktifkan Google Sign-In di Firebase Console dan perbarui google-services.json terlebih dahulu.",
-                            android.widget.Toast.LENGTH_LONG
-                        ).show()
-                    } else {
-                        isGoogleAuthLoading = true
-                        coroutineScope.launch {
-                            try {
-                                val activity = this@MainActivity
-                                var authResult: Result<Boolean>? = null
-                                try {
-                                    val credentialManager = androidx.credentials.CredentialManager.create(activity)
-                                    val signInWithGoogleOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
-                                        .build()
-                                    val request = androidx.credentials.GetCredentialRequest.Builder()
-                                        .addCredentialOption(signInWithGoogleOption)
-                                        .build()
-                                    val credResponse = credentialManager.getCredential(
-                                        context = activity,
-                                        request = request
-                                    )
-                                    val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-                                        .createFrom(credResponse.credential.data)
-                                    authResult = viewModel.loginWithGoogle(
-                                        idToken = googleCred.idToken,
-                                        displayName = googleCred.displayName,
-                                        email = googleCred.id
-                                    )
-                                } catch (credErr: Exception) {
-                                    android.util.Log.w("MainActivity", "CredentialManager Google auth failed: ${credErr::class.simpleName} - ${credErr.message}", credErr)
-                                    if (credErr is androidx.credentials.exceptions.GetCredentialCancellationException) {
-                                        android.widget.Toast.makeText(
-                                            this@MainActivity,
-                                            "Pemilihan akun Google dibatalkan.",
-                                            android.widget.Toast.LENGTH_SHORT
-                                        ).show()
-                                        return@launch
-                                    }
-                                    val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com").build()
-                                    val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
-                                        .startActivityForSignInWithProvider(activity, provider)
-                                        .await()
-                                    authResult = viewModel.completeGoogleLogin(
-                                        email = firebaseResult.user?.email,
-                                        displayName = firebaseResult.user?.displayName
-                                    )
-                                }
+            val extractGoogleEmail: (com.google.firebase.auth.AuthResult?) -> String? = { firebaseResult ->
+                val fbUser = firebaseResult?.user
+                val profileEmail = firebaseResult?.additionalUserInfo?.profile?.get("email") as? String
+                fbUser?.email?.takeIf { it.isNotBlank() }
+                    ?: fbUser?.providerData?.firstNotNullOfOrNull { info -> info.email?.takeIf { it.isNotBlank() } }
+                    ?: profileEmail?.takeIf { it.isNotBlank() }
+            }
 
-                                if (authResult.isSuccess) {
-                                    val isOnboarded = authResult.getOrDefault(false)
-                                    navController.navigate(if (isOnboarded) "home" else "onboarding") {
-                                        popUpTo("login") { inclusive = true }
+            val handleGoogleAuthResult: (Result<Boolean>) -> Unit = { authResult ->
+                if (authResult.isSuccess) {
+                    val isOnboarded = authResult.getOrDefault(false)
+                    val targetRoute = if (isOnboarded) "home" else "onboarding"
+                    navController.navigate(targetRoute) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                    }
+                } else {
+                    android.widget.Toast.makeText(
+                        this@MainActivity,
+                        authResult.exceptionOrNull()?.message ?: this@MainActivity.getString(
+                            com.example.R.string.google_auth_failed_format,
+                            this@MainActivity.getString(com.example.R.string.google_auth_generic_error)
+                        ),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+
+            // Recover any pending Firebase Google OAuth result if the Activity was recreated during sign-in
+            LaunchedEffect(Unit) {
+                val pendingTask = runCatching {
+                    com.google.firebase.auth.FirebaseAuth.getInstance().pendingAuthResult
+                }.getOrNull()
+                if (pendingTask != null) {
+                    isGoogleAuthLoading = true
+                    try {
+                        val firebaseResult = pendingTask.await()
+                        val authResult = viewModel.completeGoogleLogin(
+                            email = extractGoogleEmail(firebaseResult),
+                            displayName = firebaseResult.user?.displayName
+                        )
+                        handleGoogleAuthResult(authResult)
+                    } catch (e: kotlinx.coroutines.CancellationException) {
+                        throw e
+                    } catch (e: Throwable) {
+                        android.util.Log.w("MainActivity", "Pending Google OAuth recovery failed", e)
+                    } finally {
+                        isGoogleAuthLoading = false
+                    }
+                }
+            }
+
+            val launchGoogleAuth: (String) -> Unit = { _ ->
+                if (!isGoogleAuthLoading) {
+                    isGoogleAuthLoading = true
+                    coroutineScope.launch {
+                        try {
+                            val activity = this@MainActivity
+                            // Use Firebase OAuthProvider directly so Google sign-in & sign-up work reliably across any AI Studio / debug / release keystore SHA-1
+                            val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com")
+                                .setScopes(listOf("email", "profile"))
+                                .addCustomParameter("prompt", "select_account")
+                                .build()
+                            val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
+                                .startActivityForSignInWithProvider(activity, provider)
+                                .await()
+                            val authResult = viewModel.completeGoogleLogin(
+                                email = extractGoogleEmail(firebaseResult),
+                                displayName = firebaseResult.user?.displayName
+                            )
+                            handleGoogleAuthResult(authResult)
+                        } catch (e: kotlinx.coroutines.CancellationException) {
+                            throw e
+                        } catch (e: com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+                            android.util.Log.w("MainActivity", "Google auth collision", e)
+                            android.widget.Toast.makeText(
+                                this@MainActivity,
+                                this@MainActivity.getString(
+                                    com.example.R.string.google_auth_failed_format,
+                                    e.localizedMessage ?: "Akun sudah terdaftar dengan metode lain"
+                                ),
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        } catch (e: Throwable) {
+                            val errMsg = e.message.orEmpty()
+                            val isUserCancelled = errMsg.contains("canceled by the user", ignoreCase = true) ||
+                                errMsg.contains("cancelled by the user", ignoreCase = true) ||
+                                errMsg.contains("WEB_CONTEXT_CANCELED", ignoreCase = true)
+                            android.util.Log.w("MainActivity", "Google OAuth failed: ${e::class.simpleName} - $errMsg", e)
+                            val toastText = if (isUserCancelled) {
+                                this@MainActivity.getString(com.example.R.string.google_auth_cancelled)
+                            } else {
+                                this@MainActivity.getString(
+                                    com.example.R.string.google_auth_failed_format,
+                                    errMsg.ifBlank {
+                                        this@MainActivity.getString(com.example.R.string.google_auth_generic_error)
                                     }
-                                } else {
-                                    android.widget.Toast.makeText(
-                                        this@MainActivity,
-                                        authResult.exceptionOrNull()?.message ?: "Gagal masuk dengan Google.",
-                                        android.widget.Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            } catch (e: kotlinx.coroutines.CancellationException) {
-                                throw e
-                            } catch (e: Throwable) {
-                                android.util.Log.e("MainActivity", "Google auth failed", e)
-                                android.widget.Toast.makeText(
-                                    this@MainActivity,
-                                    "Gagal login Google: ${e.message ?: "periksa koneksi & Firebase Auth"}",
-                                    android.widget.Toast.LENGTH_LONG
-                                ).show()
-                            } finally {
-                                isGoogleAuthLoading = false
+                                )
                             }
+                            android.widget.Toast.makeText(
+                                this@MainActivity,
+                                toastText,
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        } finally {
+                            isGoogleAuthLoading = false
                         }
                     }
                 }

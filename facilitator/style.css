@@ -970,6 +970,8 @@ textarea.feedback-input:focus {
 
 .auth-overlay.hidden {
   display: none !important;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .auth-card {
@@ -1324,6 +1326,23 @@ textarea.feedback-input:focus {
   padding: 40px 20px;
   text-align: center;
   color: var(--muted);
+}
+
+.auth-status {
+  display: none;
+  margin-top: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-subtle);
+  border: 1px solid var(--mint);
+  color: var(--teal-deep);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.auth-status.show {
+  display: block;
 }
 
 .auth-error {

@@ -1055,4 +1055,9 @@
     <string name="google_auth_cancelled">Google account selection was cancelled.</string>
     <string name="google_auth_failed_format">Google sign-in failed: %1$s</string>
     <string name="google_auth_generic_error">check your connection &amp; Google Sign-In in Firebase Console</string>
+    <string name="google_auth_cert_dialog_title">APK Certificate Fingerprint Mismatch</string>
+    <string name="google_auth_cert_dialog_body_format">Firebase Auth rejected Google Sign-In because this APK build\'s signing fingerprint is not registered in Firebase Console.\n\nError: %1$s\n\nPackage Name:\n%2$s\n\nActive APK SHA-1:\n%3$s\n\nActive APK SHA-256:\n%4$s\n\nAdd the SHA-1 &amp; SHA-256 above in Firebase Console → Project Settings → Your apps (Android).</string>
+    <string name="google_auth_cert_copy_btn">Copy SHA-1 &amp; SHA-256</string>
+    <string name="google_auth_cert_copied_toast">Package &amp; SHA-1/SHA-256 copied to clipboard.</string>
+    <string name="google_auth_cert_close_btn">Close</string>
 </resources>

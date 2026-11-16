@@ -4,6 +4,29 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Android 11+ (API 30+) package visibility for Chrome Custom Tabs and Firebase OAuth redirects -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.support.customtabs.action.CustomTabsService" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="genericidp" />
+        </intent>
+    </queries>
+
     <application
         android:name=".CodeAcademyApplication"
         android:allowBackup="true"

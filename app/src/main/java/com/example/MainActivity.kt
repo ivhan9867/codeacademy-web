@@ -54,6 +54,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import com.example.ui.components.AppNavigationDrawer
 import com.example.ui.components.AppDialog
+import com.example.util.SigningCertificateHelper
+import com.example.util.SigningFingerprintInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -485,6 +487,55 @@ fun CodeAcademyApp(
             }
 
             var isGoogleAuthLoading by remember { mutableStateOf(false) }
+            var googleCertDialogInfo by remember { mutableStateOf<Pair<String, SigningFingerprintInfo>?>(null) }
+
+            googleCertDialogInfo?.let { (errMsg, fpInfo) ->
+                AlertDialog(
+                    onDismissRequest = { googleCertDialogInfo = null },
+                    title = {
+                        Text(
+                            text = this@MainActivity.getString(com.example.R.string.google_auth_cert_dialog_title),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = this@MainActivity.getString(
+                                com.example.R.string.google_auth_cert_dialog_body_format,
+                                errMsg,
+                                fpInfo.packageName,
+                                fpInfo.sha1Colon,
+                                fpInfo.sha256Colon
+                            ),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                val clipboard = this@MainActivity.getSystemService(android.content.Context.CLIPBOARD_SERVICE)
+                                    as? android.content.ClipboardManager
+                                val payload = "Package: ${fpInfo.packageName}\nSHA-1: ${fpInfo.sha1Colon}\nSHA-256: ${fpInfo.sha256Colon}"
+                                clipboard?.setPrimaryClip(android.content.ClipData.newPlainText("CodeAcademy SHA Fingerprints", payload))
+                                android.widget.Toast.makeText(
+                                    this@MainActivity,
+                                    this@MainActivity.getString(com.example.R.string.google_auth_cert_copied_toast),
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        ) {
+                            Text(this@MainActivity.getString(com.example.R.string.google_auth_cert_copy_btn))
+                        }
+                    },
+                    dismissButton = {
+                        androidx.compose.material3.TextButton(
+                            onClick = { googleCertDialogInfo = null }
+                        ) {
+                            Text(this@MainActivity.getString(com.example.R.string.google_auth_cert_close_btn))
+                        }
+                    }
+                )
+            }
 
             val extractGoogleEmail: (com.google.firebase.auth.AuthResult?) -> String? = { firebaseResult ->
                 val fbUser = firebaseResult?.user
@@ -570,25 +621,37 @@ fun CodeAcademyApp(
                             ).show()
                         } catch (e: Throwable) {
                             val errMsg = e.message.orEmpty()
-                            val isUserCancelled = errMsg.contains("canceled by the user", ignoreCase = true) ||
+                            val isCertHashError = errMsg.contains("certificate hash", ignoreCase = true) ||
+                                errMsg.contains("INVALID_CERT_HASH", ignoreCase = true) ||
+                                errMsg.contains("17499", ignoreCase = true) ||
+                                errMsg.contains("17028", ignoreCase = true) ||
+                                errMsg.contains("DEVELOPER_ERROR", ignoreCase = true)
+                            val isUserCancelled = !isCertHashError && (
+                                errMsg.contains("canceled by the user", ignoreCase = true) ||
                                 errMsg.contains("cancelled by the user", ignoreCase = true) ||
                                 errMsg.contains("WEB_CONTEXT_CANCELED", ignoreCase = true)
+                            )
                             android.util.Log.w("MainActivity", "Google OAuth failed: ${e::class.simpleName} - $errMsg", e)
-                            val toastText = if (isUserCancelled) {
-                                this@MainActivity.getString(com.example.R.string.google_auth_cancelled)
+                            if (isCertHashError) {
+                                googleCertDialogInfo = errMsg.ifBlank { "certificate_hash_error" } to
+                                    SigningCertificateHelper.getSigningFingerprints(this@MainActivity)
                             } else {
-                                this@MainActivity.getString(
-                                    com.example.R.string.google_auth_failed_format,
-                                    errMsg.ifBlank {
-                                        this@MainActivity.getString(com.example.R.string.google_auth_generic_error)
-                                    }
-                                )
+                                val toastText = if (isUserCancelled) {
+                                    this@MainActivity.getString(com.example.R.string.google_auth_cancelled)
+                                } else {
+                                    this@MainActivity.getString(
+                                        com.example.R.string.google_auth_failed_format,
+                                        errMsg.ifBlank {
+                                            this@MainActivity.getString(com.example.R.string.google_auth_generic_error)
+                                        }
+                                    )
+                                }
+                                android.widget.Toast.makeText(
+                                    this@MainActivity,
+                                    toastText,
+                                    android.widget.Toast.LENGTH_LONG
+                                ).show()
                             }
-                            android.widget.Toast.makeText(
-                                this@MainActivity,
-                                toastText,
-                                android.widget.Toast.LENGTH_LONG
-                            ).show()
                         } finally {
                             isGoogleAuthLoading = false
                         }

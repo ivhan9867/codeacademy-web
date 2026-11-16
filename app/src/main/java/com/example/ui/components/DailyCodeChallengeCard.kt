@@ -33,6 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -152,6 +156,37 @@ private val MICRO_CHALLENGES = listOf(
     )
 )
 
+private fun formatInlineCode(
+    text: String,
+    codeBg: Color,
+    codeColor: Color
+): AnnotatedString {
+    if (!text.contains('`')) return AnnotatedString(text)
+    val regex = Regex("`([^`]+)`")
+    return buildAnnotatedString {
+        var lastIndex = 0
+        regex.findAll(text).forEach { match ->
+            if (match.range.first > lastIndex) {
+                append(text.substring(lastIndex, match.range.first))
+            }
+            pushStyle(
+                SpanStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.SemiBold,
+                    color = codeColor,
+                    background = codeBg.copy(alpha = 0.7f)
+                )
+            )
+            append(" ${match.groupValues[1]} ")
+            pop()
+            lastIndex = match.range.last + 1
+        }
+        if (lastIndex < text.length) {
+            append(text.substring(lastIndex))
+        }
+    }
+}
+
 @Composable
 fun CodiDailyTipCard(
     onAskAi: (String) -> Unit,
@@ -212,8 +247,11 @@ fun CodiDailyTipCard(
 
                 Spacer(modifier = Modifier.height(6.dp))
 
+                val inlineCodeBg = MaterialTheme.colorScheme.surfaceVariant
+                val inlineCodeColor = MaterialTheme.colorScheme.primary
+
                 Text(
-                    text = title,
+                    text = formatInlineCode(title, inlineCodeBg, inlineCodeColor),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -224,7 +262,7 @@ fun CodiDailyTipCard(
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
-                    text = body,
+                    text = formatInlineCode(body, inlineCodeBg, inlineCodeColor),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,

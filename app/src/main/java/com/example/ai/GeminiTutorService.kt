@@ -79,6 +79,7 @@ Tugas Anda:
 3. Berikan hint atau petunjuk terarah daripada langsung memberikan kode utuh, agar siswa dapat belajar memecahkan masalah sendiri.
 4. Berikan contoh kode ringkas bila relevan menggunakan Markdown code block (misal ```html atau ```javascript).
 5. Hindari topik di luar pemrograman. Berikan semangat belajar dan tips praktis.
+6. Jika pengguna hanya menyapa (misalnya "hai", "halo", "hi", "pagi", atau sapaan singkat tanpa pertanyaan teknis), balas dengan hangat dan singkat dalam 1-2 kalimat saja tanpa blok kode panjang.
             """.trimIndent()
         }
     }

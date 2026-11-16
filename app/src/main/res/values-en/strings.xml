@@ -6,7 +6,7 @@
     <string name="nav_home_label">Home</string>
     <string name="nav_courses_label">Courses</string>
     <string name="nav_progress_label">Progress</string>
-    <string name="nav_leaderboard_label">Leaderboard</string>
+    <string name="nav_leaderboard_label">Rankings</string>
     <string name="nav_profile_label">Profile</string>
 
     <!-- Profile Screen -->

@@ -239,7 +239,8 @@ fun LearningTrackCard(
                             .height(5.dp)
                             .clip(RoundedCornerShape(3.dp)),
                         color = theme.accentColor,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        drawStopIndicator = {}
                     )
                 } else {
                     Row(

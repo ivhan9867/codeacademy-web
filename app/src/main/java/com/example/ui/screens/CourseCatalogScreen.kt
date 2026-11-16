@@ -356,13 +356,12 @@ fun CourseCatalogScreen(
         ) {
             items(levels, key = { it }) { lvl ->
                 val isSelected = (currentSelectedLevel == null && lvl == "Semua") || currentSelectedLevel == lvl
-                val (chipBg, chipText) = when (lvl) {
-                    "Orientasi" -> ChipOrientasiBg to ChipOrientasiText
-                    "Pemula" -> ChipPemulaBg to ChipPemulaText
-                    "Menengah" -> ChipMenengahBg to ChipMenengahText
-                    "Lanjut" -> ChipLanjutBg to ChipLanjutText
-                    else -> TealPrimary to Color.White
+                val (chipBg, chipText) = if (lvl == "Semua") {
+                    TealPrimary to Color.White
+                } else {
+                    adaptiveLevelChipColors(lvl)
                 }
+                val (neutralBg, neutralText) = adaptiveNeutralChipColors()
                 FilterChip(
                     selected = isSelected,
                     onClick = {
@@ -373,8 +372,8 @@ fun CourseCatalogScreen(
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = chipBg,
                         selectedLabelColor = chipText,
-                        containerColor = ChipNeutralBg,
-                        labelColor = ChipNeutralText
+                        containerColor = neutralBg,
+                        labelColor = neutralText
                     )
                 )
             }

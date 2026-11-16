@@ -1,6 +1,9 @@
 package com.example.ui.theme
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 
 // Primary CodeAcademy Brand Colors (Distinctive Aegean Pine / Petrol Viridian)
 val TealPrimary = Color(0xFF1A6368)
@@ -50,7 +53,7 @@ val CodeSyntaxTag = Color(0xFF5CB887)
 val CodeSyntaxAttr = Color(0xFF6BB5C4)
 val CodeSyntaxComment = Color(0xFF968E86)
 
-// WCAG 2.1 AA Accessible Solid Badges / Chips
+// WCAG 2.1 AA Accessible Solid Badges / Chips (Dark Mode)
 val ChipPemulaBg = Color(0xFF1E3835)
 val ChipPemulaText = Color(0xFF6AD3CA)
 
@@ -65,6 +68,46 @@ val ChipNeutralText = Color(0xFFE5DFD7)
 
 val ChipOrientasiBg = Color(0xFF38322C)
 val ChipOrientasiText = Color(0xFFE5DFD7)
+
+// WCAG 2.1 AA Accessible Tonal Badges / Chips (Light Mode)
+val ChipPemulaLightBg = Color(0xFFD8F3F0)
+val ChipPemulaLightText = Color(0xFF0E4D4A)
+
+val ChipMenengahLightBg = Color(0xFFFAE8D0)
+val ChipMenengahLightText = Color(0xFF6B3E08)
+
+val ChipLanjutLightBg = Color(0xFFFADBD9)
+val ChipLanjutLightText = Color(0xFF7A1C1C)
+
+val ChipNeutralLightBg = Color(0xFFEBE4DA)
+val ChipNeutralLightText = Color(0xFF3E3832)
+
+val ChipOrientasiLightBg = Color(0xFFE8E2D9)
+val ChipOrientasiLightText = Color(0xFF3E3832)
+
+@Composable
+fun isAppDarkTheme(): Boolean = MaterialTheme.colorScheme.background.luminance() < 0.5f
+
+@Composable
+fun adaptiveLevelChipColors(level: String): Pair<Color, Color> {
+    val isDark = isAppDarkTheme()
+    return when (level.trim().lowercase()) {
+        "orientasi" -> if (isDark) ChipOrientasiBg to ChipOrientasiText else ChipOrientasiLightBg to ChipOrientasiLightText
+        "pemula" -> if (isDark) ChipPemulaBg to ChipPemulaText else ChipPemulaLightBg to ChipPemulaLightText
+        "menengah" -> if (isDark) ChipMenengahBg to ChipMenengahText else ChipMenengahLightBg to ChipMenengahLightText
+        "lanjut" -> if (isDark) ChipLanjutBg to ChipLanjutText else ChipLanjutLightBg to ChipLanjutLightText
+        else -> adaptiveNeutralChipColors()
+    }
+}
+
+@Composable
+fun adaptiveNeutralChipColors(): Pair<Color, Color> {
+    return if (isAppDarkTheme()) {
+        ChipNeutralBg to ChipNeutralText
+    } else {
+        ChipNeutralLightBg to ChipNeutralLightText
+    }
+}
 // Legacy / Thematic Color Compatibility Definitions
 val BackgroundDark = DarkBg
 val SurfaceDark = DarkSurface

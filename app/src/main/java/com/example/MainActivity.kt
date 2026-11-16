@@ -306,6 +306,9 @@ fun CodeAcademyApp(
                             label = {
                                 Text(
                                     tab.label,
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                                 )
                             },

@@ -268,8 +268,9 @@ fun HeroPromoBannerCard(
     val heroOverlayGradient = remember {
         Brush.horizontalGradient(
             colors = listOf(
-                TealDark.copy(alpha = 0.94f),
-                Color(0xFF0F172A).copy(alpha = 0.70f)
+                TealDark.copy(alpha = 0.96f),
+                TealDark.copy(alpha = 0.86f),
+                Color(0xFF0F172A).copy(alpha = 0.72f)
             )
         )
     }
@@ -313,12 +314,12 @@ fun HeroPromoBannerCard(
                 verticalArrangement = Arrangement.Center
             ) {
                 Surface(
-                    color = CyanAccent.copy(alpha = 0.22f),
+                    color = CyanAccent.copy(alpha = 0.28f),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         text = androidx.compose.ui.res.stringResource(com.example.R.string.carousel_hero_badge),
-                        color = CyanAccentText,
+                        color = CyanLight,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
@@ -339,7 +340,10 @@ fun HeroPromoBannerCard(
 
                 Button(
                     onClick = onStartLearning,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.White,
+                        contentColor = TealDark
+                    ),
                     shape = RoundedCornerShape(10.dp),
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
                     modifier = Modifier
@@ -348,7 +352,7 @@ fun HeroPromoBannerCard(
                 ) {
                     Text(
                         text = androidx.compose.ui.res.stringResource(com.example.R.string.carousel_hero_btn_start),
-                        color = Color.Black,
+                        color = TealDark,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -356,7 +360,7 @@ fun HeroPromoBannerCard(
                     Icon(
                         imageVector = Icons.Default.PlayArrow,
                         contentDescription = null,
-                        tint = Color.Black,
+                        tint = TealDark,
                         modifier = Modifier.size(14.dp)
                     )
                 }
@@ -538,7 +542,8 @@ fun WeeklyXpCard(
                             .height(5.dp)
                             .clip(RoundedCornerShape(3.dp)),
                         color = AmberGold,
-                        trackColor = if (isDark) MaterialTheme.colorScheme.surfaceVariant else Color(0xFFFFEDD5)
+                        trackColor = if (isDark) MaterialTheme.colorScheme.surfaceVariant else Color(0xFFFFEDD5),
+                        drawStopIndicator = {}
                     )
                 }
             }

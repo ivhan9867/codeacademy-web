@@ -119,20 +119,11 @@ fun AiTutorScreen(
                 windowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(CircleShape)
-                                .background(CyanAccent.copy(alpha = 0.2f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AutoAwesome,
-                                contentDescription = null,
-                                tint = CyanAccent,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
+                        com.example.ui.components.CodeAcademyMascot(
+                            size = 36.dp,
+                            mood = com.example.ui.components.MascotMood.HAPPY,
+                            showWebBadges = false
+                        )
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Row(
@@ -156,6 +147,8 @@ fun AiTutorScreen(
                                         text = connectionStatus,
                                         fontSize = 10.sp,
                                         fontWeight = FontWeight.SemiBold,
+                                        maxLines = 1,
+                                        softWrap = false,
                                         color = if (connectionStatus.contains("Offline", ignoreCase = true)) {
                                             MaterialTheme.colorScheme.onErrorContainer
                                         } else {

@@ -1151,12 +1151,7 @@ fun CourseLevelBadge(
     modifier: Modifier = Modifier,
     fontSize: androidx.compose.ui.unit.TextUnit = 11.sp
 ) {
-    val (bgColor, textColor) = when (level.trim().lowercase()) {
-        "pemula" -> com.example.ui.theme.ChipPemulaBg to com.example.ui.theme.ChipPemulaText
-        "menengah" -> com.example.ui.theme.ChipMenengahBg to com.example.ui.theme.ChipMenengahText
-        "lanjut" -> com.example.ui.theme.ChipLanjutBg to com.example.ui.theme.ChipLanjutText
-        else -> com.example.ui.theme.ChipNeutralBg to com.example.ui.theme.ChipNeutralText
-    }
+    val (bgColor, textColor) = com.example.ui.theme.adaptiveLevelChipColors(level)
 
     Surface(
         color = bgColor,
@@ -1168,6 +1163,8 @@ fun CourseLevelBadge(
             color = textColor,
             fontSize = fontSize,
             fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            softWrap = false,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
         )
     }
@@ -1175,7 +1172,7 @@ fun CourseLevelBadge(
 
 /**
  * WCAG 2.1 AA Compliant Neutral Info Badge (e.g. "1/3 Modul", "0/3 Kelas")
- * Background: solid #1E293B, Text: #E2E8F0
+ * Uses Light/Dark adaptive tonal palette.
  */
 @Composable
 fun NeutralInfoBadge(
@@ -1183,16 +1180,19 @@ fun NeutralInfoBadge(
     modifier: Modifier = Modifier,
     fontSize: androidx.compose.ui.unit.TextUnit = 11.sp
 ) {
+    val (bgColor, textColor) = com.example.ui.theme.adaptiveNeutralChipColors()
     Surface(
-        color = com.example.ui.theme.ChipNeutralBg,
+        color = bgColor,
         shape = RoundedCornerShape(6.dp),
         modifier = modifier
     ) {
         Text(
             text = text,
-            color = com.example.ui.theme.ChipNeutralText,
+            color = textColor,
             fontSize = fontSize,
             fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            softWrap = false,
             modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
         )
     }

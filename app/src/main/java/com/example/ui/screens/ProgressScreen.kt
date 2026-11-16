@@ -940,7 +940,8 @@ fun ProgressScreen(
                                 .height(8.dp)
                                 .clip(RoundedCornerShape(4.dp)),
                             color = AmberGold,
-                            trackColor = MaterialTheme.colorScheme.surfaceVariant
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                            drawStopIndicator = {}
                         )
                     }
 
@@ -1137,7 +1138,8 @@ fun ProgressScreen(
                             .height(6.dp)
                             .clip(RoundedCornerShape(3.dp)),
                         color = MaterialTheme.colorScheme.primary,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant
+                        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        drawStopIndicator = {}
                     )
 
                     Spacer(modifier = Modifier.height(14.dp))
@@ -1534,7 +1536,8 @@ private fun TrackProgressCard(
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
                 color = if (item.percent >= 100) SuccessGreen else TealPrimary,
-                trackColor = MaterialTheme.colorScheme.surface
+                trackColor = MaterialTheme.colorScheme.surface,
+                drawStopIndicator = {}
             )
 
             Spacer(modifier = Modifier.height(14.dp))

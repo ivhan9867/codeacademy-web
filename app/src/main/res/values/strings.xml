@@ -6,7 +6,7 @@
     <string name="nav_home_label">Beranda</string>
     <string name="nav_courses_label">Kelas</string>
     <string name="nav_progress_label">Progres</string>
-    <string name="nav_leaderboard_label">Papan Peringkat</string>
+    <string name="nav_leaderboard_label">Peringkat</string>
     <string name="nav_profile_label">Profil</string>
 
     <!-- Profile Screen -->
@@ -697,7 +697,7 @@
     <string name="catalog_search_placeholder">Cari kelas atau topik pemrograman...</string>
     <string name="catalog_clear_search_cd">Hapus pencarian</string>
     <string name="catalog_filter_all">Semua</string>
-    <string name="catalog_filter_in_progress">Sedang Dipelajari</string>
+    <string name="catalog_filter_in_progress">Dipelajari</string>
     <string name="catalog_filter_completed">Selesai</string>
     <string name="catalog_level_all">Semua Level</string>
     <string name="catalog_courses_count_format">%1$d Kelas Tersedia</string>

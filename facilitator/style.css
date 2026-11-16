@@ -968,6 +968,10 @@ textarea.feedback-input:focus {
   padding: 20px;
 }
 
+.auth-overlay.hidden {
+  display: none !important;
+}
+
 .auth-card {
   background: #FFFFFF;
   border: 1.5px solid #0D2B2E;
@@ -1033,13 +1037,6 @@ textarea.feedback-input:focus {
 .auth-input-group input:focus {
   outline: 3px solid #E26D45;
   outline-offset: 3px;
-}
-
-.auth-error {
-  color: #B73A3A;
-  font-size: 13.5px;
-  font-weight: 600;
-  margin: -4px 0 14px;
 }
 
 .btn-auth-submit {

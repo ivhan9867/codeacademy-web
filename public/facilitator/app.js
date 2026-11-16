@@ -229,7 +229,9 @@ const authOverlay = document.getElementById("authOverlay");
 const authForm = document.getElementById("authForm");
 const emailInput = document.getElementById("emailInput");
 const passwordInput = document.getElementById("passwordInput");
+const authStatusEl = document.getElementById("authStatus");
 const authError = document.getElementById("authError");
+let verifyingSessionPromise = null;
 const btnGoogleSignIn = document.getElementById("btnGoogleSignIn");
 const btnEnterDemo = document.getElementById("btnEnterDemo");
 const btnLogout = document.getElementById("btnLogout");
@@ -364,70 +366,97 @@ function initFirebaseApp() {
 }
 
 async function verifyAndEnterFacilitatorSession(user) {
-  const email = (user.email || "").trim().toLowerCase();
-  console.log("[FacilitatorAuth] verifyAndEnterFacilitatorSession start:", {
-    uid: user.uid,
-    email,
-    emailVerified: user.emailVerified
-  });
-
-  if (!email) {
-    const msg = "Akun tidak memiliki alamat email yang valid.";
-    showAuthError(msg);
-    await auth.signOut();
-    return;
+  if (verifyingSessionPromise) {
+    console.log("[FacilitatorAuth] Reusing active verification promise");
+    return verifyingSessionPromise;
   }
-
-  try {
-    console.log(`[FacilitatorAuth] Reading Firestore allowlist: facilitators/${email}`);
-    const allowDoc = await db.collection("facilitators").doc(email).get();
-    console.log("[FacilitatorAuth] allowDoc result:", {
-      exists: allowDoc.exists,
-      data: allowDoc.exists ? allowDoc.data() : null
+  verifyingSessionPromise = (async () => {
+    const email = (user.email || "").trim().toLowerCase();
+    console.log("[FacilitatorAuth] verifyAndEnterFacilitatorSession start:", {
+      uid: user.uid,
+      email,
+      emailVerified: user.emailVerified
     });
 
-    if (!allowDoc.exists) {
-      const msg = `Akses ditolak: dokumen Firestore facilitators/${email} tidak ditemukan. Minta admin menambahkan dokumen tersebut di Firebase Console.`;
+    if (!email) {
+      const msg = "Akun tidak memiliki alamat email yang valid.";
+      setAuthStatus("");
       showAuthError(msg);
       await auth.signOut();
       return;
     }
 
-    if (!user.emailVerified) {
-      console.warn("[FacilitatorAuth] Warning: user.emailVerified === false; Firestore write rules require email_verified == true.");
+    try {
+      setAuthStatus(`Akun terautentikasi (${email}). Menyegarkan token sesi...`);
+      try {
+        await user.getIdToken(true);
+      } catch (tokErr) {
+        console.warn("[FacilitatorAuth] getIdToken(true) warning:", tokErr?.code || tokErr?.message);
+      }
+
+      setAuthStatus(`Memverifikasi izin fasilitator di Firestore: facilitators/${email}...`);
+      console.log(`[FacilitatorAuth] Reading Firestore allowlist: facilitators/${email}`);
+      let allowDoc;
+      try {
+        allowDoc = await db.collection("facilitators").doc(email).get({ source: "server" });
+      } catch (serverErr) {
+        console.warn("[FacilitatorAuth] Server fetch fallback to default:", serverErr?.code || serverErr?.message);
+        allowDoc = await db.collection("facilitators").doc(email).get();
+      }
+      console.log("[FacilitatorAuth] allowDoc result:", {
+        exists: allowDoc.exists,
+        data: allowDoc.exists ? allowDoc.data() : null
+      });
+
+      if (!allowDoc.exists) {
+        const msg = `Akses ditolak: dokumen Firestore facilitators/${email} tidak ditemukan. Minta admin menambahkan dokumen tersebut di Firebase Console.`;
+        setAuthStatus("");
+        showAuthError(msg);
+        await auth.signOut();
+        return;
+      }
+
+      if (!user.emailVerified) {
+        console.warn("[FacilitatorAuth] Warning: user.emailVerified === false; Firestore write rules require email_verified == true.");
+      }
+
+      const profileData = allowDoc.data() || {};
+      currentFacilitatorUser = {
+        uid: user.uid,
+        email,
+        displayName: profileData.name || user.displayName || "Fasilitator CodeAcademy"
+      };
+      isDemoMode = false;
+      isFirebaseReady = true;
+
+      console.log("[FacilitatorAuth] Verified! Hiding authOverlay and entering dashboard:", currentFacilitatorUser);
+      setAuthStatus("");
+      hideAuthOverlay();
+      switchView(activeView || "submissions");
+      if (profileData.name || user.displayName) {
+        facilitatorNameInput.value = currentFacilitatorUser.displayName;
+      }
+
+      modeBadge.textContent = "● Live Firebase";
+      modeBadge.className = "badge-mode live";
+      facilitatorIdentityChip.textContent = email;
+      facilitatorIdentityChip.style.display = "inline-flex";
+
+      renderAllViews();
+      startRealtimeListeners();
+      showToast(`Masuk sebagai ${email}`);
+    } catch (err) {
+      console.error("[FacilitatorAuth] Verify facilitator failed:", err.code, err.message, err);
+      setAuthStatus("");
+      showAuthError(
+        "Gagal memverifikasi izin fasilitator (" + (err.code || err.message || "permission-denied") + "). Pastikan Firestore Rules terbaru sudah di-Publish."
+      );
+      await auth.signOut();
+    } finally {
+      verifyingSessionPromise = null;
     }
-
-    const profileData = allowDoc.data() || {};
-    currentFacilitatorUser = {
-      uid: user.uid,
-      email,
-      displayName: profileData.name || user.displayName || "Fasilitator CodeAcademy"
-    };
-    isDemoMode = false;
-    isFirebaseReady = true;
-
-    console.log("[FacilitatorAuth] Verified! Hiding authOverlay and entering dashboard:", currentFacilitatorUser);
-    hideAuthOverlay();
-    switchView(activeView || "submissions");
-    if (profileData.name || user.displayName) {
-      facilitatorNameInput.value = currentFacilitatorUser.displayName;
-    }
-
-    modeBadge.textContent = "● Live Firebase";
-    modeBadge.className = "badge-mode live";
-    facilitatorIdentityChip.textContent = email;
-    facilitatorIdentityChip.style.display = "inline-flex";
-
-    renderAllViews();
-    startRealtimeListeners();
-    showToast(`Masuk sebagai ${email}`);
-  } catch (err) {
-    console.error("[FacilitatorAuth] Verify facilitator failed:", err.code, err.message, err);
-    showAuthError(
-      "Gagal memverifikasi izin fasilitator (" + (err.code || err.message || "permission-denied") + "). Pastikan Firestore Rules terbaru sudah di-Publish."
-    );
-    await auth.signOut();
-  }
+  })();
+  return verifyingSessionPromise;
 }
 
 function enterDemoOfflineMode() {
@@ -536,8 +565,9 @@ function renderAllViews() {
 
 function showAuthOverlay(preserveError = false) {
   console.log("[FacilitatorAuth] showAuthOverlay", { preserveError });
+  authOverlay.hidden = false;
   authOverlay.classList.remove("hidden");
-  authOverlay.style.display = "flex";
+  authOverlay.style.setProperty("display", "flex", "important");
   authOverlay.setAttribute("aria-hidden", "false");
   if (!preserveError) {
     authError.classList.remove("show");
@@ -548,9 +578,22 @@ function showAuthOverlay(preserveError = false) {
 function hideAuthOverlay() {
   console.log("[FacilitatorAuth] hideAuthOverlay -> dashboard visible");
   authOverlay.classList.add("hidden");
-  authOverlay.style.display = "none";
+  authOverlay.hidden = true;
+  authOverlay.style.setProperty("display", "none", "important");
   authOverlay.setAttribute("aria-hidden", "true");
   authError.classList.remove("show");
+  setAuthStatus("");
+}
+
+function setAuthStatus(msg) {
+  if (!authStatusEl) return;
+  if (msg) {
+    authStatusEl.textContent = msg;
+    authStatusEl.classList.add("show");
+  } else {
+    authStatusEl.textContent = "";
+    authStatusEl.classList.remove("show");
+  }
 }
 
 function showAuthError(msg) {
@@ -586,24 +629,27 @@ function attachEventListeners() {
       return;
     }
     authError.classList.remove("show");
+    setAuthStatus("Membuka popup login Google...");
     try {
+      await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const provider = new firebase.auth.GoogleAuthProvider();
       provider.setCustomParameters({ prompt: "select_account" });
       const cred = await auth.signInWithPopup(provider);
       console.log("[FacilitatorAuth] signInWithPopup resolved:", cred?.user?.email);
+      if (cred?.user) {
+        await verifyAndEnterFacilitatorSession(cred.user);
+      }
     } catch (err) {
       console.error("[FacilitatorAuth] Google sign-in error:", err.code, err.message);
+      setAuthStatus("");
       if (err.code === "auth/popup-blocked") {
-        showAuthError("Popup login diblokir browser. Mencoba redirect Google Sign-In...");
-        try {
-          const provider = new firebase.auth.GoogleAuthProvider();
-          await auth.signInWithRedirect(provider);
-          return;
-        } catch (redirErr) {
-          showAuthError("Login Google gagal: " + (redirErr.message || redirErr.code));
-        }
+        showAuthError("Popup login Google diblokir oleh browser. Izinkan popup untuk localhost di ikon gembok/address bar browser lalu klik lagi, atau gunakan Email & Kata Sandi.");
+      } else if (err.code === "auth/popup-closed-by-user") {
+        showAuthError("Jendela login Google ditutup sebelum selesai.");
+      } else if (err.code === "auth/unauthorized-domain") {
+        showAuthError(`Domain "${window.location.hostname}" belum ditambahkan di Firebase Console → Authentication → Settings → Authorized domains.`);
       } else {
-        showAuthError("Login Google gagal: " + (err.message || err.code));
+        showAuthError("Login Google gagal (" + (err.code || "error") + "): " + (err.message || err.code));
       }
     }
   });

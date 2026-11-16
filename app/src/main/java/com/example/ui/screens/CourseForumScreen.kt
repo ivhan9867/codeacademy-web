@@ -34,10 +34,12 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.ExpandLess
@@ -246,6 +248,7 @@ fun CourseForumScreen(
     }
 
     var loadError by remember { mutableStateOf<String?>(null) }
+    var loadErrorKind by remember { mutableStateOf<com.example.util.NetworkErrorKind?>(null) }
     var retryTrigger by remember { mutableIntStateOf(0) }
 
     var postInput by remember { mutableStateOf("") }
@@ -265,11 +268,14 @@ fun CourseForumScreen(
     DisposableEffect(course.id, retryTrigger) {
         val listenerRegistration = socialViewModel.attachForumListener(
             courseId = course.id,
-            onError = {
-                loadError = context.getString(com.example.R.string.forum_load_error)
+            onError = { exception ->
+                val kind = com.example.util.classifyFirestoreError(exception)
+                loadErrorKind = kind
+                loadError = context.getString(com.example.util.mapErrorKindToUi(kind).messageRes)
             },
             onUpdate = { updatedPosts ->
                 loadError = null
+                loadErrorKind = null
                 socialViewModel.syncIncomingForumPosts(course.id, updatedPosts)
             }
         )
@@ -415,6 +421,16 @@ fun CourseForumScreen(
                         }
                     }
 
+                    val isForumBlockedByError = loadError != null && posts.isEmpty()
+                    if (isForumBlockedByError) {
+                        Text(
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_input_disabled_error),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                        )
+                    }
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
@@ -424,6 +440,7 @@ fun CourseForumScreen(
                         OutlinedTextField(
                             value = postInput,
                             onValueChange = { if (it.length <= 500) postInput = it },
+                            enabled = !isForumBlockedByError,
                             placeholder = {
                                 Text(
                                     text = if (replyingToPost != null) {
@@ -607,6 +624,7 @@ fun CourseForumScreen(
                 // Error state with retry
                 ErrorRetryView(
                     message = loadError ?: androidx.compose.ui.res.stringResource(com.example.R.string.forum_load_error),
+                    errorKind = loadErrorKind ?: com.example.util.NetworkErrorKind.OFFLINE,
                     onRetry = {
                         retryTrigger++
                     },
@@ -1376,8 +1394,15 @@ private fun formatTimestamp(millis: Long, language: AppLanguage = AppLanguage.IN
 fun ErrorRetryView(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorKind: com.example.util.NetworkErrorKind = com.example.util.NetworkErrorKind.OFFLINE
 ) {
+    val mappedUi = com.example.util.mapErrorKindToUi(errorKind)
+    val icon = when (errorKind) {
+        com.example.util.NetworkErrorKind.OFFLINE -> Icons.Default.WifiOff
+        com.example.util.NetworkErrorKind.SESSION_OR_PERMISSION -> Icons.Default.Lock
+        com.example.util.NetworkErrorKind.SERVER_OR_OTHER -> Icons.Default.CloudOff
+    }
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -1395,7 +1420,7 @@ fun ErrorRetryView(
                     .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.4f))
             ) {
                 Icon(
-                    imageVector = Icons.Default.WifiOff,
+                    imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(36.dp)
@@ -1403,7 +1428,7 @@ fun ErrorRetryView(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_disconnected_title),
+                text = androidx.compose.ui.res.stringResource(mappedUi.titleRes),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
@@ -1430,7 +1455,7 @@ fun ErrorRetryView(
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_retry_btn),
+                    text = androidx.compose.ui.res.stringResource(mappedUi.actionLabelRes),
                     fontWeight = FontWeight.Bold
                 )
             }

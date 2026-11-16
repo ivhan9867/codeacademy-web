@@ -1047,6 +1047,17 @@
     <string name="forum_delete_confirm">Yes, Delete</string>
     <string name="forum_filter_empty">No discussions match this filter.</string>
     <string name="forum_disconnected_title">Connection Lost</string>
+    <string name="error_session_title">Session or Permission Issue</string>
+    <string name="error_session_desc">Your cloud session expired or lacks permission. Reload your session to continue.</string>
+    <string name="error_session_retry">Reload Session</string>
+    <string name="error_server_title">Server Error</string>
+    <string name="error_server_desc">The server encountered a temporary issue. Please try again shortly.</string>
+    <string name="forum_input_disabled_error">Cannot send messages while connection or session is unavailable.</string>
+    <string name="profile_edit_name_error">Name must be at least 2 letters and cannot start with a number.</string>
+    <string name="profile_edit_bio_counter_format">%1$d/100 characters</string>
+    <string name="profile_danger_zone_title">Danger Zone</string>
+    <string name="profile_delete_confirm_input_label">Type DELETE to confirm</string>
+    <string name="profile_delete_confirm_keyword">DELETE</string>
     <string name="forum_retry_btn">Try Again</string>
     <string name="comm_course_forums_title">Class Discussion Forums</string>
     <string name="comm_course_forums_subtitle">Pick a class to ask Facilitators &amp; peers directly</string>

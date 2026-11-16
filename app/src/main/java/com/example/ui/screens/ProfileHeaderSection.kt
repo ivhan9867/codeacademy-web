@@ -214,7 +214,15 @@ fun ProfileEditDialog(
     onSave: (String, String) -> Unit
 ) {
     var editName by remember { mutableStateOf(initialName) }
-    var editBio by remember { mutableStateOf(initialBio) }
+    var editBio by remember { mutableStateOf(initialBio.take(100)) }
+
+    val trimmedName = editName.trim()
+    val sanitizedName = com.example.util.NameUtils.sanitizeDisplayName(trimmedName)
+    val isNameValid = trimmedName.length >= 2 &&
+        !trimmedName.first().isDigit() &&
+        sanitizedName.length >= 2
+    val hasChanges = trimmedName != initialName.trim() || editBio.trim() != initialBio.trim()
+    val canSave = isNameValid && hasChanges
 
     AppDialog(
         onDismissRequest = onDismiss,
@@ -229,16 +237,28 @@ fun ProfileEditDialog(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = editName,
-                    onValueChange = { editName = it },
+                    onValueChange = { if (it.length <= 40) editName = it },
                     label = { Text(stringResource(R.string.profile_edit_name_label)) },
+                    isError = !isNameValid,
+                    supportingText = if (!isNameValid) {
+                        { Text(stringResource(R.string.profile_edit_name_error)) }
+                    } else null,
                     singleLine = true,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 )
                 OutlinedTextField(
                     value = editBio,
-                    onValueChange = { editBio = it },
+                    onValueChange = { if (it.length <= 100) editBio = it },
                     label = { Text(stringResource(R.string.profile_edit_bio_label)) },
+                    supportingText = {
+                        Text(
+                            text = stringResource(R.string.profile_edit_bio_counter_format, editBio.length),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.End
+                        )
+                    },
+                    maxLines = 3,
                     shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -247,9 +267,10 @@ fun ProfileEditDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    onSave(editName, editBio)
+                    onSave(sanitizedName, editBio.trim())
                     onDismiss()
                 },
+                enabled = canSave,
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = TealPrimary)
             ) {

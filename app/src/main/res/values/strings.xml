@@ -1047,6 +1047,17 @@
     <string name="forum_delete_confirm">Ya, Hapus</string>
     <string name="forum_filter_empty">Tidak ada diskusi pada filter ini.</string>
     <string name="forum_disconnected_title">Koneksi Terputus</string>
+    <string name="error_session_title">Sesi atau Izin Bermasalah</string>
+    <string name="error_session_desc">Sesi cloud belum aktif atau izin akses ditolak. Muat ulang sesi untuk melanjutkan.</string>
+    <string name="error_session_retry">Muat Ulang Sesi</string>
+    <string name="error_server_title">Terjadi Kendala Server</string>
+    <string name="error_server_desc">Server sedang mengalami gangguan sementara. Silakan coba lagi beberapa saat lagi.</string>
+    <string name="forum_input_disabled_error">Tidak dapat mengirim pesan saat koneksi atau sesi sedang bermasalah.</string>
+    <string name="profile_edit_name_error">Nama minimal 2 huruf dan tidak boleh diawali angka.</string>
+    <string name="profile_edit_bio_counter_format">%1$d/100 karakter</string>
+    <string name="profile_danger_zone_title">Zona Berbahaya</string>
+    <string name="profile_delete_confirm_input_label">Ketik HAPUS untuk konfirmasi</string>
+    <string name="profile_delete_confirm_keyword">HAPUS</string>
     <string name="forum_retry_btn">Coba Lagi</string>
     <string name="comm_course_forums_title">Forum Diskusi Kelas</string>
     <string name="comm_course_forums_subtitle">Pilih kelas untuk bertanya langsung ke Fasilitator &amp; teman belajar</string>

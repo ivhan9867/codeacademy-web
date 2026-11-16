@@ -57,6 +57,9 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
     private val _leaderboardError = MutableStateFlow<String?>(null)
     val leaderboardError: StateFlow<String?> = _leaderboardError.asStateFlow()
 
+    private val _leaderboardErrorKind = MutableStateFlow<com.example.util.NetworkErrorKind?>(null)
+    val leaderboardErrorKind: StateFlow<com.example.util.NetworkErrorKind?> = _leaderboardErrorKind.asStateFlow()
+
     private val _myLeaderboardRank = MutableStateFlow<Int?>(null)
     val myLeaderboardRank: StateFlow<Int?> = _myLeaderboardRank.asStateFlow()
 
@@ -98,8 +101,15 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
                 )
                 _myLeaderboardRank.value = rank
                 _leaderboardError.value = null
+                _leaderboardErrorKind.value = null
             } catch (e: Exception) {
-                _leaderboardError.value = "Gagal memuat papan peringkat. Periksa koneksi internetmu."
+                val kind = com.example.util.classifyFirestoreError(e)
+                _leaderboardErrorKind.value = kind
+                _leaderboardError.value = when (kind) {
+                    com.example.util.NetworkErrorKind.OFFLINE -> "Gagal memuat papan peringkat. Periksa koneksi internetmu."
+                    com.example.util.NetworkErrorKind.SESSION_OR_PERMISSION -> "Sesi atau izin akses belum aktif. Muat ulang sesi untuk melanjutkan."
+                    com.example.util.NetworkErrorKind.SERVER_OR_OTHER -> "Server sedang mengalami gangguan sementara. Silakan coba lagi."
+                }
             } finally {
                 _isLeaderboardRefreshing.value = false
             }

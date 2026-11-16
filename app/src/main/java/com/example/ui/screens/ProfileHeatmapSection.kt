@@ -299,32 +299,22 @@ fun ActivityHeatmapCard(
 
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Legend row: "Kurang" -> Solid Color Boxes -> "Lebih"
-            Row(
+            // Legend & tap hint separated into 2 clean rows to avoid crowding
+            Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Text(
-                    text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_tap_hint),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = onSurfaceVariant,
-                    fontSize = 10.sp,
-                    modifier = Modifier.weight(1f),
-                    maxLines = 1,
-                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                )
-
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_less),
                         fontSize = 10.sp,
                         color = onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
 
                     for (colorIndex in 0..4) {
                         Box(
@@ -333,15 +323,23 @@ fun ActivityHeatmapCard(
                                 .clip(RoundedCornerShape(3.dp))
                                 .background(cellColors[colorIndex])
                         )
+                        if (colorIndex < 4) Spacer(modifier = Modifier.width(4.dp))
                     }
 
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
                         text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_more),
                         fontSize = 10.sp,
                         color = onSurfaceVariant
                     )
                 }
+
+                Text(
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_tap_hint),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = onSurfaceVariant,
+                    fontSize = 11.sp
+                )
             }
         }
     }
@@ -467,6 +465,7 @@ private fun Full12WeeksHeatmapCanvas(
             }
         }
 
+        val emptyOutlineColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f)
         // Single Canvas Composable rendering all 84 cells in a single draw pass
         Canvas(
             modifier = Modifier
@@ -517,6 +516,14 @@ private fun Full12WeeksHeatmapCanvas(
                                 size = Size(cellSizePx, cellSizePx),
                                 cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
                                 style = Stroke(width = borderWidthPx)
+                            )
+                        } else if (level == 0) {
+                            drawRoundRect(
+                                color = emptyOutlineColor,
+                                topLeft = Offset(x, y),
+                                size = Size(cellSizePx, cellSizePx),
+                                cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                                style = Stroke(width = 1.dp.toPx())
                             )
                         }
                     }

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com https://accounts.google.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com https://accounts.google.com https://*.firebaseapp.com;">
   <title>CodeAcademy — Portal Fasilitator</title>
   <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20261116">
 </head>
 <body>
 
@@ -25,6 +25,7 @@
           <label for="passwordInput">Kata Sandi</label>
           <input type="password" id="passwordInput" class="auth-input" placeholder="Masukkan kata sandi" required autocomplete="current-password">
         </div>
+        <div id="authStatus" class="auth-status" aria-live="polite"></div>
         <div id="authError" class="auth-error" role="alert">Login gagal. Periksa kembali kredensial Anda.</div>
         <button type="submit" id="btnEmailLogin" class="btn-auth-submit">Masuk dengan Email</button>
       </form>
@@ -433,7 +434,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js"></script>
-  <script src="app.js"></script>
+  <script src="../firebase-config.js?v=20261116"></script>
+  <script src="app.js?v=20261116"></script>
 </body>
 </html>

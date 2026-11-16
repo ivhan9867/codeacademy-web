@@ -289,8 +289,10 @@ fun CourseForumScreen(
     }
 
     Scaffold(
+        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
         topBar = {
             TopAppBar(
+                windowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
                 title = {
                     Column {
                         Text(

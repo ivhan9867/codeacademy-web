@@ -1156,7 +1156,9 @@ class CodeAcademyRepository(
 
     suspend fun updateProfile(name: String, bio: String) = withContext(Dispatchers.IO) {
         val accountId = getActiveAccountId()
-        userDao.updateProfileInfo(accountId, name, bio)
+        val cleanName = com.example.util.NameUtils.sanitizeDisplayName(name)
+        userDao.updateProfileInfo(accountId, cleanName, bio.trim())
+        syncMyProfileToCloud()
     }
 
     suspend fun completeOnboarding(selectedTrackId: String) = withContext(Dispatchers.IO) {
@@ -1187,7 +1189,7 @@ class CodeAcademyRepository(
         password: String
     ): Result<LocalAccountEntity> = withContext(Dispatchers.IO) {
         val cleanEmail = email.trim().lowercase(Locale.ROOT)
-        val cleanName = name.trim()
+        val cleanName = com.example.util.NameUtils.sanitizeDisplayName(name, fallback = cleanEmail.substringBefore("@"))
 
         ensureInitialUserSeeded()
 
@@ -1318,7 +1320,10 @@ class CodeAcademyRepository(
                 ?: return@withContext Result.failure(Exception("Email akun Google tidak tersedia."))
             val resolvedName = displayName?.trim()?.takeIf { it.isNotBlank() }
                 ?: firebaseUser?.displayName?.trim()?.takeIf { it.isNotBlank() }
-            val cleanName = resolvedName ?: cleanEmail.substringBefore("@")
+            val cleanName = com.example.util.NameUtils.sanitizeDisplayName(
+                resolvedName,
+                fallback = cleanEmail.substringBefore("@")
+            )
 
             val existing = accountDao.getAccountByEmail(cleanEmail)
             val accountId = if (existing != null) {
@@ -1614,15 +1619,16 @@ class CodeAcademyRepository(
         try {
             val accountId = getActiveAccountId()
             val user = userDao.getUserProfileOnce(accountId) ?: return@withContext
+            val cloudUserId = firestoreService.tryEnsureAnonymousOrCurrentUid() ?: accountId.toString()
             firestoreService.syncUserXp(
-                userId = accountId.toString(),
-                userName = user.name,
+                userId = cloudUserId,
+                userName = com.example.util.NameUtils.sanitizeDisplayName(user.name),
                 totalXp = user.totalXp,
                 level = user.level,
                 currentStreak = user.currentStreak,
-                xpThisWeek = (user.totalXp % 350 + 50),
-                xpThisMonth = (user.totalXp % 900 + 150),
-                primaryTrack = user.selectedTracks.split(",").firstOrNull() ?: "front-end"
+                xpThisWeek = user.totalXp,
+                xpThisMonth = user.totalXp,
+                primaryTrack = user.selectedTracks.split(",").firstOrNull()?.ifBlank { "front-end" } ?: "front-end"
             )
         } catch (e: Exception) {
             android.util.Log.e("CodeAcademyRepo", "Gagal sinkronisasi XP ke Firestore", e)

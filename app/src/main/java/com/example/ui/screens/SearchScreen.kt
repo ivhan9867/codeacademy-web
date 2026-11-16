@@ -142,6 +142,7 @@ fun SearchScreenContent(
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
+        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
         topBar = {
             Surface(
                 color = MaterialTheme.colorScheme.surface,
@@ -151,7 +152,6 @@ fun SearchScreenContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .statusBarsPadding()
                         .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Row(

@@ -101,7 +101,8 @@ fun AiTutorScreen(
         )
     }
 
-    LaunchedEffect(messages.size, isThinking) {
+    val imeBottomPx = androidx.compose.foundation.layout.WindowInsets.ime.getBottom(androidx.compose.ui.platform.LocalDensity.current)
+    LaunchedEffect(messages.size, isThinking, imeBottomPx > 0) {
         if (messages.isNotEmpty()) {
             try {
                 listState.animateScrollToItem((messages.size - 1).coerceAtLeast(0))
@@ -112,8 +113,10 @@ fun AiTutorScreen(
     }
 
     Scaffold(
+        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
         topBar = {
             TopAppBar(
+                windowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
                 title = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(

@@ -1296,4 +1296,5 @@
     <string name="google_auth_cert_copy_btn">复制 SHA-1 与 SHA-256</string>
     <string name="google_auth_cert_copied_toast">已复制包名及 SHA-1/SHA-256 到剪贴板。</string>
     <string name="google_auth_cert_close_btn">关闭</string>
+    <string name="podium_waiting_slot">待加入</string>
 </resources>

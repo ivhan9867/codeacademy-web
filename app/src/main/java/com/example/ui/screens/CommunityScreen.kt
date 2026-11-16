@@ -248,9 +248,11 @@ fun CommunityScreen(
     }
 
     Scaffold(
+        contentWindowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
+                windowInsets = androidx.compose.foundation.layout.WindowInsets(0.dp),
                 navigationIcon = {
                     if (onMenuClick != null) {
                         IconButton(
@@ -1313,7 +1315,12 @@ fun LeaderboardPodium(
                         modifier = Modifier.weight(1f)
                     )
                 } else {
-                    Spacer(modifier = Modifier.weight(1f))
+                    PodiumEmptySlot(
+                        rank = 2,
+                        pedestalHeight = 85.dp,
+                        accentColor = Color(0xFFB0BEC5),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
 
                 // Rank 1 (Gold) - Elevated pedestal & focal center column
@@ -1331,7 +1338,12 @@ fun LeaderboardPodium(
                         modifier = Modifier.weight(1.15f)
                     )
                 } else {
-                    Spacer(modifier = Modifier.weight(1.15f))
+                    PodiumEmptySlot(
+                        rank = 1,
+                        pedestalHeight = 115.dp,
+                        accentColor = AmberGold,
+                        modifier = Modifier.weight(1.15f)
+                    )
                 }
 
                 // Rank 3 (Bronze)
@@ -1349,9 +1361,70 @@ fun LeaderboardPodium(
                         modifier = Modifier.weight(1f)
                     )
                 } else {
-                    Spacer(modifier = Modifier.weight(1f))
+                    PodiumEmptySlot(
+                        rank = 3,
+                        pedestalHeight = 65.dp,
+                        accentColor = Color(0xFFCD7F32),
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun PodiumEmptySlot(
+    rank: Int,
+    pedestalHeight: androidx.compose.ui.unit.Dp,
+    accentColor: Color,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 2.dp)
+            .alpha(0.55f),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .size(if (rank == 1) 52.dp else 44.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f))
+                .border(1.dp, accentColor.copy(alpha = 0.35f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "?",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 15.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            text = androidx.compose.ui.res.stringResource(com.example.R.string.podium_waiting_slot),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(pedestalHeight)
+                .clip(PodiumPedestalShape)
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f))
+                .border(1.dp, accentColor.copy(alpha = 0.2f), PodiumPedestalShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "#$rank",
+                fontWeight = FontWeight.Bold,
+                fontSize = if (rank == 1) 20.sp else 16.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+            )
         }
     }
 }
@@ -1437,6 +1510,9 @@ private fun PodiumColumnItem(
 
         Spacer(modifier = Modifier.height(2.dp))
 
+        val cleanEntryName = remember(entry.userName) { com.example.util.NameUtils.sanitizeDisplayName(entry.userName) }
+        val entryInitial = remember(cleanEntryName) { com.example.util.NameUtils.extractInitial(cleanEntryName, "U") }
+
         // Avatar with level-specific sizing and border
         Box(
             modifier = Modifier
@@ -1451,7 +1527,7 @@ private fun PodiumColumnItem(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = entry.userName.firstOrNull()?.uppercaseChar()?.toString() ?: "U",
+                text = entryInitial,
                 fontWeight = FontWeight.Bold,
                 color = if (isCurrentUser) MaterialTheme.colorScheme.primary else accentColor,
                 fontSize = if (rank == 1) 18.sp else 15.sp
@@ -1462,7 +1538,7 @@ private fun PodiumColumnItem(
 
         // Name with single-line ellipsis
         Text(
-            text = if (isCurrentUser) "${entry.userName} (Kamu)" else entry.userName,
+            text = if (isCurrentUser) "$cleanEntryName (Kamu)" else cleanEntryName,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
@@ -1645,6 +1721,8 @@ fun LeaderboardRowItem(
             Spacer(modifier = Modifier.width(10.dp))
 
             // Avatar circle
+            val cleanRowName = remember(entry.userName) { com.example.util.NameUtils.sanitizeDisplayName(entry.userName) }
+            val rowInitial = remember(cleanRowName) { com.example.util.NameUtils.extractInitial(cleanRowName, "U") }
             Box(
                 modifier = Modifier
                     .size(38.dp)
@@ -1660,7 +1738,7 @@ fun LeaderboardRowItem(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = entry.userName.firstOrNull()?.uppercaseChar()?.toString() ?: "U",
+                    text = rowInitial,
                     fontWeight = FontWeight.Bold,
                     color = if (isCurrentUser) MaterialTheme.colorScheme.primary else CyanAccentText,
                     fontSize = 14.sp
@@ -1673,7 +1751,7 @@ fun LeaderboardRowItem(
             Column(modifier = Modifier.weight(1f)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = entry.userName,
+                        text = cleanRowName,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = if (isCurrentUser) FontWeight.Bold else FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface,

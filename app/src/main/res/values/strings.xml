@@ -1060,4 +1060,5 @@
     <string name="google_auth_cert_copy_btn">Salin SHA-1 &amp; SHA-256</string>
     <string name="google_auth_cert_copied_toast">Package &amp; SHA-1/SHA-256 disalin ke clipboard.</string>
     <string name="google_auth_cert_close_btn">Tutup</string>
+    <string name="podium_waiting_slot">Menunggu</string>
 </resources>

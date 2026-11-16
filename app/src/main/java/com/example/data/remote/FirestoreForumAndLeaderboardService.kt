@@ -271,8 +271,8 @@ class FirestoreForumAndLeaderboardService(
         totalXp: Int,
         level: Int,
         currentStreak: Int = 0,
-        xpThisWeek: Int = (totalXp % 350 + 50),
-        xpThisMonth: Int = (totalXp % 900 + 150),
+        xpThisWeek: Int = totalXp,
+        xpThisMonth: Int = totalXp,
         primaryTrack: String = "front-end",
         bio: String = "",
         role: String = "Siswa",
@@ -282,9 +282,11 @@ class FirestoreForumAndLeaderboardService(
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
             val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val targetDocId = firebaseUid?.takeIf { it.isNotBlank() } ?: userId
+            val cleanName = com.example.util.NameUtils.sanitizeDisplayName(userName)
             val data = hashMapOf<String, Any>(
-                "userId" to userId,
-                "name" to userName,
+                "userId" to targetDocId,
+                "name" to cleanName,
                 "totalXp" to totalXp,
                 "xpThisWeek" to xpThisWeek,
                 "xpThisMonth" to xpThisMonth,
@@ -299,7 +301,7 @@ class FirestoreForumAndLeaderboardService(
             if (completedCoursesCount > 0) data["completedCoursesCount"] = completedCoursesCount
             if (unlockedBadgeIds.isNotEmpty()) data["unlockedBadgeIds"] = unlockedBadgeIds
             firestore.collection(USERS_COLLECTION)
-                .document(userId)
+                .document(targetDocId)
                 .set(data, SetOptions.merge())
                 .await()
             Result.success(Unit)
@@ -382,22 +384,29 @@ class FirestoreForumAndLeaderboardService(
 
             val snapshot = query.get().await()
 
-            val entries = snapshot.documents.mapIndexedNotNull { index, doc ->
+            val seenOwnerKeys = HashSet<String>()
+            val dedupedEntries = ArrayList<LeaderboardEntryCacheEntity>()
+            for (doc in snapshot.documents) {
                 val id = doc.getString("userId") ?: doc.id
-                val name = doc.getString("name") ?: "Siswa"
+                val ownerKey = doc.getString("firebaseUid")?.takeIf { it.isNotBlank() } ?: id
+                if (!seenOwnerKeys.add(ownerKey)) continue
+                val rawName = doc.getString("name") ?: "Siswa"
+                val name = com.example.util.NameUtils.sanitizeDisplayName(rawName)
                 val xp = (doc.getLong(sortField) ?: doc.getLong("totalXp") ?: 0L).toInt()
                 val level = (doc.getLong("level") ?: 1L).toInt()
-                LeaderboardEntryCacheEntity(
-                    scopeKey = scopeKey,
-                    userId = id,
-                    userName = name,
-                    totalXp = xp,
-                    level = level,
-                    rank = index + 1,
-                    cachedAt = System.currentTimeMillis()
+                dedupedEntries.add(
+                    LeaderboardEntryCacheEntity(
+                        scopeKey = scopeKey,
+                        userId = id,
+                        userName = name,
+                        totalXp = xp,
+                        level = level,
+                        rank = dedupedEntries.size + 1,
+                        cachedAt = System.currentTimeMillis()
+                    )
                 )
             }
-            Result.success(entries)
+            Result.success(dedupedEntries)
         } catch (e: Exception) {
             Log.w(TAG, "Error fetching top leaderboard for scope $scopeKey: ${e.message}")
             Result.failure(e)

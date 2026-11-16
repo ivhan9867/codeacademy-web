@@ -1296,4 +1296,5 @@
     <string name="google_auth_cert_copy_btn">SHA-1とSHA-256をコピー</string>
     <string name="google_auth_cert_copied_toast">パッケージ名とSHA-1/SHA-256をコピーしました。</string>
     <string name="google_auth_cert_close_btn">閉じる</string>
+    <string name="podium_waiting_slot">待機中</string>
 </resources>

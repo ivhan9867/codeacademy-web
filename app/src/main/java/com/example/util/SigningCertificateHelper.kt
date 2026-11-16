@@ -18,7 +18,10 @@ data class SigningFingerprintInfo(
  * errors during Firebase Google Auth can be diagnosed directly on any build environment.
  */
 object SigningCertificateHelper {
-    private const val REPO_DEBUG_SHA1_HEX = "7df71a3caee3fe38849700587b524c7831e6227c"
+    private val KNOWN_SHA1_HEXES = setOf(
+        "7df71a3caee3fe38849700587b524c7831e6227c",
+        "55ad7d4a51f957ba87f674ca9b25c491ad810b5d"
+    )
 
     fun getSigningFingerprints(context: Context): SigningFingerprintInfo {
         val packageName = context.packageName
@@ -39,7 +42,7 @@ object SigningCertificateHelper {
             packageName = packageName,
             sha1Colon = sha1Bytes.joinToString(":") { "%02X".format(it) },
             sha256Colon = sha256Bytes.joinToString(":") { "%02X".format(it) },
-            matchesRepoDebugSha1 = sha1Raw.equals(REPO_DEBUG_SHA1_HEX, ignoreCase = true)
+            matchesRepoDebugSha1 = KNOWN_SHA1_HEXES.any { it.equals(sha1Raw, ignoreCase = true) }
         )
     }
 

@@ -1734,6 +1734,10 @@ class CodeAcademyRepository(
         emptyList()
     }
 
+    suspend fun ensureCloudAuthSession(): String? = withContext(Dispatchers.IO) {
+        firestoreService.tryEnsureAnonymousOrCurrentUid()
+    }
+
     suspend fun syncCloudAnnouncements() = withContext(Dispatchers.IO) {
         try {
             firestoreService.tryEnsureAnonymousOrCurrentUid()

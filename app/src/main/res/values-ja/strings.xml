@@ -1294,6 +1294,17 @@
     <string name="profile_danger_zone_title">危険な操作</string>
     <string name="profile_delete_confirm_input_label">確認のため DELETE と入力</string>
     <string name="profile_delete_confirm_keyword">DELETE</string>
+    <string name="prog_to_next_level_format">レベル %1$d への進捗</string>
+    <string name="prog_by_track_title">学習トラック別の進捗</string>
+    <string name="prog_track_active_done_format">進行中 %1$d • 完了 %2$d</string>
+    <string name="prog_active_track_format">進行中トラック: %1$s</string>
+    <string name="comm_leaderboard_header">学習者ランキング</string>
+    <string name="comm_top_podium_header">トップ表彰台</string>
+    <string name="comm_period_weekly">週間</string>
+    <string name="comm_period_monthly">月間</string>
+    <string name="comm_period_all_time">全期間</string>
+    <string name="comm_period_streak">連続学習 🔥</string>
+    <string name="comm_all_tracks">すべてのトラック</string>
     <string name="forum_retry_btn">再試行</string>
     <string name="comm_course_forums_title">クラス別フォーラム</string>
     <string name="comm_course_forums_subtitle">クラスを選んで講師や仲間と直接質問・相談できます</string>

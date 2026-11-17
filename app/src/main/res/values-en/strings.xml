@@ -24,7 +24,7 @@
     <string name="profile_restart_onboarding_title">Restart Track Onboarding</string>
     <string name="profile_restart_onboarding_subtitle">Re-select learning track preferences and targets</string>
     <string name="profile_logout_title">Sign Out</string>
-    <string name="profile_logout_subtitle">Sign out from CodeAcademy local session</string>
+    <string name="profile_logout_subtitle">Sign out from this account</string>
     <string name="profile_logout_confirm_title">Confirm Sign Out</string>
     <string name="profile_logout_confirm_message">Are you sure you want to sign out? Your learning progress remains safely saved on this device.</string>
     <string name="profile_delete_account_title">Delete Account</string>
@@ -896,7 +896,7 @@
     <string name="prog_view_all_count_format">View All (%1$d)</string>
     <string name="prog_show_less">Show Less</string>
     <string name="prog_coachmark">Every module you complete earns XP to level up, with a full breakdown per course below.</string>
-    <string name="prog_current_title_label">Current Learning Title</string>
+    <string name="prog_current_title_label">Learning Title</string>
     <string name="prog_next_level_format">Progress to Level %1$d (%2$s)</string>
     <string name="prog_streak_days_format">%1$d Days</string>
     <string name="prog_streak_active_label">Active Streak</string>
@@ -1058,6 +1058,17 @@
     <string name="profile_danger_zone_title">Danger Zone</string>
     <string name="profile_delete_confirm_input_label">Type DELETE to confirm</string>
     <string name="profile_delete_confirm_keyword">DELETE</string>
+    <string name="prog_to_next_level_format">Progress to Level %1$d</string>
+    <string name="prog_by_track_title">Progress by Learning Track</string>
+    <string name="prog_track_active_done_format">%1$d active tracks • %2$d completed</string>
+    <string name="prog_active_track_format">Active track: %1$s</string>
+    <string name="comm_leaderboard_header">Student Leaderboard</string>
+    <string name="comm_top_podium_header">Top Podium</string>
+    <string name="comm_period_weekly">Weekly</string>
+    <string name="comm_period_monthly">Monthly</string>
+    <string name="comm_period_all_time">All Time</string>
+    <string name="comm_period_streak">Streak 🔥</string>
+    <string name="comm_all_tracks">All Tracks</string>
     <string name="forum_retry_btn">Try Again</string>
     <string name="comm_course_forums_title">Class Discussion Forums</string>
     <string name="comm_course_forums_subtitle">Pick a class to ask Facilitators &amp; peers directly</string>

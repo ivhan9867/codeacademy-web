@@ -924,7 +924,10 @@ fun ProgressScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = "Progres Menuju Level ${levelInfo.level + 1}",
+                                text = androidx.compose.ui.res.stringResource(
+                                    com.example.R.string.prog_to_next_level_format,
+                                    levelInfo.level + 1
+                                ),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -1220,13 +1223,17 @@ fun ProgressScreen(
 
                             Column {
                                 Text(
-                                    text = "Progres per Jalur Belajar",
+                                    text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_by_track_title),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Text(
-                                    text = "${if (activeTracksCount > 0) activeTracksCount else 1} jalur aktif • $completedTracksCount jalur selesai",
+                                    text = androidx.compose.ui.res.stringResource(
+                                        com.example.R.string.prog_track_active_done_format,
+                                        if (activeTracksCount > 0) activeTracksCount else 1,
+                                        completedTracksCount
+                                    ),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -1258,7 +1265,10 @@ fun ProgressScreen(
                                 Text(text = leadingTrack?.track?.iconEmoji ?: "🌐", fontSize = 18.sp)
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "${leadingTrack?.track?.name ?: "Front-End Development"} terdepan",
+                                    text = androidx.compose.ui.res.stringResource(
+                                        com.example.R.string.prog_active_track_format,
+                                        leadingTrack?.track?.name ?: "Front-End Development"
+                                    ),
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -1276,7 +1286,7 @@ fun ProgressScreen(
                     Spacer(modifier = Modifier.height(10.dp))
 
                     Text(
-                        text = "Lihat detail kurikulum →",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.prog_view_curriculum_detail),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold

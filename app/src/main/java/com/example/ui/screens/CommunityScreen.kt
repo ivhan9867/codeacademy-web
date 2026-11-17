@@ -218,13 +218,13 @@ fun CommunityScreen(
     val displayScore = myEntryInTop50?.totalXp ?: if (selectedPeriod == "streak") (userProfile?.currentStreak ?: 0) else (userProfile?.totalXp ?: 100)
 
     val periodOptions = listOf(
-        "weekly" to "Mingguan",
-        "monthly" to "Bulanan",
-        "all_time" to "Sepanjang Waktu",
-        "streak" to "Streak 🔥"
+        "weekly" to androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_weekly),
+        "monthly" to androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_monthly),
+        "all_time" to androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_all_time),
+        "streak" to androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_streak)
     )
 
-    val trackOptions = listOf("global" to "Semua Track") + CourseCatalog.tracks.map { it.id to it.name }
+    val trackOptions = listOf("global" to androidx.compose.ui.res.stringResource(com.example.R.string.comm_all_tracks)) + CourseCatalog.tracks.map { it.id to it.name }
 
     val listState = rememberLazyListState()
 
@@ -419,7 +419,11 @@ fun CommunityScreen(
                                 }
                             }
                             Text(
-                                text = "Peringkat di filter ${periodOptions.find { it.first == selectedPeriod }?.second ?: "Mingguan"}",
+                                text = androidx.compose.ui.res.stringResource(
+                                    com.example.R.string.comm_rank_in_filter_format,
+                                    periodOptions.find { it.first == selectedPeriod }?.second
+                                        ?: androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_weekly)
+                                ),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -1127,7 +1131,7 @@ private fun LeaderboardFilterSection(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Papan Peringkat Pelajar",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_leaderboard_header),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -1286,7 +1290,7 @@ fun LeaderboardPodium(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Podium Teratas",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_top_podium_header),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface

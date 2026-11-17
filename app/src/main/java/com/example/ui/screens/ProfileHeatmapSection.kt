@@ -427,7 +427,15 @@ private fun Full12WeeksHeatmapCanvas(
     val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
     val cellSizeDp = 20.dp
     val spacingDp = 3.dp
-    val dayLabels = remember { listOf("Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab") }
+    val appLang = com.example.util.localization.LocalAppLanguage.current
+    val dayLabels = remember(appLang) {
+        when (appLang) {
+            com.example.util.localization.AppLanguage.INDONESIAN -> listOf("Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab")
+            com.example.util.localization.AppLanguage.JAPANESE -> listOf("日", "月", "火", "水", "木", "金", "土")
+            com.example.util.localization.AppLanguage.CHINESE -> listOf("日", "一", "二", "三", "四", "五", "六")
+            else -> listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+        }
+    }
 
     val cellSizePx = remember(density) { with(density) { cellSizeDp.toPx() } }
     val spacingPx = remember(density) { with(density) { spacingDp.toPx() } }

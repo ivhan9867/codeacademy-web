@@ -582,8 +582,9 @@ fun CourseCardItem(
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
+                        val appLang = com.example.util.localization.LocalAppLanguage.current
                         Text(
-                            text = stringResource(R.string.course_detail_duration_min_format, course.durationMinutes),
+                            text = com.example.util.NameUtils.formatDurationFriendly(course.durationMinutes, appLang.code),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

@@ -498,8 +498,14 @@ fun StreakFlameGrid(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // 7-day grid (Sen - Min) mapped to actual current calendar week
-            val days = listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min")
+            // 7-day grid (Monday-first, localized) mapped to actual current calendar week
+            val appLang = com.example.util.localization.LocalAppLanguage.current
+            val days = when (appLang) {
+                com.example.util.localization.AppLanguage.INDONESIAN -> listOf("Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min")
+                com.example.util.localization.AppLanguage.JAPANESE -> listOf("月", "火", "水", "木", "金", "土", "日")
+                com.example.util.localization.AppLanguage.CHINESE -> listOf("一", "二", "三", "四", "五", "六", "日")
+                else -> listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+            }
             val todayCalDay = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK)
             val todayMonIndex = when (todayCalDay) {
                 java.util.Calendar.MONDAY -> 0

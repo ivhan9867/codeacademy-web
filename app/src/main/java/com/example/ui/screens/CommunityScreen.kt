@@ -418,12 +418,26 @@ fun CommunityScreen(
                                     )
                                 }
                             }
+                            val aboveEntry = if (myEntryInTop50 != null && myEntryInTop50.rank > 1) {
+                                leaderboardEntries.getOrNull(myEntryInTop50.rank - 2)
+                            } else null
+                            val xpGap = if (aboveEntry != null && selectedPeriod != "streak") {
+                                (aboveEntry.totalXp - displayScore + 1).coerceAtLeast(1)
+                            } else null
                             Text(
-                                text = androidx.compose.ui.res.stringResource(
-                                    com.example.R.string.comm_rank_in_filter_format,
-                                    periodOptions.find { it.first == selectedPeriod }?.second
-                                        ?: androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_weekly)
-                                ),
+                                text = if (xpGap != null && aboveEntry != null) {
+                                    androidx.compose.ui.res.stringResource(
+                                        com.example.R.string.comm_xp_to_next_rank_format,
+                                        xpGap,
+                                        aboveEntry.rank
+                                    )
+                                } else {
+                                    androidx.compose.ui.res.stringResource(
+                                        com.example.R.string.comm_rank_in_filter_format,
+                                        periodOptions.find { it.first == selectedPeriod }?.second
+                                            ?: androidx.compose.ui.res.stringResource(com.example.R.string.comm_period_weekly)
+                                    )
+                                },
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -1149,7 +1163,7 @@ private fun LeaderboardFilterSection(
         // Filter 1: Timeframe (Mingguan / Bulanan / Sepanjang Waktu / Streak) - Horizontally Scrollable
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 2.dp),
+            contentPadding = PaddingValues(start = 2.dp, end = 16.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             items(periodOptions, key = { it.first }) { (periodKey, label) ->
@@ -1165,8 +1179,8 @@ private fun LeaderboardFilterSection(
                         )
                     },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.15f),
-                        selectedLabelColor = MaterialTheme.colorScheme.primary
+                        selectedContainerColor = TealPrimary,
+                        selectedLabelColor = Color.White
                     ),
                     modifier = Modifier.testTag("filter_period_$periodKey")
                 )
@@ -1178,7 +1192,7 @@ private fun LeaderboardFilterSection(
         // Filter 2: Track Scope (Global / Front-End / Back-End / dst) - Horizontally Scrollable
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
-            contentPadding = PaddingValues(horizontal = 2.dp),
+            contentPadding = PaddingValues(start = 2.dp, end = 16.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
             items(trackOptions, key = { it.first }) { (trackKey, trackLabel) ->
@@ -1194,8 +1208,8 @@ private fun LeaderboardFilterSection(
                         )
                     },
                     colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = CyanAccent.copy(alpha = 0.2f),
-                        selectedLabelColor = CyanAccent
+                        selectedContainerColor = TealPrimary,
+                        selectedLabelColor = Color.White
                     ),
                     modifier = Modifier.testTag("filter_track_$trackKey")
                 )
@@ -1542,9 +1556,9 @@ private fun PodiumColumnItem(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Name with single-line ellipsis
+        // Name with single-line ellipsis & separate "You" badge
         Text(
-            text = if (isCurrentUser) "$cleanEntryName (Kamu)" else cleanEntryName,
+            text = cleanEntryName,
             style = MaterialTheme.typography.labelMedium,
             fontWeight = FontWeight.Bold,
             maxLines = 1,
@@ -1552,6 +1566,21 @@ private fun PodiumColumnItem(
             color = if (isCurrentUser) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(horizontal = 2.dp)
         )
+        if (isCurrentUser) {
+            Surface(
+                shape = RoundedCornerShape(999.dp),
+                color = TealPrimary.copy(alpha = 0.16f),
+                modifier = Modifier.padding(top = 1.dp)
+            ) {
+                Text(
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.comm_you_badge),
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = TealPrimary,
+                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 1.dp)
+                )
+            }
+        }
 
         // Level
         Text(

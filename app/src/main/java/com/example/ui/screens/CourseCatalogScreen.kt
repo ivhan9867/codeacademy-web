@@ -319,7 +319,7 @@ fun CourseCatalogScreen(
         if (visibleTracks.size > 1) {
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(bottom = 6.dp)
+                contentPadding = PaddingValues(end = 16.dp, bottom = 6.dp)
             ) {
                 item(key = "track_all") {
                     FilterChip(
@@ -352,7 +352,7 @@ fun CourseCatalogScreen(
         // Level Filter Chips
         LazyRow(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(bottom = 10.dp)
+            contentPadding = PaddingValues(end = 16.dp, bottom = 10.dp)
         ) {
             items(levels, key = { it }) { lvl ->
                 val isSelected = (currentSelectedLevel == null && lvl == "Semua") || currentSelectedLevel == lvl
@@ -511,13 +511,25 @@ fun CourseCardItem(
                         }
                     } else if (isStarted) {
                         NeutralInfoBadge(text = stringResource(R.string.catalog_progress_modules_format, completedModules, course.modules.size))
+                    } else {
+                        NeutralInfoBadge(text = stringResource(R.string.catalog_modules_count_format, course.modules.size))
                     }
                 }
 
-                // Bookmark icon
+                // Bookmark icon with Toast feedback & 48dp touch target
+                val bookmarkContext = androidx.compose.ui.platform.LocalContext.current
+                val savedMsg = stringResource(R.string.catalog_bookmark_saved_toast)
+                val removedMsg = stringResource(R.string.catalog_bookmark_removed_toast)
                 IconButton(
-                    onClick = onToggleBookmark,
-                    modifier = Modifier.size(28.dp)
+                    onClick = {
+                        onToggleBookmark()
+                        android.widget.Toast.makeText(
+                            bookmarkContext,
+                            if (isBookmarked) removedMsg else savedMsg,
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
                         imageVector = if (isBookmarked) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
@@ -527,7 +539,7 @@ fun CourseCardItem(
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             // Title & Description
             Text(
@@ -549,15 +561,33 @@ fun CourseCardItem(
                 overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Metadata row: Rating, Duration, Students
+            if (isStarted && !isCompleted && course.modules.isNotEmpty()) {
+                val fraction = (completedModules.toFloat() / course.modules.size.toFloat()).coerceIn(0f, 1f)
+                LinearProgressIndicator(
+                    progress = { fraction },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .clip(RoundedCornerShape(3.dp)),
+                    color = TealPrimary,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    drawStopIndicator = {}
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            // Metadata row: Rating, Duration, Students + CTA pill
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
                     if (course.rating > 0f) {
                         Icon(
                             imageVector = Icons.Default.Star,
@@ -606,6 +636,25 @@ fun CourseCardItem(
                             )
                         }
                     }
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(10.dp),
+                    color = if (isCompleted) SuccessGreen.copy(alpha = 0.14f) else TealPrimary
+                ) {
+                    Text(
+                        text = when {
+                            isCompleted -> stringResource(R.string.catalog_cta_review)
+                            isStarted -> stringResource(R.string.catalog_cta_continue)
+                            else -> stringResource(R.string.catalog_cta_start)
+                        },
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (isCompleted) SuccessGreen else Color.White,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp)
+                    )
                 }
             }
         }

@@ -1305,6 +1305,13 @@
     <string name="comm_period_all_time">总榜</string>
     <string name="comm_period_streak">连续学习 🔥</string>
     <string name="comm_all_tracks">全部路径</string>
+    <string name="catalog_cta_start">开始</string>
+    <string name="catalog_cta_continue">继续</string>
+    <string name="catalog_cta_review">复习</string>
+    <string name="catalog_bookmark_saved_toast">已保存到收藏</string>
+    <string name="catalog_bookmark_removed_toast">已取消收藏</string>
+    <string name="comm_you_badge">你</string>
+    <string name="comm_xp_to_next_rank_format">距 #%2$d 还差 %1$d XP</string>
     <string name="forum_retry_btn">重试</string>
     <string name="comm_course_forums_title">课程讨论区</string>
     <string name="comm_course_forums_subtitle">选择课程，向导师和同学们直接提问交流</string>

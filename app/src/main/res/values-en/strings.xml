@@ -1069,6 +1069,13 @@
     <string name="comm_period_all_time">All Time</string>
     <string name="comm_period_streak">Streak 🔥</string>
     <string name="comm_all_tracks">All Tracks</string>
+    <string name="catalog_cta_start">Start</string>
+    <string name="catalog_cta_continue">Continue</string>
+    <string name="catalog_cta_review">Review</string>
+    <string name="catalog_bookmark_saved_toast">Saved to Bookmarks</string>
+    <string name="catalog_bookmark_removed_toast">Removed from Bookmarks</string>
+    <string name="comm_you_badge">You</string>
+    <string name="comm_xp_to_next_rank_format">%1$d XP more to reach #%2$d</string>
     <string name="forum_retry_btn">Try Again</string>
     <string name="comm_course_forums_title">Class Discussion Forums</string>
     <string name="comm_course_forums_subtitle">Pick a class to ask Facilitators &amp; peers directly</string>

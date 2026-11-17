@@ -203,15 +203,20 @@ let auth = null;
 let isFirebaseReady = false;
 let isDemoMode = false;
 let currentFacilitatorUser = null;
+let currentAccessRole = "facilitator";
 let unsubSubmissions = null;
 let unsubForum = null;
 let unsubAnnouncements = null;
 let unsubCertificates = null;
+let unsubTeam = null;
+let unsubStudents = null;
 
 let submissions = [];
 let forumPosts = [];
 let announcements = [];
 let certificates = [];
+let facilitatorsList = [];
+let studentUsersList = [];
 
 let activeView = "submissions";
 let currentSubmission = null;
@@ -264,6 +269,23 @@ function applyFacilitatorProfileToUi(displayName, role = "") {
   if (facilitatorIdentityChip) {
     facilitatorIdentityChip.textContent = `👤 ${cleanName}${role ? ` · ${role}` : ""}`;
     facilitatorIdentityChip.style.display = "inline-flex";
+  }
+}
+
+function applyRoleAccessUi(accessRole) {
+  currentAccessRole = accessRole === "super_admin" ? "super_admin" : "facilitator";
+  const isAdmin = currentAccessRole === "super_admin";
+  document.querySelectorAll("[data-admin-only='true']").forEach((el) => {
+    el.style.display = isAdmin ? "" : "none";
+  });
+  const roleBadge = document.getElementById("roleBadge");
+  if (roleBadge) {
+    roleBadge.textContent = isAdmin ? "👑 Super Admin" : "🎓 Fasilitator";
+    roleBadge.className = `role-badge ${isAdmin ? "super-admin" : "facilitator"}`;
+    roleBadge.style.display = "inline-flex";
+  }
+  if (!isAdmin && ["certificates", "team", "analytics"].includes(activeView)) {
+    switchView("submissions");
   }
 }
 const btnGoogleSignIn = document.getElementById("btnGoogleSignIn");
@@ -458,12 +480,14 @@ async function verifyAndEnterFacilitatorSession(user) {
       const savedLocal = loadSavedFacilitatorProfile();
       const resolvedDisplayName = savedLocal.name || profileData.name || user.displayName || "Fasilitator CodeAcademy";
       const resolvedRole = savedLocal.role || profileData.role || "";
+      const accessRole = profileData.accessRole === "super_admin" ? "super_admin" : "facilitator";
       currentFacilitatorUser = {
         uid: user.uid,
         email,
         displayName: resolvedDisplayName,
         role: resolvedRole,
-        bio: savedLocal.bio || profileData.bio || ""
+        bio: savedLocal.bio || profileData.bio || "",
+        accessRole
       };
       isDemoMode = false;
       isFirebaseReady = true;
@@ -471,6 +495,7 @@ async function verifyAndEnterFacilitatorSession(user) {
       console.log("[FacilitatorAuth] Verified! Hiding authOverlay and entering dashboard:", currentFacilitatorUser);
       setAuthStatus("");
       hideAuthOverlay();
+      applyRoleAccessUi(accessRole);
       switchView(activeView || "submissions");
       applyFacilitatorProfileToUi(resolvedDisplayName, resolvedRole);
 
@@ -494,30 +519,41 @@ async function verifyAndEnterFacilitatorSession(user) {
   return verifyingSessionPromise;
 }
 
-function enterDemoOfflineMode() {
+function enterDemoOfflineMode(demoRole = "facilitator") {
   stopRealtimeListeners();
   isDemoMode = true;
   isFirebaseReady = false;
   const savedLocal = loadSavedFacilitatorProfile();
+  const isAdminDemo = demoRole === "super_admin";
   currentFacilitatorUser = {
-    uid: "demo-facilitator",
-    email: "demo-offline@codeacademy.local",
-    displayName: savedLocal.name || "Fasilitator Demo (Offline)",
-    role: savedLocal.role || "Lead Mentor",
-    bio: savedLocal.bio || ""
+    uid: isAdminDemo ? "demo-super-admin" : "demo-facilitator",
+    email: isAdminDemo ? "admin-demo@codeacademy.local" : "demo-offline@codeacademy.local",
+    displayName: savedLocal.name || (isAdminDemo ? "Super Admin Demo" : "Fasilitator Demo (Offline)"),
+    role: savedLocal.role || (isAdminDemo ? "Head of Curriculum" : "Lead Mentor"),
+    bio: savedLocal.bio || "",
+    accessRole: isAdminDemo ? "super_admin" : "facilitator"
   };
   hideAuthOverlay();
   modeBadge.textContent = "● Demo Offline";
   modeBadge.className = "badge-mode";
+  applyRoleAccessUi(currentFacilitatorUser.accessRole);
   applyFacilitatorProfileToUi(currentFacilitatorUser.displayName, currentFacilitatorUser.role);
 
   submissions = DEMO_SUBMISSIONS.map((s) => ({ ...s }));
   forumPosts = DEMO_FORUM_POSTS.map((p) => ({ ...p }));
   announcements = DEMO_ANNOUNCEMENTS.map((a) => ({ ...a }));
   certificates = DEMO_CERTIFICATES.map((c) => ({ ...c }));
+  facilitatorsList = [
+    { email: "admin-demo@codeacademy.local", name: "Super Admin Demo", accessRole: "super_admin", role: "Head of Curriculum" },
+    { email: "mentor.web@codeacademy.local", name: "Raka Pratama", accessRole: "facilitator", role: "Front-End Mentor" }
+  ];
+  studentUsersList = [
+    { id: "u1", name: "Ivhan Afika P", totalXp: 320, level: 3, currentStreak: 4 },
+    { id: "u2", name: "Alya Putri", totalXp: 210, level: 2, currentStreak: 2 }
+  ];
 
   renderAllViews();
-  showToast("Masuk Mode Demo Offline (perubahan tidak dikirim ke Firebase).");
+  showToast(`Masuk Mode Demo ${isAdminDemo ? "Super Admin" : "Fasilitator"} (Offline).`);
 }
 
 function startRealtimeListeners() {
@@ -578,6 +614,25 @@ function startRealtimeListeners() {
         console.error("Certificates listener error:", error);
       }
     );
+
+  if (currentAccessRole === "super_admin") {
+    unsubTeam = db.collection("facilitators").onSnapshot(
+      (snapshot) => {
+        facilitatorsList = snapshot.docs.map((doc) => ({ email: doc.id, ...doc.data() }));
+        renderTeam();
+      },
+      (error) => console.error("Team listener error:", error)
+    );
+    unsubStudents = db.collection("users").limit(100).onSnapshot(
+      (snapshot) => {
+        studentUsersList = snapshot.docs
+          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .sort((a, b) => (Number(b.totalXp) || 0) - (Number(a.totalXp) || 0));
+        renderAnalytics();
+      },
+      (error) => console.error("Users listener error:", error)
+    );
+  }
 }
 
 function stopRealtimeListeners() {
@@ -585,10 +640,14 @@ function stopRealtimeListeners() {
   if (typeof unsubForum === "function") unsubForum();
   if (typeof unsubAnnouncements === "function") unsubAnnouncements();
   if (typeof unsubCertificates === "function") unsubCertificates();
+  if (typeof unsubTeam === "function") unsubTeam();
+  if (typeof unsubStudents === "function") unsubStudents();
   unsubSubmissions = null;
   unsubForum = null;
   unsubAnnouncements = null;
   unsubCertificates = null;
+  unsubTeam = null;
+  unsubStudents = null;
 }
 
 function renderAllViews() {
@@ -597,6 +656,8 @@ function renderAllViews() {
   renderForum();
   renderAnnouncements();
   renderCertificates();
+  renderTeam();
+  renderAnalytics();
 }
 
 function showAuthOverlay(preserveError = false) {
@@ -691,7 +752,11 @@ function attachEventListeners() {
   });
 
   btnEnterDemo.addEventListener("click", () => {
-    enterDemoOfflineMode();
+    enterDemoOfflineMode("facilitator");
+  });
+
+  document.getElementById("btnEnterDemoAdmin")?.addEventListener("click", () => {
+    enterDemoOfflineMode("super_admin");
   });
 
   btnLogout.addEventListener("click", async () => {
@@ -699,6 +764,9 @@ function attachEventListeners() {
     isDemoMode = false;
     isFirebaseReady = false;
     currentFacilitatorUser = null;
+    currentAccessRole = "facilitator";
+    const roleBadge = document.getElementById("roleBadge");
+    if (roleBadge) roleBadge.style.display = "none";
     if (auth && auth.currentUser) {
       await auth.signOut();
     }
@@ -859,6 +927,83 @@ function attachEventListeners() {
     showToast("Profil fasilitator berhasil diperbarui.");
   });
 
+  // Super Admin: Team Management & CSV Exports
+  document.getElementById("btnAddTeamMember")?.addEventListener("click", async () => {
+    const emailEl = document.getElementById("teamEmailInput");
+    const nameEl = document.getElementById("teamNameInput");
+    const roleEl = document.getElementById("teamRoleSelect");
+    const email = (emailEl?.value || "").trim().toLowerCase();
+    const name = (nameEl?.value || "").trim();
+    const accessRole = roleEl?.value === "super_admin" ? "super_admin" : "facilitator";
+    if (!email.includes("@")) {
+      showToast("Masukkan alamat email Google yang valid.");
+      return;
+    }
+    const payload = {
+      email,
+      name: name || email.split("@")[0],
+      accessRole,
+      updatedAt: Date.now()
+    };
+    if (isFirebaseReady && db && !isDemoMode) {
+      try {
+        await db.collection("facilitators").doc(email).set(payload, { merge: true });
+        if (emailEl) emailEl.value = "";
+        if (nameEl) nameEl.value = "";
+        showToast(`Anggota ${email} disimpan sebagai ${accessRole}.`);
+      } catch (err) {
+        showToast("Gagal menyimpan anggota: " + err.message);
+      }
+    } else {
+      const idx = facilitatorsList.findIndex((f) => f.email === email);
+      if (idx >= 0) facilitatorsList[idx] = { ...facilitatorsList[idx], ...payload };
+      else facilitatorsList.unshift(payload);
+      if (emailEl) emailEl.value = "";
+      if (nameEl) nameEl.value = "";
+      renderTeam();
+      showToast(`Anggota ${email} ditambahkan (Mode Demo).`);
+    }
+  });
+
+  document.getElementById("teamTableBody")?.addEventListener("click", async (e) => {
+    const delBtn = e.target.closest("[data-action='remove-team']");
+    if (!delBtn || !delBtn.dataset.email) return;
+    const email = delBtn.dataset.email;
+    if (email === currentFacilitatorUser?.email) {
+      showToast("Tidak dapat menghapus akun sendiri.");
+      return;
+    }
+    if (!confirm(`Hapus akses portal untuk ${email}?`)) return;
+    if (isFirebaseReady && db && !isDemoMode) {
+      try {
+        await db.collection("facilitators").doc(email).delete();
+        showToast(`Akses ${email} dihapus.`);
+      } catch (err) {
+        showToast("Gagal menghapus anggota: " + err.message);
+      }
+    } else {
+      facilitatorsList = facilitatorsList.filter((f) => f.email !== email);
+      renderTeam();
+      showToast(`Akses ${email} dihapus (Mode Demo).`);
+    }
+  });
+
+  document.getElementById("btnExportCertCsv")?.addEventListener("click", () => {
+    downloadCsv(
+      "codeacademy-sertifikat.csv",
+      ["Cert ID", "Nama", "Email", "Kursus", "Skor Akhir", "Diterbitkan"],
+      certificates.map((c) => [c.certId, c.userName, c.userEmail, getCourseLabel(c.courseId), c.finalScore ?? c.scorePercent ?? "", formatDate(c.issuedAt)])
+    );
+  });
+
+  document.getElementById("btnExportGradesCsv")?.addEventListener("click", () => {
+    downloadCsv(
+      "codeacademy-nilai-proyek.csv",
+      ["Nama", "Email", "Kursus", "Status", "Skor Akhir", "Fasilitator"],
+      submissions.map((s) => [s.userName, s.userEmail, getCourseLabel(s.courseId), s.status, s.finalScore ?? "", s.facilitatorName || ""])
+    );
+  });
+
   // Announcements
   btnPublishAnnouncement.addEventListener("click", () => publishAnnouncement());
   announcementsList.addEventListener("click", (e) => {
@@ -944,6 +1089,9 @@ function attachEventListeners() {
 }
 
 function switchView(view) {
+  if (currentAccessRole !== "super_admin" && ["certificates", "team", "analytics"].includes(view)) {
+    view = "submissions";
+  }
   activeView = view;
   viewTabs.forEach((tab) => {
     const isActive = tab.dataset.view === view;
@@ -955,6 +1103,10 @@ function switchView(view) {
   forumView.style.display = view === "forum" ? "block" : "none";
   announcementsView.style.display = view === "announcements" ? "block" : "none";
   certificatesView.style.display = view === "certificates" ? "block" : "none";
+  const teamView = document.getElementById("teamView");
+  const analyticsView = document.getElementById("analyticsView");
+  if (teamView) teamView.style.display = view === "team" ? "block" : "none";
+  if (analyticsView) analyticsView.style.display = view === "analytics" ? "block" : "none";
 
   if (view === "submissions") {
     pageEyebrow.textContent = "Evaluasi Proyek Akhir";
@@ -963,15 +1115,23 @@ function switchView(view) {
   } else if (view === "forum") {
     pageEyebrow.textContent = "Moderasi & Bimbingan";
     pageTitle.textContent = "Forum Diskusi Kelas";
-    pageSubtitle.textContent = "Jawab pertanyaan peserta secara real-time dengan lencana Fasilitator, atau moderasi diskusi yang kurang sesuai.";
+    pageSubtitle.textContent = "Jawab pertanyaan peserta secara real-time dengan lencana Fasilitator, pin jawaban terverifikasi, atau balas spesifik.";
   } else if (view === "announcements") {
     pageEyebrow.textContent = "Broadcast Informasi";
     pageTitle.textContent = "Pengumuman Kelas ke Aplikasi";
     pageSubtitle.textContent = "Terbitkan pengumuman penting yang langsung muncul di tab Notifikasi seluruh peserta Android.";
   } else if (view === "certificates") {
-    pageEyebrow.textContent = "Registri Kelulusan";
-    pageTitle.textContent = "Sertifikat Terbit";
-    pageSubtitle.textContent = "Pantau sertifikat berformat CC-... yang terverifikasi secara publik di Portal Verifikasi.";
+    pageEyebrow.textContent = "Panel Super Admin · Registri Kelulusan";
+    pageTitle.textContent = "Sertifikat & Audit Kelulusan";
+    pageSubtitle.textContent = "Pantau sertifikat berformat CC-... yang terverifikasi secara publik di Portal Verifikasi atau ekspor CSV.";
+  } else if (view === "team") {
+    pageEyebrow.textContent = "Panel Super Admin · Manajemen Akses";
+    pageTitle.textContent = "Tim Fasilitator & Admin";
+    pageSubtitle.textContent = "Kelola daftar email Google yang diizinkan mengakses Portal Staff dan atur perannya.";
+  } else if (view === "analytics") {
+    pageEyebrow.textContent = "Panel Super Admin · Analitik Global";
+    pageTitle.textContent = "Ringkasan Platform & Direktori Siswa";
+    pageSubtitle.textContent = "Pantau statistik kelulusan, keaktifan forum, progres siswa, dan unduh laporan CSV.";
   }
 }
 
@@ -1086,6 +1246,80 @@ function getStatusLabel(status) {
   if (st === "REVISION_REQUESTED") return "Perlu Revisi";
   if (st === "APPROVED") return "Disetujui";
   return st || "-";
+}
+
+// ==========================================
+function renderTeam() {
+  const badge = document.getElementById("teamTotalBadge");
+  if (badge) badge.textContent = String(facilitatorsList.length);
+  const tbody = document.getElementById("teamTableBody");
+  if (!tbody) return;
+  if (facilitatorsList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="empty-row">Belum ada data tim fasilitator.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = facilitatorsList
+    .map((m) => {
+      const isAdmin = m.accessRole === "super_admin";
+      return `
+        <tr>
+          <td><strong>${escapeHtml(m.name || m.email)}</strong><div style="font-size:12px;color:var(--muted);">${escapeHtml(m.email)}</div></td>
+          <td><span class="role-badge ${isAdmin ? "super-admin" : "facilitator"}">${isAdmin ? "👑 Super Admin" : "🎓 Fasilitator"}</span></td>
+          <td>${escapeHtml(m.role || "-")}</td>
+          <td><button type="button" class="btn-danger-ghost" data-action="remove-team" data-email="${escapeHtml(m.email)}">Cabut Akses</button></td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function renderAnalytics() {
+  const badge = document.getElementById("studentsTotalBadge");
+  if (badge) badge.textContent = String(studentUsersList.length);
+  const cardsEl = document.getElementById("adminAnalyticsCards");
+  if (cardsEl) {
+    const approvedCount = submissions.filter((s) => (s.status || "").toUpperCase() === "APPROVED").length;
+    const passRate = submissions.length ? Math.round((approvedCount / submissions.length) * 100) : 0;
+    const rootsCount = forumPosts.filter((p) => !p.replyToPostId && !p.rootThreadId).length;
+    const verifiedThreads = new Set(forumPosts.filter((p) => p.isVerifiedAnswer === true).map((p) => p.rootThreadId || p.replyToPostId || p.postId)).size;
+    cardsEl.innerHTML = `
+      <div class="stat-card"><div class="stat-info"><p>Rasio Lulus Proyek</p><h3>${passRate}%</h3></div></div>
+      <div class="stat-card"><div class="stat-info"><p>Topik Forum Terverifikasi</p><h3>${verifiedThreads} / ${rootsCount}</h3></div></div>
+      <div class="stat-card"><div class="stat-info"><p>Total Sertifikat Terbit</p><h3>${certificates.length}</h3></div></div>
+      <div class="stat-card"><div class="stat-info"><p>Siswa Terdaftar (Cloud)</p><h3>${studentUsersList.length}</h3></div></div>
+    `;
+  }
+  const tbody = document.getElementById("studentsTableBody");
+  if (!tbody) return;
+  if (studentUsersList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" class="empty-row">Belum ada data siswa cloud.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = studentUsersList
+    .slice(0, 50)
+    .map((u) => `
+      <tr>
+        <td><strong>${escapeHtml(u.name || "Siswa")}</strong></td>
+        <td>${Number(u.totalXp) || 0} XP</td>
+        <td>Lv.${Number(u.level) || 1}</td>
+        <td>🔥 ${Number(u.currentStreak) || 0} hari</td>
+      </tr>
+    `)
+    .join("");
+}
+
+function downloadCsv(filename, headers, rows) {
+  const escapeCell = (val) => `"${String(val ?? "").replace(/"/g, '""')}"`;
+  const csv = [headers.map(escapeCell).join(","), ...rows.map((r) => r.map(escapeCell).join(","))].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 // ==========================================

@@ -42,9 +42,14 @@
         Masuk dengan Google
       </button>
 
-      <button type="button" id="btnEnterDemo" class="btn-demo-outline">
-        Masuk Mode Demo Offline (Tanpa Menulis ke Firebase)
-      </button>
+      <div class="demo-role-grid">
+        <button type="button" id="btnEnterDemo" class="btn-demo-outline">
+          Demo Fasilitator
+        </button>
+        <button type="button" id="btnEnterDemoAdmin" class="btn-demo-outline admin">
+          Demo Super Admin
+        </button>
+      </div>
 
       <a href="../index.html" class="auth-back">← Kembali ke beranda</a>
     </div>
@@ -64,6 +69,7 @@
         <a href="../index.html" class="nav-link">Beranda</a>
         <a href="../verify.html" class="nav-link">Verifikasi</a>
         <a href="../docs/Manual_Book_CodeAcademy.html" class="nav-link">Manual Book</a>
+        <span id="roleBadge" class="role-badge" style="display: none;"></span>
         <button type="button" id="facilitatorIdentityChip" class="facilitator-pill facilitator-pill-btn" title="Edit Profil Fasilitator" style="display: none;"></button>
         <div id="modeBadge" class="badge-mode">● Demo Offline</div>
         <button id="btnLogout" class="btn-logout" type="button">
@@ -74,32 +80,49 @@
     </div>
   </header>
 
-  <!-- MAIN DASHBOARD -->
-  <main class="container">
+  <!-- MAIN WORKSPACE -->
+  <main class="container workspace-shell">
 
+    <aside class="workspace-sidebar" aria-label="Menu Workspace Staf">
+      <div class="sidebar-group-label">Operasional Fasilitator</div>
+      <nav class="sidebar-nav" role="tablist" aria-label="Navigasi Portal Fasilitator">
+        <button type="button" class="view-tab sidebar-item active" data-view="submissions" role="tab" aria-selected="true">
+          <span>Proyek Akhir</span>
+          <span class="tab-count" id="submissionsPendingBadge">0</span>
+        </button>
+        <button type="button" class="view-tab sidebar-item" data-view="forum" role="tab" aria-selected="false">
+          <span>Forum Diskusi</span>
+          <span class="tab-count" id="forumTotalBadge">0</span>
+        </button>
+        <button type="button" class="view-tab sidebar-item" data-view="announcements" role="tab" aria-selected="false">
+          <span>Pengumuman</span>
+          <span class="tab-count" id="announcementsTotalBadge">0</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-group-label admin-label" data-admin-only="true" style="display: none;">Panel Super Admin</div>
+      <nav class="sidebar-nav" data-admin-only="true" style="display: none;">
+        <button type="button" class="view-tab sidebar-item" data-view="certificates" role="tab" aria-selected="false">
+          <span>Sertifikat &amp; Audit</span>
+          <span class="tab-count" id="certTotalBadge">0</span>
+        </button>
+        <button type="button" class="view-tab sidebar-item" data-view="team" role="tab" aria-selected="false">
+          <span>Tim Fasilitator</span>
+          <span class="tab-count" id="teamTotalBadge">0</span>
+        </button>
+        <button type="button" class="view-tab sidebar-item" data-view="analytics" role="tab" aria-selected="false">
+          <span>Ringkasan &amp; Siswa</span>
+          <span class="tab-count" id="studentsTotalBadge">0</span>
+        </button>
+      </nav>
+    </aside>
+
+    <div class="workspace-content">
     <section class="page-header">
       <div>
         <div class="page-eyebrow" id="pageEyebrow">Evaluasi Proyek Akhir</div>
         <h1 id="pageTitle">Antrean Penilaian Peserta</h1>
         <p id="pageSubtitle">Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik (40% Kuis + 60% Proyek), dan terbitkan sertifikat.</p>
-      </div>
-      <div class="view-tabs" role="tablist" aria-label="Navigasi Portal Fasilitator">
-        <button type="button" class="view-tab active" data-view="submissions" role="tab" aria-selected="true">
-          Proyek Akhir
-          <span class="tab-count" id="submissionsPendingBadge">0</span>
-        </button>
-        <button type="button" class="view-tab" data-view="forum" role="tab" aria-selected="false">
-          Forum Diskusi
-          <span class="tab-count" id="forumTotalBadge">0</span>
-        </button>
-        <button type="button" class="view-tab" data-view="announcements" role="tab" aria-selected="false">
-          Pengumuman
-          <span class="tab-count" id="announcementsTotalBadge">0</span>
-        </button>
-        <button type="button" class="view-tab" data-view="certificates" role="tab" aria-selected="false">
-          Sertifikat
-          <span class="tab-count" id="certTotalBadge">0</span>
-        </button>
       </div>
     </section>
 
@@ -290,6 +313,7 @@
             <option value="fe-css-02">CSS Layout Modern: Flexbox &amp; Grid</option>
             <option value="fe-js-03">JavaScript Fundamentals</option>
           </select>
+          <button type="button" id="btnExportCertCsv" class="btn-export-csv">Unduh CSV</button>
         </div>
       </section>
 
@@ -298,6 +322,67 @@
       </section>
     </div>
 
+    <!-- VIEW 5: SUPER ADMIN - TIM FASILITATOR -->
+    <div id="teamView" style="display: none;">
+      <section class="panel-card">
+        <h3 style="margin-bottom: 12px;">Tambah / Perbarui Anggota Tim Fasilitator</h3>
+        <div class="team-form-grid">
+          <input type="email" id="teamEmailInput" placeholder="Email Google fasilitator (mis. mentor@gmail.com)" class="auth-input">
+          <input type="text" id="teamNameInput" placeholder="Nama tampilan (mis. Budi Santoso)" class="auth-input">
+          <select id="teamRoleSelect" class="select-filter" aria-label="Peran akses">
+            <option value="facilitator">Fasilitator</option>
+            <option value="super_admin">Super Admin</option>
+          </select>
+          <button type="button" id="btnAddTeamMember" class="btn-primary-solid">Simpan Anggota</button>
+        </div>
+      </section>
+
+      <section class="table-card" style="margin-top: 16px;">
+        <div class="table-wrap">
+          <table class="submissions-table">
+            <thead>
+              <tr>
+                <th>Nama &amp; Email</th>
+                <th>Peran Akses</th>
+                <th>Spesialisasi</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="teamTableBody">
+              <tr><td colspan="4" class="empty-row">Memuat daftar tim...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW 6: SUPER ADMIN - RINGKASAN & SISWA -->
+    <div id="analyticsView" style="display: none;">
+      <section class="admin-grid" id="adminAnalyticsCards"></section>
+      <section class="panel-card" style="margin-top: 16px;">
+        <div class="panel-head-row">
+          <h3>Direktori Siswa &amp; Laporan Nilai</h3>
+          <button type="button" id="btnExportGradesCsv" class="btn-export-csv">Unduh Laporan CSV</button>
+        </div>
+        <div class="table-wrap" style="margin-top: 12px;">
+          <table class="submissions-table">
+            <thead>
+              <tr>
+                <th>Siswa</th>
+                <th>Total XP</th>
+                <th>Level</th>
+                <th>Streak</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody">
+              <tr><td colspan="4" class="empty-row">Memuat data siswa...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    </div>
   </main>
 
   <!-- REVIEW MODAL -->

@@ -18,16 +18,27 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower()));
     }
 
+    function isSuperAdmin() {
+      return isFacilitator()
+        && get(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower())).data.get('accessRole', 'facilitator') == 'super_admin';
+    }
+
     function validSubmissionStatus(status) {
       return status in ['PENDING_REVIEW', 'REVISION_REQUESTED', 'APPROVED'];
     }
 
-    // Facilitator allowlist (manageable via Firebase Console / Admin SDK only)
+    // Facilitator allowlist (Super Admin can manage all; facilitator can update own profile only)
     match /facilitators/{email} {
-      allow read: if isSignedIn()
-        && request.auth.token.email != null
-        && request.auth.token.email.lower() == email;
-      allow write: if false;
+      allow read: if isSuperAdmin()
+        || (isSignedIn()
+            && request.auth.token.email != null
+            && request.auth.token.email.lower() == email);
+      allow create, delete: if isSuperAdmin();
+      allow update: if isSuperAdmin()
+        || (hasValidEmail()
+            && request.auth.token.email.lower() == email
+            && request.resource.data.get('accessRole', resource.data.get('accessRole', 'facilitator'))
+               == resource.data.get('accessRole', 'facilitator'));
     }
 
     // Student & Facilitator Final Project Submissions

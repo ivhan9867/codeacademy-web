@@ -1082,6 +1082,8 @@
     <string name="ai_disclaimer_note">AI responses may contain mistakes, please verify.</string>
     <string name="heatmap_building_habit">Keep learning to reveal your busiest day</string>
     <string name="forum_send_failed">Failed to send message. Check your internet connection.</string>
+    <string name="forum_badge_verified_answer">✓ Verified</string>
+    <string name="forum_badge_helpful_answer">💡 Helpful</string>
     <string name="forum_retry_btn">Try Again</string>
     <string name="comm_course_forums_title">Class Discussion Forums</string>
     <string name="comm_course_forums_subtitle">Pick a class to ask Facilitators &amp; peers directly</string>

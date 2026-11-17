@@ -196,7 +196,9 @@ data class ForumPostEntity(
     val replyToAuthorName: String? = null,
     val replyToContentSnippet: String? = null,
     val authorLevel: Int = 1,
-    val authorIsMentor: Boolean = false
+    val authorIsMentor: Boolean = false,
+    val isVerifiedAnswer: Boolean = false,
+    val isHelpful: Boolean = false
 )
 
 @Immutable

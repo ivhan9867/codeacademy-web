@@ -125,24 +125,8 @@ class SocialRepository(
             replyToContentSnippet = replyToContentSnippet
         )
 
-        val entity = if (cloudResult.isSuccess) {
-            cloudResult.getOrThrow()
-        } else {
-            ForumPostEntity(
-                postId = UUID.randomUUID().toString(),
-                courseId = courseId,
-                authorId = authorId,
-                authorName = authorName,
-                content = content.trim(),
-                timestamp = System.currentTimeMillis(),
-                likeCount = 0,
-                isLikedByMe = false,
-                replyToPostId = replyToPostId,
-                replyToAuthorName = replyToAuthorName,
-                replyToContentSnippet = replyToContentSnippet,
-                authorLevel = authorLevel,
-                authorIsMentor = false
-            )
+        val entity = cloudResult.getOrElse { err ->
+            return@withContext Result.failure(err)
         }
 
         forumPostDao.insertPost(entity)

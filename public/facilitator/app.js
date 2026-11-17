@@ -233,6 +233,39 @@ const authStatusEl = document.getElementById("authStatus");
 const authError = document.getElementById("authError");
 let verifyingSessionPromise = null;
 const activeReplyTargetByThread = new Map();
+const PROFILE_STORAGE_KEY = "ca_fac_profile_v1";
+
+function loadSavedFacilitatorProfile() {
+  try {
+    const raw = localStorage.getItem(PROFILE_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveLocalFacilitatorProfile(profile) {
+  try {
+    localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+  } catch {
+    // ignore storage errors
+  }
+}
+
+function applyFacilitatorProfileToUi(displayName, role = "") {
+  const cleanName = (displayName || "Fasilitator CodeAcademy").trim();
+  if (currentFacilitatorUser) {
+    currentFacilitatorUser.displayName = cleanName;
+    currentFacilitatorUser.role = role;
+  }
+  if (facilitatorNameInput) {
+    facilitatorNameInput.value = cleanName;
+  }
+  if (facilitatorIdentityChip) {
+    facilitatorIdentityChip.textContent = `👤 ${cleanName}${role ? ` · ${role}` : ""}`;
+    facilitatorIdentityChip.style.display = "inline-flex";
+  }
+}
 const btnGoogleSignIn = document.getElementById("btnGoogleSignIn");
 const btnEnterDemo = document.getElementById("btnEnterDemo");
 const btnLogout = document.getElementById("btnLogout");
@@ -422,10 +455,15 @@ async function verifyAndEnterFacilitatorSession(user) {
       }
 
       const profileData = allowDoc.data() || {};
+      const savedLocal = loadSavedFacilitatorProfile();
+      const resolvedDisplayName = savedLocal.name || profileData.name || user.displayName || "Fasilitator CodeAcademy";
+      const resolvedRole = savedLocal.role || profileData.role || "";
       currentFacilitatorUser = {
         uid: user.uid,
         email,
-        displayName: profileData.name || user.displayName || "Fasilitator CodeAcademy"
+        displayName: resolvedDisplayName,
+        role: resolvedRole,
+        bio: savedLocal.bio || profileData.bio || ""
       };
       isDemoMode = false;
       isFirebaseReady = true;
@@ -434,14 +472,10 @@ async function verifyAndEnterFacilitatorSession(user) {
       setAuthStatus("");
       hideAuthOverlay();
       switchView(activeView || "submissions");
-      if (profileData.name || user.displayName) {
-        facilitatorNameInput.value = currentFacilitatorUser.displayName;
-      }
+      applyFacilitatorProfileToUi(resolvedDisplayName, resolvedRole);
 
       modeBadge.textContent = "● Live Firebase";
       modeBadge.className = "badge-mode live";
-      facilitatorIdentityChip.textContent = email;
-      facilitatorIdentityChip.style.display = "inline-flex";
 
       renderAllViews();
       startRealtimeListeners();
@@ -464,17 +498,18 @@ function enterDemoOfflineMode() {
   stopRealtimeListeners();
   isDemoMode = true;
   isFirebaseReady = false;
+  const savedLocal = loadSavedFacilitatorProfile();
   currentFacilitatorUser = {
     uid: "demo-facilitator",
     email: "demo-offline@codeacademy.local",
-    displayName: "Fasilitator Demo (Offline)"
+    displayName: savedLocal.name || "Fasilitator Demo (Offline)",
+    role: savedLocal.role || "Lead Mentor",
+    bio: savedLocal.bio || ""
   };
   hideAuthOverlay();
   modeBadge.textContent = "● Demo Offline";
   modeBadge.className = "badge-mode";
-  facilitatorIdentityChip.textContent = "Mode Demo Offline";
-  facilitatorIdentityChip.style.display = "inline-flex";
-  facilitatorNameInput.value = currentFacilitatorUser.displayName;
+  applyFacilitatorProfileToUi(currentFacilitatorUser.displayName, currentFacilitatorUser.role);
 
   submissions = DEMO_SUBMISSIONS.map((s) => ({ ...s }));
   forumPosts = DEMO_FORUM_POSTS.map((p) => ({ ...p }));
@@ -726,11 +761,21 @@ function attachEventListeners() {
 
   btnCreateForumPost.addEventListener("click", () => createFacilitatorTopic());
 
-  // Event delegation for Forum Delete, Targeted Reply & Reply forms
+  // Event delegation for Forum Delete, Pin/Helpful, Targeted Reply & Reply forms
   forumThreadsList.addEventListener("click", (e) => {
     const delBtn = e.target.closest("[data-action='delete-post']");
     if (delBtn && delBtn.dataset.postId) {
       deleteForumPost(delBtn.dataset.postId);
+      return;
+    }
+    const verifyBtn = e.target.closest("[data-action='toggle-verified']");
+    if (verifyBtn && verifyBtn.dataset.postId) {
+      toggleForumPostFlag(verifyBtn.dataset.postId, "isVerifiedAnswer");
+      return;
+    }
+    const helpfulBtn = e.target.closest("[data-action='toggle-helpful']");
+    if (helpfulBtn && helpfulBtn.dataset.postId) {
+      toggleForumPostFlag(helpfulBtn.dataset.postId, "isHelpful");
       return;
     }
     const targetBtn = e.target.closest("[data-action='target-reply']");
@@ -765,6 +810,53 @@ function attachEventListeners() {
       e.preventDefault();
       replyToThread(form);
     }
+  });
+
+  const profileModal = document.getElementById("profileModal");
+  const btnCloseProfileModal = document.getElementById("btnCloseProfileModal");
+  const btnCancelProfileModal = document.getElementById("btnCancelProfileModal");
+  const btnSaveProfile = document.getElementById("btnSaveProfile");
+  const profileNameInput = document.getElementById("profileNameInput");
+  const profileRoleInput = document.getElementById("profileRoleInput");
+  const profileBioInput = document.getElementById("profileBioInput");
+
+  const closeProfileModal = () => {
+    if (profileModal) profileModal.hidden = true;
+  };
+  if (facilitatorIdentityChip) {
+    facilitatorIdentityChip.addEventListener("click", () => {
+      const saved = loadSavedFacilitatorProfile();
+      if (profileNameInput) profileNameInput.value = saved.name || currentFacilitatorUser?.displayName || facilitatorNameInput?.value || "";
+      if (profileRoleInput) profileRoleInput.value = saved.role || currentFacilitatorUser?.role || "";
+      if (profileBioInput) profileBioInput.value = saved.bio || currentFacilitatorUser?.bio || "";
+      if (profileModal) profileModal.hidden = false;
+    });
+  }
+  btnCloseProfileModal?.addEventListener("click", closeProfileModal);
+  btnCancelProfileModal?.addEventListener("click", closeProfileModal);
+  btnSaveProfile?.addEventListener("click", async () => {
+    const newName = (profileNameInput?.value || "").trim();
+    const newRole = (profileRoleInput?.value || "").trim();
+    const newBio = (profileBioInput?.value || "").trim();
+    if (newName.length < 2) {
+      showToast("Nama fasilitator minimal 2 karakter.");
+      return;
+    }
+    const nextProfile = { name: newName, role: newRole, bio: newBio, updatedAt: Date.now() };
+    saveLocalFacilitatorProfile(nextProfile);
+    if (currentFacilitatorUser) {
+      currentFacilitatorUser.bio = newBio;
+    }
+    applyFacilitatorProfileToUi(newName, newRole);
+    if (isFirebaseReady && db && !isDemoMode && currentFacilitatorUser?.email) {
+      try {
+        await db.collection("facilitators").doc(currentFacilitatorUser.email).set(nextProfile, { merge: true });
+      } catch (err) {
+        console.warn("Save facilitator profile to Firestore warning:", err);
+      }
+    }
+    closeProfileModal();
+    showToast("Profil fasilitator berhasil diperbarui.");
   });
 
   // Announcements
@@ -1261,30 +1353,39 @@ function renderForum() {
 
   forumThreadsList.innerHTML = filtered
     .map((thread) => {
-      const replies = (repliesByRoot.get(thread.postId) || []).slice().sort((a, b) => a.timestamp - b.timestamp);
+      const replies = (repliesByRoot.get(thread.postId) || [])
+        .slice()
+        .sort((a, b) => ((b.isVerifiedAnswer ? 1 : 0) - (a.isVerifiedAnswer ? 1 : 0)) || (a.timestamp - b.timestamp));
       const initial = (thread.authorName || "P").trim().charAt(0).toUpperCase();
       const courseName = getCourseLabel(thread.courseId);
+      const hasVerifiedAnswer = replies.some((r) => r.isVerifiedAnswer === true);
 
       const repliesHtml = replies
         .map((r) => {
           const rInitial = (r.authorName || "P").trim().charAt(0).toUpperCase();
           const rIsMentor = r.authorIsMentor === true || r.isMentor === true;
+          const rIsVerified = r.isVerifiedAnswer === true;
+          const rIsHelpful = r.isHelpful === true;
           const hasSpecificQuote = Boolean(r.replyToAuthorName && r.replyToPostId && r.replyToPostId !== thread.postId);
           const quoteHtml = hasSpecificQuote
             ? `<div class="forum-reply-quote">Membalas <strong>@${escapeHtml(r.replyToAuthorName)}</strong>${r.replyToContentSnippet ? `: “${escapeHtml(r.replyToContentSnippet)}”` : ""}</div>`
             : "";
           return `
-        <div class="forum-reply-card ${rIsMentor ? "mentor" : ""}">
+        <div class="forum-reply-card ${rIsMentor ? "mentor" : ""} ${rIsVerified ? "verified" : ""}">
           <div class="forum-post-head" style="margin-bottom: 6px;">
             <div class="forum-author-meta">
               <div class="forum-avatar ${rIsMentor ? "mentor" : ""}" style="width:26px;height:26px;font-size:11px;">${escapeHtml(rInitial)}</div>
               <div>
                 <strong style="font-size:13px;">${escapeHtml(r.authorName || "Peserta")}</strong>
                 ${rIsMentor ? '<span class="forum-mentor-badge">Fasilitator</span>' : ""}
+                ${rIsVerified ? '<span class="forum-verified-badge">✓ Jawaban Terverifikasi</span>' : ""}
+                ${rIsHelpful ? '<span class="forum-helpful-badge">💡 Membantu</span>' : ""}
                 <span style="font-size:11.5px; color:var(--muted); margin-left:6px;">${escapeHtml(formatDate(r.timestamp))}</span>
               </div>
             </div>
             <div class="forum-reply-actions">
+              <button type="button" class="btn-action-chip ${rIsVerified ? "active-verified" : ""}" data-action="toggle-verified" data-post-id="${escapeHtml(r.postId)}" title="Pin sebagai Jawaban Terverifikasi Fasilitator">${rIsVerified ? "✓ Terpin" : "📌 Pin"}</button>
+              <button type="button" class="btn-action-chip ${rIsHelpful ? "active-helpful" : ""}" data-action="toggle-helpful" data-post-id="${escapeHtml(r.postId)}" title="Tandai jawaban membantu">💡</button>
               <button type="button" class="btn-reply-ghost" data-action="target-reply" data-thread-id="${escapeHtml(thread.postId)}" data-post-id="${escapeHtml(r.postId)}">Balas</button>
               <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(r.postId)}">Hapus</button>
             </div>
@@ -1316,6 +1417,7 @@ function renderForum() {
               <strong>${escapeHtml(thread.authorName || "Peserta")}</strong>
               ${tIsMentor ? '<span class="forum-mentor-badge">Fasilitator</span>' : `<span style="font-size:11.5px;color:var(--muted);">• Lv.${Number(thread.authorLevel) || 1}</span>`}
               <span class="forum-course-pill">${escapeHtml(courseName)}</span>
+              ${hasVerifiedAnswer ? '<span class="forum-resolved-pill">✓ Terjawab</span>' : ""}
               <div style="font-size:12px; color:var(--muted);">${escapeHtml(formatDate(thread.timestamp))} • ${Number(thread.likeCount) || 0} suka • ${replies.length} balasan</div>
             </div>
           </div>
@@ -1434,6 +1536,33 @@ async function replyToThread(form) {
     input.value = "";
     renderForum();
     showToast("Balasan ditambahkan (Mode Demo Offline).");
+  }
+}
+
+async function toggleForumPostFlag(postId, field) {
+  const target = forumPosts.find((p) => p.postId === postId);
+  if (!target) return;
+  const nextVal = !(target[field] === true);
+  if (isFirebaseReady && db && !isDemoMode) {
+    try {
+      await db.collection("forum_posts").doc(postId).update({ [field]: nextVal });
+      showToast(
+        field === "isVerifiedAnswer"
+          ? (nextVal ? "Jawaban dipin & ditandai Terverifikasi Fasilitator." : "Pin jawaban terverifikasi dilepas.")
+          : (nextVal ? "Ditandai sebagai Jawaban Membantu." : "Tanda Membantu dilepas.")
+      );
+    } catch (err) {
+      console.error("Toggle forum flag error:", err);
+      showToast("Gagal memperbarui status jawaban: " + err.message);
+    }
+  } else {
+    target[field] = nextVal;
+    renderForum();
+    showToast(
+      field === "isVerifiedAnswer"
+        ? (nextVal ? "Jawaban dipin (Mode Demo Offline)." : "Pin dilepas (Mode Demo Offline).")
+        : (nextVal ? "Ditandai Membantu (Mode Demo Offline)." : "Tanda Membantu dilepas (Mode Demo Offline).")
+    );
   }
 }
 

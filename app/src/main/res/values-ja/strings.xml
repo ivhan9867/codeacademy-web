@@ -1317,6 +1317,7 @@
     <string name="ai_clear_chat_confirm_btn">削除</string>
     <string name="ai_disclaimer_note">AIの回答には誤りが含まれる場合があります。</string>
     <string name="heatmap_building_habit">学習を続けて最も活発な日を記録しよう</string>
+    <string name="forum_send_failed">メッセージを送信できませんでした。接続を確認してください。</string>
     <string name="forum_retry_btn">再試行</string>
     <string name="comm_course_forums_title">クラス別フォーラム</string>
     <string name="comm_course_forums_subtitle">クラスを選んで講師や仲間と直接質問・相談できます</string>

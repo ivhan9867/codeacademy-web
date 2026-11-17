@@ -64,7 +64,7 @@
         <a href="../index.html" class="nav-link">Beranda</a>
         <a href="../verify.html" class="nav-link">Verifikasi</a>
         <a href="../docs/Manual_Book_CodeAcademy.html" class="nav-link">Manual Book</a>
-        <span id="facilitatorIdentityChip" class="facilitator-pill" style="display: none;"></span>
+        <button type="button" id="facilitatorIdentityChip" class="facilitator-pill facilitator-pill-btn" title="Edit Profil Fasilitator" style="display: none;"></button>
         <div id="modeBadge" class="badge-mode">● Demo Offline</div>
         <button id="btnLogout" class="btn-logout" type="button">
           <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -423,6 +423,37 @@
           <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
           Setujui &amp; Terbitkan
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROFIL FASILITATOR -->
+  <div id="profileModal" class="modal-overlay" hidden>
+    <div class="modal-card modal-card-sm">
+      <div class="modal-header">
+        <div>
+          <h3>Profil Fasilitator</h3>
+          <p class="modal-sub">Sesuaikan nama tampilan &amp; peran Anda di Forum dan Pengumuman.</p>
+        </div>
+        <button type="button" id="btnCloseProfileModal" class="btn-icon-close" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="modal-body-stack">
+        <div class="field-group">
+          <label for="profileNameInput">Nama Tampilan Fasilitator</label>
+          <input type="text" id="profileNameInput" maxlength="50" placeholder="Mis. Ivhan — Lead Web Mentor">
+        </div>
+        <div class="field-group">
+          <label for="profileRoleInput">Peran / Spesialisasi</label>
+          <input type="text" id="profileRoleInput" maxlength="60" placeholder="Mis. Front-End &amp; JavaScript Facilitator">
+        </div>
+        <div class="field-group">
+          <label for="profileBioInput">Bio Singkat</label>
+          <textarea id="profileBioInput" rows="3" maxlength="160" placeholder="Tuliskan info singkat atau jam aktif Anda..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnCancelProfileModal" class="btn-cancel">Batal</button>
+        <button type="button" id="btnSaveProfile" class="btn-approve">Simpan Profil</button>
       </div>
     </div>
   </div>

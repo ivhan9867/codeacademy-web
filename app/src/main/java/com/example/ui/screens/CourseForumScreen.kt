@@ -521,6 +521,12 @@ fun CourseForumScreen(
                                                     listState.animateScrollToItem(0)
                                                 }
                                             }
+                                        } else {
+                                            android.widget.Toast.makeText(
+                                                context,
+                                                context.getString(com.example.R.string.forum_send_failed),
+                                                android.widget.Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     }
                                 }

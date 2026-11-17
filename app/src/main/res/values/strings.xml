@@ -24,7 +24,7 @@
     <string name="profile_restart_onboarding_title">Ulangi Pengenalan Jalur</string>
     <string name="profile_restart_onboarding_subtitle">Pilih ulang preferensi jalur dan target belajar</string>
     <string name="profile_logout_title">Keluar</string>
-    <string name="profile_logout_subtitle">Keluar dari sesi akun lokal CodeAcademy</string>
+    <string name="profile_logout_subtitle">Keluar dari akun ini</string>
     <string name="profile_logout_confirm_title">Konfirmasi Keluar</string>
     <string name="profile_logout_confirm_message">Apakah kamu yakin ingin keluar dari akun ini? Progres belajar tetap tersimpan aman di perangkat ini.</string>
     <string name="profile_delete_account_title">Hapus Akun</string>
@@ -1058,6 +1058,17 @@
     <string name="profile_danger_zone_title">Zona Berbahaya</string>
     <string name="profile_delete_confirm_input_label">Ketik HAPUS untuk konfirmasi</string>
     <string name="profile_delete_confirm_keyword">HAPUS</string>
+    <string name="prog_to_next_level_format">Progres Menuju Level %1$d</string>
+    <string name="prog_by_track_title">Progres per Jalur Belajar</string>
+    <string name="prog_track_active_done_format">%1$d jalur aktif • %2$d jalur selesai</string>
+    <string name="prog_active_track_format">Jalur aktif: %1$s</string>
+    <string name="comm_leaderboard_header">Papan Peringkat Pelajar</string>
+    <string name="comm_top_podium_header">Podium Teratas</string>
+    <string name="comm_period_weekly">Mingguan</string>
+    <string name="comm_period_monthly">Bulanan</string>
+    <string name="comm_period_all_time">Sepanjang Waktu</string>
+    <string name="comm_period_streak">Streak 🔥</string>
+    <string name="comm_all_tracks">Semua Jalur</string>
     <string name="forum_retry_btn">Coba Lagi</string>
     <string name="comm_course_forums_title">Forum Diskusi Kelas</string>
     <string name="comm_course_forums_subtitle">Pilih kelas untuk bertanya langsung ke Fasilitator &amp; teman belajar</string>

@@ -1294,6 +1294,17 @@
     <string name="profile_danger_zone_title">危险区域</string>
     <string name="profile_delete_confirm_input_label">输入 DELETE 以确认</string>
     <string name="profile_delete_confirm_keyword">DELETE</string>
+    <string name="prog_to_next_level_format">升级至等级 %1$d 的进度</string>
+    <string name="prog_by_track_title">各学习路径进度</string>
+    <string name="prog_track_active_done_format">%1$d 个进行中 • %2$d 个已完成</string>
+    <string name="prog_active_track_format">当前路径: %1$s</string>
+    <string name="comm_leaderboard_header">学员排行榜</string>
+    <string name="comm_top_podium_header">前三领奖台</string>
+    <string name="comm_period_weekly">本周</string>
+    <string name="comm_period_monthly">本月</string>
+    <string name="comm_period_all_time">总榜</string>
+    <string name="comm_period_streak">连续学习 🔥</string>
+    <string name="comm_all_tracks">全部路径</string>
     <string name="forum_retry_btn">重试</string>
     <string name="comm_course_forums_title">课程讨论区</string>
     <string name="comm_course_forums_subtitle">选择课程，向导师和同学们直接提问交流</string>

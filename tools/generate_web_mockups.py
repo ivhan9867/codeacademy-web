@@ -154,7 +154,7 @@ def gen_verify_web_mockup():
 
     # Address bar (Actual GitHub Pages URL)
     d.rounded_rectangle([84, 10, w - 20, 34], radius=8, fill="#FFFFFF", outline="#D5E3E2")
-    d.text((96, 15), "https://ivhan9867.github.io/codeacademy-web/verify.html?certId=CA-2026-88912", fill="#4F6668", font=get_font(9))
+    d.text((96, 15), "https://ivhan9867.github.io/codeacademy-web/verify.html?id=CC-2026110101-A9K3P2", fill="#4F6668", font=get_font(9))
 
     # Editorial Navbar
     d.rectangle([0, 45, w, 84], fill="#F7FAFA")
@@ -179,7 +179,7 @@ def gen_verify_web_mockup():
     fields = [
         ("Modul Kursus:", "Fondasi Web: Dari Nol ke Baris Kode Pertama"),
         ("Nilai Akhir Kelulusan:", "88 / 100 (Sangat Memuaskan)"),
-        ("ID Kredensial:", "CA-2026-88912"),
+        ("ID Kredensial:", "CC-2026110101-A9K3P2"),
         ("Tanggal Terbit:", "14 November 2026"),
         ("Status Keabsahan:", "Sah & Terdaftar di Cloud Firestore")
     ]
@@ -193,6 +193,106 @@ def gen_verify_web_mockup():
     img.save(out_p)
     print(f"Verify web mockup saved to: {out_p}")
 
+
+def gen_super_admin_web_mockup():
+    w, h = 600, 420
+    img = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+
+    d.rounded_rectangle([0, 0, w, h], radius=16, fill="#F7FAFA", outline="#D5E3E2", width=2)
+    d.rounded_rectangle([0, 0, w, 44], radius=16, fill="#EEF6F5")
+    d.rectangle([0, 30, w, 44], fill="#EEF6F5")
+    d.line([0, 44, w, 44], fill="#D5E3E2", width=1)
+    d.ellipse([14, 16, 26, 28], fill="#FF5F56")
+    d.ellipse([34, 16, 46, 28], fill="#FFBD2E")
+    d.ellipse([54, 16, 66, 28], fill="#27C93F")
+    d.rounded_rectangle([84, 10, w - 20, 34], radius=8, fill="#FFFFFF", outline="#D5E3E2")
+    d.text((96, 15), "https://ivhan9867.github.io/codeacademy-web/facilitator/index.html", fill="#4F6668", font=get_font(9))
+
+    # Top Navbar with Super Admin & Profile pills
+    d.rectangle([0, 45, w, 84], fill="#FFFFFF")
+    d.line([0, 84, w, 84], fill="#D5E3E2", width=1)
+    d.rounded_rectangle([16, 53, 38, 75], radius=6, fill="#104246")
+    d.text((20, 57), ">_", fill="#FFFFFF", font=get_font(9, bold=True, code=True))
+    d.text((46, 56), "CodeAcademy", fill="#0D2B2E", font=get_font(11, bold=True))
+
+    d.rounded_rectangle([w - 305, 54, w - 210, 74], radius=10, fill="#EDE9FE")
+    d.text((w - 294, 58), "Super Admin", fill="#6D28D9", font=get_font(8, bold=True))
+    d.rounded_rectangle([w - 202, 54, w - 102, 74], radius=10, fill="#F2F7F7", outline="#D5E3E2")
+    d.text((w - 192, 58), "Ivhan · Profil", fill="#0D2B2E", font=get_font(8, bold=True))
+    d.rounded_rectangle([w - 94, 54, w - 16, 74], radius=10, fill="#E9F6EE", outline="#B9E2C8")
+    d.text((w - 86, 58), "Live", fill="#1F7A45", font=get_font(8, bold=True))
+    draw_callout_badge(d, w - 210, 50, 1)
+
+    # Sidebar workspace left column
+    d.rounded_rectangle([16, 94, 168, h - 16], radius=12, fill="#FFFFFF", outline="#D5E3E2")
+    d.text((26, 104), "OPERASIONAL", fill="#6B7280", font=get_font(7, bold=True))
+    fac_items = [("Proyek Akhir", "4"), ("Forum Diskusi", "9"), ("Pengumuman", "2")]
+    sy = 122
+    for lbl, cnt in fac_items:
+        d.rounded_rectangle([24, sy, 160, sy + 26], radius=7, fill="#F8FAFC")
+        d.text((32, sy + 6), lbl, fill="#1F2937", font=get_font(8, bold=True))
+        d.text((144, sy + 6), cnt, fill="#6B7280", font=get_font(8, bold=True))
+        sy += 31
+
+    d.text((26, sy + 8), "PANEL SUPER ADMIN", fill="#6D28D9", font=get_font(7, bold=True))
+    sy += 24
+    adm_items = [("Sertifikat & Audit", "12", False), ("Tim Fasilitator", "3", True), ("Ringkasan & Siswa", "48", False)]
+    for lbl, cnt, active in adm_items:
+        bg = "#1A6368" if active else "#F8FAFC"
+        fg = "#FFFFFF" if active else "#1F2937"
+        d.rounded_rectangle([24, sy, 160, sy + 26], radius=7, fill=bg)
+        d.text((32, sy + 6), lbl, fill=fg, font=get_font(8, bold=True))
+        d.text((142, sy + 6), cnt, fill=fg, font=get_font(8, bold=True))
+        sy += 31
+    draw_callout_badge(d, 152, 224, 2)
+
+    # Main content right column: Team management + Analytics + Export CSV
+    rx = 180
+    rw = w - rx - 16
+    d.text((rx, 96), "PANEL SUPER ADMIN · MANAJEMEN AKSES", fill="#6D28D9", font=get_font(7, bold=True))
+    d.text((rx, 108), "Tim Fasilitator & Ringkasan Siswa", fill="#0D2B2E", font=get_font(12, bold=True))
+    d.rounded_rectangle([w - 112, 104, w - 16, 126], radius=7, fill="#FFFFFF", outline="#1A6368", width=1)
+    d.text((w - 102, 109), "Unduh CSV", fill="#1A6368", font=get_font(8, bold=True))
+    draw_callout_badge(d, w - 20, 102, 3)
+
+    # Team card
+    d.rounded_rectangle([rx, 136, w - 16, 272], radius=10, fill="#FFFFFF", outline="#D5E3E2")
+    d.text((rx + 12, 145), "Daftar Anggota (/facilitators/{email})", fill="#0D2B2E", font=get_font(9, bold=True))
+    members = [
+        ("Ivhan Afika P", "ivhan@codeacademy.id", "Super Admin", "#EDE9FE", "#6D28D9"),
+        ("Raka Pratama", "raka@codeacademy.id", "Fasilitator", "#E0F2FE", "#0369A1"),
+    ]
+    my = 168
+    for name, mail, role, bg, fg in members:
+        d.rectangle([rx + 10, my, w - 26, my + 44], fill="#F9FAFB", outline="#E5E7EB")
+        d.text((rx + 18, my + 6), name, fill="#111827", font=get_font(9, bold=True))
+        d.text((rx + 18, my + 22), mail, fill="#6B7280", font=get_font(8))
+        d.rounded_rectangle([w - 130, my + 12, w - 40, my + 32], radius=8, fill=bg)
+        d.text((w - 118, my + 16), role, fill=fg, font=get_font(8, bold=True))
+        my += 49
+
+    # Bottom Forum Verified / Helpful summary strip
+    d.rounded_rectangle([rx, 282, w - 16, h - 16], radius=10, fill="#FFFFFF", outline="#D5E3E2")
+    d.text((rx + 12, 291), "Statistik & Moderasi Forum Terkini", fill="#0D2B2E", font=get_font(9, bold=True))
+    boxes = [
+        ("Rasio Lulus", "92%", "#1F7A45"),
+        ("Topik Terjawab", "18 / 20", "#1A6368"),
+        ("Sertifikat", "12", "#6D28D9"),
+    ]
+    bw = (rw - 40) / 3
+    for idx, (lbl, val, col) in enumerate(boxes):
+        bx = rx + 12 + idx * (bw + 8)
+        d.rounded_rectangle([bx, 316, bx + bw, h - 28], radius=8, fill="#F8FAFC", outline="#E5E7EB")
+        d.text((bx + 10, 326), lbl, fill="#4B5563", font=get_font(8, bold=True))
+        d.text((bx + 10, 344), val, fill=col, font=get_font(14, bold=True))
+
+    out_p = os.path.join(ASSETS_DIR, "mockup_18_super_admin_web.png")
+    img.save(out_p)
+    print(f"Super Admin web mockup saved to: {out_p}")
+
+
 if __name__ == "__main__":
     gen_facilitator_web_mockup()
     gen_verify_web_mockup()
+    gen_super_admin_web_mockup()

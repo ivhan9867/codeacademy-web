@@ -955,12 +955,15 @@ fun ProgressScreen(
 
                     // Quick stats: Streak & Certificates
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(androidx.compose.foundation.layout.IntrinsicSize.Min),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Surface(
                             modifier = Modifier
                                 .weight(1f)
+                                .fillMaxHeight()
                                 .clip(RoundedCornerShape(12.dp)),
                             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
                         ) {
@@ -993,6 +996,7 @@ fun ProgressScreen(
                         Surface(
                             modifier = Modifier
                                 .weight(1f)
+                                .fillMaxHeight()
                                 .clip(RoundedCornerShape(12.dp))
                                 .clickable { onViewCertificates() },
                             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)

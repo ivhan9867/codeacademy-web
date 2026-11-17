@@ -156,7 +156,7 @@ fun HomeScreenTopCarousel(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(min = 188.dp)
+                .height(196.dp)
                 .testTag("home_top_carousel_pager"),
             contentPadding = PaddingValues(horizontal = 0.dp),
             pageSpacing = 12.dp

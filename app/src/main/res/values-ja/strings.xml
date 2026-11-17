@@ -1305,6 +1305,13 @@
     <string name="comm_period_all_time">全期間</string>
     <string name="comm_period_streak">連続学習 🔥</string>
     <string name="comm_all_tracks">すべてのトラック</string>
+    <string name="catalog_cta_start">開始</string>
+    <string name="catalog_cta_continue">続ける</string>
+    <string name="catalog_cta_review">復習</string>
+    <string name="catalog_bookmark_saved_toast">ブックマークに保存しました</string>
+    <string name="catalog_bookmark_removed_toast">ブックマークから削除しました</string>
+    <string name="comm_you_badge">あなた</string>
+    <string name="comm_xp_to_next_rank_format">#%2$d まであと %1$d XP</string>
     <string name="forum_retry_btn">再試行</string>
     <string name="comm_course_forums_title">クラス別フォーラム</string>
     <string name="comm_course_forums_subtitle">クラスを選んで講師や仲間と直接質問・相談できます</string>

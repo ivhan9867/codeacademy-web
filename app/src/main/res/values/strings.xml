@@ -1069,6 +1069,13 @@
     <string name="comm_period_all_time">Sepanjang Waktu</string>
     <string name="comm_period_streak">Streak 🔥</string>
     <string name="comm_all_tracks">Semua Jalur</string>
+    <string name="catalog_cta_start">Mulai</string>
+    <string name="catalog_cta_continue">Lanjutkan</string>
+    <string name="catalog_cta_review">Ulangi</string>
+    <string name="catalog_bookmark_saved_toast">Disimpan ke Modul Tersimpan</string>
+    <string name="catalog_bookmark_removed_toast">Dihapus dari Tersimpan</string>
+    <string name="comm_you_badge">Kamu</string>
+    <string name="comm_xp_to_next_rank_format">Kurang %1$d XP lagi ke #%2$d</string>
     <string name="forum_retry_btn">Coba Lagi</string>
     <string name="comm_course_forums_title">Forum Diskusi Kelas</string>
     <string name="comm_course_forums_subtitle">Pilih kelas untuk bertanya langsung ke Fasilitator &amp; teman belajar</string>

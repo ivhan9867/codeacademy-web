@@ -94,8 +94,8 @@ fun adaptiveLevelChipColors(level: String): Pair<Color, Color> {
     return when (level.trim().lowercase()) {
         "orientasi" -> if (isDark) ChipOrientasiBg to ChipOrientasiText else ChipOrientasiLightBg to ChipOrientasiLightText
         "pemula" -> if (isDark) ChipPemulaBg to ChipPemulaText else ChipPemulaLightBg to ChipPemulaLightText
-        "menengah" -> if (isDark) ChipMenengahBg to ChipMenengahText else ChipMenengahLightBg to ChipMenengahLightText
-        "lanjut" -> if (isDark) ChipLanjutBg to ChipLanjutText else ChipLanjutLightBg to ChipLanjutLightText
+        "menengah", "pemula-menengah", "beginner-intermediate" -> if (isDark) ChipMenengahBg to ChipMenengahText else ChipMenengahLightBg to ChipMenengahLightText
+        "lanjut", "mahir" -> if (isDark) ChipLanjutBg to ChipLanjutText else ChipLanjutLightBg to ChipLanjutLightText
         else -> adaptiveNeutralChipColors()
     }
 }

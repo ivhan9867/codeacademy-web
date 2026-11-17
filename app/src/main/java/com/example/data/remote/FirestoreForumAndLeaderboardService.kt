@@ -496,6 +496,8 @@ class FirestoreForumAndLeaderboardService(
         val replyToContentSnippet = doc.getString("replyToContentSnippet")
         val authorLevel = (doc.getLong("authorLevel") ?: 1L).toInt().coerceAtLeast(1)
         val authorIsMentor = (doc.getBoolean("authorIsMentor") ?: doc.getBoolean("isMentor")) ?: false
+        val isVerifiedAnswer = doc.getBoolean("isVerifiedAnswer") ?: false
+        val isHelpful = doc.getBoolean("isHelpful") ?: false
 
         return ForumPostEntity(
             postId = postId,
@@ -510,7 +512,9 @@ class FirestoreForumAndLeaderboardService(
             replyToAuthorName = replyToAuthorName,
             replyToContentSnippet = replyToContentSnippet,
             authorLevel = authorLevel,
-            authorIsMentor = authorIsMentor
+            authorIsMentor = authorIsMentor,
+            isVerifiedAnswer = isVerifiedAnswer,
+            isHelpful = isHelpful
         )
     }
 

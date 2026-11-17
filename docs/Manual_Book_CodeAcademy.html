@@ -1,1432 +1,518 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual Book Aplikasi CodeAcademy (Versi Mobile)</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
-
-        :root {
-            --navy-dark: #104246;
-            --teal-primary: #1A6368;
-            --teal-light: #389B9E;
-            --coral-accent: #DF7B56;
-            --gold-accent: #D49438;
-            --bg-page: #FAF7F2;
-            --text-dark: #24211D;
-            --text-muted: #5A626A;
-            --line-grey: #D8DEE4;
-            --card-bg: #F8F9FA;
-            --callout-red: #E74C3C;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #E6E9EE;
-            color: var(--text-dark);
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-        }
-
-        /* Floating action header for screen */
-        .top-toolbar {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: #104246;
-            color: #FFFFFF;
-            padding: 12px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .top-toolbar h1 {
-            font-size: 16px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-print {
-            background: var(--coral-accent);
-            color: #FFFFFF;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-print:hover {
-            background: #C86542;
-            transform: translateY(-1px);
-        }
-
-        /* A4 Page Container */
-        .book-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px 0 60px 0;
-            gap: 32px;
-        }
-
-        .page {
-            width: 210mm;
-            min-height: 297mm;
-            height: 297mm;
-            background: #FFFFFF;
-            position: relative;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20mm 16mm 14mm 16mm;
-        }
-
-        /* Running Header */
-        .page-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1.5px solid var(--navy-dark);
-            margin-bottom: 16px;
-        }
-
-        .page-header img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-        }
-
-        .page-header-text {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .page-header-text .title {
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--navy-dark);
-            letter-spacing: 0.5px;
-        }
-
-        .page-header-text .subtitle {
-            font-size: 10px;
-            font-weight: 700;
-            color: var(--navy-dark);
-        }
-
-        /* Page Content */
-        .page-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .page-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--navy-dark);
-            margin-bottom: 8px;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-        }
-
-        .page-desc {
-            font-size: 11px;
-            line-height: 1.55;
-            color: var(--text-dark);
-            margin-bottom: 12px;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            font-size: 10.5px;
-            line-height: 1.45;
-            margin-bottom: 14px;
-        }
-
-        .feature-grid ul {
-            list-style: none;
-        }
-
-        .feature-grid li {
-            position: relative;
-            padding-left: 14px;
-            margin-bottom: 6px;
-        }
-
-        .feature-grid li::before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            color: var(--teal-primary);
-            font-weight: bold;
-        }
-
-        /* Mockup Centering */
-        .mockup-wrapper {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 6px 0;
-        }
-
-        .mockup-wrapper.two-cols {
-            gap: 24px;
-        }
-
-        .mockup-img {
-            max-height: 480px;
-            width: auto;
-            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.12));
-        }
-
-        .mockup-img.web {
-            max-width: 95%;
-            max-height: 380px;
-            width: auto;
-            border-radius: 8px;
-            border: 1px solid var(--line-grey);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
-
-        .mockup-img.half {
-            max-height: 440px;
-        }
-
-        /* Keterangan Box */
-        .keterangan-box {
-            background: var(--card-bg);
-            border: 1px solid var(--line-grey);
-            border-radius: 8px;
-            padding: 10px 14px;
-            margin-top: 8px;
-        }
-
-        .keterangan-title {
-            font-size: 10px;
-            font-weight: 800;
-            color: var(--text-dark);
-            margin-bottom: 6px;
-        }
-
-        .keterangan-list {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 5px;
-            font-size: 9.5px;
-            line-height: 1.35;
-        }
-
-        .keterangan-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .callout-badge {
-            background: var(--callout-red);
-            color: #FFFFFF;
-            font-size: 8px;
-            font-weight: 800;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        /* Running Footer */
-        .page-footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 28px;
-            background: var(--navy-dark);
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            padding: 0 16mm;
-            color: #FFFFFF;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* COVER PAGE STYLING */
-        .page.cover {
-            background: var(--navy-dark);
-            color: #FFFFFF;
-            padding: 30mm 20mm;
-            justify-content: flex-start;
-        }
-
-        .cover-arc {
-            position: absolute;
-            border-radius: 50%;
-            border-style: solid;
-            pointer-events: none;
-        }
-
-        .arc-1 {
-            width: 700px;
-            height: 700px;
-            bottom: -240px;
-            left: -200px;
-            border-width: 45px;
-            border-color: var(--teal-primary);
-            opacity: 0.7;
-        }
-
-        .arc-2 {
-            width: 580px;
-            height: 580px;
-            bottom: -180px;
-            left: -140px;
-            border-width: 18px;
-            border-color: var(--teal-light);
-            opacity: 0.6;
-        }
-
-        .cover-title {
-            margin-top: 40px;
-            font-size: 34px;
-            font-weight: 900;
-            line-height: 1.25;
-            letter-spacing: 0.5px;
-        }
-
-        .cover-subtitle {
-            margin-top: 16px;
-            font-size: 22px;
-            font-weight: 800;
-            color: var(--coral-accent);
-            letter-spacing: 0.5px;
-        }
-
-        .cover-android-icon {
-            margin-top: 36px;
-            width: 48px;
-            height: 48px;
-        }
-
-        .cover-footer {
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            z-index: 10;
-        }
-
-        .cover-footer img {
-            width: 64px;
-            height: 64px;
-            border-radius: 12px;
-            background: #FFFFFF;
-            padding: 4px;
-        }
-
-        .cover-footer-text h3 {
-            font-size: 16px;
-            font-weight: 800;
-        }
-
-        .cover-footer-text p {
-            font-size: 11px;
-            opacity: 0.85;
-            margin-top: 3px;
-        }
-
-        /* DAFTAR ISI STYLING */
-        .page.toc {
-            padding-top: 25mm;
-        }
-
-        .toc-title {
-            text-align: center;
-            font-size: 20px;
-            font-weight: 800;
-            color: var(--navy-dark);
-            margin-bottom: 24px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--navy-dark);
-            display: inline-block;
-            align-self: center;
-        }
-
-        .toc-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .toc-item {
-            display: flex;
-            align-items: baseline;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .toc-item.bold {
-            font-weight: 800;
-        }
-
-        .toc-title-text {
-            padding-right: 12px;
-        }
-
-        .toc-dots {
-            flex: 1;
-            border-bottom: 1px dotted #A0AAB5;
-            margin: 0 8px;
-        }
-
-        .toc-page {
-            font-weight: 700;
-            width: 24px;
-            text-align: right;
-        }
-
-        /* Print Media Styles */
-        @media print {
-            body {
-                background: none;
-            }
-            .top-toolbar {
-                display: none !important;
-            }
-            .book-container {
-                padding: 0;
-                gap: 0;
-            }
-            .page {
-                box-shadow: none;
-                margin: 0;
-                page-break-after: always;
-                page-break-inside: avoid;
-            }
-            @page {
-                size: A4 portrait;
-                margin: 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual Book Aplikasi CodeAcademy — Android &amp; Web Portal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #E5E7EB; color: #1F2937; line-height: 1.55; }
+    .toolbar { position: sticky; top: 0; z-index: 100; background: #0F2A82; color: #fff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.18); }
+    .toolbar .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; }
+    .toolbar .brand img { width: 28px; height: 28px; border-radius: 6px; background: #fff; }
+    .toolbar .acts { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { background: #fff; color: #0F2A82; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; text-decoration: none; }
+    .btn-ghost { background: rgba(255,255,255,0.14); color: #fff; }
+    .sheet-wrap { max-width: 900px; margin: 24px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 22px; }
+    .cover-page { background: linear-gradient(160deg, #041242 0%, #0F2A82 62%, #1D4ED8 100%); color: #fff; border-radius: 12px; padding: 54px 36px 28px; text-align: center; box-shadow: 0 8px 28px rgba(15,42,130,0.22); }
+    .cover-logo { width: 148px; height: 148px; border-radius: 28px; background: #EFFDFB; padding: 14px; margin: 22px auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .cover-page h1 { font-size: 36px; letter-spacing: 0.03em; font-weight: 800; }
+    .cover-page .sub { font-size: 18px; color: #DBEAFE; margin-top: 6px; font-weight: 700; }
+    .cover-page .desc { font-size: 15px; font-style: italic; color: #BAE6FD; margin-top: 12px; }
+    .page { background: #fff; border-radius: 12px; padding: 32px 36px 22px; box-shadow: 0 4px 18px rgba(15,23,42,0.08); }
+    .toc-banner { background: #EBF3FF; padding: 20px 24px; border-radius: 8px; margin-bottom: 16px; border-left: 6px solid #0F2A82; }
+    .toc-banner h2 { font-size: 26px; color: #111827; font-weight: 800; }
+    .toc-row { display: flex; align-items: center; gap: 14px; padding: 8px 6px; border-bottom: 1px solid #E2E8F0; font-size: 14px; }
+    .toc-num { font-weight: 800; color: #1D4ED8; min-width: 28px; }
+    .ch-head { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+    .ch-badge { width: 48px; height: 48px; border-radius: 50%; background: #0F2A82; color: #fff; font-weight: 800; font-size: 22px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ch-head h2 { font-size: 22px; color: #111827; font-weight: 800; }
+    .ch-rule { display: flex; height: 4px; margin-bottom: 18px; align-items: center; }
+    .ch-rule span { width: 46%; height: 4px; background: #1D4ED8; }
+    .ch-rule i { width: 54%; height: 1px; background: #94A3B8; display: block; }
+    .diamond-sub { display: flex; align-items: center; gap: 8px; color: #1E40AF; font-size: 15px; font-weight: 700; margin: 16px 0 8px; }
+    .diamond { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border: 1.5px solid #1D4ED8; background: #EFF6FF; color: #0F2A82; font-size: 11px; border-radius: 4px; flex-shrink: 0; }
+    .sub-h4 { color: #0F2A82; font-size: 14px; font-weight: 700; margin: 12px 0 6px; }
+    .body-p { font-size: 14px; margin-bottom: 10px; color: #1F2937; }
+    .bullet-list { margin: 6px 0 12px 22px; font-size: 14px; }
+    .bullet-list li { margin-bottom: 5px; }
+    .steps-list { margin: 8px 0 14px; border-top: 1px solid #CBD5E1; }
+    .step-row { display: flex; gap: 16px; padding: 10px 4px; border-bottom: 1px solid #CBD5E1; align-items: flex-start; font-size: 14px; }
+    .step-num { font-size: 18px; font-weight: 800; color: #1D4ED8; min-width: 30px; }
+    .table-wrap { overflow-x: auto; margin: 10px 0 14px; }
+    .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .spec-table th { background: #0F2A82; color: #fff; text-align: left; padding: 9px 10px; }
+    .spec-table td { border: 1px solid #CBD5E1; padding: 8px 10px; vertical-align: top; }
+    .spec-table tr:nth-child(even) td { background: #F8FAFC; }
+    .solo-fig { text-align: center; margin: 14px 0; }
+    .solo-fig img { max-width: 100%; max-height: 430px; border-radius: 10px; border: 1px solid #E2E8F0; }
+    .solo-fig figcaption, .img-cap { font-size: 12.5px; color: #4B5563; font-style: italic; margin-top: 6px; }
+    .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+    .img-card { text-align: center; }
+    .img-card img { max-width: 100%; max-height: 360px; border-radius: 10px; border: 1px solid #E2E8F0; }
+    .img-head { font-size: 13px; font-weight: 700; color: #0F2A82; margin-bottom: 6px; }
+    code { background: #EFF6FF; color: #0F2A82; padding: 1px 5px; border-radius: 4px; font-family: Consolas, monospace; font-size: 12.5px; }
+    .pba-footer { margin-top: 22px; padding-top: 10px; border-top: 2px solid #0F2A82; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+    .pba-footer .ribbon { background: #0F2A82; color: #fff; padding: 4px 14px; border-radius: 4px; font-weight: 700; }
+    .pba-footer .chev, .pba-footer .page-dot { color: #1D4ED8; font-weight: 800; }
+    @media (max-width: 680px) { .img-grid { grid-template-columns: 1fr; } .page { padding: 20px; } }
+    @media print { .toolbar { display: none; } body { background: #fff; } .sheet-wrap { margin: 0; max-width: none; padding: 0; gap: 0; } .cover-page, .page { box-shadow: none; border-radius: 0; page-break-after: always; } }
+  </style>
 </head>
 <body>
-
-    <!-- Floating Top Toolbar for Screen Browsing -->
-    <div class="top-toolbar">
-        <h1>
-            <span>📘</span>
-            Manual Book Aplikasi CodeAcademy (Versi Mobile) — Panduan Tugas Akhir
-        </h1>
-        <button class="btn-print" onclick="window.print()">
-            🖨️ Cetak / Simpan sebagai PDF (A4)
-        </button>
+  <header class="toolbar">
+    <div class="brand">
+      <img src="../assets/logo.png" alt="Logo CodeAcademy">
+      <span>Manual Book CodeAcademy (Android &amp; Web Portal)</span>
     </div>
-
-    <div class="book-container">
-
-        <!-- ==========================================
-             PAGE 1: COVER
-             ========================================== -->
-        <div class="page cover">
-            <div class="cover-arc arc-1"></div>
-            <div class="cover-arc arc-2"></div>
-
-            <div class="cover-title">
-                MANUAL BOOK<br>
-                APLIKASI<br>
-                CODEACADEMY
-            </div>
-
-            <div class="cover-subtitle">
-                PLATFORM BELAJAR CODING<br>
-                (VERSI MOBILE)
-            </div>
-
-            <!-- Android Vector Icon -->
-            <svg class="cover-android-icon" viewBox="0 0 24 24" fill="#3DDC84">
-                <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-4.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48C13.85 2.23 12.95 2 12 2c-.96 0-1.86.23-2.66.63L7.85 1.15c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.31 1.31C6.73 4.29 5.65 6.01 5.52 8h12.96c-.13-1.99-1.21-3.71-2.95-4.84zM10 5.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zm4 0c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75z"/>
-            </svg>
-
-            <div class="cover-footer">
-                <img src="../public/assets/logo.png" alt="CodeAcademy Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="cover-footer-text">
-                    <h3>CodeAcademy Mobile</h3>
-                    <p>Platform Pembelajaran Web Development & Coding Mobile-First</p>
-                    <p style="color: var(--teal-light); font-weight: 600;">Buku Panduan Pengguna • Tugas Akhir Pengembangan Aplikasi</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 2: DAFTAR ISI (ii)
-             ========================================== -->
-        <div class="page toc">
-            <div style="text-align: center;">
-                <h2 class="toc-title">DAFTAR ISI</h2>
-            </div>
-
-            <div class="toc-list">
-                <div class="toc-item bold">
-                    <span class="toc-title-text">Halaman Awal</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">i</span>
-                </div>
-                <div class="toc-item bold">
-                    <span class="toc-title-text">Daftar Isi</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">ii</span>
-                </div>
-                <div class="toc-item bold">
-                    <span class="toc-title-text">1. Pengenalan Aplikasi CodeAcademy</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">1</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">2. Download dan Instalasi Aplikasi Versi Mobile</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">2</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">3. Pendaftaran Akun, Masuk & Pemulihan Sandi</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">3</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">4. Alur Onboarding Siswa Baru</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">4</span>
-                </div>
-                <div class="toc-item bold">
-                    <span class="toc-title-text">5. Pengenalan Fitur Beranda (Home Dashboard)</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">5</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">6. Navigasi Menu Samping (Drawer) & Pencarian Materi</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">6</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">7. Katalog Kelas & Detail Silabus Kursus</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">7</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">8. Fitur Pembelajaran Interaktif (Materi Reader)</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">8</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">9. Fitur Playground Interaktif (Live Code Sandbox)</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">9</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">10. Fitur AI Tutor Cerdas (Didukung Gemini AI)</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">10</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">11. Sistem Evaluasi, Kuis Bab & Hasil Evaluasi</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">11</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">12. Pengumpulan Tugas Akhir (Final Project Submission)</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">12</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">13. Forum Diskusi & Komunitas Belajar</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">13</span>
-                </div>
-                <div class="toc-item bold">
-                    <span class="toc-title-text">14. Progres Belajar, Gamifikasi & Sertifikat Digital</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">14</span>
-                </div>
-                <div class="toc-item">
-                    <span class="toc-title-text">15. Profil Pengguna & Pengaturan Aplikasi</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">15</span>
-                </div>
-                <div class="toc-item bold">
-                    <span class="toc-title-text">16. Portal Web Fasilitator & Penilaian Tugas Akhir</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">16</span>
-                </div>
-                <div class="toc-item bold">
-                    <span class="toc-title-text">17. Portal Web Verifikasi Sertifikat & Validasi Kredensial</span>
-                    <span class="toc-dots"></span>
-                    <span class="toc-page">17</span>
-                </div>
-            </div>
-
-            <div class="page-footer">ii</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 3: PENGENALAN APLIKASI (Hal 1)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PENGENALAN APLIKASI CODEACADEMY</h2>
-                <p class="page-desc">
-                    Aplikasi CodeAcademy merupakan platform pembelajaran pemrograman dan web development berbasis mobile-first yang dirancang untuk memberikan pengalaman belajar coding terstruktur, fleksibel, dan interaktif langsung dari smartphone. Aplikasi ini dilengkapi beragam fitur utama:
-                </p>
-
-                <div class="feature-grid">
-                    <ul>
-                        <li><strong>Kurikulum Komprehensif:</strong> Front-End, Back-End, Python, Bahasa C, dan C++.</li>
-                        <li><strong>AI Tutor Cerdas:</strong> Didukung Google Gemini AI untuk panduan coding dan debugging real-time.</li>
-                        <li><strong>Interactive Playground:</strong> Eksekusi HTML, CSS, JS, dan logika program langsung di HP.</li>
-                        <li><strong>Sistem Kuis & Evaluasi:</strong> Ujian akhir modul berwaktu dengan passing grade standar.</li>
-                    </ul>
-                    <ul>
-                        <li><strong>Gamifikasi Lengkap:</strong> Poin XP, Level Siswa, Daily Streak, Lencana (Badges), dan Heatmap.</li>
-                        <li><strong>Forum Diskusi Terintegrasi:</strong> Diskusi per kelas dan Diskusi Hangat antar siswa.</li>
-                        <li><strong>Pengumpulan Proyek Akhir:</strong> Penilaian berbasis rubrik standar industri software engineering.</li>
-                        <li><strong>Sertifikat Digital Resmi:</strong> Dilengkapi ID verifikasi kredensial kelulusan unik.</li>
-                    </ul>
-                </div>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_01_splash.png" alt="Splash Screen Mockup">
-                </div>
-            </div>
-
-            <div class="page-footer">1</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 4: DOWNLOAD & INSTALASI (Hal 2)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">DOWNLOAD DAN INSTALASI APLIKASI VERSI MOBILE</h2>
-                <p class="page-desc">
-                    Aplikasi CodeAcademy dapat dipasang pada smartphone berbasis Android dengan spesifikasi minimum:
-                    <br>• Sistem Operasi: Android 8.0 (Oreo) atau versi yang lebih baru (API Level 26+).
-                    <br>• Kapasitas Memori: RAM minimal 2 GB dan ruang penyimpanan kosong minimal 150 MB.
-                    <br>• Koneksi Jaringan: Memerlukan akses internet aktif untuk AI Tutor dan sinkronisasi data.
-                </p>
-
-                <p class="page-desc" style="font-weight: 700; margin-bottom: 4px;">Langkah - Langkah Instalasi Paket APK:</p>
-                <div class="page-desc" style="font-size: 10.5px; line-height: 1.5; margin-bottom: 6px;">
-                    1. Unduh berkas instalasi <code>CodeAcademy-v1.0-release.apk</code> dari portal distribusi resmi / repository kampus.<br>
-                    2. Buka folder Unduhan (Downloads) melalui aplikasi Pengelola Berkas (File Manager) di smartphone Anda.<br>
-                    3. Ketuk berkas APK tersebut. Jika muncul peringatan keamanan sumber tidak dikenal, pilih opsi 'Setelan' lalu aktifkan izin 'Izinkan penginstalan aplikasi dari sumber ini' (Allow from this source).<br>
-                    4. Pada dialog penginstal paket yang muncul, ketuk tombol <strong>INSTAL</strong> (lihat tanda penunjuk nomor 1).<br>
-                    5. Tunggu proses instalasi selesai, lalu ketuk 'Buka' untuk mulai menggunakan aplikasi.
-                </div>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_02_install.png" alt="Install Screen Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Tombol Instal:</strong> Ketuk untuk mengonfirmasi dan memulai pemasangan aplikasi CodeAcademy ke perangkat smartphone Android Anda.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">2</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 5: PENDAFTARAN & LOGIN (Hal 3)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PENDAFTARAN AKUN, MASUK & PEMULIHAN SANDI</h2>
-                <p class="page-desc">
-                    Setelah aplikasi terbuka, pengguna akan diarahkan ke Form Masuk (Login). Bagi pengguna baru yang belum memiliki akun, silakan lakukan registrasi dengan mengetuk tautan 'Daftar Sekarang'.
-                </p>
-
-                <div class="mockup-wrapper two-cols">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_03_login.png" alt="Login Mockup">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_03b_register.png" alt="Register Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Input Email & Kata Sandi:</strong> Masukkan alamat email terdaftar dan kata sandi akun (minimal 6 karakter).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Lupa Kata Sandi?:</strong> Fitur pemulihan akun untuk mengatur ulang sandi baru jika pengguna lupa password lama.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Tombol Masuk &amp; Google Sign-In:</strong> Masuk memakai email/sandi atau autentikasi instan <strong>Masuk / Daftar dengan Google</strong> menuju Onboarding &amp; Beranda.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Tautan Daftar Sekarang:</strong> Mengalihkan pengguna baru ke formulir registrasi akun siswa baru.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">3</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 6: ONBOARDING SISWA BARU (Hal 4)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">ALUR ONBOARDING PENGENALAN JALUR BELAJAR</h2>
-                <p class="page-desc">
-                    Bagi siswa yang baru pertama kali mendaftar, sistem akan menyajikan alur interaktif Onboarding sebanyak 5 langkah untuk mempersonalisasi jalur belajar dan menetapkan komitmen:
-                </p>
-
-                <div class="page-desc" style="font-size: 10.5px; line-height: 1.5; margin-bottom: 8px;">
-                    1. <strong>Welcome Step:</strong> Sambutan selamat datang serta penjelasan visi belajar coding mobile-first.<br>
-                    2. <strong>Track Selection Step:</strong> Siswa memilih salah satu dari 4 peminatan kurikulum spesialisasi:<br>
-                    &nbsp;&nbsp;&nbsp;• <em>Front-End Development:</em> HTML, CSS, Modern Flexbox & Grid, JavaScript.<br>
-                    &nbsp;&nbsp;&nbsp;• <em>Back-End Development:</em> Node.js runtime, asynchronous, REST API, Database.<br>
-                    &nbsp;&nbsp;&nbsp;• <em>Python Programming:</em> Logika sintaks, otomatisasi skrip, struktur data, dan OOP.<br>
-                    &nbsp;&nbsp;&nbsp;• <em>Bahasa C & C++:</em> Fondasi arsitektur komputasi, alokasi memori pointer, dan STL.<br>
-                    3. <strong>Code Preview Step:</strong> Simulasi visual membaca penjelasan sintaks dan editor kode interaktif.<br>
-                    4. <strong>Community Step:</strong> Pengenalan ekosistem forum tanya-jawab dan kompetisi Papan Peringkat.<br>
-                    5. <strong>Plan Summary Step:</strong> Rekap preferensi target belajar harian dan memulai sesi belajar pertama.
-                </div>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_04_onboarding.png" alt="Onboarding Mockup">
-                </div>
-            </div>
-
-            <div class="page-footer">4</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 7: BERANDA / HOME (Hal 5)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PENGENALAN FITUR BERANDA (HOME DASHBOARD)</h2>
-                <p class="page-desc">
-                    Beranda adalah dashboard utama yang menampilkan status progres belajar, misi harian, dan pintasan:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_05_home.png" alt="Home Dashboard Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Menu Samping (Drawer):</strong> Membuka laci navigasi untuk fitur Cari Materi, Tersimpan, dan Playground.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Badge Runtutan (Streak Harian):</strong> Menghitung hari aktif belajar berturut-turut untuk menjaga disiplin koding.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Carousel Banner Promosi:</strong> Menampilkan kartu highlight materi unggulan dan target pencapaian XP mingguan.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Kartu Lanjutkan Belajar:</strong> Akses langsung melanjutkan modul terakhir yang sedang dipelajari dengan satu klik.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">5</span>
-                            <span><strong>Bilah Navigasi Bawah &amp; Codi Challenge:</strong> Akses cepat 5 menu inti (Beranda, Kelas, Progres, Komunitas, Profil) plus <strong>Codi Daily Tip</strong> &amp; <strong>Tantangan 1 Menit (+15 XP)</strong>.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">5</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 8: DRAWER & SEARCH (Hal 6)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">NAVIGASI MENU SAMPING & PENCARIAN MATERI</h2>
-                <p class="page-desc">
-                    Fitur Drawer Menu dan Pencarian Materi Global memungkinkan navigasi lintas fitur secara efisien:
-                </p>
-
-                <div class="mockup-wrapper two-cols">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_06_drawer.png" alt="Drawer Mockup">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_06b_search.png" alt="Search Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Profil Header Drawer:</strong> Menampilkan inisial avatar, nama siswa, peringkat level (Lv. 4), dan total XP.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Menu Aktivitas:</strong> Pintasan menuju Modul Tersimpan (Bookmarks), Notifikasi Belajar, dan Sertifikat Saya.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Menu Tools Coding:</strong> Akses langsung menuju Live Playground sandbox dan sesi Tanya AI Tutor.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Pencarian Materi Real-Time:</strong> Siswa dapat mengetik kata kunci topik (contoh: 'Flexbox', 'Loop', 'Pointer').</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">6</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 9: KATALOG KELAS (Hal 7)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">KATALOG KELAS & DETAIL SILABUS KURSUS</h2>
-                <p class="page-desc">
-                    Menu Kelas menyajikan kurikulum terstruktur dan silabus pembelajaran berjenjang:
-                </p>
-
-                <div class="mockup-wrapper two-cols">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_07_courses.png" alt="Courses Mockup">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_07b_class_detail.png" alt="Class Detail Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Filter Kategori Jalur Belajar:</strong> Memilih kategori kelas (Semua, Front-End, Back-End, Python, C/C++).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Pill Tingkat Kesulitan:</strong> Menandai jenjang kelas: Pemula (Hijau), Menengah (Kuning), atau Lanjut (Merah).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Fast-Track Placement Test:</strong> Tes penempatan untuk melompati materi dasar bagi yang sudah paham.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Struktur Silabus Bab:</strong> Modul dikelompokkan ke dalam Bab Persiapan, Pendahuluan, Inti, dan Evaluasi.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">7</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 10: READER (Hal 8)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">FITUR PEMBELAJARAN INTERAKTIF (MATERI READER)</h2>
-                <p class="page-desc">
-                    Layar baca modul didesain secara mobile-first untuk kenyamanan membaca penjelasan teknis dan kode:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_08_materi_reader.png" alt="Reader Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Tombol Bookmark:</strong> Menandai materi ke dalam daftar Modul Tersimpan agar mudah diakses kembali.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Blok Kode Syntax Highlighting:</strong> Format kode berwarna standar industri lengkap dengan tombol 'Salin Kode'.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Tombol 'Coba di Playground':</strong> Membuka potongan kode langsung ke sandbox untuk diedit dan dites.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">5</span>
-                            <span><strong>Tombol 'Tanya AI Tutor':</strong> Mengirimkan konteks modul ke AI Tutor jika ada penjelasan yang kurang jelas.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">6</span>
-                            <span><strong>Tombol 'Tandai Selesai':</strong> Menyimpan status penyelesaian modul ke database Room dan memberikan +20 XP.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">8</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 11: PLAYGROUND (Hal 9)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">FITUR PLAYGROUND INTERAKTIF (LIVE CODE SANDBOX)</h2>
-                <p class="page-desc">
-                    Playground menyediakan lingkungan eksperimen koding langsung di smartphone tanpa perlu PC:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_09_playground.png" alt="Playground Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Tab Editor Bahasa:</strong> Berpindah antara editor berkas HTML, stylesheet CSS, dan skrip JavaScript.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Live Preview Container:</strong> Menampilkan hasil render tampilan visual website secara langsung dan interaktif.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Tombol 'Jalankan' (Run):</strong> Memicu eksekusi kode dan merender pembaruan antarmuka pada area preview.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Tombol 'Tanya AI':</strong> Mengirimkan kode yang sedang ditulis ke AI Tutor untuk diperiksa bug atau error-nya.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">9</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 12: AI TUTOR (Hal 10)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">FITUR AI TUTOR CERDAS (DIDUKUNG GEMINI AI)</h2>
-                <p class="page-desc">
-                    AI Tutor adalah asisten belajar personal berbasis LLM (Google Gemini API) yang siap membantu 24/7:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_10_ai_tutor.png" alt="AI Tutor Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Konteks Modul Sadar Materi:</strong> AI otomatis memahami topik modul atau kelas yang sedang dibuka siswa.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Prompt Pills:</strong> Pertanyaan praktis siap pakai untuk memperdalam konsep koding.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Bantuan Debugging:</strong> Siswa dapat menempelkan error kode dan AI akan menerangkan solusinya.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Gaya Bahasa Pedagogis:</strong> Penjelasan ramah pemula, runtut langkah demi langkah, dan menyertakan analogi.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">10</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 13: EVALUASI & KUIS (Hal 11)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">SISTEM EVALUASI, KUIS BAB & HASIL EVALUASI</h2>
-                <p class="page-desc">
-                    Untuk menguji pemahaman siswa di setiap akhir bab, aplikasi menyediakan kuis evaluasi berwaktu:
-                </p>
-
-                <div class="mockup-wrapper two-cols">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_11_quiz.png" alt="Quiz Mockup">
-                    <img class="mockup-img half" src="manual_book_assets/mockup_11b_quiz_result.png" alt="Quiz Result Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Timer Hitung Mundur:</strong> Waktu ujian dibatasi (misal 10 menit) untuk melatih ketangkasan analisis kode.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Pilihan Ganda Interaktif:</strong> Opsi jawaban dilengkapi umpan balik visual saat dipilih oleh siswa.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Layar Hasil Evaluasi:</strong> Mengumumkan persentase skor akhir dan status kelulusan (Lulus jika skor >= 70%).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Reward Gamifikasi:</strong> Siswa yang lulus menerima perolehan bonus XP (+50 XP s.d. +100 XP).</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">11</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 14: PROYEK AKHIR (Hal 12)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PENGUMPULAN TUGAS AKHIR (FINAL PROJECT SUBMISSION)</h2>
-                <p class="page-desc">
-                    Sebagai syarat kelulusan sertifikasi pada tiap kelas, siswa wajib mengumpulkan Proyek Akhir studi kasus:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_12_final_project.png" alt="Final Project Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Spesifikasi & Brief Tugas:</strong> Deskripsi detail proyek nyata yang harus dibangun (misal: Web Portofolio).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Rubrik Kriteria Penilaian:</strong> Daftar checklist teknis kelayakan (HTML5 semantik, CSS responsif, styling).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Input URL Repositori:</strong> Siswa memasukkan tautan repositori kode sumber (GitHub / GitLab / link demo).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Tombol Kumpulkan Proyek:</strong> Mengirim submisi untuk dinilai oleh sistem/fasilitator dan membuka sertifikat.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">12</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 15: FORUM KOMUNITAS (Hal 13)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">FORUM DISKUSI & KOMUNITAS BELAJAR</h2>
-                <p class="page-desc">
-                    Komunitas CodeAcademy adalah wadah sosial edukatif untuk saling membantu menyelesaikan kendala koding:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_13_community.png" alt="Community Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Tab Diskusi Hangat &amp; Hub Forum Kelas:</strong> Sorotan thread terpopuler dan hub akses ke forum masing-masing kelas WebDev.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Filter Diskusi &amp; Lencana Fasilitator:</strong> Menyaring <em>Semua</em>, <em>Terjawab Fasilitator</em>, <em>Milik Saya</em>, dan <em>Populer</em> secara real-time.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Sistem Upvote, Hapus &amp; Sinkronisasi:</strong> Beri like, hapus komentar sendiri, dan sinkron langsung dengan Portal Web Fasilitator.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Tombol Buat Diskusi Baru:</strong> Formulir untuk mengajukan kendala baru lengkap dengan lampiran kode.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">13</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 16: LEADERBOARD & SERTIFIKAT (Hal 14)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PROGRES BELAJAR, GAMIFIKASI & SERTIFIKAT DIGITAL</h2>
-                <p class="page-desc">
-                    Fitur motivasi gamifikasi dan bukti pencapaian kelulusan resmi dalam bentuk sertifikat digital:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_14_leaderboard_cert.png" alt="Leaderboard & Cert Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Papan Peringkat Pelajar:</strong> Klasemen siswa teratas (Top 50) mingguan dan global berdasarkan akumulasi XP.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Sistem Medali:</strong> Apresiasi penghargaan bagi tiga siswa dengan produktivitas belajar tertinggi.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Sertifikat Kelulusan Resmi:</strong> Bukti kompetensi penyelesaian kurikulum kelas lengkap dengan nama siswa.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>ID Kredensial Unik:</strong> Kode verifikasi (misal: CC-2026110101-A9K3P2) untuk validasi keaslian sertifikat kelulusan.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">14</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 17: PROFIL & PENGATURAN (Hal 15)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PROFIL PENGGUNA & PENGATURAN APLIKASI</h2>
-                <p class="page-desc">
-                    Layar Profil memberikan kendali penuh dalam pengelolaan data akun dan preferensi tampilan aplikasi:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img" src="manual_book_assets/mockup_15_profile_settings.png" alt="Profile Mockup">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Header Profil & Statistik:</strong> Menampilkan inisial avatar, nama lengkap, jalur peminatan, dan total sertifikat.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Peta Semangat Belajar (Heatmap):</strong> Visualisasi intensitas keaktifan koding harian siswa ala GitHub matrix.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Pengaturan Mode Gelap (Dark Mode):</strong> Sakelar pengubah tema kontras gelap atau terang untuk kenyamanan mata.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Pilihan Bahasa Aplikasi:</strong> Mendukung antarmuka Bahasa Indonesia, English, Jepang, dan Mandarin.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">5</span>
-                            <span><strong>Ulangi Onboarding & Logout:</strong> Mengganti preferensi jalur belajar atau keluar dari sesi akun aplikasi dengan aman.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">15</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 18: PORTAL WEB FASILITATOR (Hal 16)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE & PORTAL WEB)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PORTAL WEB FASILITATOR & PENILAIAN TUGAS AKHIR</h2>
-                <p class="page-desc">
-                    Untuk menjamin keamanan, integritas akademik, dan kenyamanan inspeksi kode, evaluasi tugas akhir dipisahkan ke Portal Web Fasilitator (/facilitator/index.html) dengan sinkronisasi Firestore real-time:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img web" src="manual_book_assets/mockup_16_facilitator_web.png" alt="Portal Web Fasilitator">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Login Firebase Auth &amp; Allowlist:</strong> Melindungi portal dengan Email/Password atau Google Sign-In terverifikasi pada koleksi <code>/facilitators/{email}</code> (+ Mode Demo Offline).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Antrean, Forum &amp; Broadcast Pengumuman:</strong> Tab Proyek Akhir real-time, Forum Diskusi (*Belum Dijawab*), Pengumuman Kelas ke Notifikasi Android, dan Sertifikat Terbit.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Code Inspector &amp; Live Preview Aman:</strong> Menelaah kode HTML/CSS/JS berdampingan (layout 2-kolom) dengan frame sandbox terisolasi CSP.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Form Rubrik &amp; Bobot Nilai 40/60:</strong> Checklist rubrik tersimpan ke Firestore dengan perhitungan Nilai Akhir (<strong>40% Kuis + 60% Proyek</strong>).</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">5</span>
-                            <span><strong>Penerbitan Sertifikat Otomatis:</strong> Tugas yang disetujui (skor &ge; 70) menulis sertifikat <code>CC-...</code> secara atomik ke Firestore &amp; aplikasi siswa.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">6</span>
-                            <span><strong>Push Notifikasi Real-Time:</strong> Status kelulusan dan catatan penguji langsung diterima di layar ponsel siswa secara instan.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">16</div>
-        </div>
-
-        <!-- ==========================================
-             PAGE 19: PORTAL WEB VERIFIKASI SERTIFIKAT (Hal 17)
-             ========================================== -->
-        <div class="page">
-            <div class="page-header">
-                <img src="../public/assets/logo.png" alt="Logo" onerror="this.src='manual_book_assets/mockup_01_splash.png'">
-                <div class="page-header-text">
-                    <span class="title">MANUAL BOOK APLIKASI CODEACADEMY</span>
-                    <span class="subtitle">(VERSI MOBILE & PORTAL WEB)</span>
-                </div>
-            </div>
-
-            <div class="page-content">
-                <h2 class="page-title">PORTAL WEB VERIFIKASI SERTIFIKAT & KREDENSIAL</h2>
-                <p class="page-desc">
-                    CodeAcademy menyediakan Portal Verifikasi Publik (/verify.html) untuk memvalidasi keaslian dokumen sertifikat digital oleh pihak kampus, perusahaan rekruter, maupun masyarakat:
-                </p>
-
-                <div class="mockup-wrapper">
-                    <img class="mockup-img web" src="manual_book_assets/mockup_17_verify_web.png" alt="Portal Verifikasi Sertifikat">
-                </div>
-
-                <div class="keterangan-box">
-                    <div class="keterangan-title">Keterangan Gambar:</div>
-                    <div class="keterangan-list">
-                        <div class="keterangan-item">
-                            <span class="callout-badge">1</span>
-                            <span><strong>Pencarian ID Kredensial Unik:</strong> Memvalidasi kode sertifikat resmi berawalan <code>CC-</code> (misal: CC-2026110101-A9K3P2) langsung ke koleksi <code>certificates</code> Firestore.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">2</span>
-                            <span><strong>Lencana Kredensial Terverifikasi:</strong> Indikator status keabsahan resmi (Verified Authentic) bertanda centang hijau.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">3</span>
-                            <span><strong>Identitas Lengkap Siswa:</strong> Menampilkan nama siswa, judul spesialisasi kurikulum yang diselesaikan, dan tanggal lulus.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">4</span>
-                            <span><strong>Detail Skor & Predikat:</strong> Transparansi nilai tugas akhir yang diberikan oleh fasilitator beserta predikat kompetensi.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">5</span>
-                            <span><strong>Tautan Terintegrasi Mobile:</strong> Tombol Bagikan pada smartphone otomatis menyertakan link publik menuju portal verifikasi ini.</span>
-                        </div>
-                        <div class="keterangan-item">
-                            <span class="callout-badge">6</span>
-                            <span><strong>Pencegahan Pemalsuan Dokumen:</strong> Setiap sertifikat terkunci secara kriptografis dengan akun siswa dan ID kursus terdaftar.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-footer">17</div>
-        </div>
-
+    <div class="acts">
+      <a class="btn btn-ghost" href="../index.html">&larr; Kembali</a>
+      <a class="btn btn-ghost" href="Manual_Book_CodeAcademy.docx" download>Unduh DOCX</a>
+      <button type="button" class="btn" onclick="window.print()">Cetak / Simpan PDF</button>
     </div>
-
+  </header>
+  <main class="sheet-wrap">
+    <section class="cover-page">
+      <h1>MANUAL BOOK</h1>
+      <div class="sub">APLIKASI CODEACADEMY &amp; PORTAL WEB</div>
+      <img class="cover-logo" src="../assets/logo.png" alt="Maskot Codi CodeAcademy">
+      <p class="desc">Platform Pembelajaran Web Development &amp; Coding Mobile-First<br>(Aplikasi Android Offline-First, Portal Fasilitator, Panel Super Admin &amp; Verifikasi Sertifikat)</p>
+      <div style="margin-top:26px;font-size:13px;font-weight:700;color:#93C5FD;">Pengembangan Bahan Ajar Edisi I 2026</div>
+    </section>
+    <section class="page toc-page"><div class="toc-banner"><h2>DAFTAR ISI</h2></div><div class="toc-list">
+<div class="toc-row"><span class="toc-num">01</span><span class="toc-lbl">Halaman Sampul (Cover)</span></div>
+<div class="toc-row"><span class="toc-num">02</span><span class="toc-lbl">Daftar Isi</span></div>
+<div class="toc-row"><span class="toc-num">03</span><span class="toc-lbl">1. Pengenalan Sistem, Arsitektur &amp; Spesifikasi Platform</span></div>
+<div class="toc-row"><span class="toc-num">04</span><span class="toc-lbl">2. Unduh &amp; Instalasi Aplikasi Versi Mobile (Android)</span></div>
+<div class="toc-row"><span class="toc-num">05</span><span class="toc-lbl">3. Pendaftaran Akun, Masuk, Google Linking &amp; Pemulihan Sandi</span></div>
+<div class="toc-row"><span class="toc-num">06</span><span class="toc-lbl">4. Alur Onboarding Siswa Baru (5 Langkah)</span></div>
+<div class="toc-row"><span class="toc-num">07</span><span class="toc-lbl">5. Beranda (Home Dashboard), Streak, Misi &amp; Tantangan Kilat</span></div>
+<div class="toc-row"><span class="toc-num">08</span><span class="toc-lbl">6. Menu Samping (Drawer), Pencarian Global &amp; Tersimpan</span></div>
+<div class="toc-row"><span class="toc-num">09</span><span class="toc-lbl">7. Katalog Kelas, Placement Test &amp; Detail Silabus Kursus</span></div>
+<div class="toc-row"><span class="toc-num">10</span><span class="toc-lbl">8. Pembelajaran Interaktif (Materi Reader)</span></div>
+<div class="toc-row"><span class="toc-num">11</span><span class="toc-lbl">9. Playground Interaktif (Live HTML/CSS/JS Sandbox)</span></div>
+<div class="toc-row"><span class="toc-num">12</span><span class="toc-lbl">10. Fitur AI Tutor Cerdas (Codi — Google Gemini AI)</span></div>
+<div class="toc-row"><span class="toc-num">13</span><span class="toc-lbl">11. Sistem Evaluasi, Kuis Bab &amp; Evaluasi Akhir</span></div>
+<div class="toc-row"><span class="toc-num">14</span><span class="toc-lbl">12. Pengumpulan Tugas Akhir (Final Project Submission)</span></div>
+<div class="toc-row"><span class="toc-num">15</span><span class="toc-lbl">13. Forum Diskusi Kelas Real-Time &amp; Targeted Reply</span></div>
+<div class="toc-row"><span class="toc-num">16</span><span class="toc-lbl">14. Progres Belajar, Papan Peringkat &amp; Sertifikat Digital</span></div>
+<div class="toc-row"><span class="toc-num">17</span><span class="toc-lbl">15. Profil Pengguna, Peta Aktivitas, Bahasa &amp; Zona Berbahaya</span></div>
+<div class="toc-row"><span class="toc-num">18</span><span class="toc-lbl">16. Halaman Publik Web &amp; Pintu Masuk Portal Staf</span></div>
+<div class="toc-row"><span class="toc-num">19</span><span class="toc-lbl">17. Portal Web Fasilitator: Proyek, Forum Terverifikasi &amp; Profil</span></div>
+<div class="toc-row"><span class="toc-num">20</span><span class="toc-lbl">18. Panel Super Admin: Tim Fasilitator, Audit Sertifikat &amp; Export CSV</span></div>
+<div class="toc-row"><span class="toc-num">21</span><span class="toc-lbl">19. Portal Verifikasi Sertifikat Publik &amp; Keamanan Firestore</span></div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="page-dot">02</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">1</span><h2>PENGENALAN SISTEM, ARSITEKTUR &amp; SPESIFIKASI PLATFORM</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p"><strong>CodeAcademy</strong> adalah ekosistem pembelajaran pemrograman Web Development <em>mobile-first</em> yang menggabungkan <strong>Aplikasi Mobile Android (Offline-First)</strong>, <strong>Backend Cloud Firebase</strong>, dan <strong>Portal Web Multi-Peran</strong> (Halaman Publik, Portal Fasilitator, Panel Super Admin, dan Portal Verifikasi Sertifikat). Sistem ini dirancang agar mahasiswa maupun pembelajar pemula dapat belajar konsep hingga praktik menulis kode HTML, CSS, dan JavaScript langsung dari ponsel, sambil tetap terhubung dengan pendampingan fasilitator secara real-time di layar desktop.</p>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_01_splash.png" alt="Splash Screen CodeAcademy"><figcaption>Gambar 1: Tampilan Layar Pembuka (Splash Screen) Aplikasi CodeAcademy Mobile</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Spesifikasi Arsitektur &amp; Komponen Sistem:</h3>
+<div class="table-wrap"><table class="spec-table"><thead><tr>
+<th>Komponen Platform</th>
+<th>Teknologi Utama</th>
+<th>Fungsi &amp; Tanggung Jawab</th>
+</tr></thead><tbody>
+<tr>
+<td>Aplikasi Mobile (Android)</td>
+<td>Kotlin, Jetpack Compose Material 3, Room Database, DataStore</td>
+<td>Pembelajaran <em>offline-first</em>, Playground HTML/CSS/JS, Kuis, Forum, Gamifikasi, AI Tutor Codi</td>
+</tr>
+<tr>
+<td>Autentikasi &amp; Keamanan</td>
+<td>Firebase Authentication (Email, Google Sign-In, Anonymous), <code>firestore.rules</code></td>
+<td>Login siswa &amp; staf, penautan akun tamu ke Google (<code>linkWithCredential</code>), validasi hak akses per peran</td>
+</tr>
+<tr>
+<td>Sinkronisasi Cloud</td>
+<td>Cloud Firestore (Project <code>codeacademy-6a361</code>)</td>
+<td>Koleksi <code>users</code>, <code>forum_posts</code>, <code>project_submissions</code>, <code>certificates</code>, <code>announcements</code>, dan <code>facilitators</code></td>
+</tr>
+<tr>
+<td>Asisten AI</td>
+<td>Firebase AI Logic SDK (Google Gemini AI)</td>
+<td>Tutor interaktif sadar konteks modul/kode, pembantu debugging, sapaan ringkas &amp; contoh kode</td>
+</tr>
+<tr>
+<td>Web Portal Staf &amp; Publik</td>
+<td>HTML5, CSS3, Vanilla JS + Firebase Web SDK (<code>public/</code>)</td>
+<td>Landing page publik, Portal Fasilitator, Panel Super Admin, dan Portal Verifikasi <code>verify.html</code></td>
+</tr>
+</tbody></table></div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Spesifikasi Kurikulum &amp; Evaluasi Aktual:</h3>
+<div class="table-wrap"><table class="spec-table"><thead><tr>
+<th>ID Kelas</th>
+<th>Judul Kelas</th>
+<th>Tingkat</th>
+<th>Jumlah Modul</th>
+<th>Kuis Bab</th>
+<th>Proyek Akhir</th>
+</tr></thead><tbody>
+<tr>
+<td><code>fe-web-foundation-00</code></td>
+<td>Fondasi Web: Dari Nol ke Baris Kode Pertama</td>
+<td>Orientasi</td>
+<td>106 Modul</td>
+<td>5 Kuis</td>
+<td>Ya</td>
+</tr>
+<tr>
+<td><code>fe-css-02</code></td>
+<td>CSS Layout Modern: Flexbox &amp; Grid</td>
+<td>Pemula-Menengah</td>
+<td>24 Modul</td>
+<td>2 Kuis</td>
+<td>Ya</td>
+</tr>
+<tr>
+<td><code>fe-js-03</code></td>
+<td>JavaScript Fundamentals</td>
+<td>Pemula</td>
+<td>26 Modul</td>
+<td>2 Kuis</td>
+<td>Ya</td>
+</tr>
+<tr>
+<td><strong>Total Kurikulum</strong></td>
+<td><strong>Jalur Spesialisasi Front-End Web Development</strong></td>
+<td><strong>Berjenjang</strong></td>
+<td><strong>156 Modul</strong></td>
+<td><strong>9 Kuis</strong></td>
+<td><strong>3 Proyek</strong></td>
+</tr>
+</tbody></table></div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Matriks Peran Pengguna Ekosistem:</h3>
+<ul class="bullet-list">
+<li><strong>Siswa Terdaftar &amp; Tamu (Android):</strong> Membaca 156 modul, menjalankan kode di Playground, bertanya ke AI Tutor Codi, mengikuti kuis, berdiskusi di Forum, mengumpulkan Proyek Akhir, memantau Leaderboard &amp; Sertifikat.</li>
+<li><strong>Fasilitator (<code>accessRole: "facilitator"</code> di Web):</strong> Menilai antrean Proyek Akhir dengan rubrik (40% Kuis + 60% Proyek), menerbitkan sertifikat <code>CC-...</code> atau meminta revisi, menjawab &amp; mem-pin <em>Jawaban Terverifikasi</em> di Forum, mengirim Pengumuman kelas, dan mengatur Profil Fasilitator.</li>
+<li><strong>Super Admin (<code>accessRole: "super_admin"</code> di Web):</strong> Memiliki seluruh hak akses Fasilitator ditambah manajemen <strong>Tim Fasilitator</strong> (<code>/facilitators/{email}</code>), <strong>Sertifikat &amp; Audit</strong>, <strong>Ringkasan Analitik &amp; Direktori Siswa</strong>, serta <strong>Unduh Laporan CSV</strong> nilai dan sertifikat.</li>
+<li><strong>Publik / Penguji / Rekruter (<code>verify.html</code>):</strong> Memeriksa keabsahan ID Kredensial Sertifikat <code>CC-...</code> tanpa perlu login.</li>
+</ul>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">2</span><h2>UNDUH &amp; INSTALASI APLIKASI VERSI MOBILE (ANDROID)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Spesifikasi Kebutuhan Sistem Minimum:</h3>
+<ul class="bullet-list">
+<li><strong>Sistem Operasi:</strong> Android 8.0 (Oreo) atau versi yang lebih baru (API Level 26+).</li>
+<li><strong>Memori RAM:</strong> Minimal 2 GB (disarankan 4 GB atau lebih agar rendering WebView Live Preview di Playground berjalan mulus).</li>
+<li><strong>Ruang Penyimpanan Kosong:</strong> Minimal 150 MB untuk aplikasi, Room Database, dan cache materi offline.</li>
+<li><strong>Koneksi Jaringan:</strong> Materi inti dapat dibaca offline; internet aktif diperlukan untuk AI Tutor Codi, sinkronisasi Google, Forum real-time, Leaderboard, dan pengumpulan Proyek Akhir.</li>
+<li><strong>Dukungan Bahasa Aplikasi:</strong> Tersedia dalam 4 bahasa antarmuka: <strong>Bahasa Indonesia</strong>, <strong>English</strong>, <strong>日本語 (Jepang)</strong>, dan <strong>中文 (Mandarin)</strong>.</li>
+</ul>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Langkah-Langkah Pemasangan (Instalasi APK):</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Unduh berkas installer <code>CodeAcademy-v1.0-release.apk</code> dari repositori resmi proyek atau tautan distribusi kelas.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Buka folder <strong>Unduhan</strong> (<em>Downloads</em>) menggunakan aplikasi <strong>Pengelola Berkas</strong> (<em>File Manager</em>) di smartphone Android Anda.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Ketuk berkas installer APK CodeAcademy yang telah diunduh.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text">Jika muncul peringatan keamanan sumber tidak dikenal (<em>Unknown Sources</em>), pilih <strong>Setelan</strong> lalu aktifkan izin <strong>Izinkan dari sumber ini</strong> (<em>Allow from this source</em>).</div></div>
+<div class="step-row"><span class="step-num">05</span><div class="step-text">Pada dialog Penginstal Paket Android yang muncul, ketuk tombol <strong>INSTAL</strong> (lihat penunjuk <strong>[1]</strong> pada Gambar 2).</div></div>
+<div class="step-row"><span class="step-num">06</span><div class="step-text">Tunggu beberapa detik hingga sistem selesai memverifikasi dan memasang aplikasi.</div></div>
+<div class="step-row"><span class="step-num">07</span><div class="step-text">Setelah pemasangan selesai, ketuk tombol <strong>Buka</strong> untuk memulai aplikasi CodeAcademy.</div></div>
+</div>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_02_install.png" alt="Layar Instalasi APK"><figcaption>Gambar 2: Kotak Dialog Penginstal Paket Android</figcaption></figure>
+<h4 class="sub-h4">Keterangan Gambar:</h4>
+<ul class="bullet-list">
+<li><strong>[1] Tombol Instal:</strong> Ketuk tombol ini untuk mengonfirmasi pemasangan berkas aplikasi CodeAcademy ke perangkat Android Anda.</li>
+</ul>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">3</span><h2>PENDAFTARAN AKUN, MASUK, GOOGLE LINKING &amp; PEMULIHAN SANDI</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">Untuk menyinkronkan poin XP, streak harian, riwayat forum, dan sertifikat kelulusan ke Cloud Firestore, pengguna disarankan masuk menggunakan akun terdaftar atau Google Sign-In. Aplikasi juga mendukung <strong>Masuk sebagai Tamu</strong> (autentikasi anonim) yang nantinya dapat ditautkan ke akun Google tanpa kehilangan progres maupun membuat akun ganda di Papan Peringkat.</p>
+<div class="img-grid">
+<figure class="img-card"><figcaption class="img-head">Layar Masuk (Login)</figcaption><img src="manual_book_assets/mockup_03_login.png" alt="Layar Masuk Login"><figcaption class="img-cap"><em>Gambar 3A: Formulir Masuk Akun (Login)</em></figcaption></figure>
+<figure class="img-card"><figcaption class="img-head">Layar Pendaftaran (Register)</figcaption><img src="manual_book_assets/mockup_03b_register.png" alt="Layar Pendaftaran Register"><figcaption class="img-cap"><em>Gambar 3B: Formulir Pendaftaran Akun Baru (Register)</em></figcaption></figure>
+</div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Langkah Masuk Akun (Login — Gambar 3A):</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Buka aplikasi CodeAcademy, lalu masukkan alamat email terdaftar Anda pada kolom <strong>Email</strong> <strong>[1]</strong>.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Masukkan kata sandi pada kolom <strong>Kata Sandi</strong> <strong>[1]</strong> (gunakan ikon mata untuk menampilkan/menyembunyikan karakter sandi).</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Ketuk tombol <strong>Masuk ke Akun</strong> <strong>[3]</strong> untuk masuk ke Beranda aplikasi.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text"><strong>Masuk Instan dengan Google:</strong> Ketuk tombol <strong>Masuk dengan Google</strong> untuk autentikasi satu ketukan via Google Credential Manager. Jika sebelumnya Anda memakai akun Tamu Anonim, sistem otomatis menjalankan penautan akun (<em>link credential</em>) agar UID dan poin XP Anda menyatu dan tidak ganda di Leaderboard.</div></div>
+<div class="step-row"><span class="step-num">05</span><div class="step-text"><strong>Pemulihan Sandi:</strong> Jika lupa kata sandi akun email, ketuk tautan <strong>Lupa Kata Sandi?</strong> <strong>[2]</strong> untuk mengatur ulang kata sandi.</div></div>
+</div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Langkah Pendaftaran Akun Baru (Register — Gambar 3B):</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Pada bagian bawah layar masuk, ketuk tautan <strong>Daftar Sekarang</strong> <strong>[4]</strong> untuk membuka layar pendaftaran (<em>"Mulai perjalanan codingmu"</em>).</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Lengkapi formulir pendaftaran: <strong>Nama Lengkap</strong> (minimal 2 huruf, tidak diawali angka), <strong>Email aktif</strong>, <strong>Kata Sandi</strong> (minimal 6 karakter), dan <strong>Konfirmasi Kata Sandi</strong>.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Ketuk tombol <strong>Daftar Akun</strong> untuk membuat akun baru secara lokal &amp; cloud, atau pilih <strong>Daftar dengan Google</strong> untuk registrasi otomatis.</div></div>
+</div>
+<h4 class="sub-h4">Keterangan Gambar 3A:</h4>
+<ul class="bullet-list">
+<li><strong>[1] Kolom Input Email &amp; Kata Sandi:</strong> Area pengisian kredensial email dan kata sandi akun pengguna.</li>
+<li><strong>[2] Tautan Lupa Kata Sandi?:</strong> Membuka alur pemulihan/reset kata sandi pengguna.</li>
+<li><strong>[3] Tombol Masuk ke Akun:</strong> Memvalidasi kredensial dan membuka dashboard utama.</li>
+<li><strong>[4] Tautan Daftar Sekarang:</strong> Berpindah dari layar Masuk ke formulir Pendaftaran akun baru (Gambar 3B).</li>
+</ul>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">4</span><h2>ALUR ONBOARDING SISWA BARU (5 LANGKAH)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">Pengguna baru disambut alur <strong>Onboarding Interaktif 5 Langkah</strong> untuk memetakan tujuan belajar dan ritme harian sebelum masuk ke Beranda:</p>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_04_onboarding.png" alt="Alur Onboarding Siswa Baru"><figcaption>Gambar 4: Rangkaian 5 Langkah Layar Onboarding Siswa Baru</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Rincian Tahapan Onboarding:</h3>
+<div class="table-wrap"><table class="spec-table"><thead><tr>
+<th>Langkah</th>
+<th>Nama Tahap</th>
+<th>Fungsi &amp; Aksi Pengguna</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>01</strong></td>
+<td><strong>Welcome Step</strong></td>
+<td>Sambutan bersama maskot <strong>Codi</strong> serta pengenalan metode <em>microlearning</em> Web Development 156 modul.</td>
+</tr>
+<tr>
+<td><strong>02</strong></td>
+<td><strong>Code Preview Step</strong></td>
+<td>Simulasi interaktif mengubah elemen kode HTML dan melihat hasil render tampilan secara langsung di layar.</td>
+</tr>
+<tr>
+<td><strong>03</strong></td>
+<td><strong>Community Step</strong></td>
+<td>Pengenalan fitur Forum Diskusi kelas, Papan Peringkat mingguan, serta bimbingan dari Fasilitator.</td>
+</tr>
+<tr>
+<td><strong>04</strong></td>
+<td><strong>Track Selection Step</strong></td>
+<td>Pemilihan jalur kurikulum utama <strong>Front-End Web Development</strong> (HTML5, CSS3, Flexbox/Grid, JavaScript ES6).</td>
+</tr>
+<tr>
+<td><strong>05</strong></td>
+<td><strong>Plan Summary Step</strong></td>
+<td>Penentuan target komitmen belajar harian (10–45 menit/hari), tujuan karier, dan estimasi selesai kelas pertama.</td>
+</tr>
+</tbody></table></div>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Geser atau ketuk <strong>Lanjut</strong> untuk berpindah antar tahap onboarding, atau ketuk <strong>Lewati</strong> di pojok kanan atas jika ingin langsung menuju ringkasan akhir.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Pada tahap 5 (<em>Atur Ritme Belajarmu</em>), pilih target waktu harian dan fokus tujuan utama lalu ketuk <strong>Mulai Belajar</strong> untuk membuka Beranda.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">5</span><h2>BERANDA (HOME DASHBOARD), STREAK, MISI &amp; TANTANGAN KILAT</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">Beranda merupakan pusat kendali belajar harian yang merangkum status streak, capaian XP, tips harian Codi, kuis kilat 1 menit, misi harian, dan pintasan kelas aktif.</p>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_05_home.png" alt="Beranda Aplikasi CodeAcademy"><figcaption>Gambar 5: Halaman Beranda (Home Dashboard) CodeAcademy</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Alur &amp; Komponen Utama Beranda:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Header Atas &amp; Badge Streak [1][2]:</strong> Ketuk ikon <strong>Menu Samping (☰)</strong> <strong>[1]</strong> untuk membuka Navigation Drawer, ketuk ikon lonceng untuk membaca <strong>Notifikasi &amp; Pengumuman Fasilitator</strong>, dan pantau <strong>Badge Streak Api</strong> <strong>[2]</strong> yang otomatis menyala ke <strong>1 hari</strong> sejak aktivitas modul atau perolehan XP pertama pada hari tersebut (tersinkronisasi seragam antara Beranda, Progres, dan Profil).</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Carousel Atas Seragam (<code>196 dp</code>) [3]:</strong> Geser 3 kartu utama dengan tinggi seragam: (a) <strong>Banner Promo Mobile-First Coding</strong> dengan tombol putih kontras tinggi, (b) <strong>Kartu XP Minggu Ini</strong> lengkap dengan animasi <em>count-up</em> akurat, level aktif, dan progres target 250 XP tanpa nilai fallback palsu, serta (c) <strong>Kartu Rekomendasi Kelas</strong>.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Strip Streak 7 Hari &amp; Misi Harian:</strong> Menampilkan grid keaktifan 7 hari (dimulai <strong>Senin–Minggu</strong> mengikuti bahasa aplikasi) dan kartu <strong>Misi Harian (+50 XP)</strong>.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text"><strong>Codi Daily Tip &amp; Tantangan Kilat 1 Menit [6]:</strong></div></div>
+</div>
+<ul class="bullet-list">
+<li><strong>Codi Daily Tip:</strong> Menampilkan tips pemrograman harian (sintaks ber-backtick otomatis dirender <em>monospace</em>), lengkap dengan tombol <strong>Tanya AI</strong> dan <strong>Coba Kode</strong>.</li>
+<li><strong>Tantangan Kilat 1 Menit (+15 XP):</strong> Soal harian pilihan ganda berlabel badge <strong>A / B / C</strong> dengan <em>highlight</em> hijau/merah, ikon status, dan penjelasan inline code saat dijawab. Dilindungi guard 1x per hari (anti <em>double-tap</em> &amp; anti-spam) yang tersimpan per tanggal (<code>yyyy-MM-dd</code>).</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">05</span><div class="step-text"><strong>Kartu Lanjutkan Belajar &amp; Jalur Belajar [4][5]:</strong> Menampilkan kelas aktif dan daftar jalur kurikulum (<em>Front-End Development</em>) secara ringkas, sementara <strong>Bilah Navigasi Bawah</strong> <strong>[5]</strong> memberi akses satu ketukan ke tab <strong>Beranda</strong>, <strong>Kelas</strong>, <strong>Progres</strong>, <strong>Peringkat</strong>, dan <strong>Profil</strong>.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">6</span><h2>MENU SAMPING (DRAWER), PENCARIAN GLOBAL &amp; TERSIMPAN</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<div class="img-grid">
+<figure class="img-card"><figcaption class="img-head">Menu Navigasi Samping (Drawer)</figcaption><img src="manual_book_assets/mockup_06_drawer.png" alt="Menu Drawer"><figcaption class="img-cap"><em>Gambar 6A: Laci Navigasi Samping (Drawer)</em></figcaption></figure>
+<figure class="img-card"><figcaption class="img-head">Pencarian Materi Global (Search)</figcaption><img src="manual_book_assets/mockup_06b_search.png" alt="Pencarian Global"><figcaption class="img-cap"><em>Gambar 6B: Layar Pencarian Materi Global</em></figcaption></figure>
+</div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Langkah Menggunakan Menu Samping &amp; Pencarian:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Ketuk ikon <strong>☰</strong> di pojok kiri atas Beranda untuk membuka <strong>Navigation Drawer</strong> (Gambar 6A) yang memuat profil ringkas siswa, level XP, serta fitur-fitur utilitas yang tidak ada di Bottom Navigation: <strong>Cari Materi</strong>, <strong>Modul Tersimpan (Bookmarks)</strong>, <strong>Playground Live</strong>, <strong>AI Tutor Codi</strong>, <strong>Cheat Sheet</strong>, <strong>Sertifikat Saya</strong>, <strong>Pusat Bantuan</strong>, dan <strong>Tentang Aplikasi</strong>.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Pilih <strong>Cari Materi</strong> (Gambar 6B) lalu ketik kata kunci teknis (misalnya <code>"Flexbox"</code>, <code>"Semantic"</code>, atau <code>"Promise"</code>) untuk menelusuri seluruh <strong>156 modul</strong> secara instan dan melompat langsung ke modul terkait.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Pilih <strong>Modul Tersimpan</strong> untuk membuka daftar materi dan kelas yang telah di-bookmark oleh pengguna.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">7</span><h2>KATALOG KELAS, PLACEMENT TEST &amp; DETAIL SILABUS KURSUS</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<div class="img-grid">
+<figure class="img-card"><figcaption class="img-head">Katalog Kelas (Course Catalog)</figcaption><img src="manual_book_assets/mockup_07_courses.png" alt="Katalog Kelas"><figcaption class="img-cap"><em>Gambar 7A: Katalog Kelas &amp; Filter Tonal</em></figcaption></figure>
+<figure class="img-card"><figcaption class="img-head">Detail Silabus Kelas (Class Detail)</figcaption><img src="manual_book_assets/mockup_07b_class_detail.png" alt="Detail Silabus"><figcaption class="img-cap"><em>Gambar 7B: Detail Silabus Kelas &amp; Aksi</em></figcaption></figure>
+</div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Fitur &amp; Cara Menggunakan Menu Kelas:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Tab Filter Progres &amp; Pencarian:</strong> Ketuk tab <strong>Semua</strong>, <strong>Dipelajari</strong>, atau <strong>Selesai</strong>, atau ketik judul/topik pada kotak pencarian ringkas di bagian atas.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Filter Jalur &amp; Tingkat Adaptif Light/Dark:</strong> Saring kelas berdasarkan Jalur dan Tingkat (<em>Semua</em>, <em>Orientasi</em>, <em>Pemula</em>, <em>Pemula-Menengah</em>, <em>Lanjut</em>) menggunakan chip bergaya <strong>Teal</strong> saat terpilih dan palet tonal kontras tinggi baik pada <strong>Light Mode</strong> maupun <strong>Dark Mode</strong>.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Informasi Lengkap pada Setiap Kartu Kelas:</strong> Setiap kartu menampilkan badge tingkat berwarna konsisten, jumlah modul (<code>X/Y Modul</code> atau <code>Y Modul</code>), progress bar proporsional, durasi ramah (mis. <code>9 jam 33 mnt</code> / <code>9h 33m</code>), ikon bookmark (<code>48 dp</code>) dengan notifikasi <em>Toast</em> <code>"Disimpan"</code>, serta tombol aksi <strong>Mulai</strong>, <strong>Lanjutkan</strong>, atau <strong>Ulangi</strong>.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text">*<em>Tes Penempatan (</em>Placement Test<em>):</em><em> Di bagian Detail Kelas (Gambar 7B), pengguna yang sudah berpengalaman dapat mengikuti </em>Placement Test<em> untuk membuka modul lanjutan lebih cepat (</em>fast-track*) atau langsung membuka daftar bab modul &amp; tautan ke <strong>Forum Diskusi Kelas</strong>.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">8</span><h2>PEMBELAJARAN INTERAKTIF (MATERI READER)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_08_materi_reader.png" alt="Materi Reader"><figcaption>Gambar 8: Antarmuka Pembaca Modul Pembelajaran Interaktif</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Cara Belajar Menggunakan Materi Reader:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Buka salah satu modul dari Detail Kelas untuk membaca penjelasan terstruktur, tabel ringkasan, catatan penting (<em>callout</em>), dan blok kode berwarna (<em>syntax highlighting</em>).</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Ketuk ikon <strong>Bookmark [2]</strong> di bilah atas untuk menyimpan modul favorit ke daftar <em>Tersimpan</em>.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Pada setiap blok kode <strong>[3]</strong>, ketuk <strong>Salin Kode</strong> (<code>48 dp</code>) untuk menyalin ke clipboard, atau ketuk <strong>Coba di Playground [4]</strong> untuk langsung menjalankan potongan kode tersebut di sandbox eksekusi.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text">Jika ada bagian yang sulit dipahami, ketuk <strong>Tanya AI Tutor [5]</strong> agar konteks modul otomatis dikirim ke AI Tutor Codi.</div></div>
+<div class="step-row"><span class="step-num">05</span><div class="step-text">Setelah selesai membaca, ketuk <strong>Tandai Selesai [6]</strong> untuk menyimpan progres ke Room Database, menyalakan streak harian, dan meraih bonus <strong>+20 XP</strong>.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">9</span><h2>PLAYGROUND INTERAKTIF (LIVE HTML/CSS/JS SANDBOX)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_09_playground.png" alt="Playground Interaktif"><figcaption>Gambar 9: Layar Code Playground Multi-Tab dengan Live Preview</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Alur Penggunaan Live Code Sandbox:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Buka <strong>Playground</strong> dari Drawer, kartu Tips Codi, atau tombol <strong>Coba di Playground</strong> di dalam Materi Reader.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Pilih tab berkas <strong><code>index.html</code></strong>, <strong><code>style.css</code></strong>, atau <strong><code>script.js</code></strong> untuk menulis atau mengedit kode secara terpisah tanpa <em>auto-correct</em> yang mengganggu sintaks. Draf perubahan otomatis tersimpan per kelas di perangkat (<em>auto-save</em>).</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Ketuk tombol <strong>Jalankan / Tab Preview Web</strong> untuk merender tampilan halaman web secara real-time di WebView terisolasi beserta panel <strong>Output Console</strong> (<code>console.log</code>) yang dapat dibersihkan.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text">Ketuk <strong>Tanya AI</strong> langsung dari Playground untuk meminta AI Tutor Codi memeriksa kode yang sedang Anda tulis (sistem otomatis mengirim cuplikan kode aktif agar Codi memberi <em>hint</em> terarah).</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">10</span><h2>FITUR AI TUTOR CERDAS (CODI — GOOGLE GEMINI AI)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_10_ai_tutor.png" alt="AI Tutor Codi"><figcaption>Gambar 10: Layar Percakapan AI Tutor Codi Berbasis Google Gemini AI</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Kemampuan &amp; Cara Menggunakan AI Tutor Codi:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Identitas Konsisten &amp; Status Koneksi:</strong> Header menampilkan maskot resmi <strong>Codi</strong> beserta pill status koneksi 1-baris (<em>Gemini / Offline</em>) dan konteks kelas/modul aktif.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Respon Cerdas Sesuai Konteks:</strong> Sapaan ringan (seperti <em>"hai"</em> atau <em>"halo"</em>) dijawab hangat dan singkat dalam 1–2 kalimat tanpa membanjiri layar dengan blok kode panjang, sedangkan pertanyaan teknis dijawab terstruktur dengan contoh kode ringkas dan <em>hint</em> pedagogis.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">*<em>Saran Pertanyaan Cepat (</em>Prompt Pills<em>) &amp; Auto-Scroll Keyboard:</em>* Ketuk pill saran di atas kolom ketik untuk langsung bertanya. Saat keyboard terbuka, area chat otomatis menyesuaikan (<code>imePadding</code>) dan menggulir ke pesan terbaru.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text"><strong>Hapus Riwayat Aman &amp; Disclaimer:</strong> Ketuk ikon tempat sampah di pojok kanan atas untuk membersihkan chat (dilengkapi <strong>dialog konfirmasi</strong> agar tidak terhapus tidak sengaja). Di bawah kolom input tertera catatan pengingat <em>"Jawaban AI bisa keliru, periksa kembali"</em>.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">11</span><h2>SISTEM EVALUASI, KUIS BAB &amp; EVALUASI AKHIR</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<div class="img-grid">
+<figure class="img-card"><figcaption class="img-head">Pengerjaan Kuis (Section Quiz)</figcaption><img src="manual_book_assets/mockup_11_quiz.png" alt="Pengerjaan Kuis"><figcaption class="img-cap"><em>Gambar 11A: Layar Pengerjaan Kuis Berwaktu</em></figcaption></figure>
+<figure class="img-card"><figcaption class="img-head">Hasil Evaluasi (Result Screen)</figcaption><img src="manual_book_assets/mockup_11b_quiz_result.png" alt="Hasil Evaluasi"><figcaption class="img-cap"><em>Gambar 11B: Layar Hasil Evaluasi &amp; Pembahasan</em></figcaption></figure>
+</div>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Aturan &amp; Alur Pengerjaan Evaluasi:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Kuis Bab &amp; Evaluasi Akhir:</strong> Setiap kelas dilengkapi kuis per bab (total 9 Kuis Bab) dan 1 Evaluasi Akhir berwaktu sebelum pengumpulan Proyek Akhir.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">*<em>Ambang Kelulusan (</em>Passing Grade<em>):<strong> Siswa dinyatakan </strong>LULUS<strong> jika meraih nilai minimal </strong>70%</em>*. Kelulusan memberikan reward XP dan membuka tahapan kurikulum selanjutnya.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Ulang Kuis &amp; Pembahasan:</strong> Jika nilai belum mencapai 70%, siswa dapat meninjau umpan balik soal lalu menekan tombol <strong>Ulangi Kuis</strong> (<em>Retake</em>). Skor kuis akhir otomatis menjadi komponen <strong>40%</strong> dalam perhitungan nilai sertifikat kelulusan.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">12</span><h2>PENGUMPULAN TUGAS AKHIR (FINAL PROJECT SUBMISSION)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_12_final_project.png" alt="Pengumpulan Tugas Akhir"><figcaption>Gambar 12: Layar Pengumpulan Proyek Akhir (Final Project)</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Langkah Mengumpulkan Proyek Akhir:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text">Pastikan seluruh modul dan Evaluasi Akhir pada kelas bersangkutan telah selesai dengan skor minimal <strong>70%</strong>.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">Buka halaman <strong>Proyek Akhir</strong> kelas, baca instruksi studi kasus nyata dan daftar kriteria rubrik penilaian.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">Lengkapi <strong>URL Repositori / Tautan Proyek</strong>, <strong>Catatan untuk Fasilitator</strong>, serta kode sumber HTML/CSS/JS (dapat diimpor langsung dengan satu ketukan dari <strong>Playground Draft</strong>).</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text">Ketuk <strong>Kirim Proyek</strong> untuk mengunggah pengajuan ke koleksi <code>project_submissions</code> di Cloud Firestore dengan status awal <strong><code>PENDING_REVIEW</code></strong>.</div></div>
+<div class="step-row"><span class="step-num">05</span><div class="step-text">Pantau hasil review Fasilitator secara real-time di aplikasi:</div></div>
+</div>
+<ul class="bullet-list">
+<li>Jika berstatus <strong><code>REVISION_REQUESTED</code></strong>: baca catatan perbaikan dari Fasilitator, perbaiki kode, lalu kirim ulang (<em>resubmit</em>).</li>
+<li>Jika berstatus <strong><code>APPROVED</code></strong>: sertifikat digital ber-ID <strong><code>CC-...</code></strong> otomatis aktif di layar Sertifikat.</li>
+</ul>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">13</span><h2>FORUM DISKUSI KELAS REAL-TIME &amp; TARGETED REPLY</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_13_community.png" alt="Forum Diskusi Komunitas"><figcaption>Gambar 13: Antarmuka Forum Diskusi Kelas &amp; Thread Komentar</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Fitur &amp; Alur Diskusi di Aplikasi Android:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Sinkronisasi Dua Arah Real-Time:</strong> Thread dan komentar langsung tersinkronisasi antara aplikasi Android dan <strong>Portal Web Fasilitator</strong> melalui koleksi <code>forum_posts</code> Firestore (query langsung tanpa bottleneck composite index dan memastikan autentikasi anonim/Google aktif sebelum memuat).</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Filter Diskusi &amp; Badge Fasilitator:</strong> Saring thread menggunakan chip seragam (<strong>Semua</strong>, <strong>Terjawab Fasilitator</strong>, <strong>Milik Saya</strong>, <strong>Populer</strong>). Thread yang telah dibalas staf menampilkan badge <strong><code>Dijawab Fasilitator</code></strong> serta lencana khusus Fasilitator.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">*<em>Buka Thread &amp; Balas Spesifik (</em>Targeted Reply<em>):</em>*</div></div>
+</div>
+<ul class="bullet-list">
+<li>Ketuk pill jumlah balasan untuk memperluas daftar komentar dengan garis vertikal thread penuh dan <strong>Quote Box</strong> kutipan target balasan.</li>
+<li>Ketuk <strong>Balas</strong> pada topik utama maupun pada komentar tertentu untuk memunculkan banner <em>"Membalas @Nama"</em> di atas kolom ketik.</li>
+<li>Batas penulisan hingga <strong>4000 karakter</strong> dengan validasi server timeout (<code>10 detik</code>) dan notifikasi <em>Toast</em> apabila jaringan terputus agar indikator kirim tidak berputar tanpa henti.</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">04</span><div class="step-text"><strong>Error State 3 Varian Jelas:</strong> Jika terjadi gangguan, layar membedakan kondisi <strong>Koneksi Terputus (Offline)</strong>, <strong>Sesi atau Izin Bermasalah (Muat Ulang Sesi)</strong>, dan <strong>Kendala Server (Coba Lagi)</strong> sekaligus menonaktifkan input dengan keterangan yang jelas.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">14</span><h2>PROGRES BELAJAR, PAPAN PERINGKAT &amp; SERTIFIKAT DIGITAL</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_14_leaderboard_cert.png" alt="Leaderboard dan Sertifikat"><figcaption>Gambar 14: Papan Peringkat Top 50 &amp; Layar Sertifikat Digital Resmi</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Rincian Progres, Leaderboard &amp; Sertifikat:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Layar Progres Jujur &amp; Seimbang:</strong> Menampilkan <strong>Level &amp; Sisa XP Menuju Level Berikutnya</strong>, kartu <strong>Streak</strong> dan <strong>Sertifikat</strong> dengan tinggi seimbang, persentase penyelesaian per jalur belajar (minimal <strong>1%</strong> jika minimal 1 modul telah selesai, bukan <code>0%</code>), serta rincian per modul.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">*<em>Papan Peringkat Pelajar (</em>Leaderboard<em> Top 50):</em>*</div></div>
+</div>
+<ul class="bullet-list">
+<li>Filter periode (<strong>Mingguan</strong>, <strong>Bulanan</strong>, <strong>Sepanjang Waktu</strong>, <strong>Streak 🔥</strong>) dan filter <strong>Jalur</strong> dalam bahasa aktif aplikasi.</li>
+<li><strong>Podium Top 3 Simetris:</strong> Jika peserta kurang dari 3, slot kosong tampil sebagai placeholder <em>"Menunggu"</em>; badge <strong><code>Kamu</code></strong> tampil terpisah rapi agar nama tidak terpotong.</li>
+<li><strong>Bar Peringkat Pribadi ("Kamu") &amp; Daftar #4+:</strong> Menampilkan peringkat di luar podium serta selisih poin ke peringkat tepat di atas Anda (misal <em>"Kurang 12 XP lagi ke #2"</em>).</li>
+<li>Ketuk baris pengguna lain untuk melihat <strong>Profil Publik</strong> siswa tersebut.</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Sertifikat Digital (<code>CC-...</code>) &amp; Berbagi Tautan Verifikasi:</strong> Menampilkan nilai akhir gabungan (<strong>40% Kuis + 60% Proyek</strong>), predikat kelulusan, nomor kredensial unik, serta tombol <strong>Bagikan</strong> yang menyertakan URL langsung ke Portal Verifikasi Web (<code>verify.html?id=CC-...</code>).</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">15</span><h2>PROFIL PENGGUNA, PETA AKTIVITAS, BAHASA &amp; ZONA BERBAHAYA</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<figure class="solo-fig"><img src="manual_book_assets/mockup_15_profile_settings.png" alt="Profil dan Pengaturan"><figcaption>Gambar 15: Layar Profil Pengguna, Peta Aktivitas &amp; Pengaturan</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Fitur Lengkap Halaman Profil:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Header Profil &amp; Edit Profil Valid:</strong> Menampilkan inisial/nama bersih (otomatis disanitasi tanpa prefiks angka) dan tombol <strong>Edit Profil</strong> dengan validasi nama (minimal 2 huruf, tidak diawali angka) serta <strong>penghitung bio 100 karakter</strong>. Tombol <strong>Simpan</strong> hanya aktif bila input valid dan ada perubahan.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text">*<em>Peta Aktivitas Belajar (</em>Heatmap<em> 12 Minggu):</em><em> Matriks kontribusi harian ber-outline pada sel kosong, tombol lihat mode 7 hari vs 12 minggu, legenda 2 baris yang bersih (</em>Kurang → Lebih<em>), detail harian saat kotak diketuk, serta label </em>"Hari tersibuk"* yang otomatis tersembunyi hingga minimal ada <strong>3 hari aktif</strong>.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text">*<em>Koleksi Lencana (</em>Badges<em>):</em>* Menampilkan lencana terbuka maupun terkunci beserta deskripsi dan status syarat pencapaian.</div></div>
+<div class="step-row"><span class="step-num">04</span><div class="step-text"><strong>Preferensi Bahasa, Tema &amp; Notifikasi:</strong> Pilihan <strong>Mode Gelap / Mode Terang</strong>, pengingat belajar (<em>Notifications</em>), mengulang Onboarding, dan <strong>4 Bahasa</strong> (<em>Bahasa Indonesia</em>, <em>English</em>, <em>日本語</em>, <em>中文</em>) dengan label bersih tanpa duplikasi nama bahasa.</div></div>
+<div class="step-row"><span class="step-num">05</span><div class="step-text"><strong>Keluar Akun &amp; Zona Berbahaya (Hapus Akun 2 Langkah):</strong> Menu <strong>Hapus Akun</strong> dipisahkan ke kartu merah <strong>Zona Berbahaya</strong> di bagian paling bawah. Penghapusan akun mewajibkan konfirmasi dua langkah (mengetik kata <strong><code>HAPUS</code></strong> atau <strong><code>DELETE</code></strong>) lalu membersihkan data lokal Room, DataStore, serta dokumen <code>users/{uid}</code> di Firestore.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">16</span><h2>HALAMAN PUBLIK WEB &amp; PINTU MASUK PORTAL STAF (`public/index.html`)</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">Untuk memisahkan fungsi informasi publik dari ruang kerja operasional staf, halaman utama web (<code>https://ivhan9867.github.io/codeacademy-web/</code>) berperan sebagai <strong>Portal Publik</strong>:</p>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Ringkasan Platform &amp; Pratinjau Aplikasi:</strong> Memperkenalkan kurikulum mobile-first CodeAcademy serta tautan <strong>Baca Manual Book di Web</strong> dan <strong>Unduh <code>.docx</code></strong>.</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Akses Publik Verifikasi Sertifikat:</strong> Tombol langsung ke <code>verify.html</code> bagi penguji, dosen, atau rekruter untuk mengecek keaslian sertifikat.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Pintu Masuk Khusus Staf (<code>Portal Fasilitator &amp; Admin</code>):</strong> Mengarahkan pengajar dan admin ke halaman autentikasi portal operasional terpisah (<code>facilitator/index.html</code>) agar menu staf tidak bercampur dengan beranda publik.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">17</span><h2>PORTAL WEB FASILITATOR: PROYEK, FORUM TERVERIFIKASI &amp; PROFIL</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">Portal Staf (<code>public/facilitator/index.html</code>) menggunakan layout <strong>Sidebar Workspace</strong> khusus pengajar dengan 3 menu utama untuk peran <strong>Fasilitator (<code>accessRole: "facilitator"</code>)</strong>.</p>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_16_facilitator_web.png" alt="Portal Web Fasilitator"><figcaption>Gambar 16: Dashboard Portal Web Fasilitator CodeAcademy</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Alur Kerja &amp; Fitur Fasilitator:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Otentikasi &amp; Badge Identitas (<code>● Live Firebase</code> vs <code>● Demo Offline</code>):</strong></div></div>
+</div>
+<ul class="bullet-list">
+<li>Masuk dengan <strong>Email/Password</strong> atau <strong>Masuk dengan Google</strong> via Firebase Auth; sistem mengecek dokumen <code>/facilitators/{email}</code> di Firestore sebelum membuka dashboard.</li>
+<li>Tersedia pula tombol <strong>Demo Fasilitator</strong> dan <strong>Demo Super Admin</strong> di layar login untuk simulasi offline tanpa menulis ke Firestore.</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Modal Profil Fasilitator (Kustomisasi Nama, Peran &amp; Bio):</strong></div></div>
+</div>
+<ul class="bullet-list">
+<li>Klik pill identitas (<code>👤 Nama · Role</code>) di pojok kanan atas navbar untuk membuka <strong>Profil Fasilitator</strong>.</li>
+<li>Perubahan nama, spesialisasi/jabatan, dan bio disimpan ke <code>localStorage</code> serta disinkronkan ke <code>/facilitators/{email}</code> di Firestore dan otomatis dipakai di Forum, Pengumuman, maupun Sertifikat.</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Proyek Akhir (Rubrik 40/60 &amp; Live Preview Aman) [1][2][3]:</strong></div></div>
+</div>
+<ul class="bullet-list">
+<li>Pantau kartu statistik antrean (<strong>Total</strong>, <strong>Menunggu Review</strong>, <strong>Perlu Revisi</strong>, <strong>Disetujui</strong>) <strong>[1]</strong>, saring status/kelas <strong>[2]</strong>, lalu klik <strong>Tinjau</strong> <strong>[3]</strong>.</li>
+<li>Di Modal Review, telaah kode HTML/CSS/JS peserta sambil menguji hasil tampilannya di tab <strong>Live Preview</strong> bersandbox (<code>sandbox="allow-scripts"</code>).</li>
+<li>Isi checklist rubrik atau skor Proyek (<code>0–100</code>); kalkulator otomatis menggabungkan <strong>40% Kuis + 60% Proyek</strong>. Gunakan <strong>Minta Revisi</strong> (disertai tag umpan balik cepat) atau <strong>Setujui &amp; Terbitkan</strong> (otomatis menulis dokumen ke koleksi <code>certificates</code>).</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">04</span><div class="step-text"><strong>Forum Diskusi (Targeted Reply, Pin Terverifikasi &amp; Tandai Membantu):</strong></div></div>
+</div>
+<ul class="bullet-list">
+<li>Filter thread <em>Semua Kursus</em> atau <em>Belum Dijawab Fasilitator</em>, dan buat topik diskusi baru langsung dari portal web.</li>
+<li>*<em>Balas Spesifik (</em>Targeted Reply<em>):<strong> Klik tombol </strong>Balas</em><em> pada komentar mana pun untuk memunculkan banner </em>"Membalas @Nama"* (dan tombol batal <code>×</code>) sehingga balasan tersimpan lengkap dengan <code>replyToPostId</code>, <code>replyToAuthorName</code>, dan <code>replyToContentSnippet</code> yang selaras 100% dengan Android.</li>
+<li><strong>Pin Jawaban Terverifikasi (<code>📌 Pin</code>):</strong> Menandai jawaban terbaik (<code>isVerifiedAnswer: true</code>), otomatis mem-pin jawaban ke urutan teratas balasan dalam thread, dan menyematkan status <strong><code>✓ Terjawab</code></strong> di header thread.</li>
+<li><strong>Tandai Jawaban Membantu (<code>💡</code>):</strong> Memberi apresiasi <code>isHelpful: true</code> pada kontribusi siswa yang membantu.</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">05</span><div class="step-text"><strong>Pengumuman Kelas:</strong> Terbitkan pengumuman penting yang langsung dikirim ke koleksi <code>announcements</code> untuk tampil di aplikasi Android peserta.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">18</span><h2>PANEL SUPER ADMIN: TIM FASILITATOR, AUDIT SERTIFIKAT &amp; EXPORT CSV</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">Akun staf yang memiliki field <code>accessRole: "super_admin"</code> pada dokumen Firestore <code>/facilitators/{email}</code> otomatis memperoleh lencana <strong><code>👑 Super Admin</code></strong> di navbar serta akses ke kelompok menu kedua pada <strong>Sidebar Workspace</strong>: <strong>Panel Super Admin</strong> (menu ini disembunyikan dari Fasilitator biasa).</p>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_18_super_admin_web.png" alt="Panel Super Admin Web"><figcaption>Gambar 18: Antarmuka Sidebar Workspace &amp; Panel Super Admin CodeAcademy</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Modul Khusus Super Admin <strong>[1][2][3]</strong>:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Badge Peran &amp; Pemisahan Menu Sidebar [1][2]:</strong> Navbar menandai status <strong><code>👑 Super Admin</code></strong> <strong>[1]</strong>, sedangkan sidebar kiri menampilkan grup khusus <strong>Panel Super Admin</strong> <strong>[2]</strong> yang terdiri atas 3 sub-panel:</div></div>
+</div>
+<ul class="bullet-list">
+<li><strong>Sertifikat &amp; Audit:</strong> Memantau seluruh sertifikat <code>CC-...</code> yang terbit lintas kursus serta mengekspor registri sertifikat.</li>
+<li><strong>Tim Fasilitator (<code>/facilitators/{email}</code>):</strong> Menambah akun email Google baru sebagai staf, memilih atau mengubah peran (<code>Fasilitator</code> vs <code>Super Admin</code>), dan mencabut akses akun yang sudah tidak aktif tanpa harus membuka Firebase Console.</li>
+<li><strong>Ringkasan &amp; Siswa (<code>/users</code>):</strong> Memantau <strong>Rasio Lulus Proyek (%)</strong>, <strong>Topik Forum Terverifikasi</strong>, <strong>Total Sertifikat Terbit</strong>, <strong>Jumlah Siswa Cloud</strong>, dan tabel klasemen siswa aktif (Total XP, Level, Streak).</li>
+</ul>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Unduh Laporan CSV [3]:</strong> Tersedia tombol <strong>Unduh CSV</strong> pada panel <strong>Sertifikat &amp; Audit</strong> maupun <strong>Ringkasan &amp; Siswa</strong> untuk mengekspor rekap sertifikat kelulusan (<code>codeacademy-sertifikat.csv</code>) dan laporan nilai proyek akhir (<code>codeacademy-nilai-proyek.csv</code>) secara instan di browser.</div></div>
+</div>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+<section class="page chapter-page"><div class="ch-head"><span class="ch-badge">19</span><h2>PORTAL VERIFIKASI SERTIFIKAT PUBLIK &amp; KEAMANAN `firestore.rules`</h2></div><div class="ch-rule"><span></span><i></i></div><div class="ch-body">
+<p class="body-p">CodeAcademy menyediakan <strong>Portal Verifikasi Kredensial Publik</strong> di <code>https://ivhan9867.github.io/codeacademy-web/verify.html</code> (<code>public/verify.html</code>) yang terhubung langsung ke Cloud Firestore (<code>certificates/{certId}</code>).</p>
+<figure class="solo-fig"><img src="manual_book_assets/mockup_17_verify_web.png" alt="Portal Verifikasi Sertifikat"><figcaption>Gambar 17: Antarmuka Portal Web Verifikasi Sertifikat Digital</figcaption></figure>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Cara Validasi &amp; Perlindungan Keamanan Data:</h3>
+<div class="steps-list">
+<div class="step-row"><span class="step-num">01</span><div class="step-text"><strong>Validasi ID Kredensial (<code>CC-...</code>):</strong> Masukkan ID Kredensial sertifikat pada kolom pencarian atau buka langsung tautan bagikan dari aplikasi Android (<code>verify.html?id=CC-2026110101-A9K3P2</code>).</div></div>
+<div class="step-row"><span class="step-num">02</span><div class="step-text"><strong>Tampilan Hasil Autentik:</strong> Sertifikat valid menampilkan lencana hijau <strong><code>✓ KREDENSIAL TERVERIFIKASI</code></strong>, nama lengkap lulusan, nama kelas, nilai akhir (<strong>40% Kuis + 60% Proyek</strong>), predikat, tanggal terbit, dan nama fasilitator penilai.</div></div>
+<div class="step-row"><span class="step-num">03</span><div class="step-text"><strong>Ringkasan Aturan Keamanan <code>firestore.rules</code>:</strong></div></div>
+</div>
+<ul class="bullet-list">
+<li><code>/facilitators/{email}</code>: Hanya <strong><code>isSuperAdmin()</code></strong> yang dapat membaca seluruh daftar tim, menambah anggota, atau menghapus akses; fasilitator biasa hanya dapat membaca dan memperbarui profil miliknya sendiri tanpa izin mengubah <code>accessRole</code>.</li>
+<li><code>/project_submissions/{id}</code>: Siswa hanya dapat membuat/memperbarui pengajuan miliknya sendiri dengan status <code>PENDING_REVIEW</code>; skor &amp; keputusan akhir hanya boleh ditulis oleh <code>isFacilitator()</code>.</li>
+<li><code>/forum_posts/{postId}</code>: Dapat dibaca oleh semua pengguna login (termasuk tamu anonim); siswa tidak dapat memalsukan flag <code>isMentor</code>/<code>authorIsMentor</code>; fasilitator memiliki hak moderasi, hapus, dan pin jawaban terverifikasi.</li>
+<li><code>/certificates/{certId}</code>: Terbuka untuk dibaca publik (<code>verify.html</code>), namun pencabutan/hapus dibatasi khusus <code>isFacilitator()</code> / Admin dan skor valid wajib <code>70–100</code>.</li>
+<li><code>/announcements/{id}</code>: Terbuka dibaca aplikasi siswa, dan hanya boleh dibuat/diubah/dihapus oleh <code>isFacilitator()</code>.</li>
+</ul>
+<h3 class="diamond-sub"><span class="diamond" aria-hidden="true">&#10003;</span> Informasi Dokumen:</h3>
+<ul class="bullet-list">
+<li><strong>Platform:</strong> CodeAcademy Mobile (Android) &amp; Web Portal (Publik, Fasilitator, Super Admin, Verifikasi)</li>
+<li><strong>Basis Konten:</strong> Kode Sumber Terkini &amp; Aset Kurikulum (<code>156 Modul</code> / <code>3 Kelas Front-End</code>)</li>
+<li><strong>Template Dokumen:</strong> Pengembangan Bahan Ajar Edisi I 2026</li>
+<li><strong>Tahun Pembuatan:</strong> 2026</li>
+</ul>
+</div><footer class="pba-footer"><span class="ribbon">Pengembangan Bahan Ajar Edisi I 2026</span><span class="chev">&gt;&gt;&gt;</span></footer></section>
+  </main>
 </body>
 </html>

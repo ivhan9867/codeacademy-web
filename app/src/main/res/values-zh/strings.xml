@@ -1318,6 +1318,8 @@
     <string name="ai_disclaimer_note">AI 回答可能有误，请自行核实。</string>
     <string name="heatmap_building_habit">继续学习以记录你最活跃的一天</string>
     <string name="forum_send_failed">发送失败，请检查网络连接。</string>
+    <string name="forum_badge_verified_answer">✓ 已认证</string>
+    <string name="forum_badge_helpful_answer">💡 有帮助</string>
     <string name="forum_retry_btn">重试</string>
     <string name="comm_course_forums_title">课程讨论区</string>
     <string name="comm_course_forums_subtitle">选择课程，向导师和同学们直接提问交流</string>

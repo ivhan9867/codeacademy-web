@@ -1082,6 +1082,8 @@
     <string name="ai_disclaimer_note">Jawaban AI bisa keliru, periksa kembali.</string>
     <string name="heatmap_building_habit">Terus belajar untuk melihat hari tersibukmu</string>
     <string name="forum_send_failed">Gagal mengirim pesan. Periksa koneksi internetmu.</string>
+    <string name="forum_badge_verified_answer">✓ Terverifikasi</string>
+    <string name="forum_badge_helpful_answer">💡 Membantu</string>
     <string name="forum_retry_btn">Coba Lagi</string>
     <string name="comm_course_forums_title">Forum Diskusi Kelas</string>
     <string name="comm_course_forums_subtitle">Pilih kelas untuk bertanya langsung ke Fasilitator &amp; teman belajar</string>

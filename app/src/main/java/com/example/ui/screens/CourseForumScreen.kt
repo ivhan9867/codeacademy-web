@@ -168,7 +168,8 @@ private fun buildForumThreadGroups(posts: List<ForumPostEntity>): List<ForumThre
     val groups = topLevel.map { parent ->
         ForumThreadGroup(
             parent = parent,
-            replies = repliesByRoot[parent.postId].orEmpty().sortedBy { it.timestamp }
+            replies = repliesByRoot[parent.postId].orEmpty()
+                .sortedWith(compareByDescending<ForumPostEntity> { it.isVerifiedAnswer }.thenBy { it.timestamp })
         )
     }.toMutableList()
 
@@ -1176,15 +1177,15 @@ private fun ForumReplyItem(
         Spacer(modifier = Modifier.width(10.dp))
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = if (reply.authorIsMentor) {
-                AmberGold.copy(alpha = 0.10f)
-            } else {
-                MaterialTheme.colorScheme.surface
+            color = when {
+                reply.isVerifiedAnswer -> SuccessGreen.copy(alpha = 0.08f)
+                reply.authorIsMentor -> AmberGold.copy(alpha = 0.10f)
+                else -> MaterialTheme.colorScheme.surface
             },
-            border = if (reply.authorIsMentor) {
-                BorderStroke(1.dp, AmberGold.copy(alpha = 0.35f))
-            } else {
-                BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
+            border = when {
+                reply.isVerifiedAnswer -> BorderStroke(1.dp, SuccessGreen.copy(alpha = 0.45f))
+                reply.authorIsMentor -> BorderStroke(1.dp, AmberGold.copy(alpha = 0.35f))
+                else -> BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
             },
             modifier = Modifier.weight(1f)
         ) {
@@ -1281,6 +1282,44 @@ private fun ForumReplyItem(
                     color = MaterialTheme.colorScheme.onSurface,
                     lineHeight = 18.sp
                 )
+
+                if (reply.isVerifiedAnswer || reply.isHelpful) {
+                    @OptIn(ExperimentalLayoutApi::class)
+                    FlowRow(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        modifier = Modifier.padding(top = 6.dp)
+                    ) {
+                        if (reply.isVerifiedAnswer) {
+                            Surface(
+                                shape = ForumBadgeShape,
+                                color = SuccessGreen.copy(alpha = 0.15f)
+                            ) {
+                                Text(
+                                    text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_badge_verified_answer),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = SuccessGreen,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                        if (reply.isHelpful) {
+                            Surface(
+                                shape = ForumBadgeShape,
+                                color = AmberGold.copy(alpha = 0.16f)
+                            ) {
+                                Text(
+                                    text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_badge_helpful_answer),
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = AmberGold,
+                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Row(

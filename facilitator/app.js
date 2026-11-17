@@ -996,6 +996,27 @@ function attachEventListeners() {
     );
   });
 
+  certificatesList?.addEventListener("click", async (e) => {
+    const revokeBtn = e.target.closest("[data-action='revoke-cert']");
+    if (!revokeBtn || !revokeBtn.dataset.certId) return;
+    if (currentAccessRole !== "super_admin") return;
+    const certId = revokeBtn.dataset.certId;
+    if (!confirm(`Cabut dan hapus sertifikat ${certId} secara permanen?`)) return;
+    if (isFirebaseReady && db && !isDemoMode) {
+      try {
+        await db.collection("certificates").doc(certId).delete();
+        showToast(`Sertifikat ${certId} dicabut.`);
+      } catch (err) {
+        showToast("Gagal mencabut sertifikat: " + err.message);
+      }
+    } else {
+      certificates = certificates.filter((c) => c.certId !== certId);
+      renderCertificates();
+      renderAnalytics();
+      showToast(`Sertifikat ${certId} dicabut (Mode Demo).`);
+    }
+  });
+
   document.getElementById("btnExportGradesCsv")?.addEventListener("click", () => {
     downloadCsv(
       "codeacademy-nilai-proyek.csv",
@@ -1990,9 +2011,12 @@ function renderCertificates() {
             Nilai Akhir: <strong>${Number(c.finalScore) || 0}/100</strong> (Kuis ${Number(c.quizScore) || 0} • Proyek ${Number(c.facilitatorScore) || 0}) • Terbit ${escapeHtml(formatDate(c.issuedAt))}
           </div>
         </div>
-        <a href="${verifyHref}" target="_blank" rel="noopener noreferrer" class="btn-review" style="text-decoration:none;">
-          Buka Halaman Verifikasi ↗
-        </a>
+        <div class="forum-reply-actions">
+          <a href="${verifyHref}" target="_blank" rel="noopener noreferrer" class="btn-review" style="text-decoration:none;">
+            Buka Halaman Verifikasi ↗
+          </a>
+          ${currentAccessRole === "super_admin" ? `<button type="button" class="btn-danger-ghost" data-action="revoke-cert" data-cert-id="${escapeHtml(c.certId || "")}">Cabut</button>` : ""}
+        </div>
       </article>
     `;
     })

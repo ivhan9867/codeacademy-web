@@ -454,8 +454,18 @@ fun CourseForumScreen(
                     ) {
                         OutlinedTextField(
                             value = postInput,
-                            onValueChange = { if (it.length <= 500) postInput = it },
+                            onValueChange = { if (it.length <= 4000) postInput = it },
                             enabled = !isForumBlockedByError,
+                            supportingText = if (postInput.isNotEmpty()) {
+                                {
+                                    Text(
+                                        text = "${postInput.length}/4000",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        modifier = Modifier.fillMaxWidth(),
+                                        textAlign = androidx.compose.ui.text.style.TextAlign.End
+                                    )
+                                }
+                            } else null,
                             placeholder = {
                                 Text(
                                     text = if (replyingToPost != null) {
@@ -613,25 +623,33 @@ fun CourseForumScreen(
                     .padding(horizontal = 16.dp, vertical = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                val forumChipColors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = TealPrimary,
+                    selectedLabelColor = Color.White
+                )
                 FilterChip(
                     selected = selectedFilter == ForumFilterMode.ALL,
                     onClick = { selectedFilter = ForumFilterMode.ALL },
-                    label = { Text(stringResource(R.string.forum_filter_all)) }
+                    label = { Text(stringResource(R.string.forum_filter_all)) },
+                    colors = forumChipColors
                 )
                 FilterChip(
                     selected = selectedFilter == ForumFilterMode.FACILITATOR,
                     onClick = { selectedFilter = ForumFilterMode.FACILITATOR },
-                    label = { Text(stringResource(R.string.forum_filter_facilitator)) }
+                    label = { Text(stringResource(R.string.forum_filter_facilitator)) },
+                    colors = forumChipColors
                 )
                 FilterChip(
                     selected = selectedFilter == ForumFilterMode.MINE,
                     onClick = { selectedFilter = ForumFilterMode.MINE },
-                    label = { Text(stringResource(R.string.forum_filter_mine)) }
+                    label = { Text(stringResource(R.string.forum_filter_mine)) },
+                    colors = forumChipColors
                 )
                 FilterChip(
                     selected = selectedFilter == ForumFilterMode.POPULAR,
                     onClick = { selectedFilter = ForumFilterMode.POPULAR },
-                    label = { Text(stringResource(R.string.forum_filter_popular)) }
+                    label = { Text(stringResource(R.string.forum_filter_popular)) },
+                    colors = forumChipColors
                 )
             }
 

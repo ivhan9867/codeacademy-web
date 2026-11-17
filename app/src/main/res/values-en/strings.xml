@@ -1076,6 +1076,11 @@
     <string name="catalog_bookmark_removed_toast">Removed from Bookmarks</string>
     <string name="comm_you_badge">You</string>
     <string name="comm_xp_to_next_rank_format">%1$d XP more to reach #%2$d</string>
+    <string name="ai_clear_chat_confirm_title">Clear Chat History?</string>
+    <string name="ai_clear_chat_confirm_desc">All messages with Codi in this session will be cleared.</string>
+    <string name="ai_clear_chat_confirm_btn">Clear</string>
+    <string name="ai_disclaimer_note">AI responses may contain mistakes, please verify.</string>
+    <string name="heatmap_building_habit">Keep learning to reveal your busiest day</string>
     <string name="forum_retry_btn">Try Again</string>
     <string name="comm_course_forums_title">Class Discussion Forums</string>
     <string name="comm_course_forums_subtitle">Pick a class to ask Facilitators &amp; peers directly</string>

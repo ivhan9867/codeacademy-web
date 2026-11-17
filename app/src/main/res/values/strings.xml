@@ -1076,6 +1076,11 @@
     <string name="catalog_bookmark_removed_toast">Dihapus dari Tersimpan</string>
     <string name="comm_you_badge">Kamu</string>
     <string name="comm_xp_to_next_rank_format">Kurang %1$d XP lagi ke #%2$d</string>
+    <string name="ai_clear_chat_confirm_title">Hapus Riwayat Chat?</string>
+    <string name="ai_clear_chat_confirm_desc">Semua percakapan dengan Codi pada sesi ini akan dihapus.</string>
+    <string name="ai_clear_chat_confirm_btn">Hapus</string>
+    <string name="ai_disclaimer_note">Jawaban AI bisa keliru, periksa kembali.</string>
+    <string name="heatmap_building_habit">Terus belajar untuk melihat hari tersibukmu</string>
     <string name="forum_retry_btn">Coba Lagi</string>
     <string name="comm_course_forums_title">Forum Diskusi Kelas</string>
     <string name="comm_course_forums_subtitle">Pilih kelas untuk bertanya langsung ke Fasilitator &amp; teman belajar</string>

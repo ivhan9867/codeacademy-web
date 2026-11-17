@@ -227,15 +227,19 @@ fun ActivityHeatmapCard(
                             modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            val activeDaysCount = remember(heatmapData) { heatmapData.count { it.activityCount > 0 } }
                             Text(
-                                text = if (busiestDay != null && busiestDay.activityCount > 0) {
-                                    androidx.compose.ui.res.stringResource(
-                                        com.example.R.string.heatmap_busiest_format,
-                                        busiestDay.dayName,
-                                        busiestDay.activityCount
-                                    )
-                                } else {
-                                    androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_empty_prompt)
+                                text = when {
+                                    activeDaysCount >= 3 && busiestDay != null && busiestDay.activityCount > 0 ->
+                                        androidx.compose.ui.res.stringResource(
+                                            com.example.R.string.heatmap_busiest_format,
+                                            busiestDay.dayName,
+                                            busiestDay.activityCount
+                                        )
+                                    activeDaysCount > 0 ->
+                                        androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_building_habit)
+                                    else ->
+                                        androidx.compose.ui.res.stringResource(com.example.R.string.heatmap_empty_prompt)
                                 },
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,

@@ -178,10 +178,37 @@ fun AiTutorScreen(
                 },
                 actions = {
                     if (messages.size > 1) {
-                        IconButton(onClick = onClearChat) {
+                        var showClearConfirm by remember { mutableStateOf(false) }
+                        IconButton(onClick = { showClearConfirm = true }) {
                             Icon(
                                 imageVector = Icons.Default.DeleteOutline,
                                 contentDescription = stringResource(R.string.ai_clear_chat_cd)
+                            )
+                        }
+                        if (showClearConfirm) {
+                            androidx.compose.material3.AlertDialog(
+                                onDismissRequest = { showClearConfirm = false },
+                                title = { Text(stringResource(R.string.ai_clear_chat_confirm_title), fontWeight = FontWeight.Bold) },
+                                text = { Text(stringResource(R.string.ai_clear_chat_confirm_desc)) },
+                                confirmButton = {
+                                    androidx.compose.material3.TextButton(
+                                        onClick = {
+                                            showClearConfirm = false
+                                            onClearChat()
+                                        }
+                                    ) {
+                                        Text(
+                                            stringResource(R.string.ai_clear_chat_confirm_btn),
+                                            color = MaterialTheme.colorScheme.error,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                },
+                                dismissButton = {
+                                    androidx.compose.material3.TextButton(onClick = { showClearConfirm = false }) {
+                                        Text(stringResource(R.string.common_cancel))
+                                    }
+                                }
                             )
                         }
                     }
@@ -277,6 +304,14 @@ fun AiTutorScreen(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = stringResource(R.string.ai_disclaimer_note),
+                    fontSize = 10.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
             }
         },
         modifier = modifier

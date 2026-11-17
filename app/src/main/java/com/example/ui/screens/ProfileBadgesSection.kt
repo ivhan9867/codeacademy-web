@@ -142,7 +142,7 @@ fun ProfileBadgesCard(
             // Horizontal preview of badges
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(horizontal = 2.dp)
+                contentPadding = PaddingValues(start = 2.dp, end = 16.dp)
             ) {
                 items(allBadges, key = { it.id }) { badge ->
                     Surface(

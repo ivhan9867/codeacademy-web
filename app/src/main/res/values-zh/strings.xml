@@ -1312,6 +1312,11 @@
     <string name="catalog_bookmark_removed_toast">已取消收藏</string>
     <string name="comm_you_badge">你</string>
     <string name="comm_xp_to_next_rank_format">距 #%2$d 还差 %1$d XP</string>
+    <string name="ai_clear_chat_confirm_title">清除聊天记录？</string>
+    <string name="ai_clear_chat_confirm_desc">此会话中与 Codi 的所有对话将被清除。</string>
+    <string name="ai_clear_chat_confirm_btn">清除</string>
+    <string name="ai_disclaimer_note">AI 回答可能有误，请自行核实。</string>
+    <string name="heatmap_building_habit">继续学习以记录你最活跃的一天</string>
     <string name="forum_retry_btn">重试</string>
     <string name="comm_course_forums_title">课程讨论区</string>
     <string name="comm_course_forums_subtitle">选择课程，向导师和同学们直接提问交流</string>

@@ -232,6 +232,7 @@ const passwordInput = document.getElementById("passwordInput");
 const authStatusEl = document.getElementById("authStatus");
 const authError = document.getElementById("authError");
 let verifyingSessionPromise = null;
+const activeReplyTargetByThread = new Map();
 const btnGoogleSignIn = document.getElementById("btnGoogleSignIn");
 const btnEnterDemo = document.getElementById("btnEnterDemo");
 const btnLogout = document.getElementById("btnLogout");
@@ -725,11 +726,36 @@ function attachEventListeners() {
 
   btnCreateForumPost.addEventListener("click", () => createFacilitatorTopic());
 
-  // Event delegation for Forum Delete & Reply forms
+  // Event delegation for Forum Delete, Targeted Reply & Reply forms
   forumThreadsList.addEventListener("click", (e) => {
     const delBtn = e.target.closest("[data-action='delete-post']");
     if (delBtn && delBtn.dataset.postId) {
       deleteForumPost(delBtn.dataset.postId);
+      return;
+    }
+    const targetBtn = e.target.closest("[data-action='target-reply']");
+    if (targetBtn && targetBtn.dataset.threadId && targetBtn.dataset.postId) {
+      const threadId = targetBtn.dataset.threadId;
+      const postId = targetBtn.dataset.postId;
+      const targetPost = forumPosts.find((p) => p.postId === postId);
+      if (targetPost) {
+        activeReplyTargetByThread.set(threadId, {
+          postId: targetPost.postId,
+          authorName: targetPost.authorName || "Peserta",
+          contentSnippet: (targetPost.content || "").slice(0, 80)
+        });
+        renderForum();
+        const input = forumThreadsList.querySelector(
+          `form[data-thread-id="${CSS.escape(threadId)}"] input`
+        );
+        if (input) input.focus();
+      }
+      return;
+    }
+    const clearBtn = e.target.closest("[data-action='clear-reply-target']");
+    if (clearBtn && clearBtn.dataset.threadId) {
+      activeReplyTargetByThread.delete(clearBtn.dataset.threadId);
+      renderForum();
     }
   });
 
@@ -1243,6 +1269,10 @@ function renderForum() {
         .map((r) => {
           const rInitial = (r.authorName || "P").trim().charAt(0).toUpperCase();
           const rIsMentor = r.authorIsMentor === true || r.isMentor === true;
+          const hasSpecificQuote = Boolean(r.replyToAuthorName && r.replyToPostId && r.replyToPostId !== thread.postId);
+          const quoteHtml = hasSpecificQuote
+            ? `<div class="forum-reply-quote">Membalas <strong>@${escapeHtml(r.replyToAuthorName)}</strong>${r.replyToContentSnippet ? `: “${escapeHtml(r.replyToContentSnippet)}”` : ""}</div>`
+            : "";
           return `
         <div class="forum-reply-card ${rIsMentor ? "mentor" : ""}">
           <div class="forum-post-head" style="margin-bottom: 6px;">
@@ -1254,8 +1284,12 @@ function renderForum() {
                 <span style="font-size:11.5px; color:var(--muted); margin-left:6px;">${escapeHtml(formatDate(r.timestamp))}</span>
               </div>
             </div>
-            <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(r.postId)}">Hapus</button>
+            <div class="forum-reply-actions">
+              <button type="button" class="btn-reply-ghost" data-action="target-reply" data-thread-id="${escapeHtml(thread.postId)}" data-post-id="${escapeHtml(r.postId)}">Balas</button>
+              <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(r.postId)}">Hapus</button>
+            </div>
           </div>
+          ${quoteHtml}
           <div style="font-size:13.5px; line-height:1.5; white-space:pre-wrap;">${escapeHtml(r.content || "")}</div>
         </div>
       `;
@@ -1263,6 +1297,16 @@ function renderForum() {
         .join("");
 
       const tIsMentor = thread.authorIsMentor === true || thread.isMentor === true;
+      const activeTarget = activeReplyTargetByThread.get(thread.postId);
+      const targetBarHtml = activeTarget
+        ? `<div class="forum-reply-target-bar">
+            <span>Membalas <strong>@${escapeHtml(activeTarget.authorName)}</strong>${activeTarget.contentSnippet ? `: “${escapeHtml(activeTarget.contentSnippet)}”` : ""}</span>
+            <button type="button" class="forum-reply-target-clear" data-action="clear-reply-target" data-thread-id="${escapeHtml(thread.postId)}" aria-label="Batal balas spesifik">×</button>
+          </div>`
+        : "";
+      const replyPlaceholder = activeTarget
+        ? `Balas @${activeTarget.authorName}...`
+        : "Balas sebagai Fasilitator (muncul langsung di aplikasi)...";
       return `
       <article class="forum-thread-card">
         <div class="forum-post-head">
@@ -1279,8 +1323,9 @@ function renderForum() {
         </div>
         <div class="forum-post-body">${escapeHtml(thread.content || "")}</div>
         ${replies.length > 0 ? `<div class="forum-replies-wrap">${repliesHtml}</div>` : ""}
+        ${targetBarHtml}
         <form class="forum-reply-form" data-action="reply-thread" data-thread-id="${escapeHtml(thread.postId)}">
-          <input type="text" placeholder="Balas sebagai Fasilitator (muncul langsung di aplikasi)..." required>
+          <input type="text" placeholder="${escapeHtml(replyPlaceholder)}" required>
           <button type="submit" class="btn-primary-solid">Balas</button>
         </form>
       </article>
@@ -1349,6 +1394,10 @@ async function replyToThread(form) {
   const facName = facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || "Tim Fasilitator CodeAcademy";
   const postId = "fac_reply_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
   const uid = currentFacilitatorUser?.uid || "facilitator_web";
+  const customTarget = activeReplyTargetByThread.get(rootPostId);
+  const resolvedTarget = customTarget
+    ? forumPosts.find((p) => p.postId === customTarget.postId) || customTarget
+    : root;
 
   const replyDoc = {
     postId,
@@ -1363,15 +1412,16 @@ async function replyToThread(form) {
     timestamp: Date.now(),
     likeCount: 0,
     likedByAccountIds: [],
-    replyToPostId: root.postId,
-    replyToAuthorName: root.authorName || "Peserta",
-    replyToContentSnippet: (root.content || "").slice(0, 80),
+    replyToPostId: resolvedTarget.postId,
+    replyToAuthorName: resolvedTarget.authorName || "Peserta",
+    replyToContentSnippet: (resolvedTarget.content || resolvedTarget.contentSnippet || "").slice(0, 80),
     rootThreadId: root.rootThreadId || root.postId
   };
 
   if (isFirebaseReady && db && !isDemoMode) {
     try {
       await db.collection("forum_posts").doc(postId).set(replyDoc);
+      activeReplyTargetByThread.delete(rootPostId);
       input.value = "";
       showToast("Balasan fasilitator terkirim.");
     } catch (err) {
@@ -1379,6 +1429,7 @@ async function replyToThread(form) {
       showToast("Gagal mengirim balasan: " + err.message);
     }
   } else {
+    activeReplyTargetByThread.delete(rootPostId);
     forumPosts.push(replyDoc);
     input.value = "";
     renderForum();

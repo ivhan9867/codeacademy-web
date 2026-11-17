@@ -136,9 +136,8 @@ fun HomeScreenTopCarousel(
         }
     }
 
-    // Target weekly XP (or derived from total XP, default 180 + totalXp % 100)
     val targetWeeklyXp = remember(totalXp) {
-        if (totalXp > 0) (totalXp.coerceAtMost(350)) else 180
+        totalXp.coerceAtLeast(0)
     }
 
     Column(
@@ -384,22 +383,7 @@ fun WeeklyXpCard(
     isActivePage: Boolean = true
 ) {
     val isDark = MaterialTheme.colorScheme.surface.luminance() < 0.5f
-
-    // Single-shot XP count-up animation only triggered when page is actively viewed
-    val xpAnim = remember { Animatable(0f) }
-    var hasAnimated by remember { mutableStateOf(false) }
-
-    LaunchedEffect(isActivePage) {
-        if (isActivePage && !hasAnimated) {
-            hasAnimated = true
-            xpAnim.animateTo(
-                targetValue = targetWeeklyXp.toFloat(),
-                animationSpec = tween(durationMillis = 650, easing = FastOutSlowInEasing)
-            )
-        }
-    }
-
-    val displayXp = if (hasAnimated) xpAnim.value.toInt() else targetWeeklyXp
+    val displayXp = targetWeeklyXp
 
     Card(
         modifier = modifier.fillMaxSize(),

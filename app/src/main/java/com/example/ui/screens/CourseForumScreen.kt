@@ -263,9 +263,24 @@ fun CourseForumScreen(
 
     val listState = rememberLazyListState()
 
+    var authReady by remember {
+        mutableStateOf(com.google.firebase.auth.FirebaseAuth.getInstance().currentUser != null)
+    }
+
+    LaunchedEffect(retryTrigger) {
+        if (com.google.firebase.auth.FirebaseAuth.getInstance().currentUser == null) {
+            authReady = socialViewModel.ensureCloudAuth()
+        } else {
+            authReady = true
+        }
+    }
+
     // 1. Strict Lifecycle-managed Firestore Real-Time Snapshot Listener inside DisposableEffect
     // CRITICAL: Listener MUST be removed in onDispose to prevent memory leaks and background consumption!
-    DisposableEffect(course.id, retryTrigger) {
+    DisposableEffect(course.id, retryTrigger, authReady) {
+        if (!authReady) {
+            return@DisposableEffect onDispose {}
+        }
         val listenerRegistration = socialViewModel.attachForumListener(
             courseId = course.id,
             onError = { exception ->

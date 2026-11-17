@@ -169,12 +169,18 @@ class FirestoreForumAndLeaderboardService(
     ): Result<ForumPostEntity> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
-            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val firebaseUid = kotlinx.coroutines.withTimeout(8_000L) {
+                tryEnsureAnonymousOrCurrentUid()
+            }
+            if (firebaseUid.isNullOrBlank()) {
+                return Result.failure(IllegalStateException("Sesi cloud belum aktif. Periksa koneksi internetmu."))
+            }
             val postId = UUID.randomUUID().toString()
             val timestamp = System.currentTimeMillis()
             val postData = hashMapOf<String, Any>(
                 "postId" to postId,
                 "courseId" to courseId,
+                "firebaseUid" to firebaseUid,
                 "authorId" to authorId,
                 "authorName" to authorName,
                 "content" to content.trim(),
@@ -184,15 +190,16 @@ class FirestoreForumAndLeaderboardService(
                 "isMentor" to false,
                 "authorIsMentor" to false
             )
-            if (!firebaseUid.isNullOrBlank()) postData["firebaseUid"] = firebaseUid
             if (replyToPostId != null) postData["replyToPostId"] = replyToPostId
             if (replyToAuthorName != null) postData["replyToAuthorName"] = replyToAuthorName
             if (replyToContentSnippet != null) postData["replyToContentSnippet"] = replyToContentSnippet
 
-            firestore.collection(FORUM_COLLECTION)
-                .document(postId)
-                .set(postData)
-                .await()
+            kotlinx.coroutines.withTimeout(10_000L) {
+                firestore.collection(FORUM_COLLECTION)
+                    .document(postId)
+                    .set(postData)
+                    .await()
+            }
 
             val entity = ForumPostEntity(
                 postId = postId,

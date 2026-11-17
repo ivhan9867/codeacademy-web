@@ -506,15 +506,16 @@ fun StreakFlameGrid(
                 com.example.util.localization.AppLanguage.CHINESE -> listOf("一", "二", "三", "四", "五", "六", "日")
                 else -> listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
             }
-            val todayCalDay = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK)
-            val todayMonIndex = when (todayCalDay) {
-                java.util.Calendar.MONDAY -> 0
-                java.util.Calendar.TUESDAY -> 1
-                java.util.Calendar.WEDNESDAY -> 2
-                java.util.Calendar.THURSDAY -> 3
-                java.util.Calendar.FRIDAY -> 4
-                java.util.Calendar.SATURDAY -> 5
-                else -> 6
+            val todayMonIndex = remember {
+                when (java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK)) {
+                    java.util.Calendar.MONDAY -> 0
+                    java.util.Calendar.TUESDAY -> 1
+                    java.util.Calendar.WEDNESDAY -> 2
+                    java.util.Calendar.THURSDAY -> 3
+                    java.util.Calendar.FRIDAY -> 4
+                    java.util.Calendar.SATURDAY -> 5
+                    else -> 6
+                }
             }
             val activeCount = currentStreak.coerceIn(0, 7)
             val activeIndices = (0 until activeCount).map { offset ->

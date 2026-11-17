@@ -12,14 +12,18 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -191,6 +195,7 @@ fun CourseForumScreen(
     val coroutineScope = rememberCoroutineScope()
     val postsFlow = remember(course.id) { socialViewModel.getCourseForumPosts(course.id) }
     val posts by postsFlow.collectAsStateWithLifecycle(initialValue = emptyList())
+    val postById = remember(posts) { posts.associateBy { it.postId } }
     val threadGroups = remember(posts) { buildForumThreadGroups(posts) }
     var expandedThreadIds by remember { mutableStateOf<Set<String>>(emptySet()) }
     var selectedFilter by remember { mutableStateOf(ForumFilterMode.ALL) }
@@ -378,12 +383,14 @@ fun CourseForumScreen(
                 tonalElevation = 8.dp,
                 shadowElevation = 8.dp,
                 color = MaterialTheme.colorScheme.surface,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .imePadding()
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Column(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .imePadding()
+                ) {
                     if (replyingToPost != null) {
                         val replyTarget = replyingToPost!!
                         val snippet = if (replyTarget.content.length > 60) replyTarget.content.take(57) + "..." else replyTarget.content
@@ -513,7 +520,6 @@ fun CourseForumScreen(
                                             postInput = ""
                                             replyingToPost = null
                                             if (replyTarget != null) {
-                                                val postById = posts.associateBy { it.postId }
                                                 val rootId = resolveRootPostId(replyTarget, postById)
                                                 expandedThreadIds = expandedThreadIds + rootId
                                             } else {
@@ -855,18 +861,16 @@ fun ForumPostCard(
         formatTimestamp(post.timestamp)
     }
 
-    val normalBg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    val highlightBg = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
-    val animatedBgColor by animateColorAsState(
-        targetValue = if (isHighlighted) highlightBg else normalBg,
-        animationSpec = tween(durationMillis = 600),
-        label = "post_highlight_color"
-    )
+    val containerBgColor = if (isHighlighted) {
+        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f)
+    } else {
+        MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+    }
 
     Card(
         shape = ForumCardShape,
         colors = CardDefaults.cardColors(
-            containerColor = animatedBgColor
+            containerColor = containerBgColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         modifier = modifier
@@ -906,14 +910,20 @@ fun ForumPostCard(
                 Spacer(modifier = Modifier.width(10.dp))
 
                 Column(modifier = Modifier.weight(1f)) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    @OptIn(ExperimentalLayoutApi::class)
+                    FlowRow(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        itemVerticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             text = post.authorName,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
                         ForumAuthorBadges(
                             isAuthorMe = isAuthorMe,
                             authorIsMentor = post.authorIsMentor,
@@ -1046,10 +1056,13 @@ fun ForumPostCard(
                 }
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    TextButton(
-                        onClick = onReplyClick,
-                        modifier = Modifier.testTag("reply_button_${post.postId}"),
-                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable(onClick = onReplyClick)
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                            .testTag("reply_button_${post.postId}")
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Reply,
@@ -1061,6 +1074,7 @@ fun ForumPostCard(
                         Text(
                             text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_btn),
                             style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -1145,15 +1159,17 @@ private fun ForumReplyItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .testTag("forum_reply_item_${reply.postId}")
     ) {
-        // Subtle vertical thread line
+        // Vertical thread line matching exact reply height
         Box(
             modifier = Modifier
                 .width(2.5.dp)
-                .height(64.dp)
+                .fillMaxHeight()
+                .padding(vertical = 4.dp)
                 .background(
-                    color = if (reply.authorIsMentor) AmberGold.copy(alpha = 0.7f) else TealPrimary.copy(alpha = 0.4f),
+                    color = if (reply.authorIsMentor) AmberGold.copy(alpha = 0.75f) else TealPrimary.copy(alpha = 0.45f),
                     shape = ForumQuoteBarShape
                 )
         )
@@ -1161,13 +1177,15 @@ private fun ForumReplyItem(
         Surface(
             shape = RoundedCornerShape(12.dp),
             color = if (reply.authorIsMentor) {
-                AmberGold.copy(alpha = 0.08f)
+                AmberGold.copy(alpha = 0.10f)
             } else {
-                MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
+                MaterialTheme.colorScheme.surface
             },
             border = if (reply.authorIsMentor) {
-                BorderStroke(1.dp, AmberGold.copy(alpha = 0.3f))
-            } else null,
+                BorderStroke(1.dp, AmberGold.copy(alpha = 0.35f))
+            } else {
+                BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.45f))
+            },
             modifier = Modifier.weight(1f)
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
@@ -1197,14 +1215,20 @@ private fun ForumReplyItem(
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Column(modifier = Modifier.weight(1f)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        @OptIn(ExperimentalLayoutApi::class)
+                        FlowRow(
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            itemVerticalAlignment = Alignment.CenterVertically
+                        ) {
                             Text(
                                 text = reply.authorName,
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
-                            Spacer(modifier = Modifier.width(6.dp))
                             ForumAuthorBadges(
                                 isAuthorMe = isAuthorMe,
                                 authorIsMentor = reply.authorIsMentor,
@@ -1234,12 +1258,20 @@ private fun ForumReplyItem(
 
                 if (!reply.replyToAuthorName.isNullOrBlank()) {
                     Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_replying_at_format, reply.replyToAuthorName),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    if (!reply.replyToContentSnippet.isNullOrBlank()) {
+                        ForumQuoteBox(
+                            authorName = reply.replyToAuthorName,
+                            snippet = reply.replyToContentSnippet,
+                            onClick = null
+                        )
+                    } else {
+                        Text(
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_replying_at_format, reply.replyToAuthorName),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -1250,15 +1282,18 @@ private fun ForumReplyItem(
                     lineHeight = 18.sp
                 )
 
+                Spacer(modifier = Modifier.height(4.dp))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    TextButton(
-                        onClick = onReplyClick,
-                        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 2.dp),
-                        modifier = Modifier.height(28.dp)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable(onClick = onReplyClick)
+                            .padding(horizontal = 8.dp, vertical = 5.dp)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Reply,
@@ -1266,10 +1301,11 @@ private fun ForumReplyItem(
                             modifier = Modifier.size(13.dp),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Spacer(modifier = Modifier.width(3.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_reply_btn),
                             style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -1322,6 +1358,7 @@ private fun ForumQuoteBox(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .height(IntrinsicSize.Min)
             .then(
                 if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier
             )
@@ -1330,7 +1367,7 @@ private fun ForumQuoteBox(
         Box(
             modifier = Modifier
                 .width(2.5.dp)
-                .height(34.dp)
+                .fillMaxHeight()
                 .background(barColor, ForumQuoteBarShape)
         )
         Spacer(modifier = Modifier.width(8.dp))

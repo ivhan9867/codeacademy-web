@@ -175,6 +175,9 @@ fun ProgressScreen(
                 }
             }
             val fraction = if (totalModules > 0) completedModules.toFloat() / totalModules.toFloat() else 0f
+            val roundedPercent = if (completedModules > 0 && totalModules > 0) {
+                kotlin.math.round(fraction * 100f).toInt().coerceIn(1, 100)
+            } else 0
             TrackProgressData(
                 track = track,
                 totalModules = totalModules,
@@ -182,7 +185,7 @@ fun ProgressScreen(
                 totalCourses = trackCourses.size,
                 completedCourses = completedCourses,
                 progressFraction = fraction,
-                percent = (fraction * 100).toInt()
+                percent = roundedPercent
             )
         }
     }
@@ -1088,9 +1091,14 @@ fun ProgressScreen(
                         ) {
                             Text(
                                 text = if (nextLearningTarget.isInProgress) {
+                                    val donePct = if (nextLearningTarget.completedCount > 0 && nextLearningTarget.totalCount > 0) {
+                                        kotlin.math.round(nextLearningTarget.completedCount.toFloat() / nextLearningTarget.totalCount * 100f)
+                                            .toInt()
+                                            .coerceIn(1, 100)
+                                    } else 0
                                     androidx.compose.ui.res.stringResource(
                                         com.example.R.string.prog_percent_done_format,
-                                        (nextLearningTarget.completedCount.toFloat() / nextLearningTarget.totalCount * 100).toInt()
+                                        donePct
                                     )
                                 } else {
                                     androidx.compose.ui.res.stringResource(com.example.R.string.prog_start_now)

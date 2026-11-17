@@ -300,10 +300,14 @@ class CodeAcademyRepository(
         val accountId = getActiveAccountId()
         val user = userDao.getUserProfileOnce(accountId) ?: return@withContext
         val today = getTodayDateString()
-        if (user.lastActiveDate != today) {
+        if (user.lastActiveDate != today || user.currentStreak == 0) {
             val cal = java.util.Calendar.getInstance().apply { add(java.util.Calendar.DAY_OF_YEAR, -1) }
             val yesterday = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(cal.time)
-            val newStreak = if (user.lastActiveDate == yesterday) user.currentStreak + 1 else 1
+            val newStreak = when {
+                user.lastActiveDate == today && user.currentStreak == 0 -> 1
+                user.lastActiveDate == yesterday -> user.currentStreak + 1
+                else -> 1
+            }
             val newLongest = maxOf(newStreak, user.longestStreak)
             userDao.updateStreak(accountId, newStreak, newLongest, today)
         }
@@ -312,6 +316,7 @@ class CodeAcademyRepository(
     suspend fun addXp(amount: Int, reason: String): Pair<Int, Boolean> = withContext(Dispatchers.IO) {
         val accountId = getActiveAccountId()
         val user = userDao.getUserProfileOnce(accountId) ?: return@withContext Pair(0, false)
+        touchStreak()
         val newXp = user.totalXp + amount
         val newLevelThreshold = GamificationLevels.getLevelForXp(newXp)
         val hasLeveledUp = newLevelThreshold.level > user.level
@@ -1219,7 +1224,7 @@ class CodeAcademyRepository(
             level = 1,
             currentStreak = 0,
             longestStreak = 0,
-            lastActiveDate = getTodayDateString(),
+            lastActiveDate = "",
             dailyQuestId = "quest_mod",
             dailyQuestProgress = 0,
             dailyQuestCompleted = false,
@@ -1289,9 +1294,27 @@ class CodeAcademyRepository(
     ): Result<Boolean> = withContext(Dispatchers.IO) {
         try {
             val credential = com.google.firebase.auth.GoogleAuthProvider.getCredential(idToken, null)
-            val authResult = com.google.firebase.auth.FirebaseAuth.getInstance()
-                .signInWithCredential(credential)
-                .await()
+            val auth = com.google.firebase.auth.FirebaseAuth.getInstance()
+            val currentUser = auth.currentUser
+            val authResult = if (currentUser != null && currentUser.isAnonymous) {
+                val oldAnonUid = currentUser.uid
+                try {
+                    currentUser.linkWithCredential(credential).await()
+                } catch (_: com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+                    val signedIn = auth.signInWithCredential(credential).await()
+                    if (signedIn.user?.uid != oldAnonUid) {
+                        runCatching {
+                            com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                                .collection("users")
+                                .document(oldAnonUid)
+                                .delete()
+                        }
+                    }
+                    signedIn
+                }
+            } else {
+                auth.signInWithCredential(credential).await()
+            }
             val firebaseUser = authResult.user
             completeGoogleLoginForFirebaseUser(
                 email = firebaseUser?.email ?: fallbackEmail,

@@ -78,8 +78,10 @@ class FirestoreForumAndLeaderboardService(
     // 1. FORUM DISKUSI PER KELAS
     // ==========================================
 
+    suspend fun ensureAnonymousOrCurrentUid(): String? = tryEnsureAnonymousOrCurrentUid()
+
     /**
-     * Fetch paginated forum posts for a specific course using Query.limit(20) and optional startAfter document.
+     * Fetch paginated forum posts for a specific course using Query.limit(20) without requiring a composite index.
      */
     suspend fun fetchPosts(
         courseId: String,
@@ -91,7 +93,6 @@ class FirestoreForumAndLeaderboardService(
             tryEnsureAnonymousOrCurrentUid()
             var query = firestore.collection(FORUM_COLLECTION)
                 .whereEqualTo("courseId", courseId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .limit(limit)
 
             if (lastVisibleDoc != null) {
@@ -101,7 +102,7 @@ class FirestoreForumAndLeaderboardService(
             val snapshot = query.get().await()
             val posts = snapshot.documents.mapNotNull { doc ->
                 mapDocumentToPost(doc)
-            }
+            }.sortedByDescending { it.timestamp }
             val newLastDoc = if (snapshot.documents.isNotEmpty()) {
                 snapshot.documents.last()
             } else {
@@ -132,7 +133,6 @@ class FirestoreForumAndLeaderboardService(
         return try {
             firestore.collection(FORUM_COLLECTION)
                 .whereEqualTo("courseId", courseId)
-                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .limit(limit)
                 .addSnapshotListener { snapshot, error ->
                     if (error != null) {
@@ -143,7 +143,7 @@ class FirestoreForumAndLeaderboardService(
                     if (snapshot != null) {
                         val posts = snapshot.documents.mapNotNull { doc ->
                             mapDocumentToPost(doc)
-                        }
+                        }.sortedByDescending { it.timestamp }
                         onUpdate(posts)
                     }
                 }

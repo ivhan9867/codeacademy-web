@@ -237,6 +237,10 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
         return socialRepo.getCurrentForumUserId(fallbackAccountId)
     }
 
+    suspend fun ensureCloudAuth(): Boolean {
+        return socialRepo.firestoreService.ensureAnonymousOrCurrentUid() != null
+    }
+
     fun attachForumListener(
         courseId: String,
         onError: (Exception) -> Unit = {},

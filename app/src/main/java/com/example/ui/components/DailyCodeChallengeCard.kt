@@ -157,16 +157,17 @@ private val MICRO_CHALLENGES = listOf(
     )
 )
 
+private val INLINE_CODE_REGEX = Regex("`([^`]+)`")
+
 private fun formatInlineCode(
     text: String,
     codeBg: Color,
     codeColor: Color
 ): AnnotatedString {
     if (!text.contains('`')) return AnnotatedString(text)
-    val regex = Regex("`([^`]+)`")
     return buildAnnotatedString {
         var lastIndex = 0
-        regex.findAll(text).forEach { match ->
+        INLINE_CODE_REGEX.findAll(text).forEach { match ->
             if (match.range.first > lastIndex) {
                 append(text.substring(lastIndex, match.range.first))
             }

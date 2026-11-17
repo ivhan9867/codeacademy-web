@@ -389,18 +389,27 @@ fun resolveImageUri(rawUrl: String, courseId: String? = null): String {
     }
 }
 
+private val YT_SHORT_REGEX = Regex("""youtu\.be/([a-zA-Z0-9_-]{11})""")
+private val YT_LONG_REGEX = Regex("""[?&]v=([a-zA-Z0-9_-]{11})""")
+private val YT_EMBED_REGEX = Regex("""youtube\.com/embed/([a-zA-Z0-9_-]{11})""")
+private val MD_VIDEO_REGEX = Regex("""^::video\[(.*?)\](?:\((.*?)\))?\s*$""")
+private val MD_IMAGE_REGEX = Regex("""^!\[(.*?)\]\((.*?)\)\s*$""")
+private val MD_ORDERED_REGEX = Regex("""^(\d+)\.\s+(.*)$""")
+private val MD_CALLOUT_REGEX = Regex("""^\[!(TIP|WARNING|INFO|NOTE|IMPORTANT|CAUTION)\](?:\s+(.*))?$""", RegexOption.IGNORE_CASE)
+private val MD_TABLE_SEP_REGEX = Regex("^:?-{2,}:?$")
+
 /**
  * Extracts 11-character YouTube video ID from various YouTube URL formats.
  */
 fun extractYouTubeVideoId(url: String): String? {
     val trimmed = url.trim()
-    val shortMatch = Regex("""youtu\.be/([a-zA-Z0-9_-]{11})""").find(trimmed)
+    val shortMatch = YT_SHORT_REGEX.find(trimmed)
     if (shortMatch != null) return shortMatch.groupValues[1]
 
-    val longMatch = Regex("""[?&]v=([a-zA-Z0-9_-]{11})""").find(trimmed)
+    val longMatch = YT_LONG_REGEX.find(trimmed)
     if (longMatch != null) return longMatch.groupValues[1]
 
-    val embedMatch = Regex("""youtube\.com/embed/([a-zA-Z0-9_-]{11})""").find(trimmed)
+    val embedMatch = YT_EMBED_REGEX.find(trimmed)
     if (embedMatch != null) return embedMatch.groupValues[1]
 
     return null
@@ -427,10 +436,10 @@ fun parseMarkdownBlocks(raw: String): List<MarkdownBlock> {
     val lines = raw.lines()
     var i = 0
 
-    val videoRegex = Regex("""^::video\[(.*?)\](?:\((.*?)\))?\s*$""")
-    val imageRegex = Regex("""^!\[(.*?)\]\((.*?)\)\s*$""")
-    val orderedRegex = Regex("""^(\d+)\.\s+(.*)$""")
-    val calloutRegex = Regex("""^\[!(TIP|WARNING|INFO|NOTE|IMPORTANT|CAUTION)\](?:\s+(.*))?$""", RegexOption.IGNORE_CASE)
+    val videoRegex = MD_VIDEO_REGEX
+    val imageRegex = MD_IMAGE_REGEX
+    val orderedRegex = MD_ORDERED_REGEX
+    val calloutRegex = MD_CALLOUT_REGEX
 
     while (i < lines.size) {
         val line = lines[i]
@@ -562,7 +571,7 @@ fun parseMarkdownBlocks(raw: String): List<MarkdownBlock> {
                 if (s.endsWith("|")) s = s.removeSuffix("|")
                 val cells = s.split("|")
                 if (cells.isEmpty()) return false
-                return cells.all { it.trim().matches(Regex("^:?-{2,}:?$")) }
+                return cells.all { it.trim().matches(MD_TABLE_SEP_REGEX) }
             }
             if (isSeparatorRow(nextLine)) {
                 fun splitRow(l: String): List<String> {

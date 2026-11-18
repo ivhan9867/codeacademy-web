@@ -257,6 +257,18 @@ function saveLocalFacilitatorProfile(profile) {
   }
 }
 
+function updateHuddlyGreeting(displayName) {
+  const greetingEl = document.getElementById("huddlyGreetingTitle");
+  if (!greetingEl) return;
+  const hour = new Date().getHours();
+  let timeGreeting = "Selamat malam";
+  if (hour >= 4 && hour < 11) timeGreeting = "Selamat pagi";
+  else if (hour >= 11 && hour < 15) timeGreeting = "Selamat siang";
+  else if (hour >= 15 && hour < 18) timeGreeting = "Selamat sore";
+  const shortName = (displayName || "Fasilitator").trim().split("—")[0].trim();
+  greetingEl.textContent = `${timeGreeting}, ${shortName}`;
+}
+
 function applyFacilitatorProfileToUi(displayName, role = "") {
   const cleanName = (displayName || "Fasilitator CodeAcademy").trim();
   if (currentFacilitatorUser) {
@@ -270,6 +282,7 @@ function applyFacilitatorProfileToUi(displayName, role = "") {
     facilitatorIdentityChip.textContent = `👤 ${cleanName}${role ? ` · ${role}` : ""}`;
     facilitatorIdentityChip.style.display = "inline-flex";
   }
+  updateHuddlyGreeting(cleanName);
 }
 
 function applyRoleAccessUi(accessRole) {
@@ -658,6 +671,7 @@ function renderAllViews() {
   renderCertificates();
   renderTeam();
   renderAnalytics();
+  renderHuddlyDashboardMeta();
 }
 
 function showAuthOverlay(preserveError = false) {
@@ -927,6 +941,47 @@ function attachEventListeners() {
     showToast("Profil fasilitator berhasil diperbarui.");
   });
 
+  // Huddly Quick Shortcuts & Companion Rail
+  document.getElementById("btnQuickForumUnanswered")?.addEventListener("click", () => {
+    forumOnlyUnanswered = true;
+    btnForumUnansweredFilter?.classList.add("active");
+    btnForumUnansweredFilter?.setAttribute("aria-pressed", "true");
+    switchView("forum");
+    renderForum();
+  });
+
+  document.getElementById("btnQuickNewAnnouncement")?.addEventListener("click", () => {
+    switchView("announcements");
+    announcementTitleInput?.focus();
+  });
+
+  document.querySelectorAll("[data-jump-view]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetView = btn.dataset.jumpView;
+      if (targetView) switchView(targetView);
+    });
+  });
+
+  document.querySelectorAll(".quick-chip-btn[data-quick-prompt]").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const quickInput = document.getElementById("huddlyQuickInput");
+      if (quickInput) quickInput.value = chip.dataset.quickPrompt || "";
+      quickInput?.focus();
+    });
+  });
+
+  document.getElementById("btnHuddlyQuickGo")?.addEventListener("click", () => {
+    const quickInput = document.getElementById("huddlyQuickInput");
+    const text = (quickInput?.value || "").trim();
+    switchView("announcements");
+    if (text && announcementTitleInput) {
+      announcementTitleInput.value = text;
+      announcementBodyInput?.focus();
+    } else {
+      announcementTitleInput?.focus();
+    }
+  });
+
   // Super Admin: Team Management & CSV Exports
   document.getElementById("btnAddTeamMember")?.addEventListener("click", async () => {
     const emailEl = document.getElementById("teamEmailInput");
@@ -1179,6 +1234,140 @@ function updateStats() {
   submissionsPendingBadge.textContent = String(pending);
 }
 
+function getStudentInitials(name) {
+  const parts = String(name || "P").trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return (parts[0] || "P").slice(0, 2).toUpperCase();
+}
+
+function renderHuddlyDashboardMeta() {
+  const badgeEl = document.getElementById("huddlySpotlightBadge");
+  const titleEl = document.getElementById("huddlySpotlightTitle");
+  const metaEl = document.getElementById("huddlySpotlightMeta");
+  const avatarsEl = document.getElementById("huddlySpotlightAvatars");
+  const spotlightBtn = document.getElementById("btnSpotlightReview");
+
+  const pendingList = submissions.filter((s) => (s.status || "").toUpperCase() === "PENDING_REVIEW");
+  const revisionList = submissions.filter((s) => (s.status || "").toUpperCase() === "REVISION_REQUESTED");
+
+  if (titleEl && metaEl && avatarsEl && spotlightBtn) {
+    if (pendingList.length > 0) {
+      const topSub = pendingList[0];
+      const studentName = topSub.studentName || topSub.userName || "Peserta";
+      const courseName = topSub.courseTitle || getCourseLabel(topSub.courseId);
+      if (badgeEl) badgeEl.textContent = `${pendingList.length} Antrean Menunggu Review`;
+      titleEl.textContent = `${studentName} — ${courseName}`;
+      metaEl.textContent = `Skor Kuis ${Number(topSub.finalQuizScore) || 0}/100 • Dikirim ${formatDate(topSub.submittedAt)} • Percobaan ke-${Number(topSub.attemptNumber ?? topSub.attemptCount) || 1}`;
+      const avatarClasses = ["av-1", "av-2", "av-3", "av-4"];
+      const sampleAvatars = pendingList.slice(0, 3).map((s, idx) => {
+        const init = getStudentInitials(s.studentName || s.userName || "Peserta");
+        return `<span class="av ${avatarClasses[idx % 4]}">${escapeHtml(init)}</span>`;
+      });
+      if (pendingList.length > 3) {
+        sampleAvatars.push(`<span class="av av-4">+${pendingList.length - 3}</span>`);
+      }
+      avatarsEl.innerHTML = `${sampleAvatars.join("")}<span class="av-note">${pendingList.length} proyek siap dinilai</span>`;
+      spotlightBtn.textContent = "Mulai Review →";
+      spotlightBtn.onclick = () => openReviewModal(topSub.id);
+    } else {
+      if (badgeEl) badgeEl.textContent = "Antrean Bersih";
+      titleEl.textContent = "Semua Proyek Akhir Sudah Ditinjau";
+      metaEl.textContent = `${submissions.length} total pengajuan tersimpan. Pantau forum diskusi atau buat pengumuman baru untuk kelas.`;
+      avatarsEl.innerHTML = `<span class="av av-1">✓</span><span class="av-note">0 proyek tertunda saat ini</span>`;
+      spotlightBtn.textContent = "Buka Forum Kelas →";
+      spotlightBtn.onclick = () => switchView("forum");
+    }
+  }
+
+  const highlightsEl = document.getElementById("huddlyHighlightsList");
+  if (highlightsEl) {
+    const roots = forumPosts.filter((p) => !p.replyToPostId && !p.rootThreadId).slice(0, 2);
+    const latestAnn = announcements.slice(0, 1);
+    const itemsHtml = [];
+
+    latestAnn.forEach((ann) => {
+      itemsHtml.push(`
+        <button type="button" class="rail-item" data-rail-view="announcements">
+          <span class="rail-item-avatar">AN</span>
+          <span>
+            <span class="rail-item-title">${escapeHtml(ann.title || "Pengumuman Kelas")}</span>
+            <span class="rail-item-sub">${escapeHtml((ann.message || ann.body || "").slice(0, 68))}</span>
+          </span>
+        </button>
+      `);
+    });
+
+    roots.forEach((t) => {
+      const init = getStudentInitials(t.authorName || "P");
+      itemsHtml.push(`
+        <button type="button" class="rail-item" data-rail-view="forum">
+          <span class="rail-item-avatar">${escapeHtml(init)}</span>
+          <span>
+            <span class="rail-item-title">${escapeHtml(t.authorName || "Peserta")} · Forum</span>
+            <span class="rail-item-sub">${escapeHtml((t.content || "").slice(0, 70))}</span>
+          </span>
+        </button>
+      `);
+    });
+
+    highlightsEl.innerHTML = itemsHtml.length > 0
+      ? itemsHtml.join("")
+      : '<div class="rail-empty">Belum ada aktivitas forum atau pengumuman terbaru.</div>';
+
+    highlightsEl.querySelectorAll("[data-rail-view]").forEach((btn) => {
+      btn.addEventListener("click", () => switchView(btn.dataset.railView));
+    });
+  }
+
+  const actionEl = document.getElementById("huddlyActionItems");
+  if (actionEl) {
+    const roots = forumPosts.filter((p) => !p.replyToPostId && !p.rootThreadId);
+    const repliesByThread = new Map();
+    forumPosts.filter((p) => p.replyToPostId || p.rootThreadId).forEach((r) => {
+      const key = r.rootThreadId || r.replyToPostId;
+      if (!repliesByThread.has(key)) repliesByThread.set(key, []);
+      repliesByThread.get(key).push(r);
+    });
+    const unansweredCount = roots.filter((t) => {
+      const reps = repliesByThread.get(t.postId) || [];
+      return !reps.some((r) => r.authorIsMentor === true || r.isMentor === true);
+    }).length;
+
+    actionEl.innerHTML = `
+      <button type="button" class="action-row-btn" data-action-jump="pending">
+        <span class="action-row-left"><span class="action-dot pending"></span>Review proyek menunggu</span>
+        <span class="action-pill ${pendingList.length > 0 ? "urgent" : ""}">${pendingList.length} proyek</span>
+      </button>
+      <button type="button" class="action-row-btn" data-action-jump="forum">
+        <span class="action-row-left"><span class="action-dot forum"></span>Pertanyaan forum belum dijawab</span>
+        <span class="action-pill ${unansweredCount > 0 ? "urgent" : ""}">${unansweredCount} topik</span>
+      </button>
+      <button type="button" class="action-row-btn" data-action-jump="revision">
+        <span class="action-row-left"><span class="action-dot revision"></span>Peserta dalam status revisi</span>
+        <span class="action-pill">${revisionList.length} revisi</span>
+      </button>
+    `;
+
+    actionEl.querySelectorAll("[data-action-jump]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const mode = btn.dataset.actionJump;
+        if (mode === "forum") {
+          forumOnlyUnanswered = unansweredCount > 0;
+          btnForumUnansweredFilter?.classList.toggle("active", forumOnlyUnanswered);
+          switchView("forum");
+          renderForum();
+        } else if (mode === "pending" || mode === "revision") {
+          const targetStatus = mode === "pending" ? "PENDING_REVIEW" : "REVISION_REQUESTED";
+          filterStatus = targetStatus;
+          filterPills.forEach((p) => p.classList.toggle("active", p.dataset.status === targetStatus));
+          renderTable();
+          document.querySelector(".table-card")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+    });
+  }
+}
+
 function renderTable() {
   const filtered = submissions.filter((s) => {
     const st = (s.status || "").toUpperCase();
@@ -1210,9 +1399,11 @@ function renderTable() {
         </td>
       </tr>
     `;
+    renderHuddlyDashboardMeta();
     return;
   }
 
+  let highlightedTopPending = false;
   submissionsTableBody.innerHTML = filtered
     .map((s) => {
       const badgeClass = getStatusBadgeClass(s.status);
@@ -1222,9 +1413,11 @@ function renderTable() {
       const studentName = s.studentName || s.userName || "Peserta";
       const studentEmail = s.studentEmail || s.userEmail || s.accountId || "-";
       const attempt = Number(s.attemptNumber ?? s.attemptCount) || 1;
+      const isPendingTop = (s.status || "").toUpperCase() === "PENDING_REVIEW" && !highlightedTopPending;
+      if (isPendingTop) highlightedTopPending = true;
 
       return `
-      <tr>
+      <tr class="${isPendingTop ? "row-priority-lime" : ""}">
         <td>
           <div class="student-info">
             <span class="student-name">${escapeHtml(studentName)}</span>
@@ -1251,6 +1444,7 @@ function renderTable() {
     `;
     })
     .join("");
+  renderHuddlyDashboardMeta();
 }
 
 function getStatusBadgeClass(status) {
@@ -1689,6 +1883,7 @@ function renderForum() {
     `;
     })
     .join("");
+  renderHuddlyDashboardMeta();
 }
 
 async function createFacilitatorTopic() {
@@ -1902,6 +2097,7 @@ function renderAnnouncements() {
     `;
     })
     .join("");
+  renderHuddlyDashboardMeta();
 }
 
 async function publishAnnouncement() {

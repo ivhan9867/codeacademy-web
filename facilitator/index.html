@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com https://accounts.google.com https://*.firebaseapp.com;">
   <title>CodeAcademy — Portal Fasilitator</title>
   <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-  <link rel="stylesheet" href="style.css?v=20261118-huddly">
+  <link rel="stylesheet" href="style.css?v=20261118-ban">
 </head>
 <body>
 
@@ -509,21 +509,38 @@
           <section class="admin-grid" id="adminAnalyticsCards"></section>
           <section class="panel-card" style="margin-top: 16px;">
             <div class="panel-head-row">
-              <h3>Direktori Siswa &amp; Laporan Nilai</h3>
+              <div>
+                <h3>Direktori Siswa, Laporan Nilai &amp; Kontrol Akun</h3>
+                <p style="font-size: 12.5px; color: var(--muted); margin-top: 2px;">Super Admin dapat mencari peserta, memeriksa profil kustom, serta membekukan (Ban) atau mengaktifkan kembali (Unban) akses akun di aplikasi Android.</p>
+              </div>
               <button type="button" id="btnExportGradesCsv" class="btn-export-csv">Unduh Laporan CSV</button>
             </div>
-            <div class="table-wrap" style="margin-top: 12px;">
+
+            <div class="control-bar" style="margin-top: 12px; margin-bottom: 14px;">
+              <div class="search-box">
+                <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" id="studentSearchInput" aria-label="Cari nama, email, atau persona siswa" placeholder="Cari nama, email, atau persona developer siswa...">
+              </div>
+              <div class="pill-group" role="group" aria-label="Filter status akun siswa">
+                <button type="button" class="btn-filter-pill btn-student-filter active" data-student-status="all">Semua</button>
+                <button type="button" class="btn-filter-pill btn-student-filter" data-student-status="active">Aktif</button>
+                <button type="button" class="btn-filter-pill btn-student-filter" data-student-status="banned">Dibekukan</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
               <table class="submissions-table">
                 <thead>
                   <tr>
-                    <th>Siswa</th>
-                    <th>Total XP</th>
-                    <th>Level</th>
-                    <th>Streak</th>
+                    <th>Siswa &amp; Email</th>
+                    <th>Persona &amp; XP</th>
+                    <th>Level &amp; Streak</th>
+                    <th>Status Akun</th>
+                    <th style="text-align: right;">Kontrol</th>
                   </tr>
                 </thead>
                 <tbody id="studentsTableBody">
-                  <tr><td colspan="4" class="empty-row">Memuat data siswa...</td></tr>
+                  <tr><td colspan="5" class="empty-row">Memuat data siswa...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -693,6 +710,42 @@
     </div>
   </div>
 
+  <!-- MODAL BAN / BEKUKAN AKUN SISWA (SUPER ADMIN) -->
+  <div id="banUserModal" class="modal-overlay" hidden>
+    <div class="modal-card modal-card-sm">
+      <div class="modal-header">
+        <div>
+          <h3>Bekukan Akun Peserta</h3>
+          <p class="modal-sub">Akun yang dibekukan akan langsung terkunci ke layar peringatan saat login atau memakai aplikasi Android.</p>
+        </div>
+        <button type="button" id="btnCloseBanModal" class="btn-icon-close" aria-label="Tutup">&times;</button>
+      </div>
+      <div class="modal-body-stack">
+        <div class="ban-target-box">
+          <strong id="banTargetName">Nama Siswa</strong>
+          <div id="banTargetEmail" style="font-size: 12px; color: var(--muted);">-</div>
+        </div>
+        <div class="field-group">
+          <label>Pilih Alasan Cepat</label>
+          <div class="ban-reason-chips">
+            <button type="button" class="ban-chip-btn" data-ban-reason="Pelanggaran etika atau spam di Forum Diskusi kelas.">Spam Forum</button>
+            <button type="button" class="ban-chip-btn" data-ban-reason="Terindikasi plagiarisme pada pengajuan proyek akhir.">Plagiarisme Proyek</button>
+            <button type="button" class="ban-chip-btn" data-ban-reason="Menggunakan kata-kata tidak pantas kepada peserta atau fasilitator.">Bahasa Tidak Pantas</button>
+            <button type="button" class="ban-chip-btn" data-ban-reason="Aktivitas mencurigakan yang melanggar ketentuan platform.">Aktivitas Mencurigakan</button>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="banReasonInput">Alasan Pembekuan (Ditampilkan ke User di Aplikasi)</label>
+          <textarea id="banReasonInput" rows="3" maxlength="240" placeholder="Tuliskan alasan pembekuan akun agar peserta mengetahui penyebabnya..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnCancelBanModal" class="btn-cancel">Batal</button>
+        <button type="button" id="btnConfirmBanUser" class="btn-ban-solid">Bekukan Akun Sekarang</button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div id="toastMsg" class="toast-msg"></div>
 
@@ -700,7 +753,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js?v=20261118-huddly"></script>
-  <script src="app.js?v=20261118-huddly"></script>
+  <script src="../firebase-config.js?v=20261118-ban"></script>
+  <script src="app.js?v=20261118-ban"></script>
 </body>
 </html>

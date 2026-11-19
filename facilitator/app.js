@@ -561,8 +561,9 @@ function enterDemoOfflineMode(demoRole = "facilitator") {
     { email: "mentor.web@codeacademy.local", name: "Raka Pratama", accessRole: "facilitator", role: "Front-End Mentor" }
   ];
   studentUsersList = [
-    { id: "u1", name: "Ivhan Afika P", totalXp: 320, level: 3, currentStreak: 4 },
-    { id: "u2", name: "Alya Putri", totalXp: 210, level: 2, currentStreak: 2 }
+    { id: "u1", name: "Ivhan Afika P", email: "ivhan@codeacademy.id", headlineTitle: "Frontend Explorer", totalXp: 320, level: 3, currentStreak: 4, isBanned: false, banReason: "" },
+    { id: "u2", name: "Alya Putri", email: "alya.putri@codeacademy.id", headlineTitle: "CSS Grid Wizard", totalXp: 210, level: 2, currentStreak: 2, isBanned: false, banReason: "" },
+    { id: "u3", name: "Dimas Pratama", email: "dimas@codeacademy.id", headlineTitle: "JS Builder", totalXp: 95, level: 1, currentStreak: 0, isBanned: true, banReason: "Spam berulang di forum diskusi kelas.", bannedAt: Date.now() - 86400000 }
   ];
 
   renderAllViews();
@@ -1080,6 +1081,114 @@ function attachEventListeners() {
     );
   });
 
+  // Super Admin: Student Search, Filter & Ban Controls
+  let banTargetUserId = null;
+  const banModal = document.getElementById("banUserModal");
+  const banReasonInput = document.getElementById("banReasonInput");
+  const closeBanModal = () => {
+    banTargetUserId = null;
+    if (banModal) banModal.hidden = true;
+  };
+  document.getElementById("btnCloseBanModal")?.addEventListener("click", closeBanModal);
+  document.getElementById("btnCancelBanModal")?.addEventListener("click", closeBanModal);
+
+  document.querySelectorAll(".ban-chip-btn[data-ban-reason]").forEach((chip) => {
+    chip.addEventListener("click", () => {
+      if (banReasonInput) banReasonInput.value = chip.dataset.banReason || "";
+      banReasonInput?.focus();
+    });
+  });
+
+  document.getElementById("studentSearchInput")?.addEventListener("input", () => {
+    renderAnalytics();
+  });
+
+  document.querySelectorAll(".btn-student-filter[data-student-status]").forEach((pill) => {
+    pill.addEventListener("click", () => {
+      document.querySelectorAll(".btn-student-filter[data-student-status]").forEach((p) => p.classList.remove("active"));
+      pill.classList.add("active");
+      renderAnalytics();
+    });
+  });
+
+  document.getElementById("studentsTableBody")?.addEventListener("click", async (e) => {
+    if (currentAccessRole !== "super_admin") return;
+    const banBtn = e.target.closest("[data-action='open-ban']");
+    if (banBtn && banBtn.dataset.uid) {
+      const target = studentUsersList.find((u) => u.id === banBtn.dataset.uid);
+      if (!target) return;
+      banTargetUserId = target.id;
+      const nameEl = document.getElementById("banTargetName");
+      const emailEl = document.getElementById("banTargetEmail");
+      if (nameEl) nameEl.textContent = target.name || "Siswa";
+      if (emailEl) emailEl.textContent = target.email || `UID: ${target.id}`;
+      if (banReasonInput) banReasonInput.value = target.banReason || "";
+      if (banModal) banModal.hidden = false;
+      return;
+    }
+
+    const unbanBtn = e.target.closest("[data-action='unban-user']");
+    if (unbanBtn && unbanBtn.dataset.uid) {
+      const uid = unbanBtn.dataset.uid;
+      const target = studentUsersList.find((u) => u.id === uid);
+      if (!confirm(`Cabut pembekuan akun untuk ${target?.name || uid}?`)) return;
+      if (isFirebaseReady && db && !isDemoMode) {
+        try {
+          await db.collection("users").doc(uid).set({
+            isBanned: false,
+            banReason: "",
+            bannedAt: null,
+            bannedBy: "",
+            unbannedAt: Date.now()
+          }, { merge: true });
+          showToast(`Akses akun ${target?.name || uid} diaktifkan kembali.`);
+        } catch (err) {
+          showToast("Gagal mencabut ban: " + err.message);
+        }
+      } else {
+        studentUsersList = studentUsersList.map((u) =>
+          u.id === uid ? { ...u, isBanned: false, banReason: "", bannedAt: null } : u
+        );
+        renderAnalytics();
+        showToast(`Akun ${target?.name || uid} diaktifkan kembali (Mode Demo).`);
+      }
+    }
+  });
+
+  document.getElementById("btnConfirmBanUser")?.addEventListener("click", async () => {
+    if (currentAccessRole !== "super_admin" || !banTargetUserId) return;
+    const reason = (banReasonInput?.value || "").trim();
+    if (reason.length < 5) {
+      showToast("Tuliskan alasan pembekuan minimal 5 karakter.");
+      return;
+    }
+    const uid = banTargetUserId;
+    const target = studentUsersList.find((u) => u.id === uid);
+    const adminIdentity = currentFacilitatorUser?.email || "super_admin";
+    const banPayload = {
+      isBanned: true,
+      banReason: reason,
+      bannedAt: Date.now(),
+      bannedBy: adminIdentity
+    };
+    if (isFirebaseReady && db && !isDemoMode) {
+      try {
+        await db.collection("users").doc(uid).set(banPayload, { merge: true });
+        closeBanModal();
+        showToast(`Akun ${target?.name || uid} berhasil dibekukan.`);
+      } catch (err) {
+        showToast("Gagal membekukan akun: " + err.message);
+      }
+    } else {
+      studentUsersList = studentUsersList.map((u) =>
+        u.id === uid ? { ...u, ...banPayload } : u
+      );
+      closeBanModal();
+      renderAnalytics();
+      showToast(`Akun ${target?.name || uid} dibekukan (Mode Demo).`);
+    }
+  });
+
   // Announcements
   btnPublishAnnouncement.addEventListener("click", () => publishAnnouncement());
   announcementsList.addEventListener("click", (e) => {
@@ -1492,6 +1601,7 @@ function renderAnalytics() {
   const badge = document.getElementById("studentsTotalBadge");
   if (badge) badge.textContent = String(studentUsersList.length);
   const cardsEl = document.getElementById("adminAnalyticsCards");
+  const bannedCount = studentUsersList.filter((u) => u.isBanned === true).length;
   if (cardsEl) {
     const approvedCount = submissions.filter((s) => (s.status || "").toUpperCase() === "APPROVED").length;
     const passRate = submissions.length ? Math.round((approvedCount / submissions.length) * 100) : 0;
@@ -1501,25 +1611,56 @@ function renderAnalytics() {
       <div class="stat-card"><div class="stat-info"><p>Rasio Lulus Proyek</p><h3>${passRate}%</h3></div></div>
       <div class="stat-card"><div class="stat-info"><p>Topik Forum Terverifikasi</p><h3>${verifiedThreads} / ${rootsCount}</h3></div></div>
       <div class="stat-card"><div class="stat-info"><p>Total Sertifikat Terbit</p><h3>${certificates.length}</h3></div></div>
-      <div class="stat-card"><div class="stat-info"><p>Siswa Terdaftar (Cloud)</p><h3>${studentUsersList.length}</h3></div></div>
+      <div class="stat-card"><div class="stat-info"><p>Siswa Cloud (${bannedCount} Ban)</p><h3>${studentUsersList.length}</h3></div></div>
     `;
   }
   const tbody = document.getElementById("studentsTableBody");
   if (!tbody) return;
-  if (studentUsersList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty-row">Belum ada data siswa cloud.</td></tr>';
+  const searchTerm = (document.getElementById("studentSearchInput")?.value || "").trim().toLowerCase();
+  const activeStatusPill = document.querySelector(".btn-student-filter.active")?.dataset.studentStatus || "all";
+
+  const filteredStudents = studentUsersList.filter((u) => {
+    const isBanned = u.isBanned === true;
+    if (activeStatusPill === "active" && isBanned) return false;
+    if (activeStatusPill === "banned" && !isBanned) return false;
+    if (!searchTerm) return true;
+    return (
+      (u.name || "").toLowerCase().includes(searchTerm) ||
+      (u.email || "").toLowerCase().includes(searchTerm) ||
+      (u.headlineTitle || "").toLowerCase().includes(searchTerm) ||
+      (u.id || "").toLowerCase().includes(searchTerm)
+    );
+  });
+
+  if (filteredStudents.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Tidak ada data siswa yang sesuai filter.</td></tr>';
     return;
   }
-  tbody.innerHTML = studentUsersList
-    .slice(0, 50)
-    .map((u) => `
+  tbody.innerHTML = filteredStudents
+    .slice(0, 60)
+    .map((u) => {
+      const isBanned = u.isBanned === true;
+      const persona = u.headlineTitle ? `<span class="persona-tag-mini">${escapeHtml(u.headlineTitle)}</span><br>` : "";
+      const emailLine = u.email ? escapeHtml(u.email) : `UID: ${escapeHtml(u.id || "-")}`;
+      const statusHtml = isBanned
+        ? `<span class="ban-status-pill banned">⛔ Dibekukan</span>${u.banReason ? `<div class="ban-reason-note">${escapeHtml(u.banReason)}</div>` : ""}`
+        : `<span class="ban-status-pill active">● Aktif</span>`;
+      const actionBtn = isBanned
+        ? `<button type="button" class="btn-unban-user" data-action="unban-user" data-uid="${escapeHtml(u.id)}">Cabut Ban</button>`
+        : `<button type="button" class="btn-danger-ghost" data-action="open-ban" data-uid="${escapeHtml(u.id)}">Bekukan</button>`;
+      return `
       <tr>
-        <td><strong>${escapeHtml(u.name || "Siswa")}</strong></td>
-        <td>${Number(u.totalXp) || 0} XP</td>
-        <td>Lv.${Number(u.level) || 1}</td>
-        <td>🔥 ${Number(u.currentStreak) || 0} hari</td>
+        <td>
+          <strong>${escapeHtml(u.name || "Siswa")}</strong>
+          <div style="font-size:12px;color:var(--muted);">${emailLine}</div>
+        </td>
+        <td>${persona}<strong>${Number(u.totalXp) || 0} XP</strong></td>
+        <td>Lv.${Number(u.level) || 1} • 🔥 ${Number(u.currentStreak) || 0}h</td>
+        <td>${statusHtml}</td>
+        <td style="text-align:right;">${actionBtn}</td>
       </tr>
-    `)
+    `;
+    })
     .join("");
 }
 

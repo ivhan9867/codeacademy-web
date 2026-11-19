@@ -125,6 +125,11 @@ data class PythonLogEntry(
     val isSystem: Boolean = false
 )
 
+private enum class PlaygroundWorkspaceMode {
+    WEB_STUDIO,
+    JS_CONSOLE
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlaygroundScreen(
@@ -368,10 +373,34 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
         }
     }
 
-    // Tab: 0 = HTML, 1 = CSS, 2 = JS, 3 = Preview
-    var selectedTab by remember(initialCode) { mutableIntStateOf(initialTab) }
+    // Separate dedicated workspace mode:
+    // Pure JS snippets/modules open directly in JS_CONSOLE (Editor + Console only, no WebView).
+    // Full HTML/CSS/JS web modules & free sandbox open in WEB_STUDIO.
+    val initialWorkspaceMode = remember(resolvedLanguage, currentModule, initialCode) {
+        val isPureJs = (resolvedLanguage == "js" || resolvedLanguage == "javascript") &&
+            currentModule?.starterHtml.isNullOrBlank() &&
+            currentModule?.starterCss.isNullOrBlank()
+        if (isPureJs) PlaygroundWorkspaceMode.JS_CONSOLE else PlaygroundWorkspaceMode.WEB_STUDIO
+    }
+    var workspaceMode by remember(initialWorkspaceMode) { mutableStateOf(initialWorkspaceMode) }
+
+    // Web Studio sub-states: Code (0=HTML, 1=CSS, 2=JS) vs Web Preview
+    var selectedTab by remember(initialCode) { mutableIntStateOf(initialTab.coerceIn(0, 2)) }
+    var isWebPreviewVisible by remember(initialCode) { mutableStateOf(false) }
+    var webRunId by remember { mutableIntStateOf(1) }
+    var jsRunId by remember { mutableIntStateOf(0) }
     val consoleLogs = remember { mutableStateListOf<String>() }
+    val jsConsoleLogs = remember { mutableStateListOf<String>() }
     var showConsole by remember { mutableStateOf(false) }
+
+    // Default JS starter if user switches to JS Console with empty jsCode
+    val defaultJsConsoleSnippet = remember {
+        """// Tulis & uji logika JavaScript di sini
+const nama = "CodeAcademy";
+const angka = [10, 20, 30];
+console.log("Halo, " + nama + "!");
+console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
+    }
 
     var showResetDialog by remember { mutableStateOf(false) }
 
@@ -454,11 +483,17 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = if (isPythonMode) "Playground Python" else "Code Playground",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = when {
+                                isPythonMode -> "Playground Python"
+                                workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE -> stringResource(R.string.playground_mode_js)
+                                else -> stringResource(R.string.playground_mode_web)
+                            },
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
@@ -472,16 +507,14 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                     // Tanya AI button
                     IconButton(onClick = {
                         try {
-                            val currentCodeContext = if (isPythonMode) {
-                                "Python:\n$pythonCode".take(1500)
-                            } else {
-                                when (selectedTab) {
-                                    0 -> "HTML:\n$htmlCode"
-                                    1 -> "CSS:\n$cssCode"
-                                    2 -> "JS:\n$jsCode"
-                                    else -> "HTML:\n$htmlCode\nCSS:\n$cssCode\nJS:\n$jsCode"
-                                }.take(1500)
-                            }
+                            val currentCodeContext = when {
+                                isPythonMode -> "Python:\n$pythonCode"
+                                workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE -> "JavaScript:\n$jsCode"
+                                isWebPreviewVisible -> "HTML:\n$htmlCode\nCSS:\n$cssCode\nJS:\n$jsCode"
+                                selectedTab == 0 -> "HTML:\n$htmlCode"
+                                selectedTab == 1 -> "CSS:\n$cssCode"
+                                else -> "JS:\n$jsCode"
+                            }.take(1500)
                             onOpenAiTutor(currentCodeContext)
                         } catch (e: Exception) {
                             Toast.makeText(context, "Gagal membuka AI Tutor: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
@@ -497,10 +530,10 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                     // Export / Share code button
                     IconButton(onClick = {
                         try {
-                            val exportPayload = if (isPythonMode) {
-                                "# CodeAcademy Python Export\n\n$pythonCode"
-                            } else {
-                                buildString {
+                            val exportPayload = when {
+                                isPythonMode -> "# CodeAcademy Python Export\n\n$pythonCode"
+                                workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE -> "// CodeAcademy JavaScript Export\n\n$jsCode"
+                                else -> buildString {
                                     appendLine("<!DOCTYPE html>")
                                     appendLine("<html lang=\"id\">")
                                     appendLine("<head>")
@@ -523,9 +556,14 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                                     appendLine("</html>")
                                 }
                             }
+                            val shareSubject = when {
+                                isPythonMode -> "Kode Python CodeAcademy"
+                                workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE -> "Kode JavaScript CodeAcademy"
+                                else -> "Proyek Web CodeAcademy"
+                            }
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
-                                putExtra(Intent.EXTRA_SUBJECT, if (isPythonMode) "Kode Python CodeAcademy" else "Proyek Web CodeAcademy")
+                                putExtra(Intent.EXTRA_SUBJECT, shareSubject)
                                 putExtra(Intent.EXTRA_TEXT, exportPayload)
                             }
                             context.startActivity(Intent.createChooser(shareIntent, "Ekspor / Bagikan Kode"))
@@ -989,128 +1027,92 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                     }
                 }
             } else {
-                // Editor / Preview Tabs
-                TabRow(
-                selectedTabIndex = selectedTab,
-                containerColor = CodeDarkSurface,
-                contentColor = MaterialTheme.colorScheme.primary,
-                indicator = { tabPositions ->
-                    TabRowDefaults.SecondaryIndicator(
-                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            ) {
-                listOf("HTML", "CSS", "JS", stringResource(R.string.playground_output_web_preview)).forEachIndexed { index, title ->
-                    Tab(
-                        selected = selectedTab == index,
+                // ==========================================
+                // WORKSPACE MODE SWITCHER (WEB STUDIO vs JS CONSOLE)
+                // ==========================================
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(CodeDarkSurface)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        color = Color(0xFF0D1117),
+                        shape = RoundedCornerShape(999.dp),
+                        border = BorderStroke(1.dp, CodeDarkBorder)
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(3.dp),
+                            horizontalArrangement = Arrangement.spacedBy(2.dp)
+                        ) {
+                            val webSelected = workspaceMode == PlaygroundWorkspaceMode.WEB_STUDIO
+                            Surface(
+                                onClick = {
+                                    workspaceMode = PlaygroundWorkspaceMode.WEB_STUDIO
+                                    if (htmlCode.isBlank() && cssCode.isBlank() && !isSingleLanguageExample) {
+                                        htmlCode = defaultHtml
+                                        cssCode = defaultCss
+                                    }
+                                },
+                                shape = RoundedCornerShape(999.dp),
+                                color = if (webSelected) TealPrimary else Color.Transparent
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.playground_mode_web),
+                                    color = if (webSelected) Color.White else Color(0xFF8B949E),
+                                    fontSize = 11.5.sp,
+                                    fontWeight = if (webSelected) FontWeight.Bold else FontWeight.Medium,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                )
+                            }
+
+                            val jsSelected = workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE
+                            Surface(
+                                onClick = {
+                                    workspaceMode = PlaygroundWorkspaceMode.JS_CONSOLE
+                                    if (jsCode.isBlank()) {
+                                        jsCode = defaultJsConsoleSnippet
+                                    }
+                                },
+                                shape = RoundedCornerShape(999.dp),
+                                color = if (jsSelected) TealPrimary else Color.Transparent
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.playground_mode_js),
+                                    color = if (jsSelected) Color.White else Color(0xFF8B949E),
+                                    fontSize = 11.5.sp,
+                                    fontWeight = if (jsSelected) FontWeight.Bold else FontWeight.Medium,
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    // Primary Run CTA tailored to current mode
+                    Button(
                         onClick = {
                             try {
-                                selectedTab = index
-                                if (index == 3) {
-                                    // Auto-run when switching to Live Preview
+                                if (workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE) {
+                                    jsConsoleLogs.clear()
+                                    executedJs = jsCode
+                                    jsRunId++
+                                } else {
+                                    consoleLogs.clear()
                                     executedHtml = htmlCode
                                     executedCss = cssCode
                                     executedJs = jsCode
+                                    webRunId++
+                                    isWebPreviewVisible = true
                                 }
                             } catch (e: Exception) {
                                 Toast.makeText(context, "${e.localizedMessage}", Toast.LENGTH_SHORT).show()
                             }
                         },
-                        text = {
-                            Text(
-                                text = title,
-                                fontWeight = if (selectedTab == index) FontWeight.Bold else FontWeight.Medium,
-                                fontSize = 12.sp,
-                                color = if (selectedTab == index) MaterialTheme.colorScheme.primary else Color(0xFF8B949E)
-                            )
-                        }
-                    )
-                }
-            }
-
-            // Sub-header Action Bar
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color(0xFF161B22))
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = when (selectedTab) {
-                            0 -> "index.html"
-                            1 -> "style.css"
-                            2 -> "script.js"
-                            else -> stringResource(R.string.playground_output_web_preview)
-                        },
-                        color = Color(0xFFA5D6FF),
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Surface(
-                        color = Color(0xFF21262D),
-                        shape = RoundedCornerShape(4.dp)
-                    ) {
-                        Text(
-                            text = "GitHub Dark",
-                            color = Color(0xFF8B949E),
-                            fontSize = 10.sp,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                        )
-                    }
-                }
-
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Copy code
-                    IconButton(
-                        onClick = {
-                            val codeToCopy = when (selectedTab) {
-                                0 -> htmlCode
-                                1 -> cssCode
-                                2 -> jsCode
-                                else -> "$htmlCode\n\n<style>\n$cssCode\n</style>\n\n<script>\n$jsCode\n</script>"
-                            }
-                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                            val clip = ClipData.newPlainText("code", codeToCopy)
-                            clipboard.setPrimaryClip(clip)
-                            Toast.makeText(context, context.getString(R.string.comp_code_copied_toast), Toast.LENGTH_SHORT).show()
-                        },
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ContentCopy,
-                            contentDescription = stringResource(R.string.comp_copy),
-                            tint = Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    // Run button
-                    Button(
-                        onClick = {
-                            try {
-                                executedHtml = htmlCode
-                                executedCss = cssCode
-                                executedJs = jsCode
-                                selectedTab = 3 // Switch to preview
-                                Toast.makeText(context, context.getString(R.string.playground_btn_run_code), Toast.LENGTH_SHORT).show()
-                            } catch (e: Exception) {
-                                Toast.makeText(context, "${e.localizedMessage}", Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = SuccessGreen
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+                        colors = ButtonDefaults.buttonColors(containerColor = SuccessGreen),
+                        shape = RoundedCornerShape(999.dp),
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
@@ -1120,224 +1122,556 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = stringResource(R.string.playground_btn_run_code),
+                            text = if (workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE) {
+                                stringResource(R.string.playground_js_run_btn)
+                            } else {
+                                stringResource(R.string.playground_btn_run_code)
+                            },
                             color = Color.White,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp
                         )
                     }
                 }
-            }
 
-            // Main Editor or Preview Container
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                when (selectedTab) {
-                    0 -> {
-                        // HTML Editor
-                        CodeEditorField(
-                            value = htmlCode,
-                            onValueChange = { htmlCode = it },
-                            language = "html"
+                if (workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE) {
+                    // ==========================================
+                    // JS CONSOLE MODE (EDITOR + TERMINAL ONLY, NO WEBVIEW PREVIEW)
+                    // ==========================================
+                    if (jsRunId > 0) {
+                        CodeSandboxWebView(
+                            html = "",
+                            css = "",
+                            js = executedJs,
+                            runId = jsRunId,
+                            onConsoleLog = { logMsg ->
+                                try {
+                                    if (jsConsoleLogs.size >= 150) jsConsoleLogs.removeAt(0)
+                                    jsConsoleLogs.add(logMsg)
+                                } catch (_: Throwable) {}
+                            },
+                            modifier = Modifier.size(0.dp)
                         )
                     }
-                    1 -> {
-                        // CSS Editor
-                        CodeEditorField(
-                            value = cssCode,
-                            onValueChange = { cssCode = it },
-                            language = "css"
-                        )
+
+                    // File Action Sub-Header for script.js
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color(0xFF161B22))
+                            .padding(horizontal = 14.dp, vertical = 7.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                text = "script.js",
+                                color = Color(0xFFFDE047),
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Surface(
+                                color = Color(0xFF21262D),
+                                shape = RoundedCornerShape(6.dp)
+                            ) {
+                                val jsLines = jsCode.lines().size
+                                Text(
+                                    text = "ES6 • ${stringResource(R.string.playground_lines_count_format, jsLines)}",
+                                    color = Color(0xFF8B949E),
+                                    fontSize = 10.sp,
+                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                )
+                            }
+                        }
+
+                        IconButton(
+                            onClick = {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                clipboard.setPrimaryClip(ClipData.newPlainText("js_code", jsCode))
+                                Toast.makeText(context, context.getString(R.string.comp_code_copied_toast), Toast.LENGTH_SHORT).show()
+                            },
+                            modifier = Modifier.size(30.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = stringResource(R.string.comp_copy),
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
                     }
-                    2 -> {
-                        // JS Editor
+
+                    // Top: Pure JavaScript Editor
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(0.56f)
+                    ) {
                         CodeEditorField(
                             value = jsCode,
                             onValueChange = { jsCode = it },
                             language = "js"
                         )
                     }
-                    3 -> {
-                        // Live Preview WebView
-                        CodeSandboxWebView(
-                            html = executedHtml,
-                            css = executedCss,
-                            js = executedJs,
-                            onConsoleLog = { logMsg ->
-                                try {
-                                    if (consoleLogs.size >= 100) {
-                                        consoleLogs.removeAt(0)
-                                    }
-                                    consoleLogs.add(logMsg)
-                                } catch (_: Throwable) {
-                                    // Ignore list modification race during clear/dispose
-                                }
-                            },
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
-            }
 
-            // Target Latihan Verification Checklist
-            if (verificationRules.isNotEmpty()) {
-                Surface(
-                    color = if (allRulesPassed) Color(0xFF0F2E1E) else Color(0xFF161B22),
-                    border = androidx.compose.foundation.BorderStroke(
-                        1.dp,
-                        if (allRulesPassed) SuccessGreen.copy(alpha = 0.5f) else CodeDarkBorder
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
+                    // Bottom: Dedicated Always-Open JS Terminal Console
+                    Surface(
+                        color = Color(0xFF161B22),
+                        border = BorderStroke(1.dp, CodeDarkBorder),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 14.dp, vertical = 8.dp)
+                            .weight(0.44f)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = if (allRulesPassed) Icons.Default.CheckCircle else Icons.Default.AssignmentTurnedIn,
-                                    contentDescription = null,
-                                    tint = if (allRulesPassed) SuccessGreen else CyanAccent,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(
-                                    text = if (allRulesPassed) stringResource(R.string.playground_verify_done_format, rulesPassedCount, verificationRules.size) else stringResource(R.string.playground_verify_target_format, rulesPassedCount, verificationRules.size),
-                                    color = if (allRulesPassed) SuccessGreen else Color.White,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
-                            if (allRulesPassed) {
-                                Surface(
-                                    color = SuccessGreen.copy(alpha = 0.2f),
-                                    shape = RoundedCornerShape(12.dp)
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.playground_verify_ready_badge),
-                                        color = SuccessGreen,
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                        Column(modifier = Modifier.fillMaxSize()) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Terminal,
+                                        contentDescription = stringResource(R.string.playground_js_console_title),
+                                        tint = Color(0xFFC7F938),
+                                        modifier = Modifier.size(16.dp)
                                     )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "${stringResource(R.string.playground_js_console_title)} (${jsConsoleLogs.size})",
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                if (jsConsoleLogs.isNotEmpty()) {
+                                    TextButton(
+                                        onClick = { jsConsoleLogs.clear() },
+                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.playground_output_clear),
+                                            color = Color(0xFF8B949E),
+                                            fontSize = 11.sp
+                                        )
+                                    }
+                                }
+                            }
+
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .background(Color(0xFF0D1117))
+                                    .padding(12.dp)
+                            ) {
+                                if (jsConsoleLogs.isEmpty()) {
+                                    Text(
+                                        text = stringResource(R.string.playground_js_empty_msg),
+                                        color = Color(0xFF8B949E),
+                                        fontSize = 11.5.sp,
+                                        fontFamily = FontFamily.Monospace,
+                                        lineHeight = 18.sp
+                                    )
+                                } else {
+                                    val jsLogListState = rememberLazyListState()
+                                    LaunchedEffect(jsConsoleLogs.size) {
+                                        jsLogListState.animateScrollToItem((jsConsoleLogs.size - 1).coerceAtLeast(0))
+                                    }
+                                    LazyColumn(
+                                        state = jsLogListState,
+                                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                                        modifier = Modifier.fillMaxSize()
+                                    ) {
+                                        items(jsConsoleLogs.size) { idx ->
+                                            val line = jsConsoleLogs[idx]
+                                            val logColor = when {
+                                                line.startsWith("[Error]") -> Color(0xFFFF7B72)
+                                                line.startsWith("[Warn]") -> AmberGold
+                                                else -> Color(0xFF7EE787)
+                                            }
+                                            Text(
+                                                text = "> $line",
+                                                color = logColor,
+                                                fontSize = 12.sp,
+                                                fontFamily = FontFamily.Monospace,
+                                                lineHeight = 18.sp
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        rulesPassedStatus.forEach { (rule, passed) ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(vertical = 2.dp)
-                            ) {
-                                Icon(
-                                    imageVector = if (passed) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
-                                    contentDescription = if (passed) stringResource(R.string.comp_completed_badge) else stringResource(R.string.comp_locked_badge),
-                                    tint = if (passed) SuccessGreen else Color(0xFF8B949E),
-                                    modifier = Modifier.size(14.dp)
-                                )
-                                Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = stringResource(R.string.playground_verify_contains_format, rule),
-                                    color = if (passed) Color(0xFFC9D1D9) else Color(0xFF8B949E),
-                                    fontSize = 11.sp,
-                                    fontFamily = FontFamily.Monospace
-                                )
-                            }
-                        }
                     }
-                }
-            }
-
-            // Console toggle and panel
-            Surface(
-                color = Color(0xFF161B22),
-                border = androidx.compose.foundation.BorderStroke(1.dp, CodeDarkBorder),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column {
+                } else {
+                    // ==========================================
+                    // WEB STUDIO MODE (CLEAN CODE vs WEB PREVIEW)
+                    // ==========================================
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { showConsole = !showConsole }
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                            .background(Color(0xFF161B22))
+                            .padding(horizontal = 12.dp, vertical = 7.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Terminal,
-                                contentDescription = stringResource(R.string.playground_output_console_title),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(16.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = stringResource(R.string.playground_console_header_format, consoleLogs.size),
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                            if (consoleLogs.isNotEmpty()) {
+                        // Code vs Preview Toggle
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Surface(
+                                onClick = { isWebPreviewVisible = false },
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (!isWebPreviewVisible) Color(0xFF26303D) else Color.Transparent,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (!isWebPreviewVisible) TealPrimary else Color.Transparent
+                                )
+                            ) {
                                 Text(
-                                    text = "Bersihkan",
-                                    color = Color(0xFF8B949E),
-                                    fontSize = 11.sp,
-                                    modifier = Modifier.clickable { consoleLogs.clear() }
+                                    text = stringResource(R.string.playground_tab_code),
+                                    color = if (!isWebPreviewVisible) Color.White else Color(0xFF8B949E),
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                                 )
                             }
-                            Text(
-                                text = if (showConsole) stringResource(R.string.playground_console_close) else stringResource(R.string.playground_console_open),
-                                color = Color(0xFF8B949E),
-                                fontSize = 11.sp
-                            )
+                            Surface(
+                                onClick = {
+                                    executedHtml = htmlCode
+                                    executedCss = cssCode
+                                    executedJs = jsCode
+                                    webRunId++
+                                    isWebPreviewVisible = true
+                                },
+                                shape = RoundedCornerShape(8.dp),
+                                color = if (isWebPreviewVisible) Color(0xFF26303D) else Color.Transparent,
+                                border = BorderStroke(
+                                    1.dp,
+                                    if (isWebPreviewVisible) TealPrimary else Color.Transparent
+                                )
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.playground_tab_preview),
+                                    color = if (isWebPreviewVisible) Color.White else Color(0xFF8B949E),
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                )
+                            }
+                        }
+
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (!isWebPreviewVisible) {
+                                val currentLines = when (selectedTab) {
+                                    0 -> htmlCode.lines().size
+                                    1 -> cssCode.lines().size
+                                    else -> jsCode.lines().size
+                                }
+                                Text(
+                                    text = stringResource(R.string.playground_lines_count_format, currentLines),
+                                    color = Color(0xFF8B949E),
+                                    fontSize = 10.5.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                            } else {
+                                Surface(
+                                    color = Color(0xFF0D1117),
+                                    shape = RoundedCornerShape(999.dp),
+                                    border = BorderStroke(1.dp, CodeDarkBorder)
+                                ) {
+                                    Text(
+                                        text = "sandbox://preview",
+                                        color = Color(0xFF7EE787),
+                                        fontFamily = FontFamily.Monospace,
+                                        fontSize = 10.sp,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(6.dp))
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    val codeToCopy = when {
+                                        isWebPreviewVisible -> "$htmlCode\n\n<style>\n$cssCode\n</style>\n\n<script>\n$jsCode\n</script>"
+                                        selectedTab == 0 -> htmlCode
+                                        selectedTab == 1 -> cssCode
+                                        else -> jsCode
+                                    }
+                                    val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                    clipboard.setPrimaryClip(ClipData.newPlainText("code", codeToCopy))
+                                    Toast.makeText(context, context.getString(R.string.comp_code_copied_toast), Toast.LENGTH_SHORT).show()
+                                },
+                                modifier = Modifier.size(30.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ContentCopy,
+                                    contentDescription = stringResource(R.string.comp_copy),
+                                    tint = Color.White,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
                         }
                     }
 
-                    AnimatedVisibility(visible = showConsole) {
-                        Column(
+                    // File Selector Pills (only shown in Code view, cleanly separated from Preview)
+                    if (!isWebPreviewVisible) {
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(120.dp)
                                 .background(Color(0xFF0D1117))
-                                .verticalScroll(rememberScrollState())
-                                .padding(12.dp)
+                                .padding(horizontal = 12.dp, vertical = 6.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            if (consoleLogs.isEmpty()) {
-                                Text(
-                                    text = stringResource(R.string.playground_console_empty_msg),
-                                    color = Color(0xFF8B949E),
-                                    fontSize = 11.sp,
-                                    fontFamily = FontFamily.Monospace
-                                )
-                            } else {
-                                consoleLogs.forEach { log ->
-                                    Text(
-                                        text = "> $log",
-                                        color = Color(0xFF7EE787),
-                                        fontSize = 11.sp,
-                                        fontFamily = FontFamily.Monospace
+                            val webFiles = listOf(
+                                Triple(0, "index.html", Color(0xFFFB923C)),
+                                Triple(1, "style.css", Color(0xFF38BDF8)),
+                                Triple(2, "script.js", Color(0xFFFDE047))
+                            )
+                            webFiles.forEach { (idx, fileName, dotColor) ->
+                                val isActive = selectedTab == idx
+                                Surface(
+                                    onClick = { selectedTab = idx },
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = if (isActive) Color(0xFF1F2937) else Color(0xFF161B22),
+                                    border = BorderStroke(
+                                        1.dp,
+                                        if (isActive) dotColor.copy(alpha = 0.7f) else CodeDarkBorder
                                     )
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .size(7.dp)
+                                                .clip(CircleShape)
+                                                .background(dotColor)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = fileName,
+                                            color = if (isActive) Color.White else Color(0xFF8B949E),
+                                            fontFamily = FontFamily.Monospace,
+                                            fontWeight = if (isActive) FontWeight.Bold else FontWeight.Medium,
+                                            fontSize = 11.5.sp
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Main Editor or Full Live Web Preview Container
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        if (isWebPreviewVisible) {
+                            CodeSandboxWebView(
+                                html = executedHtml,
+                                css = executedCss,
+                                js = executedJs,
+                                runId = webRunId,
+                                onConsoleLog = { logMsg ->
+                                    try {
+                                        if (consoleLogs.size >= 100) {
+                                            consoleLogs.removeAt(0)
+                                        }
+                                        consoleLogs.add(logMsg)
+                                    } catch (_: Throwable) {}
+                                },
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        } else {
+                            when (selectedTab) {
+                                0 -> CodeEditorField(
+                                    value = htmlCode,
+                                    onValueChange = { htmlCode = it },
+                                    language = "html"
+                                )
+                                1 -> CodeEditorField(
+                                    value = cssCode,
+                                    onValueChange = { cssCode = it },
+                                    language = "css"
+                                )
+                                else -> CodeEditorField(
+                                    value = jsCode,
+                                    onValueChange = { jsCode = it },
+                                    language = "js"
+                                )
+                            }
+                        }
+                    }
+
+                    // Target Latihan Verification Checklist
+                    if (verificationRules.isNotEmpty()) {
+                        Surface(
+                            color = if (allRulesPassed) Color(0xFF0F2E1E) else Color(0xFF161B22),
+                            border = BorderStroke(
+                                1.dp,
+                                if (allRulesPassed) SuccessGreen.copy(alpha = 0.5f) else CodeDarkBorder
+                            ),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 14.dp, vertical = 8.dp)
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(
+                                            imageVector = if (allRulesPassed) Icons.Default.CheckCircle else Icons.Default.AssignmentTurnedIn,
+                                            contentDescription = null,
+                                            tint = if (allRulesPassed) SuccessGreen else CyanAccent,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = if (allRulesPassed) stringResource(R.string.playground_verify_done_format, rulesPassedCount, verificationRules.size) else stringResource(R.string.playground_verify_target_format, rulesPassedCount, verificationRules.size),
+                                            color = if (allRulesPassed) SuccessGreen else Color.White,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    if (allRulesPassed) {
+                                        Surface(
+                                            color = SuccessGreen.copy(alpha = 0.2f),
+                                            shape = RoundedCornerShape(12.dp)
+                                        ) {
+                                            Text(
+                                                text = stringResource(R.string.playground_verify_ready_badge),
+                                                color = SuccessGreen,
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.height(4.dp))
+
+                                rulesPassedStatus.forEach { (rule, passed) ->
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(vertical = 2.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = if (passed) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
+                                            contentDescription = if (passed) stringResource(R.string.comp_completed_badge) else stringResource(R.string.comp_locked_badge),
+                                            tint = if (passed) SuccessGreen else Color(0xFF8B949E),
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = stringResource(R.string.playground_verify_contains_format, rule),
+                                            color = if (passed) Color(0xFFC9D1D9) else Color(0xFF8B949E),
+                                            fontSize = 11.sp,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Collapsible Console Drawer (for Web Studio logs)
+                    Surface(
+                        color = Color(0xFF161B22),
+                        border = BorderStroke(1.dp, CodeDarkBorder),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { showConsole = !showConsole }
+                                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        imageVector = Icons.Default.Terminal,
+                                        contentDescription = stringResource(R.string.playground_output_console_title),
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = stringResource(R.string.playground_console_header_format, consoleLogs.size),
+                                        color = Color.White,
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+
+                                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    if (consoleLogs.isNotEmpty()) {
+                                        Text(
+                                            text = stringResource(R.string.playground_output_clear),
+                                            color = Color(0xFF8B949E),
+                                            fontSize = 11.sp,
+                                            modifier = Modifier.clickable { consoleLogs.clear() }
+                                        )
+                                    }
+                                    Text(
+                                        text = if (showConsole) stringResource(R.string.playground_console_close) else stringResource(R.string.playground_console_open),
+                                        color = Color(0xFF8B949E),
+                                        fontSize = 11.sp
+                                    )
+                                }
+                            }
+
+                            AnimatedVisibility(visible = showConsole) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(120.dp)
+                                        .background(Color(0xFF0D1117))
+                                        .verticalScroll(rememberScrollState())
+                                        .padding(12.dp)
+                                ) {
+                                    if (consoleLogs.isEmpty()) {
+                                        Text(
+                                            text = stringResource(R.string.playground_console_empty_msg),
+                                            color = Color(0xFF8B949E),
+                                            fontSize = 11.sp,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    } else {
+                                        consoleLogs.forEach { log ->
+                                            val logColor = when {
+                                                log.startsWith("[Error]") -> Color(0xFFFF7B72)
+                                                log.startsWith("[Warn]") -> AmberGold
+                                                else -> Color(0xFF7EE787)
+                                            }
+                                            Text(
+                                                text = "> $log",
+                                                color = logColor,
+                                                fontSize = 11.sp,
+                                                fontFamily = FontFamily.Monospace
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-        }
         }
     }
 }

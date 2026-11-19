@@ -23,6 +23,12 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower())).data.get('accessRole', 'facilitator') == 'super_admin';
     }
 
+    function isNotBannedUser() {
+      return isSignedIn()
+        && (!exists(/databases/$(database)/documents/users/$(request.auth.uid))
+            || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isBanned', false) != true);
+    }
+
     function validSubmissionStatus(status) {
       return status in ['PENDING_REVIEW', 'REVISION_REQUESTED', 'APPROVED'];
     }
@@ -45,7 +51,7 @@ service cloud.firestore {
     match /project_submissions/{submissionId} {
       allow read: if isSignedIn();
 
-      allow create: if isSignedIn()
+      allow create: if isNotBannedUser()
         && request.resource.data.firebaseUid == request.auth.uid
         && (request.resource.data.accountId is int || request.resource.data.accountId is string)
         && request.resource.data.courseId is string
@@ -73,7 +79,7 @@ service cloud.firestore {
     match /forum_posts/{postId} {
       allow read: if isSignedIn();
 
-      allow create: if isSignedIn()
+      allow create: if isNotBannedUser()
         && request.resource.data.firebaseUid == request.auth.uid
         && request.resource.data.courseId is string
         && request.resource.data.content is string
@@ -120,13 +126,21 @@ service cloud.firestore {
       allow create, update, delete: if isFacilitator();
     }
 
-    // Leaderboard & Public User Profiles
+    // Leaderboard, Custom Public Profiles & Super Admin Ban Control
     match /users/{userId} {
       allow read: if isSignedIn();
-      allow write: if isFacilitator()
+      allow create: if isSuperAdmin()
         || (isSignedIn()
-            && (request.resource.data.firebaseUid == request.auth.uid
-                || userId == request.auth.uid));
+            && (request.resource.data.firebaseUid == request.auth.uid || userId == request.auth.uid)
+            && request.resource.data.get('isBanned', false) == false);
+      allow update: if isSuperAdmin()
+        || (isSignedIn()
+            && (request.resource.data.firebaseUid == request.auth.uid || userId == request.auth.uid)
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['isBanned', 'banReason', 'bannedAt', 'bannedBy']));
+      allow delete: if isSuperAdmin()
+        || (isSignedIn()
+            && (resource.data.get('firebaseUid', '') == request.auth.uid || userId == request.auth.uid)
+            && resource.data.get('isBanned', false) != true);
     }
   }
 }

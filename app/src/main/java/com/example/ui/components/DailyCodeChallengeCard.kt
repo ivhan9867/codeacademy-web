@@ -1,6 +1,10 @@
 package com.example.ui.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -19,8 +23,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.EmojiEvents
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -28,16 +36,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -342,6 +352,18 @@ fun DailyCodeChallengeCard(
 
     var selectedOption by remember { mutableIntStateOf(-1) }
     val isCorrectSelected = selectedOption == item.correctIndex
+    var isCollapsedToCelebration by remember(isCompletedToday) {
+        mutableStateOf(isCompletedToday && selectedOption == -1)
+    }
+    var showReviewExplanation by remember { mutableStateOf(false) }
+
+    // Auto-collapse smoothly into Celebration Card ~2.2s after answering correctly
+    LaunchedEffect(isCorrectSelected) {
+        if (isCorrectSelected) {
+            delay(2200L)
+            isCollapsedToCelebration = true
+        }
+    }
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -354,188 +376,319 @@ fun DailyCodeChallengeCard(
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(
-                    shape = RoundedCornerShape(999.dp),
-                    color = if (isCompletedToday) SuccessGreen.copy(alpha = 0.14f) else FlameOrange.copy(alpha = 0.14f)
-                ) {
-                    Row(
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = if (isCompletedToday) Icons.Default.CheckCircle else Icons.Default.Bolt,
-                            contentDescription = null,
-                            tint = if (isCompletedToday) SuccessGreen else FlameOrange,
-                            modifier = Modifier.size(14.dp)
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = if (isCompletedToday) {
-                                stringResource(R.string.daily_challenge_completed_badge)
-                            } else {
-                                stringResource(R.string.daily_challenge_badge)
-                            },
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isCompletedToday) SuccessGreen else FlameOrange
-                        )
-                    }
-                }
-
-                Surface(
-                    shape = RoundedCornerShape(8.dp),
-                    color = MaterialTheme.colorScheme.surfaceVariant
-                ) {
-                    Text(
-                        text = item.tag,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            if (isCompletedToday && selectedOption == -1) {
-                Text(
-                    text = stringResource(R.string.daily_challenge_done_msg),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            } else {
-                Text(
-                    text = if (isEnLike) item.questionEn else item.questionId,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Box(
+        AnimatedContent(
+            targetState = isCollapsedToCelebration,
+            transitionSpec = { fadeIn() togetherWith fadeOut() },
+            label = "dailyChallengeState"
+        ) { collapsed ->
+            if (collapsed) {
+                val explanationText = if (isEnLike) item.explanationEn else item.explanationId
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(CodeDarkBg)
-                        .padding(12.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    SuccessGreen.copy(alpha = 0.13f),
+                                    TealPrimary.copy(alpha = 0.08f),
+                                    AmberGold.copy(alpha = 0.08f)
+                                )
+                            )
+                        )
+                        .padding(16.dp)
                 ) {
-                    Text(
-                        text = item.codeSnippet,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp,
-                        lineHeight = 18.sp,
-                        color = Color(0xFFE2E8F0)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    item.options.forEachIndexed { idx, opt ->
-                        val isPicked = selectedOption == idx
-                        val isRight = idx == item.correctIndex
-                        val borderColor = when {
-                            isPicked && isRight -> SuccessGreen
-                            isPicked && !isRight -> ErrorRed
-                            else -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
-                        }
-                        val bgColor = when {
-                            isPicked && isRight -> SuccessGreen.copy(alpha = 0.12f)
-                            isPicked && !isRight -> ErrorRed.copy(alpha = 0.10f)
-                            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
-                        }
-
-                        val optionLabel = ('A' + idx).toString()
-                        Surface(
-                            shape = RoundedCornerShape(12.dp),
-                            color = bgColor,
-                            border = BorderStroke(1.dp, borderColor),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .heightIn(min = 48.dp)
-                                .clickable(enabled = !isCompletedToday && !isCorrectSelected) {
-                                    selectedOption = idx
-                                    if (idx == item.correctIndex && !isCompletedToday) {
-                                        onClaimReward()
-                                    }
-                                }
-                        ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        CodeAcademyMascot(
+                            size = 54.dp,
+                            mood = MascotMood.HAPPY,
+                            showWebBadges = false
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Surface(
-                                    shape = RoundedCornerShape(6.dp),
-                                    color = when {
-                                        isPicked && isRight -> SuccessGreen
-                                        isPicked && !isRight -> ErrorRed
-                                        else -> MaterialTheme.colorScheme.surfaceVariant
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = SuccessGreen.copy(alpha = 0.18f)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.EmojiEvents,
+                                            contentDescription = null,
+                                            tint = SuccessGreen,
+                                            modifier = Modifier.size(13.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Text(
+                                            text = stringResource(R.string.daily_challenge_celebrate_xp_badge),
+                                            fontSize = 10.5.sp,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = SuccessGreen
+                                        )
                                     }
+                                }
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f)
                                 ) {
                                     Text(
-                                        text = optionLabel,
-                                        fontSize = 11.sp,
+                                        text = item.tag,
+                                        fontSize = 10.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = if (isPicked) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
                                     )
                                 }
-                                Spacer(modifier = Modifier.width(10.dp))
+                            }
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = stringResource(R.string.daily_challenge_celebrate_title),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = stringResource(R.string.daily_challenge_done_msg),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.78f),
+                        border = BorderStroke(1.dp, SuccessGreen.copy(alpha = 0.28f)),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { showReviewExplanation = !showReviewExplanation }
+                    ) {
+                        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(
-                                    text = opt,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = if (isPicked) FontWeight.Bold else FontWeight.Medium,
-                                    color = MaterialTheme.colorScheme.onSurface,
-                                    modifier = Modifier.weight(1f)
+                                    text = if (showReviewExplanation) {
+                                        stringResource(R.string.daily_challenge_hide_review)
+                                    } else {
+                                        stringResource(R.string.daily_challenge_show_review)
+                                    },
+                                    fontSize = 11.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TealPrimary
                                 )
-                                if (isPicked) {
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Icon(
-                                        imageVector = if (isRight) Icons.Default.CheckCircle else androidx.compose.material.icons.Icons.Default.Cancel,
-                                        contentDescription = null,
-                                        tint = if (isRight) SuccessGreen else ErrorRed,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
+                                Icon(
+                                    imageVector = if (showReviewExplanation) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                                    contentDescription = null,
+                                    tint = TealPrimary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                            AnimatedVisibility(visible = showReviewExplanation) {
+                                Text(
+                                    text = formatInlineCode(
+                                        text = explanationText,
+                                        codeBg = MaterialTheme.colorScheme.surfaceVariant,
+                                        codeColor = MaterialTheme.colorScheme.primary
+                                    ),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(top = 6.dp)
+                                )
                             }
                         }
                     }
                 }
+            } else {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(
+                            shape = RoundedCornerShape(999.dp),
+                            color = if (isCompletedToday || isCorrectSelected) SuccessGreen.copy(alpha = 0.14f) else FlameOrange.copy(alpha = 0.14f)
+                        ) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = if (isCompletedToday || isCorrectSelected) Icons.Default.CheckCircle else Icons.Default.Bolt,
+                                    contentDescription = null,
+                                    tint = if (isCompletedToday || isCorrectSelected) SuccessGreen else FlameOrange,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = if (isCompletedToday || isCorrectSelected) {
+                                        stringResource(R.string.daily_challenge_completed_badge)
+                                    } else {
+                                        stringResource(R.string.daily_challenge_badge)
+                                    },
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isCompletedToday || isCorrectSelected) SuccessGreen else FlameOrange
+                                )
+                            }
+                        }
 
-                AnimatedVisibility(visible = selectedOption != -1) {
-                    val explanationText = if (isEnLike) item.explanationEn else item.explanationId
-                    Column(modifier = Modifier.padding(top = 10.dp)) {
+                        Surface(
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant
+                        ) {
+                            Text(
+                                text = item.tag,
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(
+                        text = if (isEnLike) item.questionEn else item.questionId,
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(CodeDarkBg)
+                            .padding(12.dp)
+                    ) {
                         Text(
-                            text = if (isCorrectSelected) {
-                                stringResource(R.string.daily_challenge_correct_msg)
-                            } else {
-                                stringResource(R.string.daily_challenge_wrong_msg)
-                            },
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = if (isCorrectSelected) SuccessGreen else FlameOrange
+                            text = item.codeSnippet,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 12.sp,
+                            lineHeight = 18.sp,
+                            color = Color(0xFFE2E8F0)
                         )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = formatInlineCode(
-                                text = explanationText,
-                                codeBg = MaterialTheme.colorScheme.surfaceVariant,
-                                codeColor = MaterialTheme.colorScheme.primary
-                            ),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        item.options.forEachIndexed { idx, opt ->
+                            val isPicked = selectedOption == idx
+                            val isRight = idx == item.correctIndex
+                            val borderColor = when {
+                                isPicked && isRight -> SuccessGreen
+                                isPicked && !isRight -> ErrorRed
+                                else -> MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)
+                            }
+                            val bgColor = when {
+                                isPicked && isRight -> SuccessGreen.copy(alpha = 0.12f)
+                                isPicked && !isRight -> ErrorRed.copy(alpha = 0.10f)
+                                else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.35f)
+                            }
+
+                            val optionLabel = ('A' + idx).toString()
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = bgColor,
+                                border = BorderStroke(1.dp, borderColor),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .heightIn(min = 48.dp)
+                                    .clickable(enabled = !isCompletedToday && !isCorrectSelected) {
+                                        selectedOption = idx
+                                        if (idx == item.correctIndex && !isCompletedToday) {
+                                            onClaimReward()
+                                        }
+                                    }
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 12.dp, vertical = 10.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Surface(
+                                        shape = RoundedCornerShape(6.dp),
+                                        color = when {
+                                            isPicked && isRight -> SuccessGreen
+                                            isPicked && !isRight -> ErrorRed
+                                            else -> MaterialTheme.colorScheme.surfaceVariant
+                                        }
+                                    ) {
+                                        Text(
+                                            text = optionLabel,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (isPicked) Color.White else MaterialTheme.colorScheme.onSurfaceVariant,
+                                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                    Text(
+                                        text = opt,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = if (isPicked) FontWeight.Bold else FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                    if (isPicked) {
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Icon(
+                                            imageVector = if (isRight) Icons.Default.CheckCircle else Icons.Default.Cancel,
+                                            contentDescription = null,
+                                            tint = if (isRight) SuccessGreen else ErrorRed,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    AnimatedVisibility(visible = selectedOption != -1) {
+                        val explanationText = if (isEnLike) item.explanationEn else item.explanationId
+                        Column(modifier = Modifier.padding(top = 10.dp)) {
+                            Text(
+                                text = if (isCorrectSelected) {
+                                    stringResource(R.string.daily_challenge_correct_msg)
+                                } else {
+                                    stringResource(R.string.daily_challenge_wrong_msg)
+                                },
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = if (isCorrectSelected) SuccessGreen else FlameOrange
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                            Text(
+                                text = formatInlineCode(
+                                    text = explanationText,
+                                    codeBg = MaterialTheme.colorScheme.surfaceVariant,
+                                    codeColor = MaterialTheme.colorScheme.primary
+                                ),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }

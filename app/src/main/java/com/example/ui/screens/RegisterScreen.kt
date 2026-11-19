@@ -110,6 +110,7 @@ import com.example.ui.theme.LightSurface
 import com.example.ui.theme.LightSurfaceVariant
 import com.example.ui.theme.LightTextPrimary
 import com.example.ui.theme.LightTextSecondary
+import com.example.ui.theme.TealPrimary
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

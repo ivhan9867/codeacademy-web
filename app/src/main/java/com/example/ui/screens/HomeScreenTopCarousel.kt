@@ -79,6 +79,7 @@ import com.example.ui.components.PulsingStreakFlameIcon
 import com.example.ui.theme.AmberGold
 import com.example.ui.theme.CyanAccent
 import com.example.ui.theme.CyanAccentText
+import com.example.ui.theme.CyanLight
 import com.example.ui.theme.FlameOrange
 import com.example.ui.theme.PurpleLevel
 import com.example.ui.theme.TealDark

@@ -61,6 +61,12 @@ fun ProfileScreen(
         bio = userProfile?.bio ?: "Belajar coding setiap hari untuk masa depan cerah!",
         totalXp = userProfile?.totalXp ?: 0,
         streak = userProfile?.currentStreak ?: 0,
+        bannerTheme = userProfile?.bannerTheme ?: "teal_ocean",
+        avatarStyle = userProfile?.avatarStyle ?: "initial",
+        avatarFrame = userProfile?.avatarFrame ?: "classic",
+        headlineTitle = userProfile?.headlineTitle ?: "WebDev Learner",
+        skillTags = com.example.ui.theme.ProfileCustomizationCatalog.parseSkillTags(userProfile?.skillTags),
+        featuredBadgeId = userProfile?.featuredBadgeId ?: "",
         isDark = isDark,
         currentLanguage = currentLanguage,
         certificates = certificates,
@@ -69,6 +75,18 @@ fun ProfileScreen(
         onToggleDarkMode = { viewModel.toggleDarkMode(it) },
         onSelectLanguage = { viewModel.setAppLanguage(it) },
         onUpdateProfile = { name, bio -> viewModel.updateProfile(name, bio) },
+        onUpdateProfileCustomization = { name, bio, bannerTheme, avatarStyle, avatarFrame, headlineTitle, skillTags, featuredBadgeId ->
+            viewModel.updateProfileCustomization(
+                name = name,
+                bio = bio,
+                bannerTheme = bannerTheme,
+                avatarStyle = avatarStyle,
+                avatarFrame = avatarFrame,
+                headlineTitle = headlineTitle,
+                skillTags = skillTags,
+                featuredBadgeId = featuredBadgeId
+            )
+        },
         onResetOnboarding = {
             viewModel.startReplayingOnboarding()
             onResetOnboarding()
@@ -94,6 +112,12 @@ fun ProfileScreen(
     bio: String,
     totalXp: Int,
     streak: Int,
+    bannerTheme: String = "teal_ocean",
+    avatarStyle: String = "initial",
+    avatarFrame: String = "classic",
+    headlineTitle: String = "WebDev Learner",
+    skillTags: List<String> = emptyList(),
+    featuredBadgeId: String = "",
     isDark: Boolean,
     currentLanguage: AppLanguage = AppLanguage.INDONESIAN,
     certificates: List<CertificateEntity>,
@@ -102,6 +126,7 @@ fun ProfileScreen(
     onToggleDarkMode: (Boolean) -> Unit,
     onSelectLanguage: (AppLanguage) -> Unit = {},
     onUpdateProfile: (String, String) -> Unit,
+    onUpdateProfileCustomization: ((String, String, String, String, String, String, List<String>, String) -> Unit)? = null,
     onResetOnboarding: () -> Unit,
     onLogout: () -> Unit,
     onDeleteAccount: () -> Unit = {},
@@ -133,7 +158,15 @@ fun ProfileScreen(
             initialName = name,
             initialBio = bio,
             onDismiss = { showEditDialog = false },
-            onSave = onUpdateProfile
+            onSave = onUpdateProfile,
+            initialBannerTheme = bannerTheme,
+            initialAvatarStyle = avatarStyle,
+            initialAvatarFrame = avatarFrame,
+            initialHeadlineTitle = headlineTitle,
+            initialSkillTags = skillTags,
+            initialFeaturedBadgeId = featuredBadgeId,
+            unlockedBadges = allBadges.filter { it.isUnlocked },
+            onSaveFull = onUpdateProfileCustomization
         )
     }
 
@@ -233,6 +266,12 @@ fun ProfileScreen(
                 totalXp = totalXp,
                 streak = streak,
                 certificateCount = certificates.size,
+                bannerTheme = bannerTheme,
+                avatarStyle = avatarStyle,
+                avatarFrame = avatarFrame,
+                headlineTitle = headlineTitle,
+                skillTags = skillTags,
+                featuredBadgeId = featuredBadgeId,
                 onEditClick = { showEditDialog = true }
             )
         }

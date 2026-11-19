@@ -25,7 +25,20 @@ data class PublicUserProfile(
     val totalXp: Int = 0,
     val currentStreak: Int = 0,
     val completedCoursesCount: Int = 0,
-    val unlockedBadgeIds: List<String> = emptyList()
+    val unlockedBadgeIds: List<String> = emptyList(),
+    val bannerTheme: String = "teal_ocean",
+    val avatarStyle: String = "initial",
+    val avatarFrame: String = "classic",
+    val headlineTitle: String = "WebDev Learner",
+    val skillTags: List<String> = emptyList(),
+    val featuredBadgeId: String = ""
+)
+
+data class AccountBanStatus(
+    val isBanned: Boolean = false,
+    val banReason: String = "",
+    val bannedAt: Long = 0L,
+    val bannedBy: String = ""
 )
 
 data class CloudAnnouncement(
@@ -284,7 +297,14 @@ class FirestoreForumAndLeaderboardService(
         bio: String = "",
         role: String = "Siswa",
         completedCoursesCount: Int = 0,
-        unlockedBadgeIds: List<String> = emptyList()
+        unlockedBadgeIds: List<String> = emptyList(),
+        email: String = "",
+        bannerTheme: String = "teal_ocean",
+        avatarStyle: String = "initial",
+        avatarFrame: String = "classic",
+        headlineTitle: String = "WebDev Learner",
+        skillTags: List<String> = emptyList(),
+        featuredBadgeId: String = ""
     ): Result<Unit> {
         val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
         return try {
@@ -301,12 +321,19 @@ class FirestoreForumAndLeaderboardService(
                 "currentStreak" to currentStreak,
                 "primaryTrack" to primaryTrack,
                 "role" to role,
+                "bio" to bio,
+                "completedCoursesCount" to completedCoursesCount,
+                "unlockedBadgeIds" to unlockedBadgeIds,
+                "bannerTheme" to bannerTheme.ifBlank { "teal_ocean" },
+                "avatarStyle" to avatarStyle.ifBlank { "initial" },
+                "avatarFrame" to avatarFrame.ifBlank { "classic" },
+                "headlineTitle" to headlineTitle.ifBlank { "WebDev Learner" },
+                "skillTags" to skillTags.take(3),
+                "featuredBadgeId" to featuredBadgeId,
                 "updatedAt" to System.currentTimeMillis()
             )
+            if (email.isNotBlank()) data["email"] = email.trim().lowercase()
             if (!firebaseUid.isNullOrBlank()) data["firebaseUid"] = firebaseUid
-            if (bio.isNotBlank()) data["bio"] = bio
-            if (completedCoursesCount > 0) data["completedCoursesCount"] = completedCoursesCount
-            if (unlockedBadgeIds.isNotEmpty()) data["unlockedBadgeIds"] = unlockedBadgeIds
             firestore.collection(USERS_COLLECTION)
                 .document(targetDocId)
                 .set(data, SetOptions.merge())
@@ -330,7 +357,13 @@ class FirestoreForumAndLeaderboardService(
                     totalXp = 9999,
                     currentStreak = 30,
                     completedCoursesCount = 4,
-                    unlockedBadgeIds = listOf("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10")
+                    unlockedBadgeIds = listOf("b1", "b2", "b3", "b4", "b5", "b6", "b7", "b8", "b9", "b10", "b11", "b12"),
+                    bannerTheme = "midnight_cyber",
+                    avatarStyle = "codi",
+                    avatarFrame = "gold_ring",
+                    headlineTitle = "Lead Web Mentor",
+                    skillTags = listOf("HTML5", "CSS Grid", "JavaScript"),
+                    featuredBadgeId = "b12"
                 )
             )
         }
@@ -343,6 +376,7 @@ class FirestoreForumAndLeaderboardService(
             }
             @Suppress("UNCHECKED_CAST")
             val badges = (doc.get("unlockedBadgeIds") as? List<*>)?.mapNotNull { it as? String }.orEmpty()
+            val tags = (doc.get("skillTags") as? List<*>)?.mapNotNull { (it as? String)?.trim() }?.filter { it.isNotBlank() }.orEmpty()
             Result.success(
                 PublicUserProfile(
                     userId = doc.getString("userId") ?: doc.id,
@@ -353,13 +387,79 @@ class FirestoreForumAndLeaderboardService(
                     totalXp = (doc.getLong("totalXp") ?: 0L).toInt(),
                     currentStreak = (doc.getLong("currentStreak") ?: 0L).toInt(),
                     completedCoursesCount = (doc.getLong("completedCoursesCount") ?: 0L).toInt(),
-                    unlockedBadgeIds = badges
+                    unlockedBadgeIds = badges,
+                    bannerTheme = doc.getString("bannerTheme") ?: "teal_ocean",
+                    avatarStyle = doc.getString("avatarStyle") ?: "initial",
+                    avatarFrame = doc.getString("avatarFrame") ?: "classic",
+                    headlineTitle = doc.getString("headlineTitle") ?: "WebDev Learner",
+                    skillTags = tags,
+                    featuredBadgeId = doc.getString("featuredBadgeId") ?: ""
                 )
             )
         } catch (e: Exception) {
             Log.w(TAG, "Error fetching public profile for $userId: ${e.message}")
             Result.failure(e)
         }
+    }
+
+    suspend fun checkAccountBanStatus(email: String? = null): AccountBanStatus {
+        val firestore = getFirestore() ?: return AccountBanStatus()
+        return try {
+            val uid = tryEnsureAnonymousOrCurrentUid()
+            if (!uid.isNullOrBlank()) {
+                val snap = firestore.collection(USERS_COLLECTION).document(uid).get().await()
+                if (snap.exists() && snap.getBoolean("isBanned") == true) {
+                    return AccountBanStatus(
+                        isBanned = true,
+                        banReason = snap.getString("banReason").orEmpty(),
+                        bannedAt = snap.getLong("bannedAt") ?: 0L,
+                        bannedBy = snap.getString("bannedBy").orEmpty()
+                    )
+                }
+            }
+            val cleanEmail = email?.trim()?.lowercase()?.takeIf { it.isNotBlank() }
+            if (cleanEmail != null) {
+                val querySnap = firestore.collection(USERS_COLLECTION)
+                    .whereEqualTo("email", cleanEmail)
+                    .limit(5)
+                    .get()
+                    .await()
+                val bannedDoc = querySnap.documents.firstOrNull { it.getBoolean("isBanned") == true }
+                if (bannedDoc != null) {
+                    return AccountBanStatus(
+                        isBanned = true,
+                        banReason = bannedDoc.getString("banReason").orEmpty(),
+                        bannedAt = bannedDoc.getLong("bannedAt") ?: 0L,
+                        bannedBy = bannedDoc.getString("bannedBy").orEmpty()
+                    )
+                }
+            }
+            AccountBanStatus(isBanned = false)
+        } catch (e: Exception) {
+            Log.w(TAG, "Unable to check ban status: ${e.message}")
+            AccountBanStatus(isBanned = false)
+        }
+    }
+
+    fun observeAccountBanStatus(
+        onStatusChanged: (AccountBanStatus) -> Unit
+    ): ListenerRegistration? {
+        val firestore = getFirestore() ?: return null
+        val uid = getCurrentFirebaseUid() ?: return null
+        return firestore.collection(USERS_COLLECTION)
+            .document(uid)
+            .addSnapshotListener { snap, error ->
+                if (error != null || snap == null || !snap.exists()) return@addSnapshotListener
+                val banned = snap.getBoolean("isBanned") == true
+                onStatusChanged(
+                    AccountBanStatus(
+                        isBanned = banned,
+                        banReason = if (banned) snap.getString("banReason").orEmpty() else "",
+                        bannedAt = if (banned) (snap.getLong("bannedAt") ?: 0L) else 0L,
+                        bannedBy = if (banned) snap.getString("bannedBy").orEmpty() else ""
+                    )
+                )
+            }
     }
 
     /**

@@ -23,7 +23,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ActiveSectionQuizSessionEntity::class,
         ProjectSubmissionEntity::class
     ],
-    version = 14,
+    version = 15,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -643,6 +643,17 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_14_15 = object : Migration(14, 15) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `bannerTheme` TEXT NOT NULL DEFAULT 'teal_ocean'")
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `avatarStyle` TEXT NOT NULL DEFAULT 'initial'")
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `avatarFrame` TEXT NOT NULL DEFAULT 'classic'")
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `headlineTitle` TEXT NOT NULL DEFAULT 'WebDev Learner'")
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `skillTags` TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE `user_profile` ADD COLUMN `featuredBadgeId` TEXT NOT NULL DEFAULT ''")
+            }
+        }
+
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -663,7 +674,8 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_10_11,
                         MIGRATION_11_12,
                         MIGRATION_12_13,
-                        MIGRATION_13_14
+                        MIGRATION_13_14,
+                        MIGRATION_14_15
                     )
                     .build()
                 INSTANCE = instance

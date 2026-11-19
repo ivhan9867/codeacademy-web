@@ -54,6 +54,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import com.example.ui.components.AppNavigationDrawer
 import com.example.ui.components.AppDialog
+import com.example.util.FirebaseAuthKeyResetHelper
 import com.example.util.SigningCertificateHelper
 import com.example.util.SigningFingerprintInfo
 import androidx.compose.runtime.Composable
@@ -86,6 +87,7 @@ import com.example.ui.InitialDestination
 import com.example.ui.MainViewModel
 import java.net.URLDecoder
 import java.net.URLEncoder
+import com.example.ui.screens.AccountBannedScreen
 import com.example.ui.screens.AiTutorScreen
 import com.example.ui.screens.AuthOnboardingScreen
 import com.example.ui.screens.BookmarksScreen
@@ -163,7 +165,7 @@ class MainActivity : ComponentActivity() {
                 LocalAppLanguage provides currentLanguage
             ) {
                 CodeAcademyTheme(darkTheme = isDark) {
-                    CodeAcademyApp(viewModel = viewModel)
+                    CodeAcademyApp(viewModel = viewModel, hostActivity = this@MainActivity)
                 }
             }
         }
@@ -180,10 +182,13 @@ private data class NavigationTab(
 @Composable
 fun CodeAcademyApp(
     viewModel: MainViewModel,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    hostActivity: Activity? = null
 ) {
     val coroutineScope = rememberCoroutineScope()
     val levelUpDialog by viewModel.levelUpDialogInfo.collectAsStateWithLifecycle()
+    val banStatus by viewModel.banStatus.collectAsStateWithLifecycle()
+    val currentUserProfile by viewModel.userProfile.collectAsStateWithLifecycle()
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -226,7 +231,7 @@ fun CodeAcademyApp(
 
     val tabRoutes = remember { setOf("home", "courses", "progress", "komunitas", "profile") }
     val tabOrder = remember { listOf("home", "courses", "progress", "komunitas", "profile") }
-    val authRoutes = remember { setOf("splash", "login", "register", "onboarding", "forgot_password") }
+    val authRoutes = remember { setOf("splash", "login", "register", "onboarding", "forgot_password", "banned") }
     val context = androidx.compose.ui.platform.LocalContext.current
     val tabSlideOffsetPx = remember(context) { (12 * context.resources.displayMetrics.density).toInt() }
 
@@ -333,6 +338,279 @@ fun CodeAcademyApp(
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
+        val resolvedActivity = hostActivity ?: (view.context as? Activity)
+        var isGoogleAuthLoading by remember { mutableStateOf(false) }
+        var googleCertDialogInfo by remember { mutableStateOf<Pair<String, SigningFingerprintInfo>?>(null) }
+
+        googleCertDialogInfo?.let { (errMsg, fpInfo) ->
+            AlertDialog(
+                onDismissRequest = { googleCertDialogInfo = null },
+                title = {
+                    Text(
+                        text = context.getString(com.example.R.string.google_auth_cert_dialog_title),
+                        fontWeight = FontWeight.Bold
+                    )
+                },
+                text = {
+                    androidx.compose.foundation.text.selection.SelectionContainer {
+                        Text(
+                            text = context.getString(
+                                com.example.R.string.google_auth_cert_dialog_body_format,
+                                errMsg,
+                                fpInfo.packageName,
+                                fpInfo.sha1Colon,
+                                fpInfo.sha256Colon
+                            ),
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                            )
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE)
+                                as? android.content.ClipboardManager
+                            val payload = "Package: ${fpInfo.packageName}\nSHA-1: ${fpInfo.sha1Colon}\nSHA-256: ${fpInfo.sha256Colon}"
+                            clipboard?.setPrimaryClip(android.content.ClipData.newPlainText("CodeAcademy SHA Fingerprints", payload))
+                            android.widget.Toast.makeText(
+                                context,
+                                context.getString(com.example.R.string.google_auth_cert_copied_toast),
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    ) {
+                        Text(context.getString(com.example.R.string.google_auth_cert_copy_btn))
+                    }
+                },
+                dismissButton = {
+                    androidx.compose.material3.TextButton(
+                        onClick = { googleCertDialogInfo = null }
+                    ) {
+                        Text(context.getString(com.example.R.string.google_auth_cert_close_btn))
+                    }
+                }
+            )
+        }
+
+        val extractGoogleEmail: (com.google.firebase.auth.AuthResult?) -> String? = { firebaseResult ->
+            val fbUser = firebaseResult?.user
+            val profileEmail = firebaseResult?.additionalUserInfo?.profile?.get("email") as? String
+            fbUser?.email?.takeIf { it.isNotBlank() }
+                ?: fbUser?.providerData?.firstNotNullOfOrNull { info -> info.email?.takeIf { it.isNotBlank() } }
+                ?: profileEmail?.takeIf { it.isNotBlank() }
+        }
+
+        val handleGoogleAuthResult: (Result<Boolean>) -> Unit = { authResult ->
+            if (authResult.isSuccess) {
+                val targetRoute = when {
+                    viewModel.banStatus.value.isBanned -> "banned"
+                    authResult.getOrDefault(false) -> "home"
+                    else -> "onboarding"
+                }
+                navController.navigate(targetRoute) {
+                    popUpTo(navController.graph.id) { inclusive = true }
+                }
+            } else {
+                android.widget.Toast.makeText(
+                    context,
+                    authResult.exceptionOrNull()?.message ?: context.getString(
+                        com.example.R.string.google_auth_failed_format,
+                        context.getString(com.example.R.string.google_auth_generic_error)
+                    ),
+                    android.widget.Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        // Recover any pending Firebase Google OAuth result if the Activity was recreated during sign-in
+        LaunchedEffect(Unit) {
+            val pendingTask = runCatching {
+                com.google.firebase.auth.FirebaseAuth.getInstance().pendingAuthResult
+            }.getOrNull()
+            if (pendingTask != null) {
+                isGoogleAuthLoading = true
+                try {
+                    val firebaseResult = pendingTask.await()
+                    val authResult = viewModel.completeGoogleLogin(
+                        email = extractGoogleEmail(firebaseResult),
+                        displayName = firebaseResult.user?.displayName
+                    )
+                    handleGoogleAuthResult(authResult)
+                } catch (e: kotlinx.coroutines.CancellationException) {
+                    throw e
+                } catch (e: Throwable) {
+                    android.util.Log.w("MainActivity", "Pending Google OAuth recovery failed", e)
+                } finally {
+                    isGoogleAuthLoading = false
+                }
+            }
+        }
+
+        val launchGoogleAuth: (String) -> Unit = { _ ->
+            if (!isGoogleAuthLoading) {
+                val activity = resolvedActivity
+                if (activity == null) {
+                    android.widget.Toast.makeText(
+                        context,
+                        context.getString(
+                            com.example.R.string.google_auth_failed_format,
+                            context.getString(com.example.R.string.google_auth_generic_error)
+                        ),
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                } else {
+                    isGoogleAuthLoading = true
+                    coroutineScope.launch {
+                        try {
+                            // Path 1: Native Play Services Credential Manager (bypasses GenericIdpActivity / AndroidKeyStore Tink keyset)
+                            val webClientIdRes = context.resources.getIdentifier(
+                                "default_web_client_id",
+                                "string",
+                                context.packageName
+                            )
+                            val webClientId = if (webClientIdRes != 0) {
+                                runCatching { context.getString(webClientIdRes) }.getOrNull().orEmpty()
+                            } else {
+                                ""
+                            }
+
+                            var userCancelledCredentialSheet = false
+                            if (webClientId.isNotBlank()) {
+                                val sheetOpenedAt = android.os.SystemClock.elapsedRealtime()
+                                try {
+                                    val googleIdOption = com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption.Builder(webClientId)
+                                        .build()
+                                    val credentialRequest = androidx.credentials.GetCredentialRequest.Builder()
+                                        .addCredentialOption(googleIdOption)
+                                        .build()
+                                    val credentialResponse = androidx.credentials.CredentialManager.create(activity)
+                                        .getCredential(activity, credentialRequest)
+                                    val cred = credentialResponse.credential
+                                    if (cred.type == com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                                        val googleCred = com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.createFrom(cred.data)
+                                        val authResult = viewModel.loginWithGoogle(
+                                            idToken = googleCred.idToken,
+                                            displayName = googleCred.displayName,
+                                            email = googleCred.id
+                                        )
+                                        handleGoogleAuthResult(authResult)
+                                        return@launch
+                                    }
+                                } catch (e: kotlinx.coroutines.CancellationException) {
+                                    throw e
+                                } catch (e: androidx.credentials.exceptions.GetCredentialCancellationException) {
+                                    val elapsedMs = android.os.SystemClock.elapsedRealtime() - sheetOpenedAt
+                                    if (elapsedMs >= 450L) {
+                                        userCancelledCredentialSheet = true
+                                    } else {
+                                        android.util.Log.w("MainActivity", "CredentialManager instant cancel (${elapsedMs}ms), falling back to OAuthProvider", e)
+                                    }
+                                } catch (e: Throwable) {
+                                    android.util.Log.w("MainActivity", "CredentialManager unavailable/failed, falling back to OAuthProvider: ${e.message}", e)
+                                }
+                            }
+
+                            if (userCancelledCredentialSheet) {
+                                android.widget.Toast.makeText(
+                                    context,
+                                    context.getString(com.example.R.string.google_auth_cancelled),
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                                return@launch
+                            }
+
+                            // Path 2: Firebase OAuthProvider fallback with self-healing Tink crypto keyset reset & 1 automatic retry
+                            val startOAuthFlow: suspend () -> com.google.firebase.auth.AuthResult = {
+                                val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com")
+                                    .setScopes(listOf("email", "profile"))
+                                    .addCustomParameter("prompt", "select_account")
+                                    .build()
+                                com.google.firebase.auth.FirebaseAuth.getInstance()
+                                    .startActivityForSignInWithProvider(activity, provider)
+                                    .await()
+                            }
+
+                            val firebaseResult = try {
+                                startOAuthFlow()
+                            } catch (e: Throwable) {
+                                if (FirebaseAuthKeyResetHelper.isKeystoreOrPublicKeyError(e.message)) {
+                                    android.util.Log.w("MainActivity", "Detected Firebase Tink/KeyStore public key error; clearing crypto prefs & retrying once", e)
+                                    FirebaseAuthKeyResetHelper.clearCorruptedAuthKeysets(activity)
+                                    startOAuthFlow()
+                                } else {
+                                    throw e
+                                }
+                            }
+
+                            val authResult = viewModel.completeGoogleLogin(
+                                email = extractGoogleEmail(firebaseResult),
+                                displayName = firebaseResult.user?.displayName
+                            )
+                            handleGoogleAuthResult(authResult)
+                        } catch (e: kotlinx.coroutines.CancellationException) {
+                            throw e
+                        } catch (e: com.google.firebase.auth.FirebaseAuthUserCollisionException) {
+                            android.util.Log.w("MainActivity", "Google auth collision", e)
+                            android.widget.Toast.makeText(
+                                context,
+                                context.getString(
+                                    com.example.R.string.google_auth_failed_format,
+                                    e.localizedMessage ?: "Akun sudah terdaftar dengan metode lain"
+                                ),
+                                android.widget.Toast.LENGTH_LONG
+                            ).show()
+                        } catch (e: Throwable) {
+                            val errMsg = e.message.orEmpty()
+                            val isCertHashError = errMsg.contains("certificate hash", ignoreCase = true) ||
+                                errMsg.contains("INVALID_CERT_HASH", ignoreCase = true) ||
+                                errMsg.contains("17499", ignoreCase = true) ||
+                                errMsg.contains("17028", ignoreCase = true) ||
+                                errMsg.contains("DEVELOPER_ERROR", ignoreCase = true)
+                            val isKeystoreError = FirebaseAuthKeyResetHelper.isKeystoreOrPublicKeyError(errMsg)
+                            val isUserCancelled = !isCertHashError && !isKeystoreError && (
+                                errMsg.contains("canceled by the user", ignoreCase = true) ||
+                                errMsg.contains("cancelled by the user", ignoreCase = true) ||
+                                errMsg.contains("WEB_CONTEXT_CANCELED", ignoreCase = true)
+                            )
+                            android.util.Log.w("MainActivity", "Google OAuth failed: ${e::class.simpleName} - $errMsg", e)
+                            if (isCertHashError) {
+                                googleCertDialogInfo = errMsg.ifBlank { "certificate_hash_error" } to
+                                    SigningCertificateHelper.getSigningFingerprints(activity)
+                            } else {
+                                val toastText = when {
+                                    isUserCancelled -> context.getString(com.example.R.string.google_auth_cancelled)
+                                    isKeystoreError -> context.getString(com.example.R.string.google_auth_keystore_recovery_hint)
+                                    else -> context.getString(
+                                        com.example.R.string.google_auth_failed_format,
+                                        errMsg.ifBlank {
+                                            context.getString(com.example.R.string.google_auth_generic_error)
+                                        }
+                                    )
+                                }
+                                android.widget.Toast.makeText(
+                                    context,
+                                    toastText,
+                                    android.widget.Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        } finally {
+                            isGoogleAuthLoading = false
+                        }
+                    }
+                }
+            }
+        }
+
+        LaunchedEffect(banStatus.isBanned, currentRoute) {
+            if (banStatus.isBanned && currentRoute != null && currentRoute !in setOf("splash", "login", "register", "forgot_password", "banned")) {
+                navController.navigate("banned") {
+                    popUpTo(navController.graph.id) { inclusive = true }
+                }
+            }
+        }
+
         NavHost(
             navController = navController,
             startDestination = "splash",
@@ -484,186 +762,47 @@ fun CodeAcademyApp(
                                     popUpTo("splash") { inclusive = true }
                                 }
                             }
-                        }
-                    }
-                )
-            }
-
-            var isGoogleAuthLoading by remember { mutableStateOf(false) }
-            var googleCertDialogInfo by remember { mutableStateOf<Pair<String, SigningFingerprintInfo>?>(null) }
-
-            googleCertDialogInfo?.let { (errMsg, fpInfo) ->
-                AlertDialog(
-                    onDismissRequest = { googleCertDialogInfo = null },
-                    title = {
-                        Text(
-                            text = this@MainActivity.getString(com.example.R.string.google_auth_cert_dialog_title),
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                    text = {
-                        androidx.compose.foundation.text.selection.SelectionContainer {
-                            Text(
-                                text = this@MainActivity.getString(
-                                    com.example.R.string.google_auth_cert_dialog_body_format,
-                                    errMsg,
-                                    fpInfo.packageName,
-                                    fpInfo.sha1Colon,
-                                    fpInfo.sha256Colon
-                                ),
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
-                                )
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        Button(
-                            onClick = {
-                                val clipboard = this@MainActivity.getSystemService(android.content.Context.CLIPBOARD_SERVICE)
-                                    as? android.content.ClipboardManager
-                                val payload = "Package: ${fpInfo.packageName}\nSHA-1: ${fpInfo.sha1Colon}\nSHA-256: ${fpInfo.sha256Colon}"
-                                clipboard?.setPrimaryClip(android.content.ClipData.newPlainText("CodeAcademy SHA Fingerprints", payload))
-                                android.widget.Toast.makeText(
-                                    this@MainActivity,
-                                    this@MainActivity.getString(com.example.R.string.google_auth_cert_copied_toast),
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        ) {
-                            Text(this@MainActivity.getString(com.example.R.string.google_auth_cert_copy_btn))
-                        }
-                    },
-                    dismissButton = {
-                        androidx.compose.material3.TextButton(
-                            onClick = { googleCertDialogInfo = null }
-                        ) {
-                            Text(this@MainActivity.getString(com.example.R.string.google_auth_cert_close_btn))
-                        }
-                    }
-                )
-            }
-
-            val extractGoogleEmail: (com.google.firebase.auth.AuthResult?) -> String? = { firebaseResult ->
-                val fbUser = firebaseResult?.user
-                val profileEmail = firebaseResult?.additionalUserInfo?.profile?.get("email") as? String
-                fbUser?.email?.takeIf { it.isNotBlank() }
-                    ?: fbUser?.providerData?.firstNotNullOfOrNull { info -> info.email?.takeIf { it.isNotBlank() } }
-                    ?: profileEmail?.takeIf { it.isNotBlank() }
-            }
-
-            val handleGoogleAuthResult: (Result<Boolean>) -> Unit = { authResult ->
-                if (authResult.isSuccess) {
-                    val isOnboarded = authResult.getOrDefault(false)
-                    val targetRoute = if (isOnboarded) "home" else "onboarding"
-                    navController.navigate(targetRoute) {
-                        popUpTo(navController.graph.id) { inclusive = true }
-                    }
-                } else {
-                    android.widget.Toast.makeText(
-                        this@MainActivity,
-                        authResult.exceptionOrNull()?.message ?: this@MainActivity.getString(
-                            com.example.R.string.google_auth_failed_format,
-                            this@MainActivity.getString(com.example.R.string.google_auth_generic_error)
-                        ),
-                        android.widget.Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-
-            // Recover any pending Firebase Google OAuth result if the Activity was recreated during sign-in
-            LaunchedEffect(Unit) {
-                val pendingTask = runCatching {
-                    com.google.firebase.auth.FirebaseAuth.getInstance().pendingAuthResult
-                }.getOrNull()
-                if (pendingTask != null) {
-                    isGoogleAuthLoading = true
-                    try {
-                        val firebaseResult = pendingTask.await()
-                        val authResult = viewModel.completeGoogleLogin(
-                            email = extractGoogleEmail(firebaseResult),
-                            displayName = firebaseResult.user?.displayName
-                        )
-                        handleGoogleAuthResult(authResult)
-                    } catch (e: kotlinx.coroutines.CancellationException) {
-                        throw e
-                    } catch (e: Throwable) {
-                        android.util.Log.w("MainActivity", "Pending Google OAuth recovery failed", e)
-                    } finally {
-                        isGoogleAuthLoading = false
-                    }
-                }
-            }
-
-            val launchGoogleAuth: (String) -> Unit = { _ ->
-                if (!isGoogleAuthLoading) {
-                    isGoogleAuthLoading = true
-                    coroutineScope.launch {
-                        try {
-                            val activity = this@MainActivity
-                            // Use Firebase OAuthProvider directly so Google sign-in & sign-up work reliably across any AI Studio / debug / release keystore SHA-1
-                            val provider = com.google.firebase.auth.OAuthProvider.newBuilder("google.com")
-                                .setScopes(listOf("email", "profile"))
-                                .addCustomParameter("prompt", "select_account")
-                                .build()
-                            val firebaseResult = com.google.firebase.auth.FirebaseAuth.getInstance()
-                                .startActivityForSignInWithProvider(activity, provider)
-                                .await()
-                            val authResult = viewModel.completeGoogleLogin(
-                                email = extractGoogleEmail(firebaseResult),
-                                displayName = firebaseResult.user?.displayName
-                            )
-                            handleGoogleAuthResult(authResult)
-                        } catch (e: kotlinx.coroutines.CancellationException) {
-                            throw e
-                        } catch (e: com.google.firebase.auth.FirebaseAuthUserCollisionException) {
-                            android.util.Log.w("MainActivity", "Google auth collision", e)
-                            android.widget.Toast.makeText(
-                                this@MainActivity,
-                                this@MainActivity.getString(
-                                    com.example.R.string.google_auth_failed_format,
-                                    e.localizedMessage ?: "Akun sudah terdaftar dengan metode lain"
-                                ),
-                                android.widget.Toast.LENGTH_LONG
-                            ).show()
-                        } catch (e: Throwable) {
-                            val errMsg = e.message.orEmpty()
-                            val isCertHashError = errMsg.contains("certificate hash", ignoreCase = true) ||
-                                errMsg.contains("INVALID_CERT_HASH", ignoreCase = true) ||
-                                errMsg.contains("17499", ignoreCase = true) ||
-                                errMsg.contains("17028", ignoreCase = true) ||
-                                errMsg.contains("DEVELOPER_ERROR", ignoreCase = true)
-                            val isUserCancelled = !isCertHashError && (
-                                errMsg.contains("canceled by the user", ignoreCase = true) ||
-                                errMsg.contains("cancelled by the user", ignoreCase = true) ||
-                                errMsg.contains("WEB_CONTEXT_CANCELED", ignoreCase = true)
-                            )
-                            android.util.Log.w("MainActivity", "Google OAuth failed: ${e::class.simpleName} - $errMsg", e)
-                            if (isCertHashError) {
-                                googleCertDialogInfo = errMsg.ifBlank { "certificate_hash_error" } to
-                                    SigningCertificateHelper.getSigningFingerprints(this@MainActivity)
-                            } else {
-                                val toastText = if (isUserCancelled) {
-                                    this@MainActivity.getString(com.example.R.string.google_auth_cancelled)
-                                } else {
-                                    this@MainActivity.getString(
-                                        com.example.R.string.google_auth_failed_format,
-                                        errMsg.ifBlank {
-                                            this@MainActivity.getString(com.example.R.string.google_auth_generic_error)
-                                        }
-                                    )
+                            InitialDestination.BANNED -> {
+                                navController.navigate("banned") {
+                                    popUpTo("splash") { inclusive = true }
                                 }
-                                android.widget.Toast.makeText(
-                                    this@MainActivity,
-                                    toastText,
-                                    android.widget.Toast.LENGTH_LONG
-                                ).show()
                             }
-                        } finally {
-                            isGoogleAuthLoading = false
                         }
                     }
-                }
+                )
+            }
+
+            // 1b. Account Suspended / Banned Screen
+            composable("banned") {
+                AccountBannedScreen(
+                    userEmail = currentUserProfile?.email.orEmpty(),
+                    userName = currentUserProfile?.name.orEmpty(),
+                    banStatus = banStatus,
+                    onRefreshStatus = {
+                        val dest = viewModel.refreshBanStatusAndResolveDestination()
+                        if (dest != InitialDestination.BANNED) {
+                            val target = when (dest) {
+                                InitialDestination.MAIN -> "home"
+                                InitialDestination.ONBOARDING -> "onboarding"
+                                else -> "login"
+                            }
+                            navController.navigate(target) {
+                                popUpTo(navController.graph.id) { inclusive = true }
+                            }
+                            false
+                        } else {
+                            true
+                        }
+                    },
+                    onLogout = {
+                        coroutineScope.launch {
+                            viewModel.logout()
+                            navController.navigate("login") {
+                                popUpTo(navController.graph.id) { inclusive = true }
+                            }
+                        }
+                    }
+                )
             }
 
             // 2. Login
@@ -672,15 +811,13 @@ fun CodeAcademyApp(
                     onLoginSubmit = { email, password ->
                         val result = viewModel.login(email, password)
                         if (result.isSuccess) {
-                            val isOnboarded = result.getOrDefault(false)
-                            if (isOnboarded) {
-                                navController.navigate("home") {
-                                    popUpTo("login") { inclusive = true }
-                                }
-                            } else {
-                                navController.navigate("onboarding") {
-                                    popUpTo("login") { inclusive = true }
-                                }
+                            val targetRoute = when {
+                                viewModel.banStatus.value.isBanned -> "banned"
+                                result.getOrDefault(false) -> "home"
+                                else -> "onboarding"
+                            }
+                            navController.navigate(targetRoute) {
+                                popUpTo("login") { inclusive = true }
                             }
                             Result.success(Unit)
                         } else {
@@ -784,8 +921,8 @@ fun CodeAcademyApp(
                     },
                     onAskAi = { topic ->
                         val encodedCourse = URLEncoder.encode("Front-End Web Development", "UTF-8")
-                        val encodedMod = URLEncoder.encode(topic, "UTF-8")
-                        navController.navigate("aiTutor/$encodedCourse/$encodedMod")
+                        val encodedMod = URLEncoder.encode(topic.ifBlank { "Tips Harian" }, "UTF-8")
+                        navController.navigate("aiTutor?courseTitle=$encodedCourse&moduleTitle=$encodedMod")
                     },
                     onTryInPlayground = { snippet, lang ->
                         val encodedCode = URLEncoder.encode(snippet, "UTF-8")

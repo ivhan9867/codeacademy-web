@@ -1166,6 +1166,46 @@ class CodeAcademyRepository(
         syncMyProfileToCloud()
     }
 
+    suspend fun updateProfileCustomization(
+        name: String,
+        bio: String,
+        bannerTheme: String,
+        avatarStyle: String,
+        avatarFrame: String,
+        headlineTitle: String,
+        skillTags: List<String>,
+        featuredBadgeId: String
+    ) = withContext(Dispatchers.IO) {
+        val accountId = getActiveAccountId()
+        val cleanName = com.example.util.NameUtils.sanitizeDisplayName(name)
+        val cleanHeadline = headlineTitle.trim().ifBlank { "WebDev Learner" }.take(32)
+        val cleanTags = skillTags.map { it.trim() }.filter { it.isNotBlank() }.distinct().take(3).joinToString(",")
+        userDao.updateProfileCustomization(
+            accountId = accountId,
+            name = cleanName,
+            bio = bio.trim(),
+            bannerTheme = bannerTheme.ifBlank { "teal_ocean" },
+            avatarStyle = avatarStyle.ifBlank { "initial" },
+            avatarFrame = avatarFrame.ifBlank { "classic" },
+            headlineTitle = cleanHeadline,
+            skillTags = cleanTags,
+            featuredBadgeId = featuredBadgeId.trim()
+        )
+        syncMyProfileToCloud()
+    }
+
+    suspend fun checkCurrentAccountBanStatus(emailOverride: String? = null): com.example.data.remote.AccountBanStatus =
+        withContext(Dispatchers.IO) {
+            val activeId = sessionManager.accountId.first()
+            val localEmail = emailOverride ?: activeId?.let { userDao.getUserProfileOnce(it)?.email }
+            firestoreService.checkAccountBanStatus(localEmail)
+        }
+
+    fun observeCurrentAccountBanStatus(
+        onStatusChanged: (com.example.data.remote.AccountBanStatus) -> Unit
+    ): com.google.firebase.firestore.ListenerRegistration? =
+        firestoreService.observeAccountBanStatus(onStatusChanged)
+
     suspend fun completeOnboarding(selectedTrackId: String) = withContext(Dispatchers.IO) {
         val accountId = getActiveAccountId()
         val tracksStr = if (selectedTrackId.isNotBlank()) selectedTrackId else "front-end"
@@ -1653,6 +1693,36 @@ class CodeAcademyRepository(
             val accountId = getActiveAccountId()
             val user = userDao.getUserProfileOnce(accountId) ?: return@withContext
             val cloudUserId = firestoreService.tryEnsureAnonymousOrCurrentUid() ?: accountId.toString()
+            val progressList = progressDao.getAllProgress(accountId).first()
+            val certs = certDao.getAllCertificates(accountId).first()
+            val bmarks = bookmarkDao.getAllBookmarks(accountId).first()
+            val totalCompleted = progressList.count { it.isCompleted }
+            val unlockedBadgeIds = CourseCatalog.allBadges.mapNotNull { badge ->
+                val unlocked = when (badge.id) {
+                    "b1" -> totalCompleted >= 1
+                    "b2" -> totalCompleted >= 3
+                    "b3" -> user.currentStreak >= 7
+                    "b4" -> user.currentStreak >= 30
+                    "b5" -> progressList.map { it.courseId }.distinct().size >= 2
+                    "b6" -> certs.any { it.scorePercent == 100 }
+                    "b7" -> user.dailyQuestCompleted && user.currentStreak >= 7
+                    "b8" -> user.level >= 10
+                    "b9" -> certs.size >= 3
+                    "b10" -> totalCompleted >= 3 && user.totalXp >= 60
+                    "b11" -> bmarks.isNotEmpty()
+                    "b12" -> setOf("fe-web-foundation-00", "fe-css-02", "fe-js-03").all { cid ->
+                        progressList.any { it.courseId == cid && it.isCompleted }
+                    }
+                    else -> false
+                }
+                if (unlocked) badge.id else null
+            }
+            val parsedSkills = user.skillTags
+                .split(",")
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
+                .distinct()
+                .take(3)
             firestoreService.syncUserXp(
                 userId = cloudUserId,
                 userName = com.example.util.NameUtils.sanitizeDisplayName(user.name),
@@ -1661,7 +1731,17 @@ class CodeAcademyRepository(
                 currentStreak = user.currentStreak,
                 xpThisWeek = user.totalXp,
                 xpThisMonth = user.totalXp,
-                primaryTrack = user.selectedTracks.split(",").firstOrNull()?.ifBlank { "front-end" } ?: "front-end"
+                primaryTrack = user.selectedTracks.split(",").firstOrNull()?.ifBlank { "front-end" } ?: "front-end",
+                bio = user.bio,
+                completedCoursesCount = certs.size,
+                unlockedBadgeIds = unlockedBadgeIds,
+                email = user.email,
+                bannerTheme = user.bannerTheme,
+                avatarStyle = user.avatarStyle,
+                avatarFrame = user.avatarFrame,
+                headlineTitle = user.headlineTitle,
+                skillTags = parsedSkills,
+                featuredBadgeId = user.featuredBadgeId
             )
         } catch (e: Exception) {
             android.util.Log.e("CodeAcademyRepo", "Gagal sinkronisasi XP ke Firestore", e)

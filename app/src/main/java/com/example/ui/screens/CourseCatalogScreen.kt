@@ -40,6 +40,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -87,9 +88,12 @@ import com.example.ui.theme.ChipOrientasiText
 import com.example.ui.theme.ChipPemulaBg
 import com.example.ui.theme.ChipPemulaText
 import com.example.ui.theme.CyanAccent
+import com.example.ui.theme.FlameOrange
 import com.example.ui.theme.SuccessGreen
 import com.example.ui.theme.TealDark
 import com.example.ui.theme.TealPrimary
+import com.example.ui.theme.adaptiveLevelChipColors
+import com.example.ui.theme.adaptiveNeutralChipColors
 
 @Composable
 fun CourseCatalogScreen(
@@ -105,8 +109,9 @@ fun CourseCatalogScreen(
     val progressList by viewModel.moduleProgressList.collectAsStateWithLifecycle()
     val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
     val filteredCourses by viewModel.filteredCourses.collectAsStateWithLifecycle()
-    val courses = remember { viewModel.getAllCourses() }
-    val tracks = remember { viewModel.getAllTracks() }
+    val liveCatalogCourses by viewModel.catalogCourses.collectAsStateWithLifecycle()
+    val courses = liveCatalogCourses.ifEmpty { viewModel.getAllCourses() }
+    val tracks = remember(courses) { viewModel.getAllTracks() }
     val context = androidx.compose.ui.platform.LocalContext.current
 
     CourseCatalogScreen(

@@ -55,7 +55,8 @@ import java.util.UUID
 enum class InitialDestination {
     LOGIN,
     ONBOARDING,
-    MAIN
+    MAIN,
+    BANNED
 }
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -67,6 +68,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private var _isReplayingOnboarding = false
     val isReplayingOnboarding: Boolean get() = _isReplayingOnboarding
+
+    private val _banStatus = kotlinx.coroutines.flow.MutableStateFlow(com.example.data.remote.AccountBanStatus())
+    val banStatus: StateFlow<com.example.data.remote.AccountBanStatus> = _banStatus
+
+    private var banListenerRegistration: com.google.firebase.firestore.ListenerRegistration? = null
+
+    fun startBanStatusMonitor() {
+        viewModelScope.launch {
+            val current = repo.checkCurrentAccountBanStatus()
+            _banStatus.value = current
+            banListenerRegistration?.remove()
+            banListenerRegistration = repo.observeCurrentAccountBanStatus { updated ->
+                _banStatus.value = updated
+            }
+        }
+    }
+
+    suspend fun refreshBanStatusAndResolveDestination(): InitialDestination {
+        val status = repo.checkCurrentAccountBanStatus()
+        _banStatus.value = status
+        if (status.isBanned) return InitialDestination.BANNED
+        return checkInitialDestination()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        banListenerRegistration?.remove()
+        banListenerRegistration = null
+    }
 
     // Data from Room
     val userProfile: StateFlow<UserProfileEntity?> = repo.userProfile.stateIn(
@@ -285,20 +315,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _selectedTabFilter = MutableStateFlow(0)
     val selectedTabFilter: StateFlow<Int> = _selectedTabFilter.asStateFlow()
 
-    // Static cached courses from repository to avoid repeatedly querying repo
-    private val allStaticCourses: List<Course> = repo.getAllCourses()
+    // Reactive catalog courses so module counts update immediately once asset courses finish loading
+    val catalogCourses: StateFlow<List<Course>> = com.example.data.CourseCatalog.coursesState
 
-    // Pre-filtered courses combined from keyword (debounced 250ms), level, category, tab, and progress
+    // Pre-filtered courses combined from live catalog, keyword (debounced 250ms), level, category, tab, and progress
     @OptIn(FlowPreview::class)
     val filteredCourses: StateFlow<List<Course>> = combine(
-        _searchKeyword.debounce(250L),
-        _selectedLevelFilter,
-        _selectedCategoryFilter,
-        _selectedTabFilter,
-        moduleProgressList
-    ) { query, level, category, tab, progressList ->
+        combine(
+            _searchKeyword.debounce(250L),
+            _selectedLevelFilter,
+            _selectedCategoryFilter,
+            _selectedTabFilter
+        ) { query, level, category, tab ->
+            listOf(query, level, category, tab)
+        },
+        moduleProgressList,
+        com.example.data.CourseCatalog.coursesState
+    ) { filterArgs, progressList, liveCourses ->
+        val query = filterArgs[0] as String
+        val level = filterArgs[1] as String
+        val category = filterArgs[2] as String?
+        val tab = filterArgs[3] as Int
+        val sourceCourses = liveCourses.ifEmpty { repo.getAllCourses() }
         val completedKeys = progressList.filter { it.isCompleted }.map { it.courseId to it.moduleId }.toSet()
-        allStaticCourses.filter { course ->
+        sourceCourses.filter { course ->
             val matchesQuery = query.isBlank() ||
                     course.title.contains(query, ignoreCase = true) ||
                     course.description.contains(query, ignoreCase = true)
@@ -323,7 +363,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = allStaticCourses
+        initialValue = repo.getAllCourses()
     )
 
     fun setSearchKeyword(keyword: String) {
@@ -450,8 +490,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 android.util.Log.w("MainViewModel", "Initial seeding skipped: ${e.message}")
             }
         }
+        val catalogJob = async(Dispatchers.IO) {
+            try {
+                if (!com.example.data.CourseCatalog.isAssetCoursesLoaded.value) {
+                    com.example.data.CourseCatalog.loadAssetCourses(context)
+                }
+            } catch (e: Exception) {
+                android.util.Log.w("MainViewModel", "Catalog preload skipped: ${e.message}")
+            }
+        }
         imageWarmJob.await()
         seedJob.await()
+        catalogJob.await()
 
         // Resolve destination while still under splash gate
         checkInitialDestination()
@@ -472,6 +522,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
         val activeId = repo.sessionManager.accountId.first()
         val profile = repo.getUserProfileOnce(activeId)
+        val status = repo.checkCurrentAccountBanStatus(profile?.email)
+        _banStatus.value = status
+        if (status.isBanned) {
+            return@withContext InitialDestination.BANNED
+        }
+        startBanStatusMonitor()
         val isOnboarded = profile?.isOnboarded ?: false
         if (isOnboarded) {
             InitialDestination.MAIN
@@ -501,6 +557,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val result = repo.loginLocalAccount(email, password)
         if (result.isSuccess) {
             val account = result.getOrNull()
+            val ban = repo.checkCurrentAccountBanStatus(account?.email ?: email)
+            _banStatus.value = ban
+            startBanStatusMonitor()
             val profile = repo.getUserProfileOnce(account?.id)
             val isOnboarded = profile?.isOnboarded ?: false
             Result.success(isOnboarded)
@@ -513,14 +572,31 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         idToken: String,
         displayName: String?,
         email: String?
-    ): Result<Boolean> = repo.loginWithGoogleIdToken(idToken, displayName, email)
+    ): Result<Boolean> {
+        val res = repo.loginWithGoogleIdToken(idToken, displayName, email)
+        if (res.isSuccess) {
+            _banStatus.value = repo.checkCurrentAccountBanStatus(email)
+            startBanStatusMonitor()
+        }
+        return res
+    }
 
     suspend fun completeGoogleLogin(
         email: String?,
         displayName: String?
-    ): Result<Boolean> = repo.completeGoogleLoginForFirebaseUser(email, displayName)
+    ): Result<Boolean> {
+        val res = repo.completeGoogleLoginForFirebaseUser(email, displayName)
+        if (res.isSuccess) {
+            _banStatus.value = repo.checkCurrentAccountBanStatus(email)
+            startBanStatusMonitor()
+        }
+        return res
+    }
 
     suspend fun logout() = withContext(Dispatchers.IO) {
+        banListenerRegistration?.remove()
+        banListenerRegistration = null
+        _banStatus.value = com.example.data.remote.AccountBanStatus()
         repo.logoutLocalAccount()
     }
 
@@ -752,7 +828,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 var codeContext = currentPlaygroundCode
                 var contentContext = moduleContent
-                val course = allStaticCourses.find { it.title.equals(courseTitle, ignoreCase = true) }
+                val course = catalogCourses.value.ifEmpty { repo.getAllCourses() }.find { it.title.equals(courseTitle, ignoreCase = true) }
                 if (contentContext.isNullOrBlank() && course != null) {
                     val mod = course.modules.find { it.title.equals(moduleTitle, ignoreCase = true) }
                     contentContext = mod?.content
@@ -816,6 +892,30 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun updateProfile(name: String, bio: String) {
         viewModelScope.launch {
             repo.updateProfile(name, bio)
+        }
+    }
+
+    fun updateProfileCustomization(
+        name: String,
+        bio: String,
+        bannerTheme: String,
+        avatarStyle: String,
+        avatarFrame: String,
+        headlineTitle: String,
+        skillTags: List<String>,
+        featuredBadgeId: String
+    ) {
+        viewModelScope.launch {
+            repo.updateProfileCustomization(
+                name = name,
+                bio = bio,
+                bannerTheme = bannerTheme,
+                avatarStyle = avatarStyle,
+                avatarFrame = avatarFrame,
+                headlineTitle = headlineTitle,
+                skillTags = skillTags,
+                featuredBadgeId = featuredBadgeId
+            )
         }
     }
 

@@ -2430,6 +2430,114 @@ tbody tr.row-priority-lime:hover {
 }
 
 /* =========================================
+   SUPER ADMIN USER BAN CONTROLS
+========================================= */
+.ban-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.ban-status-pill.active {
+  background: var(--approved-bg);
+  color: var(--approved);
+  border: 1px solid var(--approved-line);
+}
+
+.ban-status-pill.banned {
+  background: var(--revision-bg);
+  color: var(--revision);
+  border: 1px solid var(--revision-line);
+}
+
+.ban-reason-note {
+  font-size: 11.5px;
+  color: var(--revision);
+  margin-top: 4px;
+  max-width: 240px;
+  line-height: 1.4;
+}
+
+.persona-tag-mini {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #1E3A8A;
+  background: #EFF6FF;
+  border: 1px solid #DBEAFE;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 3px;
+}
+
+.btn-unban-user {
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--approved-line);
+  background: var(--approved-bg);
+  color: var(--approved);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-unban-user:hover {
+  background: #BBF7D0;
+}
+
+.btn-ban-solid {
+  padding: 9px 18px;
+  border-radius: 999px;
+  border: none;
+  background: var(--revision);
+  color: #FFFFFF;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-ban-solid:hover {
+  background: #9F1239;
+}
+
+.ban-target-box {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 11px 14px;
+}
+
+.ban-reason-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ban-chip-btn {
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ban-chip-btn:hover {
+  background: var(--revision-bg);
+  border-color: var(--revision-line);
+  color: var(--revision);
+}
+
+/* =========================================
    RESPONSIVE BREAKPOINTS
 ========================================= */
 @media (max-width: 1120px) {

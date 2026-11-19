@@ -11,17 +11,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.LocalFireDepartment
-import androidx.compose.material.icons.rounded.School
+import androidx.compose.material.icons.rounded.MenuBook
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -30,33 +30,32 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
+import com.example.data.CourseCatalog
 import com.example.data.remote.PublicUserProfile
 import com.example.ui.screens.badgeVectorIcon
 import com.example.ui.theme.AmberGold
+import com.example.ui.theme.CustomProfileAvatar
 import com.example.ui.theme.FlameOrange
+import com.example.ui.theme.ProfileCustomizationCatalog
 import com.example.ui.theme.TealPrimary
 
-private fun badgeTitleForId(id: String): String = when (id) {
-    "b1" -> "Langkah Pertama"
-    "b2" -> "Kode Pertamaku"
-    "b3" -> "Rajin 3 Hari"
-    "b4" -> "Penjelajah Track"
-    "b5" -> "Api Semangat 7"
-    "b6" -> "Aktif Diskusi"
-    "b7" -> "Skor Sempurna"
-    "b8" -> "Level 5"
-    "b9" -> "Kolektor 1000 XP"
-    "b10" -> "Master Web"
-    else -> "Pencapaian"
+@Composable
+private fun badgeTitleForId(id: String): String {
+    val base = CourseCatalog.allBadges.firstOrNull { it.id == id }
+    return com.example.util.localization.DataLabelMappings.badgeName(id, base?.name ?: "Pencapaian")
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -68,177 +67,265 @@ fun UserPublicProfileDialog(
 ) {
     val isMentor = profile.role.equals("Fasilitator", ignoreCase = true) ||
         profile.userId == "facilitator-mentor"
+    val bannerPreset = remember(profile.bannerTheme, isMentor) {
+        if (isMentor) ProfileCustomizationCatalog.bannerFor("midnight_cyber")
+        else ProfileCustomizationCatalog.bannerFor(profile.bannerTheme)
+    }
+    val featuredBadgeId = profile.featuredBadgeId.takeIf { id ->
+        id.isNotBlank() && (id in profile.unlockedBadgeIds || isMentor)
+    }.orEmpty()
 
     AppDialog(
         onDismissRequest = onDismiss,
-        modifier = Modifier.widthIn(max = 380.dp),
+        modifier = Modifier.widthIn(max = 390.dp),
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth()
             ) {
-            if (isLoading) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                    color = TealPrimary
-                )
-            }
-
-            // Avatar
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(64.dp)
-                    .clip(CircleShape)
-                    .background(if (isMentor) AmberGold else TealPrimary)
-            ) {
-                if (isMentor) {
-                    Icon(
-                        imageVector = Icons.Rounded.School,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.size(32.dp)
-                    )
-                } else {
-                    val initial = profile.name.firstOrNull()?.uppercaseChar()?.toString() ?: "S"
-                    Text(
-                        text = initial,
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
+                if (isLoading) {
+                    LinearProgressIndicator(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 10.dp),
+                        color = TealPrimary
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = profile.name,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Surface(
-                shape = RoundedCornerShape(999.dp),
-                color = if (isMentor) AmberGold.copy(alpha = 0.16f) else TealPrimary.copy(alpha = 0.12f)
-            ) {
-                Text(
-                    text = if (isMentor) "Fasilitator Resmi" else "Level ${profile.level} • Peserta",
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = if (isMentor) AmberGold else TealPrimary,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
-                )
-            }
-
-            if (profile.bio.isNotBlank()) {
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text = profile.bio,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center,
-                    lineHeight = 18.sp
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Stats Row
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                PublicStatTile(
-                    icon = Icons.Rounded.AutoAwesome,
-                    tint = AmberGold,
-                    value = "${profile.totalXp}",
-                    label = "Total XP",
-                    modifier = Modifier.weight(1f)
-                )
-                PublicStatTile(
-                    icon = Icons.Rounded.LocalFireDepartment,
-                    tint = FlameOrange,
-                    value = "${profile.currentStreak}h",
-                    label = "Streak",
-                    modifier = Modifier.weight(1f)
-                )
-                PublicStatTile(
-                    icon = Icons.Rounded.EmojiEvents,
-                    tint = TealPrimary,
-                    value = "${profile.unlockedBadgeIds.size}",
-                    label = "Lencana",
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Unlocked Achievements
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Pencapaian Terbuka",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-
-                if (profile.unlockedBadgeIds.isEmpty()) {
+                // Custom Gradient Showcase Banner
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(78.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(bannerPreset.toBrush())
+                        .padding(10.dp)
+                ) {
                     Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
-                        modifier = Modifier.fillMaxWidth()
+                        color = Color.Black.copy(alpha = 0.28f),
+                        shape = RoundedCornerShape(999.dp),
+                        modifier = Modifier.align(Alignment.TopEnd)
                     ) {
                         Text(
-                            text = "Belum ada lencana yang disinkronkan.",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(12.dp)
+                            text = if (isMentor) "Mentor Resmi" else profile.headlineTitle.ifBlank { "WebDev Learner" },
+                            fontSize = 10.5.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = bannerPreset.accentColor,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.padding(horizontal = 9.dp, vertical = 3.dp)
                         )
                     }
-                } else {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                        modifier = Modifier.fillMaxWidth()
+                }
+
+                // Overlapping Custom Avatar + Frame
+                Box(
+                    modifier = Modifier.offset(y = (-34).dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CustomProfileAvatar(
+                        name = profile.name,
+                        avatarStyle = profile.avatarStyle,
+                        avatarFrame = profile.avatarFrame,
+                        bannerTheme = profile.bannerTheme,
+                        isMentor = isMentor,
+                        size = 70.dp
+                    )
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .offset(y = (-24).dp)
+                ) {
+                    Text(
+                        text = profile.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Surface(
+                        shape = RoundedCornerShape(999.dp),
+                        color = if (isMentor) AmberGold.copy(alpha = 0.16f) else bannerPreset.startColor.copy(alpha = 0.14f)
                     ) {
-                        profile.unlockedBadgeIds.forEach { badgeId ->
-                            Surface(
-                                shape = RoundedCornerShape(10.dp),
-                                color = TealPrimary.copy(alpha = 0.1f),
-                                border = BorderStroke(1.dp, TealPrimary.copy(alpha = 0.25f))
+                        Text(
+                            text = if (isMentor) "Fasilitator Resmi" else "Level ${profile.level} • Peserta",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = if (isMentor) AmberGold else TealPrimary,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                        )
+                    }
+
+                    // Featured Badge Pin Showcase
+                    if (featuredBadgeId.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Surface(
+                            shape = RoundedCornerShape(10.dp),
+                            color = AmberGold.copy(alpha = 0.13f),
+                            border = BorderStroke(1.dp, AmberGold.copy(alpha = 0.38f))
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                             ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                                Icon(
+                                    imageVector = badgeVectorIcon(featuredBadgeId),
+                                    contentDescription = null,
+                                    tint = AmberGold,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Spacer(modifier = Modifier.width(5.dp))
+                                Text(
+                                    text = "${stringResource(R.string.public_profile_showcase_pin)}: ${badgeTitleForId(featuredBadgeId)}",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = AmberGold
+                                )
+                            }
+                        }
+                    }
+
+                    // Skill Focus Chips
+                    if (profile.skillTags.isNotEmpty()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp, Alignment.CenterHorizontally),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            profile.skillTags.take(3).forEach { tag ->
+                                Surface(
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.65f),
+                                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
                                 ) {
-                                    Icon(
-                                        imageVector = badgeVectorIcon(badgeId),
-                                        contentDescription = null,
-                                        tint = TealPrimary,
-                                        modifier = Modifier.size(14.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
                                     Text(
-                                        text = badgeTitleForId(badgeId),
+                                        text = tag,
                                         style = MaterialTheme.typography.labelSmall,
                                         fontWeight = FontWeight.SemiBold,
-                                        color = TealPrimary
+                                        color = MaterialTheme.colorScheme.onSurface,
+                                        modifier = Modifier.padding(horizontal = 9.dp, vertical = 3.dp)
                                     )
                                 }
                             }
                         }
                     }
-                }
-            }
 
+                    if (profile.bio.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = profile.bio,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 18.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // Stats Row (4 compact tiles)
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        PublicStatTile(
+                            icon = Icons.Rounded.AutoAwesome,
+                            tint = AmberGold,
+                            value = "${profile.totalXp}",
+                            label = "XP",
+                            modifier = Modifier.weight(1f)
+                        )
+                        PublicStatTile(
+                            icon = Icons.Rounded.LocalFireDepartment,
+                            tint = FlameOrange,
+                            value = "${profile.currentStreak}h",
+                            label = "Streak",
+                            modifier = Modifier.weight(1f)
+                        )
+                        PublicStatTile(
+                            icon = Icons.Rounded.MenuBook,
+                            tint = Color(0xFF2563EB),
+                            value = "${profile.completedCoursesCount}",
+                            label = stringResource(R.string.public_profile_stats_courses),
+                            modifier = Modifier.weight(1f)
+                        )
+                        PublicStatTile(
+                            icon = Icons.Rounded.EmojiEvents,
+                            tint = TealPrimary,
+                            value = "${profile.unlockedBadgeIds.size}",
+                            label = "Lencana",
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    // Unlocked Achievements
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Pencapaian Terbuka",
+                            style = MaterialTheme.typography.labelMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        if (profile.unlockedBadgeIds.isEmpty()) {
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = "Belum ada lencana yang disinkronkan.",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(12.dp)
+                                )
+                            }
+                        } else {
+                            FlowRow(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp),
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                profile.unlockedBadgeIds.forEach { badgeId ->
+                                    Surface(
+                                        shape = RoundedCornerShape(10.dp),
+                                        color = TealPrimary.copy(alpha = 0.1f),
+                                        border = BorderStroke(1.dp, TealPrimary.copy(alpha = 0.25f))
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 5.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = badgeVectorIcon(badgeId),
+                                                contentDescription = null,
+                                                tint = TealPrimary,
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(4.dp))
+                                            Text(
+                                                text = badgeTitleForId(badgeId),
+                                                style = MaterialTheme.typography.labelSmall,
+                                                fontWeight = FontWeight.SemiBold,
+                                                color = TealPrimary
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         confirmButton = {
@@ -264,29 +351,33 @@ private fun PublicStatTile(
 ) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.45f),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.48f),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f)),
         modifier = modifier
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(vertical = 10.dp, horizontal = 6.dp)
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 4.dp)
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = null,
                 tint = tint,
-                modifier = Modifier.size(18.dp)
+                modifier = Modifier.size(16.dp)
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(3.dp))
             Text(
                 text = value,
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.ExtraBold,
+                maxLines = 1
             )
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 10.sp,
+                maxLines = 1
             )
         }
     }

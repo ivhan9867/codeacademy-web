@@ -35,7 +35,13 @@ data class UserProfileEntity(
     val goal: String = "Persiapan Karier",
     val isDarkMode: Boolean = true,
     val isOnboarded: Boolean = false,
-    val seenCoachMarks: String = ""
+    val seenCoachMarks: String = "",
+    val bannerTheme: String = "teal_ocean",
+    val avatarStyle: String = "initial",
+    val avatarFrame: String = "classic",
+    val headlineTitle: String = "WebDev Learner",
+    val skillTags: String = "",
+    val featuredBadgeId: String = ""
 ) {
     val id: Long get() = accountId
 }

@@ -57,6 +57,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -103,6 +104,7 @@ import com.example.ui.viewmodel.SocialViewModel
 import com.example.ui.components.CoachMarkBubble
 import com.example.ui.theme.AmberGold
 import com.example.ui.theme.CyanAccent
+import com.example.ui.theme.SuccessGreen
 import com.example.ui.theme.TealDark
 import com.example.ui.theme.TealLight
 import com.example.ui.theme.TealPrimary
@@ -913,9 +915,8 @@ fun ForumPostCard(
                 Column(modifier = Modifier.weight(1f)) {
                     @OptIn(ExperimentalLayoutApi::class)
                     FlowRow(
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        itemVerticalAlignment = Alignment.CenterVertically
+                        verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         Text(
                             text = post.authorName,
@@ -1218,9 +1219,8 @@ private fun ForumReplyItem(
                     Column(modifier = Modifier.weight(1f)) {
                         @OptIn(ExperimentalLayoutApi::class)
                         FlowRow(
-                            verticalArrangement = Arrangement.spacedBy(4.dp),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            itemVerticalAlignment = Alignment.CenterVertically
+                            verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
+                            horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Text(
                                 text = reply.authorName,

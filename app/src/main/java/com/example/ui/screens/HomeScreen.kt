@@ -120,8 +120,9 @@ fun HomeScreen(
 ) {
     val userProfile by viewModel.userProfile.collectAsStateWithLifecycle()
     val progressList by viewModel.moduleProgressList.collectAsStateWithLifecycle()
-    val tracks = remember { viewModel.getAllTracks() }
-    val courses = remember { viewModel.getAllCourses() }
+    val liveCatalogCourses by viewModel.catalogCourses.collectAsStateWithLifecycle()
+    val courses = liveCatalogCourses.ifEmpty { viewModel.getAllCourses() }
+    val tracks = remember(courses) { viewModel.getAllTracks() }
 
     if (userProfile == null) {
         HomeScreenSkeleton(modifier = modifier)

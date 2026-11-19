@@ -1049,9 +1049,10 @@ fun CodeSandboxWebView(
     css: String,
     js: String,
     onConsoleLog: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    runId: Int = 0
 ) {
-    val fullHtmlDoc = remember(html, css, js) {
+    val fullHtmlDoc = remember(html, css, js, runId) {
         """
         <!DOCTYPE html>
         <html>
@@ -1062,11 +1063,35 @@ fun CodeSandboxWebView(
             ${css.ifBlank { "/* Empty CSS */" }}
           </style>
           <script>
-            // Intercept console.log to communicate back
-            const _origLog = console.log;
-            console.log = function(...args) {
-              _origLog.apply(console, args);
-            };
+            (function() {
+              function fmt(val) {
+                if (val === undefined) return 'undefined';
+                if (val === null) return 'null';
+                if (typeof val === 'object') {
+                  try { return JSON.stringify(val); } catch(e) { return String(val); }
+                }
+                return String(val);
+              }
+              var _origLog = console.log;
+              var _origWarn = console.warn;
+              var _origErr = console.error;
+              console.log = function() {
+                var args = Array.prototype.slice.call(arguments).map(fmt).join(' ');
+                _origLog.call(console, args);
+              };
+              console.warn = function() {
+                var args = Array.prototype.slice.call(arguments).map(fmt).join(' ');
+                _origLog.call(console, '[Warn] ' + args);
+              };
+              console.error = function() {
+                var args = Array.prototype.slice.call(arguments).map(fmt).join(' ');
+                _origLog.call(console, '[Error] ' + args);
+              };
+              window.onerror = function(msg, src, line) {
+                _origLog.call(console, '[Error] ' + msg + (line ? ' (baris ' + line + ')' : ''));
+                return true;
+              };
+            })();
           </script>
         </head>
         <body>
@@ -1075,7 +1100,7 @@ fun CodeSandboxWebView(
             try {
               $js
             } catch(e) {
-              console.log("Error: " + e.message);
+              console.error(e && e.message ? e.message : String(e));
             }
           </script>
         </body>
@@ -1084,6 +1109,8 @@ fun CodeSandboxWebView(
     }
 
     val mainHandler = remember { android.os.Handler(android.os.Looper.getMainLooper()) }
+    val currentOnConsoleLog by androidx.compose.runtime.rememberUpdatedState(onConsoleLog)
+    val loadKey = "$runId:${fullHtmlDoc.hashCode()}"
 
     AndroidView(
         factory = { ctx ->
@@ -1109,7 +1136,7 @@ fun CodeSandboxWebView(
                             if (!msg.isNullOrBlank()) {
                                 mainHandler.post {
                                     try {
-                                        onConsoleLog(msg)
+                                        currentOnConsoleLog(msg)
                                     } catch (_: Throwable) {
                                         // Ignore UI update error if screen is disposed
                                     }
@@ -1124,19 +1151,24 @@ fun CodeSandboxWebView(
             }
         },
         update = { webView ->
-            try {
-                webView.loadDataWithBaseURL("https://localhost/", fullHtmlDoc, "text/html", "UTF-8", null)
-            } catch (_: Throwable) {
-                // Fallback for WebView load error
+            if (webView.tag != loadKey) {
+                webView.tag = loadKey
+                try {
+                    webView.loadDataWithBaseURL("https://localhost/", fullHtmlDoc, "text/html", "UTF-8", null)
+                } catch (_: Throwable) {
+                    // Fallback for WebView load error
+                }
             }
         },
         onReset = { webView ->
             try {
+                webView.tag = null
                 webView.stopLoading()
             } catch (_: Throwable) {}
         },
         onRelease = { webView ->
             try {
+                webView.tag = null
                 webView.stopLoading()
                 webView.webChromeClient = null
                 webView.destroy()

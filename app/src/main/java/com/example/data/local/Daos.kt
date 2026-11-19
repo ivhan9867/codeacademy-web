@@ -30,6 +30,32 @@ interface UserDao {
     @Query("UPDATE user_profile SET name = :name, bio = :bio WHERE accountId = :accountId")
     suspend fun updateProfileInfo(accountId: Long, name: String, bio: String)
 
+    @Query(
+        """
+        UPDATE user_profile
+        SET name = :name,
+            bio = :bio,
+            bannerTheme = :bannerTheme,
+            avatarStyle = :avatarStyle,
+            avatarFrame = :avatarFrame,
+            headlineTitle = :headlineTitle,
+            skillTags = :skillTags,
+            featuredBadgeId = :featuredBadgeId
+        WHERE accountId = :accountId
+        """
+    )
+    suspend fun updateProfileCustomization(
+        accountId: Long,
+        name: String,
+        bio: String,
+        bannerTheme: String,
+        avatarStyle: String,
+        avatarFrame: String,
+        headlineTitle: String,
+        skillTags: String,
+        featuredBadgeId: String
+    )
+
     @Query("UPDATE user_profile SET dailyQuestProgress = :progress, dailyQuestCompleted = :completed WHERE accountId = :accountId")
     suspend fun updateDailyQuest(accountId: Long, progress: Int, completed: Boolean)
 

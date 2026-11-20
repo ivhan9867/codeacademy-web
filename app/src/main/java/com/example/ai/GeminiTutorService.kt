@@ -61,17 +61,29 @@ class GeminiTutorService {
             language: String = "id"
         ): String {
             val langName = resolveLanguageName(language)
+            val isIndonesian = langName == "Bahasa Indonesia"
+
             val contextAdditions = buildString {
                 if (!moduleContent.isNullOrBlank()) {
-                    append("\nKonten modul yang sedang dibaca murid:\n\"\"\"\n${moduleContent.take(1500)}\n\"\"\"\n")
+                    if (isIndonesian) {
+                        append("\nKonten modul yang sedang dibaca murid:\n\"\"\"\n${moduleContent.take(1500)}\n\"\"\"\n")
+                    } else {
+                        append("\nModule content currently being read by the student:\n\"\"\"\n${moduleContent.take(1500)}\n\"\"\"\n")
+                    }
                 }
                 if (!currentPlaygroundCode.isNullOrBlank()) {
-                    append("\nKode yang sedang ditulis murid di Playground saat ini:\n\"\"\"\n${currentPlaygroundCode.take(1500)}\n\"\"\"\n")
-                    append("\nInstruksi khusus: Berikan hint atau petunjuk terarah berdasarkan kode murid saat ini jika relevan dengan pertanyaannya (jangan langsung berikan kode jadi utuh, melainkan arahkan siswa untuk menemukan dan memperbaiki letak kekeliruannya sendiri, misalnya: 'coba periksa tag penutup atau atribut pada baris...').\n")
+                    if (isIndonesian) {
+                        append("\nKode yang sedang ditulis murid di Playground saat ini:\n\"\"\"\n${currentPlaygroundCode.take(1500)}\n\"\"\"\n")
+                        append("\nInstruksi khusus: Berikan hint atau petunjuk terarah berdasarkan kode murid saat ini jika relevan dengan pertanyaannya (jangan langsung berikan kode jadi utuh, melainkan arahkan siswa untuk menemukan dan memperbaiki letak kekeliruannya sendiri, misalnya: 'coba periksa tag penutup atau atribut pada baris...').\n")
+                    } else {
+                        append("\nCode currently written by the student in the Playground:\n\"\"\"\n${currentPlaygroundCode.take(1500)}\n\"\"\"\n")
+                        append("\nSpecial instruction: Provide targeted hints or guidance based on the student's current code when relevant to their question (do not give away the complete solution directly; instead guide the student to find and fix the mistake themselves, e.g., 'try checking the closing tag or attribute on line...').\n")
+                    }
                 }
             }
 
-            return """
+            return if (isIndonesian) {
+                """
 Anda adalah AI Tutor resmi untuk CodeAcademy Indonesia, platform pembelajaran web development mobile-first.
 Tugas Anda:
 1. Menjawab pertanyaan seputar pemrograman Web Development (HTML, CSS, dan JavaScript) dalam $langName yang ramah, jelas, edukatif, dan mudah dipahami siswa.
@@ -80,7 +92,19 @@ Tugas Anda:
 4. Berikan contoh kode ringkas bila relevan menggunakan Markdown code block (misal ```html atau ```javascript).
 5. Hindari topik di luar pemrograman. Berikan semangat belajar dan tips praktis.
 6. Jika pengguna hanya menyapa (misalnya "hai", "halo", "hi", "pagi", atau sapaan singkat tanpa pertanyaan teknis), balas dengan hangat dan singkat dalam 1-2 kalimat saja tanpa blok kode panjang.
-            """.trimIndent()
+                """.trimIndent()
+            } else {
+                """
+You are the official AI Tutor for CodeAcademy, a mobile-first web development learning platform.
+Your responsibilities:
+1. Answer Web Development programming questions (HTML, CSS, and JavaScript) in friendly, clear, educational, and easy-to-understand $langName.
+2. Current student learning context: Course "$courseTitle", Module "$moduleTitle".$contextAdditions
+3. Provide guided hints rather than giving away the full final code, so the student learns to solve problems independently.
+4. Include concise code examples when relevant using Markdown code blocks (e.g., ```html or ```javascript).
+5. Stay focused on programming topics. Offer encouragement and practical tips.
+6. If the user only greets you (e.g., "hi", "hello", "hey", or a short greeting without a technical question), reply warmly and briefly in 1-2 sentences without a long code block.
+                """.trimIndent()
+            }
         }
     }
 

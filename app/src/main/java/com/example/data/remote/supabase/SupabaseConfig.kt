@@ -2,23 +2,26 @@ package com.example.data.remote.supabase
 
 import com.example.BuildConfig
 
+/**
+ * Supabase configuration for optional Social/Realtime & Edge Function (`ai-tutor`).
+ * Note: Primary Forum, Leaderboard, Certificates, and Ban Monitor use Firebase Firestore
+ * (`FirestoreForumAndLeaderboardService`). Credentials must be supplied via `.env` / BuildConfig.
+ */
 object SupabaseConfig {
-    // Default Supabase project URL and anon key.
-    // Can be configured in .env / BuildConfig (SUPABASE_URL and SUPABASE_ANON_KEY)
     val SUPABASE_URL: String = try {
         val field = BuildConfig::class.java.getField("SUPABASE_URL")
         val value = field.get(null) as? String
-        if (!value.isNullOrBlank()) value else "https://xgplr3t3rs6g3l2blp5n.supabase.co"
+        if (!value.isNullOrBlank()) value else ""
     } catch (e: Exception) {
-        "https://xgplr3t3rs6g3l2blp5n.supabase.co"
+        ""
     }
 
     val SUPABASE_ANON_KEY: String = try {
         val field = BuildConfig::class.java.getField("SUPABASE_ANON_KEY")
         val value = field.get(null) as? String
-        if (!value.isNullOrBlank()) value else "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhncGxyM3QzcnM2ZzNsMmJscDVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI2NzIwMDAsImV4cCI6MjA1ODI0ODAwMH0.dummyAnonKey"
+        if (!value.isNullOrBlank()) value else ""
     } catch (e: Exception) {
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhncGxyM3QzcnM2ZzNsMmJscDVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI2NzIwMDAsImV4cCI6MjA1ODI0ODAwMH0.dummyAnonKey"
+        ""
     }
 
     val AI_TUTOR_FUNCTION_URL: String = "$SUPABASE_URL/functions/v1/ai-tutor"

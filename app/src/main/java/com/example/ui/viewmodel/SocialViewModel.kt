@@ -271,18 +271,39 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
     fun openPublicProfile(
         userId: String,
         fallbackName: String = "Siswa",
-        fallbackLevel: Int = 1
+        fallbackLevel: Int = 1,
+        fallbackAccessRole: String = "",
+        fallbackIsMentor: Boolean = false
     ) {
+        val initialRole = when {
+            fallbackAccessRole.equals("super_admin", ignoreCase = true) -> "Super Admin"
+            fallbackIsMentor || userId == "facilitator-mentor" -> "Fasilitator"
+            else -> "Siswa"
+        }
         _selectedPublicProfile.value = com.example.data.remote.PublicUserProfile(
             userId = userId,
             name = fallbackName,
-            role = if (userId == "facilitator-mentor") "Fasilitator" else "Siswa",
+            role = initialRole,
+            accessRole = fallbackAccessRole,
             level = fallbackLevel
         )
         _isLoadingPublicProfile.value = true
         viewModelScope.launch {
             val loaded = socialRepo.fetchPublicUserProfile(userId, fallbackName, fallbackLevel)
-            _selectedPublicProfile.value = loaded
+            val resolved = when {
+                loaded.accessRole.isBlank() && fallbackAccessRole.isNotBlank() -> loaded.copy(
+                    accessRole = fallbackAccessRole,
+                    role = if (fallbackAccessRole.equals("super_admin", ignoreCase = true)) "Super Admin"
+                    else if (fallbackIsMentor) "Fasilitator"
+                    else loaded.role
+                )
+                loaded.role == "Siswa" && fallbackIsMentor -> loaded.copy(
+                    role = "Fasilitator",
+                    accessRole = loaded.accessRole.ifBlank { "facilitator" }
+                )
+                else -> loaded
+            }
+            _selectedPublicProfile.value = resolved
             _isLoadingPublicProfile.value = false
         }
     }

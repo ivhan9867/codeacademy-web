@@ -33,10 +33,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.data.CourseCatalog
 import com.example.ui.theme.TealPrimary
 import kotlin.math.ceil
@@ -54,12 +56,16 @@ fun PlanSummaryStep(
     val borderCol = if (isDark) MaterialTheme.colorScheme.outlineVariant else Color(0xFFD5E3E2)
     val cardBg = if (isDark) MaterialTheme.colorScheme.surface else Color.White
 
-    val goals = listOf("Karier Web Dev", "Upgrade Skill", "Bangun Portofolio")
+    val goals = listOf(
+        "Karier Web Dev" to stringResource(R.string.onboarding_plan_goal_career),
+        "Upgrade Skill" to stringResource(R.string.onboarding_plan_goal_skill),
+        "Bangun Portofolio" to stringResource(R.string.onboarding_plan_goal_portfolio)
+    )
     val minuteOptions = listOf(
-        10 to "Santai",
-        20 to "Ideal",
-        30 to "Serius",
-        45 to "Intensif"
+        10 to stringResource(R.string.onboarding_plan_pace_casual),
+        20 to stringResource(R.string.onboarding_plan_pace_ideal),
+        30 to stringResource(R.string.onboarding_plan_pace_serious),
+        45 to stringResource(R.string.onboarding_plan_pace_intensive)
     )
 
     val courses = CourseCatalog.courses.filter { it.trackId == selectedTrack }
@@ -77,7 +83,7 @@ fun PlanSummaryStep(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Atur Ritme Belajarmu",
+            text = stringResource(R.string.onboarding_plan_title),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -85,7 +91,7 @@ fun PlanSummaryStep(
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "Belajar singkat namun konsisten setiap hari jauh lebih efektif daripada maraton sesekali.",
+            text = stringResource(R.string.onboarding_plan_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -107,7 +113,7 @@ fun PlanSummaryStep(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Target Waktu Harian",
+                text = stringResource(R.string.onboarding_plan_daily_target),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -134,7 +140,7 @@ fun PlanSummaryStep(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "${mins}m",
+                            text = stringResource(R.string.onboarding_plan_min_short_format, mins),
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.ExtraBold,
                             color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
@@ -164,7 +170,7 @@ fun PlanSummaryStep(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Fokus Tujuan Utama",
+                text = stringResource(R.string.onboarding_plan_goal_title),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
@@ -175,14 +181,14 @@ fun PlanSummaryStep(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            goals.forEach { goal ->
-                val selected = selectedGoal == goal
+            goals.forEach { (goalValue, goalLabel) ->
+                val selected = selectedGoal == goalValue
                 FilterChip(
                     selected = selected,
-                    onClick = { onSelectGoal(goal) },
+                    onClick = { onSelectGoal(goalValue) },
                     label = {
                         Text(
-                            text = goal,
+                            text = goalLabel,
                             fontSize = 11.5.sp,
                             fontWeight = if (selected) FontWeight.Bold else FontWeight.Medium,
                             maxLines = 1
@@ -207,21 +213,21 @@ fun PlanSummaryStep(
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 Text(
-                    text = "RINGKASAN RENCANA",
+                    text = stringResource(R.string.onboarding_plan_summary_badge),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = TealPrimary
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Front-End Web Development",
+                    text = stringResource(R.string.onboarding_plan_track_title),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.ExtraBold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 if (firstCourse != null) {
                     Text(
-                        text = "Kelas awal: ${firstCourse.title}",
+                        text = stringResource(R.string.onboarding_plan_first_course_format, firstCourse.title),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -236,7 +242,7 @@ fun PlanSummaryStep(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "Estimasi selesai kelas pertama: ~$estimatedDays hari ($selectedDailyMinutes menit/hari)",
+                        text = stringResource(R.string.onboarding_plan_estimate_format, estimatedDays, selectedDailyMinutes),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface

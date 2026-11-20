@@ -42,7 +42,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import com.example.R
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -76,29 +78,36 @@ fun CodePreviewStep(
     val isDark = MaterialTheme.colorScheme.background.luminance() < 0.5f
     val borderCol = if (isDark) MaterialTheme.colorScheme.outlineVariant else Color(0xFFD5E3E2)
 
-    val presets = remember {
+    val p1Label = stringResource(R.string.onboarding_code_preset1_label)
+    val p1Heading = stringResource(R.string.onboarding_code_preset1_heading)
+    val p2Label = stringResource(R.string.onboarding_code_preset2_label)
+    val p2Heading = stringResource(R.string.onboarding_code_preset2_heading)
+    val p3Label = stringResource(R.string.onboarding_code_preset3_label)
+    val p3Heading = stringResource(R.string.onboarding_code_preset3_heading)
+
+    val presets = remember(p1Label, p2Label, p3Label) {
         listOf(
             SandboxPreset(
                 id = 0,
-                label = "Judul Utama",
+                label = p1Label,
                 icon = Icons.Rounded.Title,
-                headingText = "Halo, Web Developer!",
+                headingText = p1Heading,
                 showTealAccent = false,
                 showButton = false
             ),
             SandboxPreset(
                 id = 1,
-                label = "Tema Teal",
+                label = p2Label,
                 icon = Icons.Rounded.Palette,
-                headingText = "Desain Bersih & Rapi",
+                headingText = p2Heading,
                 showTealAccent = true,
                 showButton = false
             ),
             SandboxPreset(
                 id = 2,
-                label = "Tambah Tombol",
+                label = p3Label,
                 icon = Icons.Rounded.SmartButton,
-                headingText = "Siap Interaktif!",
+                headingText = p3Heading,
                 showTealAccent = true,
                 showButton = true
             )
@@ -128,7 +137,7 @@ fun CodePreviewStep(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Coba Ubah Kode Secara Langsung",
+            text = stringResource(R.string.onboarding_code_title),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -136,7 +145,7 @@ fun CodePreviewStep(
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "Ketuk salah satu preset di bawah untuk melihat bagaimana perubahan HTML & CSS langsung memperbarui tampilan web.",
+            text = stringResource(R.string.onboarding_code_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -259,7 +268,7 @@ fun CodePreviewStep(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Pratinjau Live",
+                        text = stringResource(R.string.onboarding_code_live_preview),
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF4F6668)
@@ -273,7 +282,7 @@ fun CodePreviewStep(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = "Tersinkron",
+                            text = stringResource(R.string.onboarding_code_synced),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = SuccessGreen
@@ -297,7 +306,7 @@ fun CodePreviewStep(
                         shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF104246))
                     ) {
-                        Text("Mulai", fontWeight = FontWeight.Bold, color = Color.White)
+                        Text(stringResource(R.string.common_start), fontWeight = FontWeight.Bold, color = Color.White)
                     }
                 }
             }

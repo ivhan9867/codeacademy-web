@@ -57,6 +57,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.UUID
+import com.example.R
+import com.example.util.localization.localizedContext
 import com.example.util.localization.toLocale
 
 class CodeAcademyRepository(
@@ -88,6 +90,12 @@ class CodeAcademyRepository(
     }
     val sessionManager = SessionManager(context)
     private val seedMutex = Mutex()
+
+    private fun getLocalizedString(@androidx.annotation.StringRes resId: Int, vararg args: Any): String {
+        val langCode = sessionManager.getCachedLanguageCode()
+        val ctx = appContext.localizedContext(langCode)
+        return if (args.isEmpty()) ctx.getString(resId) else ctx.getString(resId, *args)
+    }
 
     @Volatile
     private var isSeeded = false
@@ -151,20 +159,20 @@ class CodeAcademyRepository(
                 NotificationEntity(
                     UUID.randomUUID().toString(),
                     1L,
-                    "Selamat Datang di CodeAcademy!",
-                    "Mulai belajar modul pertamamu dan bangun kebiasaan belajar setiap hari.",
+                    getLocalizedString(R.string.notif_welcome_title),
+                    getLocalizedString(R.string.notif_welcome_msg),
                     "SYSTEM",
-                    "Hari ini"
+                    getLocalizedString(R.string.notif_time_just_now)
                 )
             )
             notifDao.insertNotification(
                 NotificationEntity(
                     UUID.randomUUID().toString(),
                     1L,
-                    "Misi Harian Tersedia",
-                    "Selesaikan 1 modul hari ini dan raih bonus +50 XP!",
+                    getLocalizedString(R.string.notif_daily_quest_avail_title),
+                    getLocalizedString(R.string.notif_daily_quest_avail_msg),
                     "QUEST",
-                    "Pagi ini"
+                    getLocalizedString(R.string.notif_time_just_now)
                 )
             )
 
@@ -328,10 +336,10 @@ class CodeAcademyRepository(
                 NotificationEntity(
                     UUID.randomUUID().toString(),
                     accountId,
-                    "🎉 Naik Level!",
-                    "Selamat! Kamu telah mencapai Level ${newLevelThreshold.level} (${newLevelThreshold.name})!",
+                    getLocalizedString(R.string.notif_level_up_title),
+                    getLocalizedString(R.string.notif_level_up_msg_format, newLevelThreshold.level, newLevelThreshold.name),
                     "LEVEL_UP",
-                    "Baru saja"
+                    getLocalizedString(R.string.notif_time_just_now)
                 )
             )
         }
@@ -351,10 +359,10 @@ class CodeAcademyRepository(
                     NotificationEntity(
                         UUID.randomUUID().toString(),
                         accountId,
-                        "⚔️ Misi Harian Selesai!",
-                        "Kamu mendapatkan bonus +50 XP karena menyelesaikan misi harian.",
+                        getLocalizedString(R.string.notif_daily_quest_done_title),
+                        getLocalizedString(R.string.notif_daily_quest_done_msg),
                         "QUEST",
-                        "Baru saja"
+                        getLocalizedString(R.string.notif_time_just_now)
                     )
                 )
             }
@@ -416,10 +424,10 @@ class CodeAcademyRepository(
                 NotificationEntity(
                     UUID.randomUUID().toString(),
                     accountId,
-                    "🚀 Proyek Akhir Terbuka!",
-                    "Kamu lulus Kuis Evaluasi ${course.title} ($scorePercent%). Selesaikan Proyek Akhir untuk meraih Sertifikat Kelulusan!",
+                    getLocalizedString(R.string.notif_final_project_unlocked_title),
+                    getLocalizedString(R.string.notif_final_project_unlocked_msg_format, course.title, scorePercent),
                     "SYSTEM",
-                    "Baru saja"
+                    getLocalizedString(R.string.notif_time_just_now)
                 )
             )
             null
@@ -463,10 +471,10 @@ class CodeAcademyRepository(
                 NotificationEntity(
                     UUID.randomUUID().toString(),
                     accountId,
-                    "🏆 Sertifikat Diterbitkan!",
-                    "Selamat! Proyek Akhirmu disetujui dan kamu resmi lulus kelas ${course.title} dengan nilai akhir $bestScore%!",
+                    getLocalizedString(R.string.notif_cert_issued_title),
+                    getLocalizedString(R.string.notif_cert_issued_msg_format, course.title, bestScore),
                     "BADGE",
-                    "Baru saja"
+                    getLocalizedString(R.string.notif_time_just_now)
                 )
             )
         }
@@ -598,10 +606,10 @@ class CodeAcademyRepository(
                     NotificationEntity(
                         UUID.randomUUID().toString(),
                         remote.accountId,
-                        "📝 Proyek Akhir Perlu Revisi",
-                        "Fasilitator telah memeriksa proyek ${course.title} dan memberikan catatan perbaikan.",
+                        getLocalizedString(R.string.notif_project_revision_title),
+                        getLocalizedString(R.string.notif_project_revision_msg_format, course.title),
                         "SYSTEM",
-                        "Baru saja"
+                        getLocalizedString(R.string.notif_time_just_now)
                     )
                 )
             }
@@ -647,10 +655,10 @@ class CodeAcademyRepository(
                 NotificationEntity(
                     UUID.randomUUID().toString(),
                     reviewed.accountId,
-                    "📝 Proyek Akhir Perlu Revisi",
-                    "Fasilitator ${reviewed.facilitatorName} memberikan evaluasi pada proyek ${course.title}. Silakan periksa feedback dan kirim ulang.",
+                    getLocalizedString(R.string.notif_project_revision_title),
+                    getLocalizedString(R.string.notif_project_revision_detail_msg_format, reviewed.facilitatorName ?: "", course.title),
                     "SYSTEM",
-                    "Baru saja"
+                    getLocalizedString(R.string.notif_time_just_now)
                 )
             )
         }
@@ -928,10 +936,10 @@ class CodeAcademyRepository(
                     NotificationEntity(
                         UUID.randomUUID().toString(),
                         getActiveAccountId(),
-                        "🎯 Lulus ${quiz.title}!",
-                        "Selamat! Kamu berhasil lulus ${quiz.title} dengan nilai $finalScorePercent%!",
+                        getLocalizedString(R.string.notif_quiz_passed_title_format, quiz.title),
+                        getLocalizedString(R.string.notif_quiz_passed_msg_format, quiz.title, finalScorePercent),
                         "SYSTEM",
-                        "Baru saja"
+                        getLocalizedString(R.string.notif_time_just_now)
                     )
                 )
             }
@@ -1067,10 +1075,10 @@ class CodeAcademyRepository(
                         NotificationEntity(
                             UUID.randomUUID().toString(),
                             accountId,
-                            "⚡ Fast-Track Berhasil!",
-                            "Kamu lulus $sectionTitle lewat Tes Penempatan! $fastTrackedCount modul dibuka dan kamu mendapat bonus +$bonusXp XP.",
+                            getLocalizedString(R.string.notif_fast_track_title),
+                            getLocalizedString(R.string.notif_fast_track_msg_format, sectionTitle, fastTrackedCount, bonusXp),
                             "SYSTEM",
-                            "Baru saja"
+                            getLocalizedString(R.string.notif_time_just_now)
                         )
                     )
                 }
@@ -1280,10 +1288,10 @@ class CodeAcademyRepository(
             NotificationEntity(
                 UUID.randomUUID().toString(),
                 accountId,
-                "Selamat Datang di CodeAcademy!",
-                "Hai $cleanName, selamat datang! Selesaikan pengenalan jalur belajarmu untuk memulai modul pertama.",
+                getLocalizedString(R.string.notif_welcome_title),
+                getLocalizedString(R.string.notif_welcome_user_msg_format, cleanName),
                 "SYSTEM",
-                "Baru saja"
+                getLocalizedString(R.string.notif_time_just_now)
             )
         )
 

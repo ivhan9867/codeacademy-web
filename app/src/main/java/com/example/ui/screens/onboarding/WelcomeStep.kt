@@ -32,10 +32,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.ui.components.CodeAcademyMascot
 import com.example.ui.components.MascotMood
 import com.example.ui.theme.TealPrimary
@@ -65,7 +67,7 @@ fun WelcomeStep(
             color = pillBg
         ) {
             Text(
-                text = "CodeAcademy • Web Development",
+                text = stringResource(R.string.onboarding_welcome_badge),
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.Bold,
                 color = pillText,
@@ -85,9 +87,9 @@ fun WelcomeStep(
 
         Text(
             text = if (userName.isNotBlank()) {
-                "Selamat datang, $userName"
+                stringResource(R.string.onboarding_welcome_greeting_format, userName)
             } else {
-                "Belajar Web Dev dengan Tenang"
+                stringResource(R.string.onboarding_welcome_title_default)
             },
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.ExtraBold,
@@ -98,7 +100,7 @@ fun WelcomeStep(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Kuasai HTML semantik, layout CSS modern, dan JavaScript interaktif langkah demi langkah langsung dari ponselmu.",
+            text = stringResource(R.string.onboarding_welcome_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -114,8 +116,8 @@ fun WelcomeStep(
         ) {
             WelcomeHighlightRow(
                 icon = Icons.Rounded.Code,
-                title = "Materi Terstruktur & Ringkas",
-                subtitle = "156 modul terbagi jelas dari nol hingga proyek nyata",
+                title = stringResource(R.string.onboarding_welcome_feat1_title),
+                subtitle = stringResource(R.string.onboarding_welcome_feat1_desc),
                 cardBg = cardBg,
                 borderCol = borderCol,
                 iconBg = pillBg,
@@ -123,8 +125,8 @@ fun WelcomeStep(
             )
             WelcomeHighlightRow(
                 icon = Icons.Rounded.Devices,
-                title = "Playground & AI Tutor Terintegrasi",
-                subtitle = "Tulis kode HTML/CSS/JS dan lihat hasilnya seketika",
+                title = stringResource(R.string.onboarding_welcome_feat2_title),
+                subtitle = stringResource(R.string.onboarding_welcome_feat2_desc),
                 cardBg = cardBg,
                 borderCol = borderCol,
                 iconBg = pillBg,
@@ -132,8 +134,8 @@ fun WelcomeStep(
             )
             WelcomeHighlightRow(
                 icon = Icons.Rounded.Verified,
-                title = "Penilaian Fasilitator & Sertifikat",
-                subtitle = "Proyek akhir ditinjau langsung dengan ID verifikasi online",
+                title = stringResource(R.string.onboarding_welcome_feat3_title),
+                subtitle = stringResource(R.string.onboarding_welcome_feat3_desc),
                 cardBg = cardBg,
                 borderCol = borderCol,
                 iconBg = pillBg,

@@ -499,7 +499,7 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                     IconButton(onClick = onBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Kembali"
+                            contentDescription = stringResource(R.string.common_back)
                         )
                     }
                 },
@@ -522,7 +522,7 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                     }) {
                         Icon(
                             imageVector = Icons.Default.Psychology,
-                            contentDescription = "Tanya AI",
+                            contentDescription = stringResource(R.string.playground_ask_ai_cd),
                             tint = CyanAccentText
                         )
                     }
@@ -566,14 +566,14 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                 putExtra(Intent.EXTRA_SUBJECT, shareSubject)
                                 putExtra(Intent.EXTRA_TEXT, exportPayload)
                             }
-                            context.startActivity(Intent.createChooser(shareIntent, "Ekspor / Bagikan Kode"))
+                            context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.playground_export_share_cd)))
                         } catch (e: Exception) {
                             Toast.makeText(context, "Gagal mengekspor kode: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
                         }
                     }) {
                         Icon(
                             imageVector = Icons.Default.Share,
-                            contentDescription = "Ekspor / Bagikan Kode",
+                            contentDescription = stringResource(R.string.playground_export_share_cd),
                             tint = Color.White
                         )
                     }
@@ -658,9 +658,9 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                         isPythonRunning = false
                         lastExecutionTimeMs = timeMs
                         if (success) {
-                            pythonLogs.add(PythonLogEntry(text = "\n[Program selesai dalam ${timeMs}ms]", isSystem = true))
+                            pythonLogs.add(PythonLogEntry(text = context.getString(R.string.playground_program_finished_format, timeMs), isSystem = true))
                         } else {
-                            pythonLogs.add(PythonLogEntry(text = "\n[Program berhenti karena error]", isSystem = true))
+                            pythonLogs.add(PythonLogEntry(text = context.getString(R.string.playground_program_error_stopped), isSystem = true))
                         }
                     }
                 )

@@ -36,10 +36,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.ui.theme.AmberGold
 import com.example.ui.theme.CyanAccent
 import com.example.ui.theme.FlameLight
@@ -801,7 +803,7 @@ fun GamifikasiIllustration(modifier: Modifier = Modifier) {
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "3 Hari Streak!",
+                    text = stringResource(R.string.onboarding_illus_streak),
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
                     color = FlameOrange
@@ -839,7 +841,7 @@ fun GamifikasiIllustration(modifier: Modifier = Modifier) {
             border = androidx.compose.foundation.BorderStroke(1.dp, TealLight.copy(alpha = 0.4f))
         ) {
             Text(
-                text = "🏆 Peringkat #1",
+                text = "🏆 ${stringResource(R.string.onboarding_illus_rank)}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.sp,
                 color = TealLight,

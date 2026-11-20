@@ -2,6 +2,7 @@ package com.example.ui.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -45,10 +46,12 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material.icons.rounded.ChatBubbleOutline
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.School
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -788,7 +791,9 @@ fun CourseForumScreen(
                                 socialViewModel.openPublicProfile(
                                     userId = authorId,
                                     fallbackName = target?.authorName ?: "Siswa",
-                                    fallbackLevel = target?.authorLevel ?: 1
+                                    fallbackLevel = target?.authorLevel ?: 1,
+                                    fallbackAccessRole = target?.authorAccessRole ?: "",
+                                    fallbackIsMentor = target?.authorIsMentor ?: false
                                 )
                             }
                         )
@@ -929,6 +934,7 @@ fun ForumPostCard(
                         ForumAuthorBadges(
                             isAuthorMe = isAuthorMe,
                             authorIsMentor = post.authorIsMentor,
+                            authorAccessRole = post.authorAccessRole,
                             authorLevel = post.authorLevel
                         )
                     }
@@ -1233,6 +1239,7 @@ private fun ForumReplyItem(
                             ForumAuthorBadges(
                                 isAuthorMe = isAuthorMe,
                                 authorIsMentor = reply.authorIsMentor,
+                                authorAccessRole = reply.authorAccessRole,
                                 authorLevel = reply.authorLevel
                             )
                         }
@@ -1432,9 +1439,11 @@ private fun ForumQuoteBox(
 private fun ForumAuthorBadges(
     isAuthorMe: Boolean,
     authorIsMentor: Boolean,
+    authorAccessRole: String = "",
     authorLevel: Int,
     modifier: Modifier = Modifier
 ) {
+    val isSuperAdmin = authorAccessRole.equals("super_admin", ignoreCase = true)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -1453,10 +1462,49 @@ private fun ForumAuthorBadges(
             }
             Spacer(modifier = Modifier.width(6.dp))
         }
-        if (authorIsMentor) {
+        if (isSuperAdmin) {
+            val adminTransition = androidx.compose.animation.core.rememberInfiniteTransition(label = "forum_admin_badge")
+            val shimmerAlpha by adminTransition.animateFloat(
+                initialValue = 0.72f,
+                targetValue = 1.0f,
+                animationSpec = androidx.compose.animation.core.infiniteRepeatable(
+                    animation = androidx.compose.animation.core.tween(1400, easing = androidx.compose.animation.core.FastOutSlowInEasing),
+                    repeatMode = androidx.compose.animation.core.RepeatMode.Reverse
+                ),
+                label = "forum_admin_alpha"
+            )
             Surface(
                 shape = ForumBadgeShape,
-                color = MentorBadgeBg
+                color = Color(0xFF312E81).copy(alpha = 0.85f * shimmerAlpha),
+                border = BorderStroke(
+                    1.dp,
+                    Brush.linearGradient(listOf(AmberGold, Color(0xFFEC4899), Color(0xFF38BDF8)))
+                )
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.AutoAwesome,
+                        contentDescription = null,
+                        tint = AmberGold,
+                        modifier = Modifier.size(12.dp)
+                    )
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Text(
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_badge_super_admin),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color(0xFFFDE68A),
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                }
+            }
+        } else if (authorIsMentor) {
+            Surface(
+                shape = ForumBadgeShape,
+                color = Color(0xFF064E3B).copy(alpha = 0.18f),
+                border = BorderStroke(1.dp, Color(0xFF10B981).copy(alpha = 0.45f))
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -1465,14 +1513,14 @@ private fun ForumAuthorBadges(
                     Icon(
                         imageVector = Icons.Rounded.School,
                         contentDescription = null,
-                        tint = AmberGold,
+                        tint = Color(0xFF10B981),
                         modifier = Modifier.size(12.dp)
                     )
                     Spacer(modifier = Modifier.width(3.dp))
                     Text(
                         text = androidx.compose.ui.res.stringResource(com.example.R.string.forum_badge_facilitator),
                         style = MaterialTheme.typography.labelSmall,
-                        color = AmberGold,
+                        color = Color(0xFF10B981),
                         fontWeight = FontWeight.Bold
                     )
                 }

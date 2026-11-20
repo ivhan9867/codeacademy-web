@@ -1,6 +1,8 @@
 package com.example.ui.screens
 
 import android.provider.Settings
+import androidx.compose.ui.res.stringResource
+import com.example.R
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -411,7 +413,7 @@ fun CommunityScreen(
                                     color = TealLight.copy(alpha = 0.2f)
                                 ) {
                                     Text(
-                                        text = "Kamu",
+                                        text = stringResource(R.string.community_you_label),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.primary,
                                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 1.dp)
@@ -993,7 +995,7 @@ fun ForumHighlightCard(
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
-                            text = "Kelas: ${post.courseId}",
+                            text = stringResource(R.string.community_course_prefix_format, post.courseId),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.primary,
                             fontSize = 10.sp
@@ -1111,7 +1113,7 @@ fun EmptyLeaderboardView(
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Perbarui Data",
+                    text = stringResource(R.string.community_refresh_data),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -1616,7 +1618,7 @@ private fun PodiumColumnItem(
                 modifier = Modifier.padding(top = 2.dp)
             ) {
                 Text(
-                    text = "🔥 $currentUserStreak hr",
+                    text = stringResource(R.string.community_streak_days_short_format, currentUserStreak),
                     style = MaterialTheme.typography.labelSmall,
                     color = FlameOrange,
                     fontWeight = FontWeight.Bold,
@@ -1800,7 +1802,7 @@ fun LeaderboardRowItem(
                             color = TealPrimary.copy(alpha = 0.2f)
                         ) {
                             Text(
-                                text = "Kamu",
+                                text = stringResource(R.string.community_you_label),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontWeight = FontWeight.Bold,
@@ -1815,7 +1817,7 @@ fun LeaderboardRowItem(
                             color = FlameOrange.copy(alpha = 0.15f)
                         ) {
                             Text(
-                                text = "🔥 $currentUserStreak hr",
+                                text = stringResource(R.string.community_streak_days_short_format, currentUserStreak),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = FlameOrange,
                                 fontWeight = FontWeight.Bold,

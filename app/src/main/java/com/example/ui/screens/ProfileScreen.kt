@@ -242,7 +242,7 @@ fun ProfileScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu Navigasi",
+                            contentDescription = stringResource(R.string.common_nav_menu),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }

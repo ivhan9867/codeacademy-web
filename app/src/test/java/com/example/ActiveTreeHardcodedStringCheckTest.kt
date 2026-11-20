@@ -44,7 +44,7 @@ class ActiveTreeHardcodedStringCheckTest {
      * menaikkannya DILARANG KERAS dan membutuhkan alasan tertulis serta persetujuan arsitektur.
      * Satu penambahan literal baru di pohon aktif harus membuat test ini GAGAL.
      */
-    private val BASELINE_CEILING = 300
+    private val BASELINE_CEILING = 174
 
     private val uiLiteralPattern = Pattern.compile(
         """(?:Text\s*\(\s*text\s*=\s*|Text\s*\(\s*|text\s*=\s*|title\s*=\s*|label\s*=\s*|placeholder\s*=\s*|contentDescription\s*=\s*|subtitle\s*=\s*|description\s*=\s*)"([^"\n]{2,})""""

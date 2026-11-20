@@ -3,20 +3,6 @@
 // Direct Firestore lookup without wildcard bypass
 // ==========================================
 
-const DEMO_SAMPLE_CERTS = {
-  "CC-2026110101-A9K3P2": {
-    certId: "CC-2026110101-A9K3P2",
-    userName: "Siti Aminah",
-    courseTitle: "CSS Layout Modern: Flexbox & Grid",
-    quizScore: 88,
-    facilitatorScore: 92,
-    finalScore: 90,
-    issuedAt: new Date("2026-11-12T10:00:00Z").getTime(),
-    facilitatorName: "Fasilitator Demo CodeAcademy",
-    isSampleDemo: true
-  }
-};
-
 let verifyDb = null;
 
 function initVerifyFirebase() {
@@ -50,14 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
     input.value = id;
     verifyCert(id);
   });
-
-  document.querySelectorAll(".try button").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const sampleId = btn.dataset.id || "";
-      input.value = sampleId;
-      verifyCert(sampleId);
-    });
-  });
 });
 
 async function verifyCert(rawId) {
@@ -82,10 +60,6 @@ async function verifyCert(rawId) {
       }
     }
 
-    if (!record && DEMO_SAMPLE_CERTS[id]) {
-      record = DEMO_SAMPLE_CERTS[id];
-    }
-
     if (record) {
       notFoundCard.classList.remove("show");
       document.getElementById("resRecipientName").textContent = (record.userName || "PESERTA").toUpperCase();
@@ -103,12 +77,8 @@ async function verifyCert(rawId) {
 
       document.getElementById("resDate").textContent = formatIssuedDate(record.issuedAt);
       document.getElementById("resFacilitator").textContent = record.facilitatorName || "Tim Fasilitator CodeAcademy";
-      document.getElementById("resStatusBadge").textContent = record.isSampleDemo
-        ? "Contoh Demo Tervalidasi (Offline Preview)"
-        : "Sertifikat asli dan terdaftar di Firestore";
-      document.getElementById("resRegistrySource").textContent = record.isSampleDemo
-        ? "Data contoh demo lokal"
-        : "Terdaftar resmi di Firestore CodeAcademy";
+      document.getElementById("resStatusBadge").textContent = "Sertifikat asli dan terdaftar di Firestore";
+      document.getElementById("resRegistrySource").textContent = "Terdaftar resmi di Firestore CodeAcademy";
 
       resultCard.classList.add("show");
     } else {

@@ -42,166 +42,12 @@ function getRubricsForCourse(courseId) {
   return RUBRICS_BY_COURSE[courseId] || RUBRICS_BY_COURSE["fe-web-foundation-00"];
 }
 
-// Data Demo Offline (hanya aktif jika user memilih Mode Demo Offline)
-const DEMO_SUBMISSIONS = [
-  {
-    id: "demo_andi_fe_web",
-    accountId: "demo_user_andi",
-    firebaseUid: "",
-    userName: "Andi Pratama",
-    userEmail: "andi.pratama@example.id",
-    courseId: "fe-web-foundation-00",
-    courseTitle: "Fondasi Web: Dari Nol ke Baris Kode Pertama",
-    status: "PENDING_REVIEW",
-    finalQuizScore: 90,
-    facilitatorScore: null,
-    attemptCount: 1,
-    submittedAt: Date.now() - 3600000 * 2,
-    projectNotes: "Saya membangun landing page profil portfolio responsif memakai HTML5 semantik.",
-    projectUrl: "https://github.com/contoh/portfolio-andi",
-    checkedRubricIdsJson: '["semantik","aksesibilitas","styling","clean"]',
-    workspaceCode: `<!DOCTYPE html>
-<html lang="id">
-<head>
-  <style>
-    body { font-family: system-ui, sans-serif; margin: 0; background: #F0FDFA; color: #0F172A; }
-    header { background: #0D9488; color: white; padding: 28px 24px; text-align: center; }
-    main { max-width: 720px; margin: 24px auto; padding: 0 20px; }
-    .card { background: white; padding: 22px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-    footer { text-align: center; color: #64748B; font-size: 13px; padding: 20px; }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Andi Pratama - Web Portfolio</h1>
-    <p>Calon Front-End Developer</p>
-  </header>
-  <main>
-    <article class="card">
-      <h2>Tentang Saya</h2>
-      <p>Belajar HTML5 Semantik & CSS Grid di CodeAcademy Android.</p>
-    </article>
-  </main>
-  <footer>&copy; 2026 Andi Pratama</footer>
-</body>
-</html>`
-  },
-  {
-    id: "demo_siti_fe_css",
-    accountId: "demo_user_siti",
-    firebaseUid: "",
-    userName: "Siti Aminah",
-    userEmail: "siti.aminah@example.id",
-    courseId: "fe-css-02",
-    courseTitle: "CSS Layout Modern: Flexbox & Grid",
-    status: "APPROVED",
-    finalQuizScore: 88,
-    facilitatorScore: 92,
-    attemptCount: 1,
-    submittedAt: Date.now() - 86400000,
-    reviewedAt: Date.now() - 43200000,
-    facilitatorName: "Fasilitator Demo",
-    feedback: "Layout CSS Grid sangat responsif dan rapi di viewport mobile maupun desktop.",
-    certificateId: "CC-2026110101-A9K3P2",
-    checkedRubricIdsJson: '["layout","responsif","tokens","polish"]',
-    projectNotes: "Memakai CSS Grid auto-fit untuk kartu produk.",
-    projectUrl: "",
-    workspaceCode: `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;padding:16px;font-family:sans-serif;">
-  <div style="background:#0F766E;color:#fff;padding:16px;border-radius:10px;">Kartu 1</div>
-  <div style="background:#115E59;color:#fff;padding:16px;border-radius:10px;">Kartu 2</div>
-</div>`
-  },
-  {
-    id: "demo_budi_fe_js",
-    accountId: "demo_user_budi",
-    firebaseUid: "",
-    userName: "Budi Santoso",
-    userEmail: "budi.santoso@example.id",
-    courseId: "fe-js-03",
-    courseTitle: "JavaScript Fundamentals",
-    status: "REVISION_REQUESTED",
-    finalQuizScore: 76,
-    facilitatorScore: 60,
-    attemptCount: 1,
-    submittedAt: Date.now() - 86400000 * 2,
-    reviewedAt: Date.now() - 86400000,
-    facilitatorName: "Fasilitator Demo",
-    feedback: "Validasi input form belum menangani field kosong. Silakan lengkapi event listener submit.",
-    checkedRubricIdsJson: '["dom"]',
-    projectNotes: "Daftar tugas sederhana.",
-    projectUrl: "",
-    workspaceCode: `<div style="padding:16px;font-family:sans-serif;">
-  <h3>To-Do List Sederhana</h3>
-  <input id="item" placeholder="Tambah tugas..." />
-  <button onclick="document.getElementById('list').innerHTML += '<li>' + document.getElementById('item').value + '</li>'">Tambah</button>
-  <ul id="list"></ul>
-</div>`
-  }
-];
-
-const DEMO_FORUM_POSTS = [
-  {
-    postId: "demo_thread_1",
-    courseId: "fe-web-foundation-00",
-    authorId: "demo_user_andi",
-    authorName: "Andi Pratama",
-    authorIsMentor: false,
-    authorLevel: 3,
-    content: "Apakah untuk proyek akhir wajib memakai <main> dan <section>, atau cukup <div> saja?",
-    timestamp: Date.now() - 3600000 * 5,
-    likeCount: 3,
-    replyToPostId: null,
-    rootThreadId: null
-  },
-  {
-    postId: "demo_thread_2",
-    courseId: "fe-css-02",
-    authorId: "demo_user_siti",
-    authorName: "Siti Aminah",
-    authorIsMentor: false,
-    authorLevel: 5,
-    content: "Tips cepat bedain kapan pakai Flexbox (1 dimensi) vs CSS Grid (2 dimensi) biar layout nggak berantakan?",
-    timestamp: Date.now() - 3600000 * 2,
-    likeCount: 5,
-    replyToPostId: null,
-    rootThreadId: null
-  }
-];
-
-const DEMO_ANNOUNCEMENTS = [
-  {
-    id: "demo_ann_1",
-    title: "Panduan Penilaian Proyek Akhir (40/60)",
-    body: "Nilai akhir sertifikat dihitung dari 40% Kuis Aplikasi + 60% Skor Proyek Fasilitator (minimal 70 untuk terbit sertifikat).",
-    courseId: "all",
-    courseTitle: "Semua Kelas / Umum",
-    authorName: "Tim Fasilitator CodeAcademy",
-    createdAt: Date.now() - 3600000 * 12
-  }
-];
-
-const DEMO_CERTIFICATES = [
-  {
-    certId: "CC-2026110101-A9K3P2",
-    accountId: "demo_user_siti",
-    userName: "Siti Aminah",
-    courseId: "fe-css-02",
-    courseTitle: "CSS Layout Modern: Flexbox & Grid",
-    quizScore: 88,
-    facilitatorScore: 92,
-    finalScore: 90,
-    issuedAt: Date.now() - 43200000,
-    facilitatorName: "Fasilitator Demo"
-  }
-];
-
 // ==========================================
 // STATE APPLICATION
 // ==========================================
 let db = null;
 let auth = null;
 let isFirebaseReady = false;
-let isDemoMode = false;
 let currentFacilitatorUser = null;
 let currentAccessRole = "facilitator";
 let unsubSubmissions = null;
@@ -302,7 +148,6 @@ function applyRoleAccessUi(accessRole) {
   }
 }
 const btnGoogleSignIn = document.getElementById("btnGoogleSignIn");
-const btnEnterDemo = document.getElementById("btnEnterDemo");
 const btnLogout = document.getElementById("btnLogout");
 const modeBadge = document.getElementById("modeBadge");
 const facilitatorIdentityChip = document.getElementById("facilitatorIdentityChip");
@@ -391,7 +236,7 @@ function initFirebaseApp() {
     projectId: activeConfig?.projectId
   });
   if (typeof firebase === "undefined" || !activeConfig) {
-    showAuthError("SDK Firebase tidak tersedia. Anda tetap dapat mencoba Mode Demo Offline.");
+    showAuthError("SDK Firebase tidak tersedia. Periksa koneksi internet dan konfigurasi Firebase.");
     return;
   }
   try {
@@ -414,13 +259,11 @@ function initFirebaseApp() {
 
     auth.onAuthStateChanged(async (user) => {
       console.log("[FacilitatorAuth] onAuthStateChanged:", {
-        isDemoMode,
         hasUser: Boolean(user),
         uid: user?.uid || null,
         email: user?.email || null,
         emailVerified: user?.emailVerified || false
       });
-      if (isDemoMode) return;
       if (!user) {
         stopRealtimeListeners();
         showAuthOverlay(true);
@@ -431,6 +274,27 @@ function initFirebaseApp() {
   } catch (e) {
     console.error("[FacilitatorAuth] Firebase init failed:", e);
     showAuthError("Gagal menginisialisasi Firebase: " + (e.message || e));
+  }
+}
+
+async function syncStaffPublicUserProfile(uid, displayName, bio, accessRole) {
+  if (!isFirebaseReady || !db || !uid) return;
+  const isAdmin = accessRole === "super_admin";
+  try {
+    await db.collection("users").doc(uid).set({
+      userId: uid,
+      firebaseUid: uid,
+      name: displayName,
+      bio: bio || (isAdmin ? "System Architect & Super Admin CodeAcademy." : "Mentor & Reviewer Resmi CodeAcademy."),
+      role: isAdmin ? "Super Admin" : "Fasilitator",
+      accessRole: isAdmin ? "super_admin" : "facilitator",
+      headlineTitle: isAdmin ? "System Architect" : "Official Facilitator",
+      level: 99,
+      totalXp: isAdmin ? 99999 : 9999,
+      updatedAt: Date.now()
+    }, { merge: true });
+  } catch (err) {
+    console.warn("[FacilitatorAuth] syncStaffPublicUserProfile warning:", err?.message || err);
   }
 }
 
@@ -502,8 +366,14 @@ async function verifyAndEnterFacilitatorSession(user) {
         bio: savedLocal.bio || profileData.bio || "",
         accessRole
       };
-      isDemoMode = false;
       isFirebaseReady = true;
+
+      await syncStaffPublicUserProfile(
+        user.uid,
+        resolvedDisplayName,
+        currentFacilitatorUser.bio,
+        accessRole
+      );
 
       console.log("[FacilitatorAuth] Verified! Hiding authOverlay and entering dashboard:", currentFacilitatorUser);
       setAuthStatus("");
@@ -530,44 +400,6 @@ async function verifyAndEnterFacilitatorSession(user) {
     }
   })();
   return verifyingSessionPromise;
-}
-
-function enterDemoOfflineMode(demoRole = "facilitator") {
-  stopRealtimeListeners();
-  isDemoMode = true;
-  isFirebaseReady = false;
-  const savedLocal = loadSavedFacilitatorProfile();
-  const isAdminDemo = demoRole === "super_admin";
-  currentFacilitatorUser = {
-    uid: isAdminDemo ? "demo-super-admin" : "demo-facilitator",
-    email: isAdminDemo ? "admin-demo@codeacademy.local" : "demo-offline@codeacademy.local",
-    displayName: savedLocal.name || (isAdminDemo ? "Super Admin Demo" : "Fasilitator Demo (Offline)"),
-    role: savedLocal.role || (isAdminDemo ? "Head of Curriculum" : "Lead Mentor"),
-    bio: savedLocal.bio || "",
-    accessRole: isAdminDemo ? "super_admin" : "facilitator"
-  };
-  hideAuthOverlay();
-  modeBadge.textContent = "● Demo Offline";
-  modeBadge.className = "badge-mode";
-  applyRoleAccessUi(currentFacilitatorUser.accessRole);
-  applyFacilitatorProfileToUi(currentFacilitatorUser.displayName, currentFacilitatorUser.role);
-
-  submissions = DEMO_SUBMISSIONS.map((s) => ({ ...s }));
-  forumPosts = DEMO_FORUM_POSTS.map((p) => ({ ...p }));
-  announcements = DEMO_ANNOUNCEMENTS.map((a) => ({ ...a }));
-  certificates = DEMO_CERTIFICATES.map((c) => ({ ...c }));
-  facilitatorsList = [
-    { email: "admin-demo@codeacademy.local", name: "Super Admin Demo", accessRole: "super_admin", role: "Head of Curriculum" },
-    { email: "mentor.web@codeacademy.local", name: "Raka Pratama", accessRole: "facilitator", role: "Front-End Mentor" }
-  ];
-  studentUsersList = [
-    { id: "u1", name: "Ivhan Afika P", email: "ivhan@codeacademy.id", headlineTitle: "Frontend Explorer", totalXp: 320, level: 3, currentStreak: 4, isBanned: false, banReason: "" },
-    { id: "u2", name: "Alya Putri", email: "alya.putri@codeacademy.id", headlineTitle: "CSS Grid Wizard", totalXp: 210, level: 2, currentStreak: 2, isBanned: false, banReason: "" },
-    { id: "u3", name: "Dimas Pratama", email: "dimas@codeacademy.id", headlineTitle: "JS Builder", totalXp: 95, level: 1, currentStreak: 0, isBanned: true, banReason: "Spam berulang di forum diskusi kelas.", bannedAt: Date.now() - 86400000 }
-  ];
-
-  renderAllViews();
-  showToast(`Masuk Mode Demo ${isAdminDemo ? "Super Admin" : "Fasilitator"} (Offline).`);
 }
 
 function startRealtimeListeners() {
@@ -720,7 +552,7 @@ function attachEventListeners() {
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!auth) {
-      showAuthError("Firebase Auth tidak tersedia. Gunakan Mode Demo Offline.");
+      showAuthError("Firebase Auth tidak tersedia. Muat ulang halaman dan coba lagi.");
       return;
     }
     authError.classList.remove("show");
@@ -737,7 +569,7 @@ function attachEventListeners() {
   btnGoogleSignIn.addEventListener("click", async () => {
     console.log("[FacilitatorAuth] Google Sign-In clicked");
     if (!auth) {
-      showAuthError("Firebase Auth tidak tersedia. Gunakan Mode Demo Offline.");
+      showAuthError("Firebase Auth tidak tersedia. Muat ulang halaman dan coba lagi.");
       return;
     }
     authError.classList.remove("show");
@@ -766,17 +598,8 @@ function attachEventListeners() {
     }
   });
 
-  btnEnterDemo.addEventListener("click", () => {
-    enterDemoOfflineMode("facilitator");
-  });
-
-  document.getElementById("btnEnterDemoAdmin")?.addEventListener("click", () => {
-    enterDemoOfflineMode("super_admin");
-  });
-
   btnLogout.addEventListener("click", async () => {
     stopRealtimeListeners();
-    isDemoMode = false;
     isFirebaseReady = false;
     currentFacilitatorUser = null;
     currentAccessRole = "facilitator";
@@ -931,9 +754,15 @@ function attachEventListeners() {
       currentFacilitatorUser.bio = newBio;
     }
     applyFacilitatorProfileToUi(newName, newRole);
-    if (isFirebaseReady && db && !isDemoMode && currentFacilitatorUser?.email) {
+    if (isFirebaseReady && db && currentFacilitatorUser?.email) {
       try {
         await db.collection("facilitators").doc(currentFacilitatorUser.email).set(nextProfile, { merge: true });
+        await syncStaffPublicUserProfile(
+          currentFacilitatorUser.uid,
+          newName,
+          newBio,
+          currentFacilitatorUser.accessRole || "facilitator"
+        );
       } catch (err) {
         console.warn("Save facilitator profile to Firestore warning:", err);
       }
@@ -1001,7 +830,7 @@ function attachEventListeners() {
       accessRole,
       updatedAt: Date.now()
     };
-    if (isFirebaseReady && db && !isDemoMode) {
+    if (isFirebaseReady && db) {
       try {
         await db.collection("facilitators").doc(email).set(payload, { merge: true });
         if (emailEl) emailEl.value = "";
@@ -1030,7 +859,7 @@ function attachEventListeners() {
       return;
     }
     if (!confirm(`Hapus akses portal untuk ${email}?`)) return;
-    if (isFirebaseReady && db && !isDemoMode) {
+    if (isFirebaseReady && db) {
       try {
         await db.collection("facilitators").doc(email).delete();
         showToast(`Akses ${email} dihapus.`);
@@ -1058,7 +887,7 @@ function attachEventListeners() {
     if (currentAccessRole !== "super_admin") return;
     const certId = revokeBtn.dataset.certId;
     if (!confirm(`Cabut dan hapus sertifikat ${certId} secara permanen?`)) return;
-    if (isFirebaseReady && db && !isDemoMode) {
+    if (isFirebaseReady && db) {
       try {
         await db.collection("certificates").doc(certId).delete();
         showToast(`Sertifikat ${certId} dicabut.`);
@@ -1132,7 +961,7 @@ function attachEventListeners() {
       const uid = unbanBtn.dataset.uid;
       const target = studentUsersList.find((u) => u.id === uid);
       if (!confirm(`Cabut pembekuan akun untuk ${target?.name || uid}?`)) return;
-      if (isFirebaseReady && db && !isDemoMode) {
+      if (isFirebaseReady && db) {
         try {
           await db.collection("users").doc(uid).set({
             isBanned: false,
@@ -1171,7 +1000,7 @@ function attachEventListeners() {
       bannedAt: Date.now(),
       bannedBy: adminIdentity
     };
-    if (isFirebaseReady && db && !isDemoMode) {
+    if (isFirebaseReady && db) {
       try {
         await db.collection("users").doc(uid).set(banPayload, { merge: true });
         closeBanModal();
@@ -1856,7 +1685,7 @@ async function executeReview(newStatus) {
           }
         : null;
 
-    if (isFirebaseReady && db && !isDemoMode) {
+    if (isFirebaseReady && db) {
       const batch = db.batch();
       const subRef = db.collection("project_submissions").doc(currentSubmission.id);
       batch.update(subRef, payload);
@@ -2043,11 +1872,12 @@ async function createFacilitatorTopic() {
     postId,
     courseId,
     firebaseUid: uid,
-    authorId: "facilitator_" + facName.toLowerCase().replace(/[^a-z0-9]/g, "_"),
+    authorId: uid,
     authorName: facName,
     authorLevel: 99,
     authorIsMentor: true,
     isMentor: true,
+    authorAccessRole: currentFacilitatorUser?.accessRole || "facilitator",
     content,
     timestamp: Date.now(),
     likeCount: 0,
@@ -2058,7 +1888,7 @@ async function createFacilitatorTopic() {
     rootThreadId: null
   };
 
-  if (isFirebaseReady && db && !isDemoMode) {
+  if (isFirebaseReady && db) {
     try {
       await db.collection("forum_posts").doc(postId).set(docData);
       forumNewPostInput.value = "";
@@ -2096,11 +1926,12 @@ async function replyToThread(form) {
     postId,
     courseId: root.courseId,
     firebaseUid: uid,
-    authorId: "facilitator_" + facName.toLowerCase().replace(/[^a-z0-9]/g, "_"),
+    authorId: uid,
     authorName: facName,
     authorLevel: 99,
     authorIsMentor: true,
     isMentor: true,
+    authorAccessRole: currentFacilitatorUser?.accessRole || "facilitator",
     content,
     timestamp: Date.now(),
     likeCount: 0,
@@ -2111,7 +1942,7 @@ async function replyToThread(form) {
     rootThreadId: root.rootThreadId || root.postId
   };
 
-  if (isFirebaseReady && db && !isDemoMode) {
+  if (isFirebaseReady && db) {
     try {
       await db.collection("forum_posts").doc(postId).set(replyDoc);
       activeReplyTargetByThread.delete(rootPostId);
@@ -2134,7 +1965,7 @@ async function toggleForumPostFlag(postId, field) {
   const target = forumPosts.find((p) => p.postId === postId);
   if (!target) return;
   const nextVal = !(target[field] === true);
-  if (isFirebaseReady && db && !isDemoMode) {
+  if (isFirebaseReady && db) {
     try {
       await db.collection("forum_posts").doc(postId).update({ [field]: nextVal });
       showToast(
@@ -2175,7 +2006,7 @@ async function deleteForumPost(postId) {
     });
   }
 
-  if (isFirebaseReady && db && !isDemoMode) {
+  if (isFirebaseReady && db) {
     try {
       const ids = Array.from(toDeleteIds);
       for (let i = 0; i < ids.length; i += 400) {
@@ -2265,7 +2096,7 @@ async function publishAnnouncement() {
     createdAt: Date.now()
   };
 
-  if (isFirebaseReady && db && !isDemoMode) {
+  if (isFirebaseReady && db) {
     try {
       await db.collection("announcements").doc(annId).set(docData);
       announcementTitleInput.value = "";
@@ -2286,7 +2117,7 @@ async function publishAnnouncement() {
 
 async function deleteAnnouncement(id) {
   if (!confirm("Hapus pengumuman ini?")) return;
-  if (isFirebaseReady && db && !isDemoMode) {
+  if (isFirebaseReady && db) {
     try {
       await db.collection("announcements").doc(id).delete();
       showToast("Pengumuman dihapus.");

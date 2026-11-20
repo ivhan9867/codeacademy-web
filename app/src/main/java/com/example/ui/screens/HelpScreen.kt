@@ -132,7 +132,7 @@ fun HelpScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Kembali",
+                                contentDescription = stringResource(R.string.common_back),
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
@@ -550,13 +550,13 @@ private fun PrivacyTermsSection() {
                 Spacer(modifier = Modifier.width(14.dp))
                 Column {
                     Text(
-                        text = "Kebijakan Privasi & Data",
+                        text = stringResource(R.string.help_privacy_header_title),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = "Draf Transparansi Arsitektur Sistem",
+                        text = stringResource(R.string.help_privacy_draft_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -585,7 +585,7 @@ private fun PrivacyTermsSection() {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "1. Penyimpanan Data Lokal (Device)",
+                        text = stringResource(R.string.help_privacy_sec1_title),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -593,17 +593,17 @@ private fun PrivacyTermsSection() {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Aplikasi CodeAcademy memprioritaskan privasi dan kecepatan akses offline. Data berikut disimpan secara lokal di perangkat Anda menggunakan Room Database (SQLite):",
+                    text = stringResource(R.string.help_privacy_s1_intro),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 20.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                BulletItem(text = "Progres modul pembelajaran dan status kelulusan materi")
-                BulletItem(text = "Riwayat percobaan Section Quiz dan deteksi fokus (ON_STOP)")
-                BulletItem(text = "Catatan kode koding interaktif di Playground")
-                BulletItem(text = "Bookmark modul dan riwayat hasil Placement Test")
-                BulletItem(text = "Kredensial sesi lokal pengguna")
+                BulletItem(text = stringResource(R.string.help_privacy_s1_b1))
+                BulletItem(text = stringResource(R.string.help_privacy_s1_b2))
+                BulletItem(text = stringResource(R.string.help_privacy_s1_b3))
+                BulletItem(text = stringResource(R.string.help_privacy_s1_b4))
+                BulletItem(text = stringResource(R.string.help_privacy_s1_b5))
             }
         }
 
@@ -628,7 +628,7 @@ private fun PrivacyTermsSection() {
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "2. Layanan Cloud & Fitur Sosial",
+                        text = stringResource(R.string.help_privacy_sec2_title),
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -636,14 +636,14 @@ private fun PrivacyTermsSection() {
                 }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
-                    text = "Beberapa fitur kolaboratif memerlukan pertukaran data melalui Firebase Firestore cloud backend:",
+                    text = stringResource(R.string.help_privacy_s2_intro),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 20.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                BulletItem(text = "Forum Diskusi Kelas: Judul postingan, isi teks pertanyaan/jawaban, serta nama tampilan Anda tersimpan di cloud dan dapat dibaca oleh murid lain di kelas yang sama.")
-                BulletItem(text = "Papan Peringkat (Leaderboard): Nama profil, foto/avatar, serta total XP disinkronkan untuk menampilkan skor kompetisi mingguan.")
+                BulletItem(text = stringResource(R.string.help_privacy_s2_b1))
+                BulletItem(text = stringResource(R.string.help_privacy_s2_b2))
             }
         }
 
@@ -660,14 +660,14 @@ private fun PrivacyTermsSection() {
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "3. Kontrol Data & Hak Pengguna",
+                    text = stringResource(R.string.help_privacy_s3_title),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Anda memiliki kendali penuh atas data lokal Anda. Anda dapat menghapus seluruh riwayat belajar kapan saja dengan melakukan 'Hapus Data / Clear Storage' pada pengaturan aplikasi Android, atau mencopot pemasangan (uninstall) aplikasi.",
+                    text = stringResource(R.string.help_privacy_s3_body),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 20.sp
@@ -682,7 +682,7 @@ private fun PrivacyTermsSection() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Catatan: Draf kebijakan privasi ini disusun sebagai transparansi teknis fungsional aplikasi. Teks ini merupakan draf awal internal dan akan ditinjau kembali sebelum publikasi versi final.",
+                text = stringResource(R.string.help_privacy_draft_note),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 17.sp,
@@ -764,7 +764,7 @@ private fun ContactFeedbackSection(versionName: String) {
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "Platform pembelajaran pemrograman interaktif modern dengan compiler langsung, latihan terstruktur, dan komunitas pembelajar.",
+                    text = stringResource(R.string.help_about_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -795,7 +795,7 @@ private fun ContactFeedbackSection(versionName: String) {
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    text = "Punya pertanyaan seputar materi, menemukan kendala sistem, atau ingin memberikan saran fitur baru? Tim kami siap mendengar.",
+                    text = stringResource(R.string.help_contact_desc),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     lineHeight = 18.sp
@@ -823,7 +823,7 @@ private fun ContactFeedbackSection(versionName: String) {
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = "Email Dukungan",
+                                text = stringResource(R.string.help_contact_email_label),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

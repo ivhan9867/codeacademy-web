@@ -33,10 +33,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.R
 import com.example.ui.theme.TealPrimary
 
 private data class RoadmapStage(
@@ -60,36 +62,36 @@ fun RoadmapStep(
     val stages = listOf(
         RoadmapStage(
             stepNumber = "01",
-            title = "Fondasi Web: HTML & CSS Dasar",
-            subtitle = "Struktur halaman semantik, formulir, box model, dan tipografi.",
-            meta = "106 Modul • 5 Kuis Bab",
+            title = stringResource(R.string.onboarding_roadmap_s1_title),
+            subtitle = stringResource(R.string.onboarding_roadmap_s1_desc),
+            meta = stringResource(R.string.onboarding_roadmap_s1_meta),
             icon = Icons.Rounded.Code,
             accentBg = if (isDark) TealPrimary.copy(alpha = 0.2f) else Color(0xFFD9EEEC),
             accentTint = if (isDark) Color(0xFF9DE3DF) else Color(0xFF104246)
         ),
         RoadmapStage(
             stepNumber = "02",
-            title = "CSS Layout Modern",
-            subtitle = "Tata letak responsif 1D Flexbox, 2D CSS Grid, dan media query.",
-            meta = "24 Modul • 2 Kuis Bab",
+            title = stringResource(R.string.onboarding_roadmap_s2_title),
+            subtitle = stringResource(R.string.onboarding_roadmap_s2_desc),
+            meta = stringResource(R.string.onboarding_roadmap_s2_meta),
             icon = Icons.Rounded.Dashboard,
             accentBg = if (isDark) Color(0xFF33271D) else Color(0xFFFDF0EB),
             accentTint = Color(0xFFE26D45)
         ),
         RoadmapStage(
             stepNumber = "03",
-            title = "JavaScript Fundamentals",
-            subtitle = "Logika ES6, struktur data array/objek, dan manipulasi DOM.",
-            meta = "26 Modul • 2 Kuis Bab",
+            title = stringResource(R.string.onboarding_roadmap_s3_title),
+            subtitle = stringResource(R.string.onboarding_roadmap_s3_desc),
+            meta = stringResource(R.string.onboarding_roadmap_s3_meta),
             icon = Icons.Rounded.Bolt,
             accentBg = if (isDark) Color(0xFF2E2A1A) else Color(0xFFFEF4E6),
             accentTint = Color(0xFFB45309)
         ),
         RoadmapStage(
             stepNumber = "04",
-            title = "Proyek Akhir & Sertifikat",
-            subtitle = "Kirim proyek dari Playground untuk dinilai fasilitator & terverifikasi online.",
-            meta = "Cloud Sync • ID Kredensial",
+            title = stringResource(R.string.onboarding_roadmap_s4_title),
+            subtitle = stringResource(R.string.onboarding_roadmap_s4_desc),
+            meta = stringResource(R.string.onboarding_roadmap_s4_meta),
             icon = Icons.Rounded.Verified,
             accentBg = if (isDark) Color(0xFF1B3324) else Color(0xFFE9F6EE),
             accentTint = Color(0xFF1F7A45)
@@ -105,7 +107,7 @@ fun RoadmapStep(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Peta Perjalanan Belajarmu",
+            text = stringResource(R.string.onboarding_roadmap_title),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.ExtraBold,
             color = MaterialTheme.colorScheme.onBackground,
@@ -113,7 +115,7 @@ fun RoadmapStep(
         )
         Spacer(modifier = Modifier.height(6.dp))
         Text(
-            text = "Kurikulum dirancang berjenjang untuk membawamu dari nol sampai siap membangun website responsif & interaktif.",
+            text = stringResource(R.string.onboarding_roadmap_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -159,7 +161,7 @@ fun RoadmapStep(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "TAHAP ${stage.stepNumber}",
+                                    text = stringResource(R.string.onboarding_roadmap_stage_format, stage.stepNumber),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = stage.accentTint

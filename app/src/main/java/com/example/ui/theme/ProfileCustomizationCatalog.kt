@@ -1,5 +1,12 @@
 package com.example.ui.theme
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AdminPanelSettings
 import androidx.compose.material.icons.rounded.Bolt
 import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Palette
@@ -19,11 +27,13 @@ import androidx.compose.material.icons.rounded.Terminal
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -131,6 +141,7 @@ fun CustomProfileAvatar(
     avatarFrame: String,
     bannerTheme: String,
     isMentor: Boolean = false,
+    isSuperAdmin: Boolean = false,
     size: Dp = 64.dp,
     modifier: Modifier = Modifier
 ) {
@@ -140,8 +151,113 @@ fun CustomProfileAvatar(
     val cleanName = NameUtils.sanitizeDisplayName(name)
     val initial = NameUtils.extractInitial(cleanName)
 
+    if (isSuperAdmin) {
+        val infiniteTransition = rememberInfiniteTransition(label = "super_admin_avatar_anim")
+        val ringRotation by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 360f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 3600, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ),
+            label = "super_admin_ring_rot"
+        )
+        val auraScale by infiniteTransition.animateFloat(
+            initialValue = 0.96f,
+            targetValue = 1.12f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 1800, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "super_admin_aura_scale"
+        )
+        val auraAlpha by infiniteTransition.animateFloat(
+            initialValue = 0.32f,
+            targetValue = 0.72f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 1800, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "super_admin_aura_alpha"
+        )
+
+        val cosmicSweep = Brush.sweepGradient(
+            listOf(
+                Color(0xFFF59E0B),
+                Color(0xFFEC4899),
+                Color(0xFF8B5CF6),
+                Color(0xFF06B6D4),
+                Color(0xFFF59E0B)
+            )
+        )
+        val coreBrush = Brush.linearGradient(
+            listOf(Color(0xFF1E1B4B), Color(0xFF4C1D95), Color(0xFF0F172A))
+        )
+
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier.size(size)
+        ) {
+            // Pulsing Cosmic Aura
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer {
+                        scaleX = auraScale
+                        scaleY = auraScale
+                        alpha = auraAlpha
+                    }
+                    .clip(CircleShape)
+                    .background(
+                        Brush.radialGradient(
+                            listOf(Color(0xFF8B5CF6).copy(alpha = 0.65f), Color.Transparent)
+                        )
+                    )
+            )
+            // Rotating Holographic Ring
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .graphicsLayer { rotationZ = ringRotation }
+                    .clip(CircleShape)
+                    .border(BorderStroke(3.5.dp, cosmicSweep), CircleShape)
+            )
+            // Inner Core
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .matchParentSize()
+                    .padding(4.dp)
+                    .clip(CircleShape)
+                    .background(coreBrush)
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.AdminPanelSettings,
+                    contentDescription = null,
+                    tint = Color(0xFFFDE68A),
+                    modifier = Modifier.size(size * 0.50f)
+                )
+            }
+        }
+        return
+    }
+
+    val mentorPulseAlpha = if (isMentor) {
+        val mentorTransition = rememberInfiniteTransition(label = "mentor_avatar_pulse")
+        val alphaVal by mentorTransition.animateFloat(
+            initialValue = 0.72f,
+            targetValue = 1.0f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 2200, easing = FastOutSlowInEasing),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "mentor_ring_alpha"
+        )
+        alphaVal
+    } else 1f
+
     val frameBrush = if (isMentor) {
-        Brush.linearGradient(listOf(AmberGold, Color(0xFFFDE68A)))
+        Brush.linearGradient(listOf(Color(0xFF10B981), AmberGold, Color(0xFFFDE68A)))
     } else if (frame.secondaryColor != null) {
         Brush.linearGradient(listOf(frame.primaryColor, frame.secondaryColor))
     } else {
@@ -149,7 +265,7 @@ fun CustomProfileAvatar(
     }
 
     val innerBgBrush = if (isMentor) {
-        Brush.linearGradient(listOf(AmberGold, FlameOrange))
+        Brush.linearGradient(listOf(Color(0xFF064E3B), Color(0xFF0D9488)))
     } else {
         banner.toBrush()
     }
@@ -159,8 +275,9 @@ fun CustomProfileAvatar(
         modifier = modifier
             .size(size)
             .clip(CircleShape)
-            .border(BorderStroke(frame.strokeWidth, frameBrush), CircleShape)
-            .padding(frame.strokeWidth)
+            .border(BorderStroke(if (isMentor) 3.dp else frame.strokeWidth, frameBrush), CircleShape)
+            .graphicsLayer { alpha = mentorPulseAlpha }
+            .padding(if (isMentor) 3.dp else frame.strokeWidth)
             .clip(CircleShape)
             .background(innerBgBrush)
     ) {
@@ -169,7 +286,7 @@ fun CustomProfileAvatar(
                 Icon(
                     imageVector = Icons.Rounded.School,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color(0xFFFDE68A),
                     modifier = Modifier.size(size * 0.48f)
                 )
             }

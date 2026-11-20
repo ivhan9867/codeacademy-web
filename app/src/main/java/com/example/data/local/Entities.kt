@@ -203,6 +203,7 @@ data class ForumPostEntity(
     val replyToContentSnippet: String? = null,
     val authorLevel: Int = 1,
     val authorIsMentor: Boolean = false,
+    val authorAccessRole: String = "",
     val isVerifiedAnswer: Boolean = false,
     val isHelpful: Boolean = false
 )

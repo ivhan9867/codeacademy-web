@@ -1226,6 +1226,7 @@ fun CodeAcademyApp(
                     try { URLDecoder.decode(it, "UTF-8") } catch (_: Exception) { it }
                 }
                 val initialLanguage = backStackEntry.arguments?.getString("lang")
+                val moduleAnalysisTitle = stringResource(R.string.common_code_analysis)
                 PlaygroundScreen(
                     courseId = courseId,
                     moduleId = moduleId,
@@ -1236,7 +1237,7 @@ fun CodeAcademyApp(
                         try {
                             val cObj = viewModel.getCourseById(courseId)
                             val courseTitle = cObj?.title ?: "Playground"
-                            val moduleTitle = "Analisis Kode"
+                            val moduleTitle = moduleAnalysisTitle
 
                             // Send prompt as initial user query to AI Tutor if not blank
                             if (prompt.isNotBlank()) {

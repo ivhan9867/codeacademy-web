@@ -143,7 +143,7 @@ fun ProfileIdentityCard(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit Profil",
+                            contentDescription = stringResource(R.string.common_edit_profile),
                             tint = Color.White,
                             modifier = Modifier.size(14.dp)
                         )

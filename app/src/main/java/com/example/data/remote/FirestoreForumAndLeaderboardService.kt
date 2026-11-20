@@ -21,6 +21,7 @@ data class PublicUserProfile(
     val name: String,
     val bio: String = "",
     val role: String = "Siswa",
+    val accessRole: String = "",
     val level: Int = 1,
     val totalXp: Int = 0,
     val currentStreak: Int = 0,
@@ -383,6 +384,7 @@ class FirestoreForumAndLeaderboardService(
                     name = doc.getString("name") ?: "Siswa",
                     bio = doc.getString("bio") ?: "",
                     role = doc.getString("role") ?: "Siswa",
+                    accessRole = doc.getString("accessRole") ?: "",
                     level = (doc.getLong("level") ?: 1L).toInt(),
                     totalXp = (doc.getLong("totalXp") ?: 0L).toInt(),
                     currentStreak = (doc.getLong("currentStreak") ?: 0L).toInt(),
@@ -596,6 +598,7 @@ class FirestoreForumAndLeaderboardService(
         val replyToContentSnippet = doc.getString("replyToContentSnippet")
         val authorLevel = (doc.getLong("authorLevel") ?: 1L).toInt().coerceAtLeast(1)
         val authorIsMentor = (doc.getBoolean("authorIsMentor") ?: doc.getBoolean("isMentor")) ?: false
+        val authorAccessRole = doc.getString("authorAccessRole") ?: ""
         val isVerifiedAnswer = doc.getBoolean("isVerifiedAnswer") ?: false
         val isHelpful = doc.getBoolean("isHelpful") ?: false
 
@@ -613,6 +616,7 @@ class FirestoreForumAndLeaderboardService(
             replyToContentSnippet = replyToContentSnippet,
             authorLevel = authorLevel,
             authorIsMentor = authorIsMentor,
+            authorAccessRole = authorAccessRole,
             isVerifiedAnswer = isVerifiedAnswer,
             isHelpful = isHelpful
         )

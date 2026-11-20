@@ -1,9 +1,21 @@
 package com.example.util.localization
 
+import android.content.Context
+import android.content.res.Configuration
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+
+/**
+ * Returns a Configuration-wrapped Context for the specified language code.
+ */
+fun Context.localizedContext(languageCode: String?): Context {
+    val lang = AppLanguage.fromCode(languageCode)
+    val config = Configuration(resources.configuration)
+    config.setLocale(lang.toLocale())
+    return createConfigurationContext(config)
+}
 
 /**
 / * Converts AppLanguage enum to Java Locale.

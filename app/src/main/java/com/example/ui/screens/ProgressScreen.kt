@@ -448,12 +448,12 @@ fun ProgressScreen(
                                     )
                                     Spacer(modifier = Modifier.height(10.dp))
                                     Text(
-                                        text = "Belum Ada Kelas yang Selesai",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_empty_completed_title),
                                         style = MaterialTheme.typography.titleMedium,
                                         fontWeight = FontWeight.Bold
                                     )
                                     Text(
-                                        text = "Riwayat kelas dan sertifikatmu akan muncul di sini.",
+                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_empty_completed_subtitle),
                                         style = MaterialTheme.typography.bodySmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         modifier = Modifier.padding(horizontal = 24.dp, vertical = 6.dp),
@@ -470,7 +470,7 @@ fun ProgressScreen(
                                     ) {
                                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                                         Spacer(modifier = Modifier.width(6.dp))
-                                        Text("Mulai Belajar Sekarang", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.progress_start_learning_now), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                                     }
                                 }
                             }
@@ -504,7 +504,7 @@ fun ProgressScreen(
                                                 )
                                                 Spacer(modifier = Modifier.width(8.dp))
                                                 Text(
-                                                    text = "${allCompletedCourses.size} Kelas Selesai • ${completedTracks.size} Jalur Tuntas",
+                                                    text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_completed_summary_format, allCompletedCourses.size, completedTracks.size),
                                                     style = MaterialTheme.typography.bodySmall,
                                                     fontWeight = FontWeight.Bold,
                                                     color = MaterialTheme.colorScheme.onSurface
@@ -553,7 +553,7 @@ fun ProgressScreen(
                                                         completedCategoryFilter = null
                                                         completedDisplayLimit = 4
                                                     },
-                                                    label = { Text("Semua (${allCompletedCourses.size})", fontSize = 11.sp) },
+                                                    label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.progress_filter_all_format, allCompletedCourses.size), fontSize = 11.sp) },
                                                     colors = FilterChipDefaults.filterChipColors(
                                                         selectedContainerColor = TealPrimary,
                                                         selectedLabelColor = Color.White
@@ -587,7 +587,7 @@ fun ProgressScreen(
                                 if (completedTracks.isNotEmpty() && completedCategoryFilter == null) {
                                     item(key = "completed_tracks_header") {
                                         Text(
-                                            text = "Jalur Kelulusan Penuh (100%)",
+                                            text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_completed_tracks_full_title),
                                             style = MaterialTheme.typography.titleSmall,
                                             fontWeight = FontWeight.Bold,
                                             color = SuccessGreen
@@ -615,13 +615,13 @@ fun ProgressScreen(
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
                                             Text(
-                                                text = "Daftar Kelas Selesai",
+                                                text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_completed_courses_list_title),
                                                 style = MaterialTheme.typography.titleSmall,
                                                 fontWeight = FontWeight.Bold,
                                                 color = MaterialTheme.colorScheme.onBackground
                                             )
                                             Text(
-                                                text = "Menampilkan ${visibleCompletedCourses.size} dari ${filteredCompletedCourses.size}",
+                                                text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_showing_count_format, visibleCompletedCourses.size, filteredCompletedCourses.size),
                                                 style = MaterialTheme.typography.labelSmall,
                                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                                             )
@@ -648,7 +648,7 @@ fun ProgressScreen(
                                                             color = MaterialTheme.colorScheme.primary
                                                         )
                                                         Text(
-                                                            text = "${coursesInGroup.size} Kelas",
+                                                            text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_courses_count_format, coursesInGroup.size),
                                                             style = MaterialTheme.typography.labelSmall,
                                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                                         )
@@ -707,7 +707,7 @@ fun ProgressScreen(
                                                     )
                                                     Spacer(modifier = Modifier.width(4.dp))
                                                     Text(
-                                                        text = "Muat Lebih Banyak (+4)",
+                                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_load_more_4),
                                                         color = Color.White,
                                                         fontWeight = FontWeight.Bold,
                                                         fontSize = 12.sp
@@ -724,7 +724,7 @@ fun ProgressScreen(
                                                         .testTag("btn_show_all_completed")
                                                 ) {
                                                     Text(
-                                                        text = "Lihat Semua (${filteredCompletedCourses.size})",
+                                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_show_all_format, filteredCompletedCourses.size),
                                                         fontSize = 12.sp,
                                                         fontWeight = FontWeight.SemiBold,
                                                         color = MaterialTheme.colorScheme.primary
@@ -749,7 +749,7 @@ fun ProgressScreen(
                                                     )
                                                     Spacer(modifier = Modifier.width(4.dp))
                                                     Text(
-                                                        text = "Tampilkan Lebih Sedikit",
+                                                        text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_show_less),
                                                         fontSize = 12.sp,
                                                         fontWeight = FontWeight.SemiBold,
                                                         color = MaterialTheme.colorScheme.primary
@@ -820,7 +820,7 @@ fun ProgressScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Menu Navigasi",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.common_nav_menu),
                             tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
@@ -1133,7 +1133,7 @@ fun ProgressScreen(
                     if (nextLearningTarget.nextModule != null) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Modul ${nextLearningTarget.nextModule.order}: ${nextLearningTarget.nextModule.title} (${nextLearningTarget.nextModule.readingMinutes} mnt)",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_next_module_format, nextLearningTarget.nextModule.order, nextLearningTarget.nextModule.title, nextLearningTarget.nextModule.readingMinutes),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
@@ -1247,7 +1247,7 @@ fun ProgressScreen(
 
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = "Buka Detail",
+                            contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.progress_open_detail_cd),
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(16.dp)
                         )
@@ -1516,7 +1516,7 @@ private fun TrackProgressCard(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${item.completedCourses}/${item.totalCourses} Kelas • ${item.completedModules}/${item.totalModules} Modul",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_track_stats_format, item.completedCourses, item.totalCourses, item.completedModules, item.totalModules),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -1532,7 +1532,7 @@ private fun TrackProgressCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = if (item.percent >= 100) "Selesai" else "${item.percent}%",
+                            text = if (item.percent >= 100) androidx.compose.ui.res.stringResource(com.example.R.string.progress_status_done) else "${item.percent}%",
                             color = if (item.percent >= 100) SuccessGreen else MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp
@@ -1577,7 +1577,7 @@ private fun TrackProgressCard(
                     ) {
                         Icon(imageVector = Icons.Default.WorkspacePremium, contentDescription = null, tint = Color.Black, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Lihat Sertifikat", color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.progress_view_certificate), color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                     }
                 } else {
                     Button(
@@ -1587,7 +1587,12 @@ private fun TrackProgressCard(
                     ) {
                         Icon(imageVector = Icons.Default.PlayArrow, contentDescription = null, tint = Color.White, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text(if (item.percent > 0) "Lanjutkan Belajar" else "Mulai Jalur Ini", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                        Text(
+                            if (item.percent > 0) androidx.compose.ui.res.stringResource(com.example.R.string.progress_continue_learning) else androidx.compose.ui.res.stringResource(com.example.R.string.progress_start_this_track),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp
+                        )
                     }
                 }
             }
@@ -1653,7 +1658,7 @@ private fun CompletedCourseCard(
                             shape = RoundedCornerShape(4.dp)
                         ) {
                             Text(
-                                text = "Selesai (${item.totalModulesCount} Modul)",
+                                text = androidx.compose.ui.res.stringResource(com.example.R.string.progress_course_done_modules_format, item.totalModulesCount),
                                 color = SuccessGreen,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,

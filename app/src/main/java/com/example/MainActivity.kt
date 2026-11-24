@@ -1227,6 +1227,7 @@ fun CodeAcademyApp(
                 }
                 val initialLanguage = backStackEntry.arguments?.getString("lang")
                 val moduleAnalysisTitle = stringResource(R.string.common_code_analysis)
+                val playgroundAiPromptCtx = LocalContext.current
                 PlaygroundScreen(
                     courseId = courseId,
                     moduleId = moduleId,
@@ -1242,7 +1243,7 @@ fun CodeAcademyApp(
                             // Send prompt as initial user query to AI Tutor if not blank
                             if (prompt.isNotBlank()) {
                                 viewModel.askAi(
-                                    userQuery = "Halo AI Tutor, mohon bantu jelaskan dan periksa kode saya di Playground berikut ini:\n\n$prompt",
+                                    userQuery = playgroundAiPromptCtx.getString(R.string.playground_ai_prompt_format, prompt),
                                     courseTitle = courseTitle,
                                     moduleTitle = moduleTitle
                                 )

@@ -1281,4 +1281,16 @@
     <string name="public_profile_badge_architect">SYSTEM ARCHITECT</string>
     <string name="public_profile_badge_official_mentor">MENTOR RESMI</string>
     <string name="forum_badge_super_admin">SUPER ADMIN</string>
+
+    <!-- QA-05: Remaining Toast, Forum Time & Playground Prompt -->
+    <string name="cert_id_copied_toast_format">ID Kredensial disalin: %1$s</string>
+    <string name="materi_complete_prev_toast">Selesaikan modul sebelumnya dulu ya</string>
+    <string name="playground_ai_prompt_format">Halo AI Tutor, mohon bantu jelaskan dan periksa kode saya di Playground berikut ini:\n\n%1$s</string>
+    <string name="playground_open_ai_error_format">Gagal membuka AI Tutor: %1$s</string>
+    <string name="playground_export_error_format">Gagal mengekspor kode: %1$s</string>
+    <string name="playground_reset_template_toast">Kode direset ke template</string>
+    <string name="playground_reset_error_format">Gagal mereset kode: %1$s</string>
+    <string name="forum_time_just_now">Baru saja</string>
+    <string name="forum_time_mins_ago_format">%1$d mnt lalu</string>
+    <string name="forum_time_hours_ago_format">%1$d jam lalu</string>
 </resources>

@@ -25,6 +25,8 @@
 -keepclassmembers class com.example.data.models.** { *; }
 -keep class com.example.data.model.** { *; }
 -keepclassmembers class com.example.data.model.** { *; }
+-keep class com.example.data.remote.** { *; }
+-keepclassmembers class com.example.data.remote.** { *; }
 -keep class com.example.data.remote.supabase.** { *; }
 -keepclassmembers class com.example.data.remote.supabase.** { *; }
 

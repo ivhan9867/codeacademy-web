@@ -263,7 +263,7 @@ fun CertificateScreen(
                         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                         val clip = ClipData.newPlainText(context.getString(R.string.cert_view_label_id), certificate.certId)
                         clipboard.setPrimaryClip(clip)
-                        Toast.makeText(context, "ID Kredensial disalin: ${certificate.certId}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, context.getString(R.string.cert_id_copied_toast_format, certificate.certId), Toast.LENGTH_SHORT).show()
                     },
                     icon = Icons.Default.ContentCopy,
                     modifier = Modifier.weight(1f)

@@ -851,11 +851,45 @@ function attachEventListeners() {
   });
 
   document.getElementById("teamTableBody")?.addEventListener("click", async (e) => {
+    const promoteBtn = e.target.closest("[data-action='promote-team']");
+    if (promoteBtn && promoteBtn.dataset.email) {
+      if (currentAccessRole !== "super_admin") {
+        showToast("Hanya Super Admin yang dapat menaikkan peran tim.");
+        return;
+      }
+      const email = promoteBtn.dataset.email;
+      const target = facilitatorsList.find((f) => f.email === email);
+      if (target?.accessRole === "super_admin") {
+        showToast("Akun ini sudah berstatus Super Admin.");
+        return;
+      }
+      if (!confirm(`Naikkan peran ${target?.name || email} (${email}) menjadi Super Admin? Sesama Super Admin tidak dapat diturunkan kembali.`)) {
+        return;
+      }
+      if (isFirebaseReady && db) {
+        try {
+          await db.collection("facilitators").doc(email).update({
+            accessRole: "super_admin",
+            updatedAt: Date.now()
+          });
+          showToast(`${target?.name || email} berhasil dinaikkan menjadi Super Admin.`);
+        } catch (err) {
+          showToast("Gagal menaikkan peran: " + err.message);
+        }
+      }
+      return;
+    }
+
     const delBtn = e.target.closest("[data-action='remove-team']");
     if (!delBtn || !delBtn.dataset.email) return;
     const email = delBtn.dataset.email;
     if (email === currentFacilitatorUser?.email) {
       showToast("Tidak dapat menghapus akun sendiri.");
+      return;
+    }
+    const target = facilitatorsList.find((f) => f.email === email);
+    if (target?.accessRole === "super_admin") {
+      showToast("Sesama Super Admin dilindungi dan tidak dapat diturunkan atau dihapus.");
       return;
     }
     if (!confirm(`Hapus akses portal untuk ${email}?`)) return;
@@ -866,10 +900,6 @@ function attachEventListeners() {
       } catch (err) {
         showToast("Gagal menghapus anggota: " + err.message);
       }
-    } else {
-      facilitatorsList = facilitatorsList.filter((f) => f.email !== email);
-      renderTeam();
-      showToast(`Akses ${email} dihapus (Mode Demo).`);
     }
   });
 
@@ -1414,12 +1444,19 @@ function renderTeam() {
   tbody.innerHTML = facilitatorsList
     .map((m) => {
       const isAdmin = m.accessRole === "super_admin";
+      const isSelf = m.email === currentFacilitatorUser?.email;
+      const actionsHtml = isAdmin
+        ? `<span class="team-protected-pill">${isSelf ? "Akun Anda (Super Admin)" : "Super Admin (Dilindungi)"}</span>`
+        : `<div class="team-actions-row">
+             <button type="button" class="btn-promote-ghost" data-action="promote-team" data-email="${escapeHtml(m.email)}">⬆ Jadikan Super Admin</button>
+             <button type="button" class="btn-danger-ghost" data-action="remove-team" data-email="${escapeHtml(m.email)}">Cabut Akses</button>
+           </div>`;
       return `
         <tr>
           <td><strong>${escapeHtml(m.name || m.email)}</strong><div style="font-size:12px;color:var(--muted);">${escapeHtml(m.email)}</div></td>
           <td><span class="role-badge ${isAdmin ? "super-admin" : "facilitator"}">${isAdmin ? "👑 Super Admin" : "🎓 Fasilitator"}</span></td>
           <td>${escapeHtml(m.role || "-")}</td>
-          <td><button type="button" class="btn-danger-ghost" data-action="remove-team" data-email="${escapeHtml(m.email)}">Cabut Akses</button></td>
+          <td>${actionsHtml}</td>
         </tr>
       `;
     })

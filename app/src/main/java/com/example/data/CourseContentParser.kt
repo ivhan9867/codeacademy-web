@@ -167,8 +167,10 @@ object CourseContentParser {
                 }
                 currentBlockScalar = null
             }
-            if (currentKey == "codeSnippets" && currentMapSubKey != null && currentMapBlockScalar != null) {
-                codeSnippets[currentMapSubKey!!] = currentMapBlockScalar.toString().trimEnd('\r', '\n')
+            val mapSubKey = currentMapSubKey
+            val mapBlock = currentMapBlockScalar
+            if (currentKey == "codeSnippets" && mapSubKey != null && mapBlock != null) {
+                codeSnippets[mapSubKey] = mapBlock.toString().trimEnd('\r', '\n')
                 currentMapBlockScalar = null
                 currentMapSubKey = null
             }

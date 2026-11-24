@@ -2590,3 +2590,39 @@ tbody tr.row-priority-lime:hover {
     grid-template-columns: 1fr;
   }
 }
+
+.team-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-promote-ghost {
+  background: rgba(139, 92, 246, 0.12);
+  color: #6D28D9;
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 10px;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.btn-promote-ghost:hover {
+  background: rgba(139, 92, 246, 0.22);
+  border-color: #7C3AED;
+}
+
+.team-protected-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #B45309;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}

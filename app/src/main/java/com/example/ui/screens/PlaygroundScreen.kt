@@ -35,10 +35,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Psychology
@@ -90,6 +92,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -290,7 +293,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
     var htmlCode by remember(initialCode, currentModule) {
         mutableStateOf(
             when {
-                !currentModule?.starterHtml.isNullOrBlank() -> currentModule!!.starterHtml
+                !currentModule?.starterHtml.isNullOrBlank() -> currentModule?.starterHtml.orEmpty()
                 initialTab == 0 && !initialCode.isNullOrBlank() -> initialCode
                 !isSingleLanguageExample -> defaultHtml
                 else -> ""
@@ -301,7 +304,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
         mutableStateOf(
             when {
                 initialTab == 1 && !initialCode.isNullOrBlank() -> initialCode
-                !currentModule?.starterCss.isNullOrBlank() -> currentModule!!.starterCss
+                !currentModule?.starterCss.isNullOrBlank() -> currentModule?.starterCss.orEmpty()
                 !isSingleLanguageExample -> defaultCss
                 else -> ""
             }
@@ -311,7 +314,7 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
         mutableStateOf(
             when {
                 initialTab == 2 && !initialCode.isNullOrBlank() -> initialCode
-                !currentModule?.starterJs.isNullOrBlank() -> currentModule!!.starterJs
+                !currentModule?.starterJs.isNullOrBlank() -> currentModule?.starterJs.orEmpty()
                 !isSingleLanguageExample -> defaultJs
                 else -> ""
             }
@@ -517,7 +520,7 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                             }.take(1500)
                             onOpenAiTutor(currentCodeContext)
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Gagal membuka AI Tutor: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.playground_open_ai_error_format, e.localizedMessage ?: ""), Toast.LENGTH_SHORT).show()
                         }
                     }) {
                         Icon(
@@ -568,7 +571,7 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                             }
                             context.startActivity(Intent.createChooser(shareIntent, context.getString(R.string.playground_export_share_cd)))
                         } catch (e: Exception) {
-                            Toast.makeText(context, "Gagal mengekspor kode: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.playground_export_error_format, e.localizedMessage ?: ""), Toast.LENGTH_SHORT).show()
                         }
                     }) {
                         Icon(
@@ -601,9 +604,9 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                 executedCss = cssCode
                                 executedJs = jsCode
                                 consoleLogs.clear()
-                                Toast.makeText(context, "Kode direset ke template", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.playground_reset_template_toast), Toast.LENGTH_SHORT).show()
                             } catch (e: Exception) {
-                                Toast.makeText(context, "Gagal mereset kode: ${e.localizedMessage}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.playground_reset_error_format, e.localizedMessage ?: ""), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }) {
@@ -845,7 +848,7 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = currentModule!!.playgroundTask!!,
+                                    text = currentModule?.playgroundTask.orEmpty(),
                                     color = Color.White,
                                     fontSize = 12.sp,
                                     lineHeight = 16.sp
@@ -1059,13 +1062,24 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                 shape = RoundedCornerShape(999.dp),
                                 color = if (webSelected) TealPrimary else Color.Transparent
                             ) {
-                                Text(
-                                    text = stringResource(R.string.playground_mode_web),
-                                    color = if (webSelected) Color.White else Color(0xFF8B949E),
-                                    fontSize = 11.5.sp,
-                                    fontWeight = if (webSelected) FontWeight.Bold else FontWeight.Medium,
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 11.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Code,
+                                        contentDescription = null,
+                                        tint = if (webSelected) Color.White else Color(0xFF8B949E),
+                                        modifier = Modifier.size(13.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(5.dp))
+                                    Text(
+                                        text = stringResource(R.string.playground_mode_web),
+                                        color = if (webSelected) Color.White else Color(0xFF8B949E),
+                                        fontSize = 11.5.sp,
+                                        fontWeight = if (webSelected) FontWeight.Bold else FontWeight.Medium
+                                    )
+                                }
                             }
 
                             val jsSelected = workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE
@@ -1079,18 +1093,29 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                 shape = RoundedCornerShape(999.dp),
                                 color = if (jsSelected) TealPrimary else Color.Transparent
                             ) {
-                                Text(
-                                    text = stringResource(R.string.playground_mode_js),
-                                    color = if (jsSelected) Color.White else Color(0xFF8B949E),
-                                    fontSize = 11.5.sp,
-                                    fontWeight = if (jsSelected) FontWeight.Bold else FontWeight.Medium,
-                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-                                )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(horizontal = 11.dp, vertical = 6.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Terminal,
+                                        contentDescription = null,
+                                        tint = if (jsSelected) Color.White else Color(0xFF8B949E),
+                                        modifier = Modifier.size(13.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(5.dp))
+                                    Text(
+                                        text = stringResource(R.string.playground_mode_js),
+                                        color = if (jsSelected) Color.White else Color(0xFF8B949E),
+                                        fontSize = 11.5.sp,
+                                        fontWeight = if (jsSelected) FontWeight.Bold else FontWeight.Medium
+                                    )
+                                }
                             }
                         }
                     }
 
-                    // Primary Run CTA tailored to current mode
+                    // Primary Run CTA tailored to current mode (crisp dark-friendly Emerald button)
                     Button(
                         onClick = {
                             try {
@@ -1110,9 +1135,13 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                 Toast.makeText(context, "${e.localizedMessage}", Toast.LENGTH_SHORT).show()
                             }
                         },
-                        colors = ButtonDefaults.buttonColors(containerColor = SuccessGreen),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF10B981),
+                            contentColor = Color.White
+                        ),
                         shape = RoundedCornerShape(999.dp),
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp)
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 7.dp),
+                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp, pressedElevation = 0.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.PlayArrow,
@@ -1136,171 +1165,252 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
 
                 if (workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE) {
                     // ==========================================
-                    // JS CONSOLE MODE (EDITOR + TERMINAL ONLY, NO WEBVIEW PREVIEW)
+                    // JS CONSOLE MODE (EDITOR + TERMINAL ONLY, HEADLESS SANDBOX)
                     // ==========================================
-                    if (jsRunId > 0) {
-                        CodeSandboxWebView(
-                            html = "",
-                            css = "",
-                            js = executedJs,
-                            runId = jsRunId,
-                            onConsoleLog = { logMsg ->
-                                try {
-                                    if (jsConsoleLogs.size >= 150) jsConsoleLogs.removeAt(0)
-                                    jsConsoleLogs.add(logMsg)
-                                } catch (_: Throwable) {}
-                            },
-                            modifier = Modifier.size(0.dp)
-                        )
-                    }
-
-                    // File Action Sub-Header for script.js
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFF161B22))
-                            .padding(horizontal = 14.dp, vertical = 7.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "script.js",
-                                color = Color(0xFFFDE047),
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Surface(
-                                color = Color(0xFF21262D),
-                                shape = RoundedCornerShape(6.dp)
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        if (jsRunId > 0) {
+                            // Isolated invisible 1dp container so WebView never flashes white over editor/console
+                            Box(
+                                modifier = Modifier
+                                    .size(1.dp)
+                                    .alpha(0f)
                             ) {
-                                val jsLines = jsCode.lines().size
-                                Text(
-                                    text = "ES6 • ${stringResource(R.string.playground_lines_count_format, jsLines)}",
-                                    color = Color(0xFF8B949E),
-                                    fontSize = 10.sp,
-                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                CodeSandboxWebView(
+                                    html = "",
+                                    css = "",
+                                    js = executedJs,
+                                    runId = jsRunId,
+                                    isHeadless = true,
+                                    onConsoleLog = { logMsg ->
+                                        try {
+                                            if (jsConsoleLogs.size >= 150) jsConsoleLogs.removeAt(0)
+                                            jsConsoleLogs.add(logMsg)
+                                        } catch (_: Throwable) {}
+                                    },
+                                    modifier = Modifier.fillMaxSize()
                                 )
                             }
                         }
 
-                        IconButton(
-                            onClick = {
-                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                                clipboard.setPrimaryClip(ClipData.newPlainText("js_code", jsCode))
-                                Toast.makeText(context, context.getString(R.string.comp_code_copied_toast), Toast.LENGTH_SHORT).show()
-                            },
-                            modifier = Modifier.size(30.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ContentCopy,
-                                contentDescription = stringResource(R.string.comp_copy),
-                                tint = Color.White,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                    }
-
-                    // Top: Pure JavaScript Editor
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.56f)
-                    ) {
-                        CodeEditorField(
-                            value = jsCode,
-                            onValueChange = { jsCode = it },
-                            language = "js"
-                        )
-                    }
-
-                    // Bottom: Dedicated Always-Open JS Terminal Console
-                    Surface(
-                        color = Color(0xFF161B22),
-                        border = BorderStroke(1.dp, CodeDarkBorder),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.44f)
-                    ) {
                         Column(modifier = Modifier.fillMaxSize()) {
+                            // File Action Sub-Header for script.js
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                                    .background(Color(0xFF161B22))
+                                    .padding(horizontal = 14.dp, vertical = 7.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(
-                                        imageVector = Icons.Default.Terminal,
-                                        contentDescription = stringResource(R.string.playground_js_console_title),
-                                        tint = Color(0xFFC7F938),
-                                        modifier = Modifier.size(16.dp)
+                                    Box(
+                                        modifier = Modifier
+                                            .size(8.dp)
+                                            .clip(CircleShape)
+                                            .background(Color(0xFFFDE047))
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "${stringResource(R.string.playground_js_console_title)} (${jsConsoleLogs.size})",
-                                        color = Color.White,
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold
+                                        text = "script.js",
+                                        color = Color(0xFFFDE047),
+                                        fontFamily = FontFamily.Monospace,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp
                                     )
-                                }
-
-                                if (jsConsoleLogs.isNotEmpty()) {
-                                    TextButton(
-                                        onClick = { jsConsoleLogs.clear() },
-                                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Surface(
+                                        color = Color(0xFF21262D),
+                                        shape = RoundedCornerShape(6.dp)
                                     ) {
+                                        val jsLines = jsCode.lines().size
                                         Text(
-                                            text = stringResource(R.string.playground_output_clear),
+                                            text = "ES6 • ${stringResource(R.string.playground_lines_count_format, jsLines)}",
                                             color = Color(0xFF8B949E),
-                                            fontSize = 11.sp
+                                            fontSize = 10.sp,
+                                            modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
                                         )
                                     }
                                 }
+
+                                IconButton(
+                                    onClick = {
+                                        val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                        clipboard.setPrimaryClip(ClipData.newPlainText("js_code", jsCode))
+                                        Toast.makeText(context, context.getString(R.string.comp_code_copied_toast), Toast.LENGTH_SHORT).show()
+                                    },
+                                    modifier = Modifier.size(30.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.ContentCopy,
+                                        contentDescription = stringResource(R.string.comp_copy),
+                                        tint = Color(0xFFC9D1D9),
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
                             }
 
+                            // Top: Pure JavaScript Editor
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .weight(1f)
-                                    .background(Color(0xFF0D1117))
-                                    .padding(12.dp)
+                                    .weight(0.56f)
                             ) {
-                                if (jsConsoleLogs.isEmpty()) {
-                                    Text(
-                                        text = stringResource(R.string.playground_js_empty_msg),
-                                        color = Color(0xFF8B949E),
-                                        fontSize = 11.5.sp,
-                                        fontFamily = FontFamily.Monospace,
-                                        lineHeight = 18.sp
-                                    )
-                                } else {
-                                    val jsLogListState = rememberLazyListState()
-                                    LaunchedEffect(jsConsoleLogs.size) {
-                                        jsLogListState.animateScrollToItem((jsConsoleLogs.size - 1).coerceAtLeast(0))
-                                    }
-                                    LazyColumn(
-                                        state = jsLogListState,
-                                        verticalArrangement = Arrangement.spacedBy(4.dp),
-                                        modifier = Modifier.fillMaxSize()
+                                CodeEditorField(
+                                    value = jsCode,
+                                    onValueChange = { jsCode = it },
+                                    language = "js"
+                                )
+                            }
+
+                            // Bottom: Dedicated Always-Open JS Terminal Console
+                            Surface(
+                                color = Color(0xFF161B22),
+                                border = BorderStroke(1.dp, CodeDarkBorder),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(0.44f)
+                            ) {
+                                Column(modifier = Modifier.fillMaxSize()) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 14.dp, vertical = 8.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
                                     ) {
-                                        items(jsConsoleLogs.size) { idx ->
-                                            val line = jsConsoleLogs[idx]
-                                            val logColor = when {
-                                                line.startsWith("[Error]") -> Color(0xFFFF7B72)
-                                                line.startsWith("[Warn]") -> AmberGold
-                                                else -> Color(0xFF7EE787)
-                                            }
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Box(
+                                                modifier = Modifier
+                                                    .size(7.dp)
+                                                    .clip(CircleShape)
+                                                    .background(
+                                                        if (jsRunId > 0) Color(0xFF3FB950) else Color(0xFF6E7681)
+                                                    )
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Icon(
+                                                imageVector = Icons.Default.Terminal,
+                                                contentDescription = stringResource(R.string.playground_js_console_title),
+                                                tint = Color(0xFF3FB950),
+                                                modifier = Modifier.size(15.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(6.dp))
                                             Text(
-                                                text = "> $line",
-                                                color = logColor,
+                                                text = stringResource(R.string.playground_js_console_title),
+                                                color = Color.White,
                                                 fontSize = 12.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Surface(
+                                                color = Color(0xFF21262D),
+                                                shape = RoundedCornerShape(999.dp)
+                                            ) {
+                                                Text(
+                                                    text = "${jsConsoleLogs.size}",
+                                                    color = if (jsConsoleLogs.isNotEmpty()) Color(0xFF3FB950) else Color(0xFF8B949E),
+                                                    fontSize = 10.sp,
+                                                    fontFamily = FontFamily.Monospace,
+                                                    fontWeight = FontWeight.Bold,
+                                                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp)
+                                                )
+                                            }
+                                        }
+
+                                        if (jsConsoleLogs.isNotEmpty()) {
+                                            Surface(
+                                                onClick = { jsConsoleLogs.clear() },
+                                                color = Color(0xFF21262D),
+                                                shape = RoundedCornerShape(8.dp)
+                                            ) {
+                                                Row(
+                                                    verticalAlignment = Alignment.CenterVertically,
+                                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                                                ) {
+                                                    Icon(
+                                                        imageVector = Icons.Default.DeleteOutline,
+                                                        contentDescription = null,
+                                                        tint = Color(0xFF8B949E),
+                                                        modifier = Modifier.size(13.dp)
+                                                    )
+                                                    Spacer(modifier = Modifier.width(4.dp))
+                                                    Text(
+                                                        text = stringResource(R.string.playground_output_clear),
+                                                        color = Color(0xFFC9D1D9),
+                                                        fontSize = 10.5.sp,
+                                                        fontWeight = FontWeight.Medium
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .weight(1f)
+                                            .background(Color(0xFF0D1117))
+                                            .padding(12.dp)
+                                    ) {
+                                        if (jsConsoleLogs.isEmpty()) {
+                                            Text(
+                                                text = stringResource(R.string.playground_js_empty_msg),
+                                                color = Color(0xFF8B949E),
+                                                fontSize = 11.5.sp,
                                                 fontFamily = FontFamily.Monospace,
                                                 lineHeight = 18.sp
                                             )
+                                        } else {
+                                            val jsLogListState = rememberLazyListState()
+                                            LaunchedEffect(jsConsoleLogs.size) {
+                                                jsLogListState.animateScrollToItem((jsConsoleLogs.size - 1).coerceAtLeast(0))
+                                            }
+                                            SelectionContainer {
+                                                LazyColumn(
+                                                    state = jsLogListState,
+                                                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                                                    modifier = Modifier.fillMaxSize()
+                                                ) {
+                                                    items(jsConsoleLogs.size) { idx ->
+                                                        val line = jsConsoleLogs[idx]
+                                                        val isErr = line.startsWith("[Error]")
+                                                        val isWarn = line.startsWith("[Warn]")
+                                                        val logColor = when {
+                                                            isErr -> Color(0xFFFF7B72)
+                                                            isWarn -> AmberGold
+                                                            else -> Color(0xFF7EE787)
+                                                        }
+                                                        val rowBg = when {
+                                                            isErr -> Color(0xFFFF7B72).copy(alpha = 0.08f)
+                                                            isWarn -> AmberGold.copy(alpha = 0.08f)
+                                                            else -> Color.Transparent
+                                                        }
+                                                        Row(
+                                                            verticalAlignment = Alignment.Top,
+                                                            modifier = Modifier
+                                                                .fillMaxWidth()
+                                                                .clip(RoundedCornerShape(6.dp))
+                                                                .background(rowBg)
+                                                                .padding(horizontal = 6.dp, vertical = 3.dp)
+                                                        ) {
+                                                            Text(
+                                                                text = ">",
+                                                                color = Color(0xFF6E7681),
+                                                                fontSize = 12.sp,
+                                                                fontFamily = FontFamily.Monospace
+                                                            )
+                                                            Spacer(modifier = Modifier.width(6.dp))
+                                                            Text(
+                                                                text = line,
+                                                                color = logColor,
+                                                                fontSize = 12.sp,
+                                                                fontFamily = FontFamily.Monospace,
+                                                                lineHeight = 18.sp
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -1686,31 +1796,60 @@ fun CodeEditorField(
     val transformation = remember(language) { codeHighlightTransformation(language) }
     val vScroll = rememberScrollState()
     val hScroll = rememberScrollState()
-    Box(
+    val lineCount = remember(value) { value.count { it == '\n' } + 1 }
+    val lineNumbersText = remember(lineCount) {
+        (1..lineCount).joinToString("\n")
+    }
+
+    Row(
         modifier = modifier
             .fillMaxSize()
             .background(CodeDarkBg)
             .verticalScroll(vScroll)
-            .horizontalScroll(hScroll)
-            .padding(12.dp)
     ) {
-        BasicTextField(
-            value = value,
-            onValueChange = onValueChange,
-            textStyle = TextStyle(
+        // Line numbers gutter
+        Text(
+            text = lineNumbersText,
+            style = TextStyle(
                 fontFamily = FontFamily.Monospace,
-                fontSize = 13.sp,
-                color = Color(0xFFE6EDF3),
-                lineHeight = 22.sp
+                fontSize = 12.sp,
+                color = Color(0xFF484F58),
+                lineHeight = 22.sp,
+                textAlign = TextAlign.End
             ),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Ascii,
-                autoCorrectEnabled = false,
-                capitalization = KeyboardCapitalization.None
-            ),
-            visualTransformation = transformation,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .background(Color(0xFF12171E))
+                .padding(start = 10.dp, end = 8.dp, top = 12.dp, bottom = 12.dp)
         )
+        Box(
+            modifier = Modifier
+                .width(1.dp)
+                .background(CodeDarkBorder)
+        )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .horizontalScroll(hScroll)
+                .padding(12.dp)
+        ) {
+            BasicTextField(
+                value = value,
+                onValueChange = onValueChange,
+                textStyle = TextStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 13.sp,
+                    color = Color(0xFFE6EDF3),
+                    lineHeight = 22.sp
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Ascii,
+                    autoCorrectEnabled = false,
+                    capitalization = KeyboardCapitalization.None
+                ),
+                visualTransformation = transformation,
+                cursorBrush = SolidColor(Color(0xFF10B981)),
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }

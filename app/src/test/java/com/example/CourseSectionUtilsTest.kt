@@ -105,18 +105,15 @@ class CourseSectionUtilsTest {
     }
 
     @Test
-    fun testCatalogJsonContainsPythonSectionTitles() {
+    fun testCatalogJsonContainsFrontEndCourses() {
         val dir = CourseCatalogParser.findLocalCatalogDirectory()
         assertNotNull("Local catalog directory must exist", dir)
 
         val catalogData = CourseCatalogParser.loadCatalogFromDirectory(dir!!)
-        val pyCourse = catalogData.courses.find { it.id == "py-fund-01" }
-        assertNotNull("py-fund-01 must be parsed", pyCourse)
-        assertTrue("py-fund-01 must have sectionTitles map populated", pyCourse!!.sectionTitles.isNotEmpty())
-        assertEquals("Persiapan", pyCourse.sectionTitles["PERSIAPAN"])
-        assertEquals("Dasar-Dasar Python", pyCourse.sectionTitles["PENDAHULUAN"])
-        assertEquals("Alur Program & Perulangan", pyCourse.sectionTitles["INTI"])
-        assertEquals("Struktur Data & Fungsi", pyCourse.sectionTitles["LANJUTAN"])
-        assertEquals("Proyek & Evaluasi", pyCourse.sectionTitles["EVALUASI"])
+        val feCourse = catalogData.courses.find { it.id == "fe-web-foundation-00" }
+        assertNotNull("fe-web-foundation-00 must be parsed", feCourse)
+        assertTrue("Catalog must contain at least 3 Front-End courses", catalogData.courses.size >= 3)
+        assertNotNull("fe-css-02 must be parsed", catalogData.courses.find { it.id == "fe-css-02" })
+        assertNotNull("fe-js-03 must be parsed", catalogData.courses.find { it.id == "fe-js-03" })
     }
 }

@@ -225,8 +225,7 @@ fun CourseForumScreen(
     val selectedPublicProfile by socialViewModel.selectedPublicProfile.collectAsStateWithLifecycle()
     val isLoadingPublicProfile by socialViewModel.isLoadingPublicProfile.collectAsStateWithLifecycle()
 
-    if (postToDelete != null) {
-        val targetDelete = postToDelete!!
+    postToDelete?.let { targetDelete ->
         AlertDialog(
             onDismissRequest = { postToDelete = null },
             title = { Text(stringResource(R.string.forum_delete_title), fontWeight = FontWeight.Bold) },
@@ -397,8 +396,7 @@ fun CourseForumScreen(
                         .navigationBarsPadding()
                         .imePadding()
                 ) {
-                    if (replyingToPost != null) {
-                        val replyTarget = replyingToPost!!
+                    replyingToPost?.let { replyTarget ->
                         val snippet = if (replyTarget.content.length > 60) replyTarget.content.take(57) + "..." else replyTarget.content
                         Surface(
                             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
@@ -865,8 +863,10 @@ fun ForumPostCard(
 ) {
     val isAuthorMe = post.authorId == currentUserId
     val hasFacilitatorReply = remember(replies) { replies.any { it.authorIsMentor } }
-    val formattedTime = remember(post.timestamp) {
-        formatTimestamp(post.timestamp)
+    val timeCtx = LocalContext.current
+    val appLang = com.example.util.localization.LocalAppLanguage.current
+    val formattedTime = remember(post.timestamp, appLang) {
+        formatTimestamp(post.timestamp, timeCtx, appLang)
     }
 
     val containerBgColor = if (isHighlighted) {
@@ -1162,7 +1162,9 @@ private fun ForumReplyItem(
     modifier: Modifier = Modifier
 ) {
     val isAuthorMe = reply.authorId == currentUserId
-    val formattedTime = remember(reply.timestamp) { formatTimestamp(reply.timestamp) }
+    val replyTimeCtx = LocalContext.current
+    val replyAppLang = com.example.util.localization.LocalAppLanguage.current
+    val formattedTime = remember(reply.timestamp, replyAppLang) { formatTimestamp(reply.timestamp, replyTimeCtx, replyAppLang) }
 
     Row(
         modifier = modifier
@@ -1543,12 +1545,16 @@ private fun ForumAuthorBadges(
     }
 }
 
-private fun formatTimestamp(millis: Long, language: AppLanguage = AppLanguage.INDONESIAN): String {
+private fun formatTimestamp(
+    millis: Long,
+    context: android.content.Context,
+    language: AppLanguage = AppLanguage.INDONESIAN
+): String {
     val diff = System.currentTimeMillis() - millis
     return when {
-        diff < 60_000L -> "Baru saja"
-        diff < 3600_000L -> "${diff / 60_000L} mnt lalu"
-        diff < 86400_000L -> "${diff / 3600_000L} jam lalu"
+        diff < 60_000L -> context.getString(R.string.forum_time_just_now)
+        diff < 3600_000L -> context.getString(R.string.forum_time_mins_ago_format, diff / 60_000L)
+        diff < 86400_000L -> context.getString(R.string.forum_time_hours_ago_format, diff / 3600_000L)
         else -> SimpleDateFormat("dd MMM yyyy, HH:mm", language.toLocale()).format(Date(millis))
     }
 }

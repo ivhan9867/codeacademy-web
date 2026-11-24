@@ -1517,4 +1517,16 @@
     <string name="public_profile_badge_architect">SYSTEM ARCHITECT</string>
     <string name="public_profile_badge_official_mentor">官方导师</string>
     <string name="forum_badge_super_admin">SUPER ADMIN</string>
+
+    <!-- QA-05: Remaining Toast, Forum Time & Playground Prompt -->
+    <string name="cert_id_copied_toast_format">已复制证书 ID：%1$s</string>
+    <string name="materi_complete_prev_toast">请先完成上一个模块</string>
+    <string name="playground_ai_prompt_format">你好 AI 导师，请帮我解释并检查以下 Playground 代码：\n\n%1$s</string>
+    <string name="playground_open_ai_error_format">无法打开 AI 导师：%1$s</string>
+    <string name="playground_export_error_format">导出代码失败：%1$s</string>
+    <string name="playground_reset_template_toast">代码已重置为模板</string>
+    <string name="playground_reset_error_format">重置代码失败：%1$s</string>
+    <string name="forum_time_just_now">刚刚</string>
+    <string name="forum_time_mins_ago_format">%1$d 分钟前</string>
+    <string name="forum_time_hours_ago_format">%1$d 小时前</string>
 </resources>

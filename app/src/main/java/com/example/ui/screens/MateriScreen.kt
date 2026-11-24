@@ -328,7 +328,7 @@ fun MateriScreen(
                                     .padding(horizontal = 12.dp, vertical = 4.dp)
                                     .clickable {
                                         if (isModLocked) {
-                                            Toast.makeText(context, "Selesaikan modul sebelumnya dulu ya", Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(context, context.getString(R.string.materi_complete_prev_toast), Toast.LENGTH_SHORT).show()
                                         } else {
                                             scope.launch { drawerState.close() }
                                             onSelectModule(mod.id)

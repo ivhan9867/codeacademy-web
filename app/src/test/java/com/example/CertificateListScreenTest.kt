@@ -35,7 +35,7 @@ import org.robolectric.annotation.Config
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [36])
+@Config(sdk = [36], qualifiers = "id")
 class CertificateListScreenTest {
 
     @get:Rule
@@ -123,8 +123,8 @@ class CertificateListScreenTest {
         }
 
         // Verify Title and Description in Empty State
-        composeTestRule.onNodeWithText("Belum Ada Sertifikat Nih").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Selesaikan satu kelas penuh untuk meraih sertifikat pertamamu!").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Belum Ada Sertifikat").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Selesaikan seluruh modul, lulus kuis akhir (minimal 70%), dan dapatkan persetujuan proyek akhir dari fasilitator untuk menerbitkan sertifikat resmi.").assertIsDisplayed()
 
         // Verify CTA button "Jelajahi Kelas" is displayed and clickable
         composeTestRule.onNodeWithTag("btn_explore_courses").performScrollTo().assertIsDisplayed()

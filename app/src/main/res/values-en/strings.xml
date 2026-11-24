@@ -1281,4 +1281,16 @@
     <string name="public_profile_badge_architect">SYSTEM ARCHITECT</string>
     <string name="public_profile_badge_official_mentor">OFFICIAL MENTOR</string>
     <string name="forum_badge_super_admin">SUPER ADMIN</string>
+
+    <!-- QA-05: Remaining Toast, Forum Time & Playground Prompt -->
+    <string name="cert_id_copied_toast_format">Credential ID copied: %1$s</string>
+    <string name="materi_complete_prev_toast">Please complete the previous module first</string>
+    <string name="playground_ai_prompt_format">Hi AI Tutor, please help explain and review my Playground code below:\n\n%1$s</string>
+    <string name="playground_open_ai_error_format">Failed to open AI Tutor: %1$s</string>
+    <string name="playground_export_error_format">Failed to export code: %1$s</string>
+    <string name="playground_reset_template_toast">Code reset to template</string>
+    <string name="playground_reset_error_format">Failed to reset code: %1$s</string>
+    <string name="forum_time_just_now">Just now</string>
+    <string name="forum_time_mins_ago_format">%1$d min ago</string>
+    <string name="forum_time_hours_ago_format">%1$d hr ago</string>
 </resources>

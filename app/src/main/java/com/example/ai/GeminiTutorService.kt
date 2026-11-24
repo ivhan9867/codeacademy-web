@@ -35,10 +35,9 @@ class GeminiTutorService {
     companion object {
         private const val TAG = "GeminiTutorService"
         private val DIRECT_GEMINI_MODELS = listOf(
-            "gemini-3-flash-preview",
-            "gemini-flash-lite-latest",
-            "gemini-3.5-flash-lite",
-            "gemini-3.8-flash",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash",
             "gemini-flash-latest"
         )
         private fun directEndpoint(model: String) =
@@ -174,14 +173,14 @@ Your responsibilities:
                         )
                     }
                 } catch (e: Throwable) {
-                    directError = "$modelName (key=${apiKey.take(6)}..len=${apiKey.length}): ${e.message}"
+                    directError = "$modelName: ${e.message}"
                     Log.e(TAG, "Direct Gemini API ($modelName) failed", e)
                 }
             }
         }
 
         // 2. Secondary: Firebase AI Logic SDK (Gemini Developer API - free tier)
-        for (fbModel in listOf("gemini-3.8-flash", "gemini-2.5-flash", "gemini-2.0-flash")) {
+        for (fbModel in listOf("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.0-flash")) {
             try {
                 val generativeModel = Firebase.ai(backend = GenerativeBackend.googleAI()).generativeModel(
                     modelName = fbModel,
@@ -210,14 +209,18 @@ Your responsibilities:
         }
 
         val combinedError = listOfNotNull(directError, firebaseError).joinToString(" | ")
-        val fallbackBase = generateSmartFallbackResponse(userMessage, courseTitle, moduleTitle, moduleContent)
-        val diagnosticNote = if (combinedError.isNotBlank()) "\n\n---\n_Info koneksi: ${combinedError.take(220)}_" else ""
+        val fallbackBase = generateSmartFallbackResponse(userMessage, courseTitle, moduleTitle, moduleContent, language)
+        val isIndonesian = resolveLanguageName(language) == "Bahasa Indonesia"
+        val diagnosticNote = if (combinedError.isNotBlank()) {
+            val label = if (isIndonesian) "Info koneksi" else "Connection info"
+            "\n\n---\n_${label}: ${combinedError.take(180)}_"
+        } else ""
 
         // 3. Fallback: Smart localized engine (clearly flagged as offline)
         return@withContext AiTutorResult(
             text = fallbackBase + diagnosticNote,
             isLive = false,
-            provider = "Mode Offline",
+            provider = if (isIndonesian) "Mode Offline" else "Offline Mode",
             errorDetail = combinedError
         )
     }
@@ -288,15 +291,86 @@ Your responsibilities:
         query: String,
         courseTitle: String,
         moduleTitle: String,
-        moduleContent: String? = null
+        moduleContent: String? = null,
+        language: String = "id"
     ): String {
         val q = query.lowercase()
+        val isIndonesian = resolveLanguageName(language) == "Bahasa Indonesia"
         val moduleHint = moduleContent
             ?.lineSequence()
             ?.map { it.trim() }
             ?.firstOrNull { it.length > 40 && !it.startsWith("#") && !it.startsWith("```") && !it.startsWith("---") }
-            ?.let { "\n\n**Ringkasan Modul ($moduleTitle):**\n> $it" }
+            ?.let {
+                if (isIndonesian) "\n\n**Ringkasan Modul ($moduleTitle):**\n> $it"
+                else "\n\n**Module Summary ($moduleTitle):**\n> $it"
+            }
             .orEmpty()
+
+        if (!isIndonesian) {
+            return when {
+                q.contains("flexbox") || q.contains("flex") -> """
+**CSS Flexbox** is a one-dimensional layout model for arranging elements horizontally (row) or vertically (column).
+
+```css
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+```
+*CodeAcademy Tip:* Use `justify-content: space-between;` for clean mobile navbars.
+                """.trimIndent()
+
+                q.contains("grid") -> """
+**CSS Grid** is ideal for two-dimensional layouts (rows and columns simultaneously).
+
+```css
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+```
+Combining `auto-fit` and `minmax()` makes columns automatically responsive without media queries.
+                """.trimIndent()
+
+                q.contains("html") || q.contains("tag") || q.contains("element") -> """
+In HTML, elements consist of an **Opening Tag**, **Content**, and a **Closing Tag**.
+
+```html
+<main>
+  <button class="btn-primary">Start Learning</button>
+</main>
+```
+In **$moduleTitle**, prefer semantic tags like `<header>`, `<main>`, `<section>`, and `<footer>` for clean, accessible structure.
+                """.trimIndent()
+
+                q.contains("js") || q.contains("javascript") || q.contains("variable") || q.contains("dom") -> """
+In modern JavaScript (ES6+), prefer `const` for fixed values, `let` for reassignable values, and `querySelector` for DOM manipulation:
+
+```javascript
+const btn = document.querySelector("#action-btn");
+let count = 0;
+
+btn.addEventListener("click", () => {
+  count += 1;
+  btn.textContent = `Clicked ${'$'}{count}x`;
+});
+```
+                """.trimIndent()
+
+                else -> """
+*(Offline Mode — Gemini AI connection is currently unavailable)*
+
+For module **$moduleTitle** in **$courseTitle**, try these steps:$moduleHint
+
+1. Test your code snippet in **Playground** and inspect **Web Preview** or **JS Console**.
+2. Double-check closing HTML tags, CSS semicolons (`;`), and JavaScript selectors.
+3. Once back online, resend your question for a live Gemini AI explanation.
+                """.trimIndent()
+            }
+        }
 
         return when {
             q.contains("flexbox") || q.contains("flex") -> """

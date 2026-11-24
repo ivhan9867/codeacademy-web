@@ -1050,7 +1050,8 @@ fun CodeSandboxWebView(
     js: String,
     onConsoleLog: (String) -> Unit,
     modifier: Modifier = Modifier,
-    runId: Int = 0
+    runId: Int = 0,
+    isHeadless: Boolean = false
 ) {
     val fullHtmlDoc = remember(html, css, js, runId) {
         """
@@ -1116,6 +1117,10 @@ fun CodeSandboxWebView(
         factory = { ctx ->
             WebView(ctx).apply {
                 try {
+                    if (isHeadless) {
+                        setBackgroundColor(android.graphics.Color.TRANSPARENT)
+                        visibility = android.view.View.INVISIBLE
+                    }
                     settings.javaScriptEnabled = true
                     settings.domStorageEnabled = true
                     settings.allowFileAccess = false

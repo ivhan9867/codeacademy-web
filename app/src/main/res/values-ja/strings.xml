@@ -1517,4 +1517,16 @@
     <string name="public_profile_badge_architect">SYSTEM ARCHITECT</string>
     <string name="public_profile_badge_official_mentor">公式メンター</string>
     <string name="forum_badge_super_admin">SUPER ADMIN</string>
+
+    <!-- QA-05: Remaining Toast, Forum Time & Playground Prompt -->
+    <string name="cert_id_copied_toast_format">認定IDをコピーしました: %1$s</string>
+    <string name="materi_complete_prev_toast">先に前のモジュールを完了してください</string>
+    <string name="playground_ai_prompt_format">AIチューターさん、以下のPlaygroundのコードを解説・チェックしてください:\n\n%1$s</string>
+    <string name="playground_open_ai_error_format">AIチューターを開けませんでした: %1$s</string>
+    <string name="playground_export_error_format">コードのエクスポートに失敗しました: %1$s</string>
+    <string name="playground_reset_template_toast">コードをテンプレートにリセットしました</string>
+    <string name="playground_reset_error_format">コードのリセットに失敗しました: %1$s</string>
+    <string name="forum_time_just_now">たった今</string>
+    <string name="forum_time_mins_ago_format">%1$d分前</string>
+    <string name="forum_time_hours_ago_format">%1$d時間前</string>
 </resources>

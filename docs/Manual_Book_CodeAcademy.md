@@ -9,24 +9,26 @@
 - **Halaman Sampul (Cover)** ................................................................................. 1
 - **Daftar Isi** ....................................................................................................... 2
 - **1. Pengenalan Sistem, Arsitektur & Spesifikasi Platform** .............................. 3
-- **2. Unduh & Instalasi Aplikasi Versi Mobile (Android)** ................................ 4
-- **3. Pendaftaran Akun, Masuk, Google Linking & Pemulihan Sandi** ............... 5
-- **4. Alur Onboarding Siswa Baru (5 Langkah)** ................................................. 6
-- **5. Beranda (Home Dashboard), Streak, Misi & Tantangan Kilat** ................. 7
-- **6. Menu Samping (Drawer), Pencarian Global & Tersimpan** ......................... 8
-- **7. Katalog Kelas, Placement Test & Detail Silabus Kursus** ........................... 9
-- **8. Pembelajaran Interaktif (Materi Reader)** ................................................. 10
-- **9. Playground Interaktif (Live HTML/CSS/JS Sandbox)** ............................... 11
-- **10. Fitur AI Tutor Cerdas (Codi — Google Gemini AI)** ................................ 12
-- **11. Sistem Evaluasi, Kuis Bab & Evaluasi Akhir** .......................................... 13
-- **12. Pengumpulan Tugas Akhir (Final Project Submission)** ............................. 14
-- **13. Forum Diskusi Kelas Real-Time & Targeted Reply** ................................. 15
-- **14. Progres Belajar, Papan Peringkat & Sertifikat Digital** ............................. 16
-- **15. Profil Pengguna, Peta Aktivitas, Bahasa & Zona Berbahaya** ................. 17
-- **16. Halaman Publik Web & Pintu Masuk Portal Staf** ................................... 18
-- **17. Portal Web Fasilitator: Proyek, Forum Terverifikasi & Profil** ................. 19
-- **18. Panel Super Admin: Tim Fasilitator, Audit Sertifikat & Export CSV** ......... 20
-- **19. Portal Verifikasi Sertifikat Publik & Keamanan Firestore** .................... 21
+- **2. Use Case Diagram & Matriks Hak Akses Aktor** ........................................ 4
+- **3. Flowchart Sistem & Arsitektur Alur Aplikasi Mobile** ............................... 5
+- **4. User Flow End-to-End Aplikasi CodeAcademy** .......................................... 6
+- **5. Unduh & Instalasi Aplikasi Versi Mobile (Android)** ................................ 7
+- **6. Pendaftaran Akun, Masuk, Google Linking & Status Akun** ....................... 8
+- **7. Alur Onboarding Siswa Baru (4 Langkah)** ................................................. 9
+- **8. Beranda (Home Dashboard), Streak, Misi & Tantangan Kilat** ................. 10
+- **9. Menu Samping (Drawer), Pencarian Global & Tersimpan** ......................... 11
+- **10. Katalog Kursus, Placement Test & Detail Silabus** ................................... 12
+- **11. Pembelajaran Interaktif (Materi Reader)** ................................................. 13
+- **12. Playground Interaktif (Web Studio & JS Console)** .................................. 14
+- **13. Fitur AI Tutor Cerdas (Codi — Google Gemini AI)** ................................ 15
+- **14. Sistem Evaluasi, Kuis Bab & Evaluasi Akhir** .......................................... 16
+- **15. Pengumpulan Tugas Akhir (Final Project Submission)** ............................. 17
+- **16. Forum Diskusi Real-Time, Targeted Reply & Badge Staf** ........................ 18
+- **17. Progres Belajar, Papan Peringkat & Sertifikat Digital** ............................. 19
+- **18. Profil Pengguna, Profile Studio, Bahasa & Zona Berbahaya** .................. 20
+- **19. Halaman Publik Web & Portal Web Fasilitator** ....................................... 21
+- **20. Panel Super Admin: Promosi Tim, Ban Siswa & Export CSV** ................... 22
+- **21. Portal Verifikasi Sertifikat Publik & Keamanan Firestore** ...................... 23
 
 ---
 
@@ -41,342 +43,384 @@
 
 | Komponen Platform | Teknologi Utama | Fungsi & Tanggung Jawab |
 | :--- | :--- | :--- |
-| Aplikasi Mobile (Android) | Kotlin, Jetpack Compose Material 3, Room Database, DataStore | Pembelajaran *offline-first*, Playground HTML/CSS/JS, Kuis, Forum, Gamifikasi, AI Tutor Codi |
-| Autentikasi & Keamanan | Firebase Authentication (Email, Google Sign-In, Anonymous), `firestore.rules` | Login siswa & staf, penautan akun tamu ke Google (`linkWithCredential`), validasi hak akses per peran |
+| Aplikasi Mobile (Android) | Kotlin, Jetpack Compose Material 3, Room Database v16, DataStore | Pembelajaran *offline-first*, Playground (Web Studio & JS Console), Kuis, Forum, Gamifikasi, AI Tutor Codi, 4 Bahasa |
+| Autentikasi & Keamanan | Firebase Authentication (Email, Google Sign-In, Anonymous), `firestore.rules` | Login siswa & staf, penautan akun tamu ke Google (`linkWithCredential`), pemantauan status Ban, validasi hak akses |
 | Sinkronisasi Cloud | Cloud Firestore (Project `codeacademy-6a361`) | Koleksi `users`, `forum_posts`, `project_submissions`, `certificates`, `announcements`, dan `facilitators` |
-| Asisten AI | Firebase AI Logic SDK (Google Gemini AI) | Tutor interaktif sadar konteks modul/kode, pembantu debugging, sapaan ringkas & contoh kode |
+| Asisten AI | Direct Gemini REST API + Firebase AI Logic SDK (Google Gemini) | Tutor interaktif sadar konteks modul/kode dalam 4 bahasa (`id`, `en`, `ja`, `zh`) + fallback offline terlokalisasi |
 | Web Portal Staf & Publik | HTML5, CSS3, Vanilla JS + Firebase Web SDK (`public/`) | Landing page publik, Portal Fasilitator, Panel Super Admin, dan Portal Verifikasi `verify.html` |
 
 ### Spesifikasi Kurikulum & Evaluasi Aktual:
 
-| ID Kelas | Judul Kelas | Tingkat | Jumlah Modul | Kuis Bab | Proyek Akhir |
+| ID Kursus | Judul Kursus | Tingkat | Jumlah Modul | Kuis Bab | Proyek Akhir |
 | :--- | :--- | :--- | :---: | :---: | :---: |
 | `fe-web-foundation-00` | Fondasi Web: Dari Nol ke Baris Kode Pertama | Orientasi | 106 Modul | 5 Kuis | Ya |
 | `fe-css-02` | CSS Layout Modern: Flexbox & Grid | Pemula-Menengah | 24 Modul | 2 Kuis | Ya |
 | `fe-js-03` | JavaScript Fundamentals | Pemula | 26 Modul | 2 Kuis | Ya |
 | **Total Kurikulum** | **Jalur Spesialisasi Front-End Web Development** | **Berjenjang** | **156 Modul** | **9 Kuis** | **3 Proyek** |
 
-### Matriks Peran Pengguna Ekosistem:
-- **Siswa Terdaftar & Tamu (Android):** Membaca 156 modul, menjalankan kode di Playground, bertanya ke AI Tutor Codi, mengikuti kuis, berdiskusi di Forum, mengumpulkan Proyek Akhir, memantau Leaderboard & Sertifikat.
-- **Fasilitator (`accessRole: "facilitator"` di Web):** Menilai antrean Proyek Akhir dengan rubrik (40% Kuis + 60% Proyek), menerbitkan sertifikat `CC-...` atau meminta revisi, menjawab & mem-pin *Jawaban Terverifikasi* di Forum, mengirim Pengumuman kelas, dan mengatur Profil Fasilitator.
-- **Super Admin (`accessRole: "super_admin"` di Web):** Memiliki seluruh hak akses Fasilitator ditambah manajemen **Tim Fasilitator** (`/facilitators/{email}`), **Sertifikat & Audit**, **Ringkasan Analitik & Direktori Siswa**, serta **Unduh Laporan CSV** nilai dan sertifikat.
-- **Publik / Penguji / Rekruter (`verify.html`):** Memeriksa keabsahan ID Kredensial Sertifikat `CC-...` tanpa perlu login.
+---
+
+## 2. USE CASE DIAGRAM & MATRIKS HAK AKSES AKTOR
+
+Sebelum masuk ke panduan operasional layar, diagram berikut memetakan interaksi seluruh aktor dalam ekosistem **CodeAcademy** (Aplikasi Mobile Android dan Portal Web):
+
+![Use Case Diagram CodeAcademy](manual_book_assets/flow_00_use_case_diagram.png)
+*Gambar 2: Use Case Diagram Ekosistem CodeAcademy (4 Aktor Utama)*
+
+### Matriks Peran & Hak Akses Aktor:
+
+| Aktor | Platform | Hak Akses & Use Case Utama |
+| :--- | :---: | :--- |
+| **Siswa Terdaftar & Tamu** | Android App | Registrasi/Login/Google Link, Onboarding 4 langkah, membaca 156 modul, Placement Test, Playground (Web Studio & JS Console), AI Tutor Codi, Kuis Bab & Evaluasi Akhir, Pengumpulan Proyek Akhir, Forum Diskusi, Leaderboard, Profile Studio, 4 Bahasa, dan Sertifikat Digital. |
+| **Fasilitator** (`accessRole: "facilitator"`) | Web Portal | Login Firebase Auth terverifikasi `/facilitators/{email}`, meninjau antrean Proyek Akhir dengan rubrik (40% Kuis + 60% Proyek), menerbitkan sertifikat `CC-...` atau meminta revisi, menjawab & mem-pin *Jawaban Terverifikasi* di Forum, mengirim Pengumuman kelas, dan mengelola Profil Staf (tersinkron ke `users/{uid}`). |
+| **Super Admin** (`accessRole: "super_admin"`) | Web Panel | Mewarisi seluruh hak akses Fasilitator ditambah manajemen **Tim Fasilitator** (tambah staf, promosi `Facilitator → Super Admin` dengan perlindungan sesama Super Admin), **Ban / Unban Akun Siswa**, **Audit & Pencabutan Sertifikat**, **Analitik**, serta **Export CSV**. |
+| **Publik / Penguji / Rekruter** | Web (`verify.html`) | Memeriksa keaslian ID Kredensial Sertifikat `CC-...` secara langsung ke Firestore tanpa login, serta membaca/mengunduh Manual Book. |
 
 ---
 
-## 2. UNDUH & INSTALASI APLIKASI VERSI MOBILE (ANDROID)
+## 3. FLOWCHART SISTEM & ARSITEKTUR ALUR APLIKASI MOBILE
+
+Bagian ini mendokumentasikan alur logika internal aplikasi **CodeAcademy Mobile** secara menyeluruh—mulai dari gerbang masuk (*gatekeeping*), siklus belajar & evaluasi, hingga sinkronisasi data lokal-cloud serta hierarki tampilan profil antar peran.
+
+### 3.1 Flowchart Navigasi & Gatekeeping Aplikasi
+
+![Flowchart Navigasi dan Gatekeeping](manual_book_assets/flow_01_app_navigation_architecture.png)
+*Gambar 3A: Flowchart Gerbang Masuk, Pemantauan Status Ban, Autentikasi & Onboarding*
+
+1. **Splash Screen & Inisialisasi:** Aplikasi memuat katalog JSON (`front-end.json`) serta membaca preferensi sesi (`SessionManager` DataStore) dan bahasa aktif (`id`, `en`, `ja`, `zh`).
+2. **Ban Monitor Guard:** Sistem memeriksa status `isBanned` akun pada Cloud Firestore (`users/{uid}`). Jika akun dibekukan oleh Super Admin, pengguna langsung diarahkan ke **`AccountBannedScreen`** (menampilkan alasan pembekuan, tombol periksa status ulang, ajukan banding via email, dan keluar akun).
+3. **Auth & Onboarding Gate:** Jika belum masuk, pengguna diarahkan ke **`LoginScreen`** / **`RegisterScreen`** / **Masuk Tamu**. Pengguna baru yang belum menyelesaikan pengenalan (`isOnboarded == false`) melewati **Onboarding 4 Langkah** sebelum masuk ke **Main Dashboard** (5 Tab BottomNav + Navigation Drawer).
+
+### 3.2 Flowchart Siklus Belajar, Kuis & Penerbitan Sertifikat
+
+![Flowchart Siklus Belajar dan Evaluasi](manual_book_assets/flow_02_learning_evaluation_loop.png)
+*Gambar 3B: Flowchart Siklus Pembelajaran, Placement Test, Kuis Bab & Penilaian Tugas Akhir*
+
+1. **Fast-Track Placement Test (Opsional):** Di halaman **Detail Kursus**, siswa dapat mengikuti Tes Penempatan untuk membuka bagian materi dasar secara instan sekaligus memperoleh bonus XP.
+2. **Siklus Belajar Interaktif:** Siswa membaca 156 modul Markdown di **Materi Reader**, mempraktikkan kode di **Playground** (**Web Studio** & **JS Console**), dan berdiskusi dengan **AI Tutor Codi** (Google Gemini AI dalam 4 bahasa).
+3. **Evaluasi Bertingkat:** Setiap bab diakhiri **Section Quiz** (dilengkapi deteksi fokus `ON_STOP`), dilanjutkan **Kuis Evaluasi Akhir** (syarat lulus ≥ 70%) untuk membuka **Final Project Submission**.
+4. **Penilaian & Sertifikasi:** Proyek dinilai oleh Fasilitator di Portal Web menggunakan bobot **40% Kuis + 60% Proyek**. Jika status `REVISION_REQUESTED`, siswa menerima notifikasi terlokalisasi untuk memperbaiki dan mengirim ulang; jika `APPROVED` (≥ 70), sertifikat digital **`CC-...`** diterbitkan ke Room & Firestore.
+
+### 3.3 Flowchart Data Offline-First, Isolasi Akun & Hierarki Profil
+
+![Flowchart Data dan Hierarki Peran](manual_book_assets/flow_04_auth_sync_and_roles.png)
+*Gambar 3C: Flowchart Sinkronisasi Room v16 ↔ Cloud Firestore & Tiering Identitas Profil Publik*
+
+- **Isolasi Multi-Akun (`accountId`):** Seluruh progres modul, bookmark, draf Playground, dan riwayat kuis di **Room Database (`AppDatabase v16`)** diisolasi per `accountId` sehingga pergantian akun tidak pernah mencampur data belajar.
+- **Hierarki Identitas Profil Publik (`UserPublicProfileDialog` & Forum):**
+  - **Peserta (Siswa/Tamu):** Menampilkan banner & avatar kustom pilihan pengguna (*Profile Studio*), level XP (Lv. 1–10), pin lencana, dan *skill tags*.
+  - **Fasilitator (`accessRole: "facilitator"`):** Menampilkan tema **Emerald-Gold Prestige**, bingkai avatar berdenyut lembut, lencana **`MENTOR RESMI`**, dan badge **`FASILITATOR`** di Forum.
+  - **Super Admin (`accessRole: "super_admin"`):** Menampilkan animasi *looping* bertingkat—banner **Cosmic Aurora** dengan *diagonal holographic light sweep*, avatar dengan **rotating sweep halo ring 360°** dan **pulsing cosmic aura**, lencana **`SYSTEM ARCHITECT`**, serta badge **`SUPER ADMIN`** berkilau di Forum.
+
+---
+
+## 4. USER FLOW END-TO-END APLIKASI CODEACADEMY
+
+Diagram berikut merangkum perjalanan pengalaman pengguna (*User Flow*) dari pertama kali membuka aplikasi hingga meraih sertifikat digital terverifikasi:
+
+![User Flow End-to-End Siswa](manual_book_assets/flow_03_user_flow_student.png)
+*Gambar 4: Peta User Flow End-to-End Aplikasi CodeAcademy Mobile (7 Tahap Utama)*
+
+### Rincian Matriks User Flow per Layar Aplikasi:
+
+| Tahap | Layar / Fitur | Aksi Pengguna | Respons Sistem & Output |
+| :---: | :--- | :--- | :--- |
+| **1** | **Splash & Auth** (`Login`, `Register`, `ForgotPassword`, `AccountBanned`) | Masuk via Email, Google Credential Manager, atau Tamu | Validasi sesi, *link credential* jika Tamu → Google, cek status Ban Firestore |
+| **2** | **Onboarding** (`Welcome`, `CodePreview`, `Roadmap`, `PlanSummary`) | Coba preset live HTML/CSS & pilih target menit harian | Simpan preferensi belajar ke Room & DataStore (`isOnboarded = true`) |
+| **3** | **Beranda & Navigasi** (`Home`, `Drawer`, `Search`, `Bookmarks`, `Notifications`) | Cek streak, misi harian, tantangan kode kilat, atau cari modul | Tambah XP harian, buka modul tersimpan, tampilkan notifikasi sesuai bahasa aktif |
+| **4** | **Belajar & Praktik** (`CourseCatalog`, `ClassDetail`, `Materi`, `Playground`, `AiTutor`) | Baca modul Markdown, jalankan HTML/CSS/JS di Web Studio / JS Console, tanya Codi | Auto-save draf kode, eksekusi sandbox terisolasi, hint kontekstual dari Gemini AI |
+| **5** | **Evaluasi & Proyek** (`PlacementTest`, `SectionQuiz`, `HasilEvaluasi`, `FinalProject`) | Kerjakan kuis bab/akhir & kirim kode + rubrik Proyek Akhir | Hitung skor, buka kunci bab/proyek, kirim antrean review ke Cloud Firestore |
+| **6** | **Komunitas & Sosial** (`Community`, `CourseForum`, `UserPublicProfileDialog`) | Buat topik/balasan forum, lihat Leaderboard & klik profil pengguna | Sinkron real-time Firestore, tampilkan profil unik Peserta / Fasilitator / Super Admin |
+| **7** | **Progres, Profil & Sertifikat** (`Progress`, `Profile`, `CertificateList`, `Certificate`) | Kustomisasi Profile Studio, ubah bahasa (ID/EN/JA/ZH), & bagikan sertifikat `CC-...` | Update konfigurasi bahasa instan, tampilkan sertifikat & tautan `verify.html` |
+
+---
+
+## 5. UNDUH & INSTALASI APLIKASI VERSI MOBILE (ANDROID)
 
 ### Spesifikasi Kebutuhan Sistem Minimum:
-- **Sistem Operasi:** Android 8.0 (Oreo) atau versi yang lebih baru (API Level 26+).
+- **Sistem Operasi:** Android 7.0 (Nougat) atau versi yang lebih baru (`minSdk = 24`, `targetSdk = 36`).
 - **Memori RAM:** Minimal 2 GB (disarankan 4 GB atau lebih agar rendering WebView Live Preview di Playground berjalan mulus).
 - **Ruang Penyimpanan Kosong:** Minimal 150 MB untuk aplikasi, Room Database, dan cache materi offline.
 - **Koneksi Jaringan:** Materi inti dapat dibaca offline; internet aktif diperlukan untuk AI Tutor Codi, sinkronisasi Google, Forum real-time, Leaderboard, dan pengumpulan Proyek Akhir.
-- **Dukungan Bahasa Aplikasi:** Tersedia dalam 4 bahasa antarmuka: **Bahasa Indonesia**, **English**, **日本語 (Jepang)**, dan **中文 (Mandarin)**.
+- **Dukungan Bahasa Aplikasi:** Seluruh antarmuka UI, notifikasi, dan AI Tutor tersedia dalam 4 bahasa: **Bahasa Indonesia**, **English**, **日本語 (Jepang)**, dan **中文 (Mandarin)**.
 
 ### Langkah-Langkah Pemasangan (Instalasi APK):
-1. Unduh berkas installer `CodeAcademy-v1.0-release.apk` dari repositori resmi proyek atau tautan distribusi kelas.
-2. Buka folder **Unduhan** (*Downloads*) menggunakan aplikasi **Pengelola Berkas** (*File Manager*) di smartphone Android Anda.
+1. Unduh berkas installer `CodeAcademy-v1.0-release.apk` (atau `app-debug.apk` untuk pengujian) dari repositori resmi proyek.
+2. Buka folder **Unduhan** (*Downloads*) menggunakan **Pengelola Berkas** (*File Manager*) di smartphone Android Anda.
 3. Ketuk berkas installer APK CodeAcademy yang telah diunduh.
 4. Jika muncul peringatan keamanan sumber tidak dikenal (*Unknown Sources*), pilih **Setelan** lalu aktifkan izin **Izinkan dari sumber ini** (*Allow from this source*).
-5. Pada dialog Penginstal Paket Android yang muncul, ketuk tombol **INSTAL** (lihat penunjuk **[1]** pada Gambar 2).
-6. Tunggu beberapa detik hingga sistem selesai memverifikasi dan memasang aplikasi.
-7. Setelah pemasangan selesai, ketuk tombol **Buka** untuk memulai aplikasi CodeAcademy.
+5. Pada dialog Penginstal Paket Android yang muncul, ketuk tombol **INSTAL** (lihat penunjuk **[1]** pada Gambar 5).
+6. Tunggu beberapa detik hingga sistem selesai memverifikasi dan memasang aplikasi, lalu ketuk **Buka**.
 
 ![Layar Instalasi APK](manual_book_assets/mockup_02_install.png)
-*Gambar 2: Kotak Dialog Penginstal Paket Android*
+*Gambar 5: Kotak Dialog Penginstal Paket Android*
 
 #### Keterangan Gambar:
 - **[1] Tombol Instal:** Ketuk tombol ini untuk mengonfirmasi pemasangan berkas aplikasi CodeAcademy ke perangkat Android Anda.
 
 ---
 
-## 3. PENDAFTARAN AKUN, MASUK, GOOGLE LINKING & PEMULIHAN SANDI
+## 6. PENDAFTARAN AKUN, MASUK, GOOGLE LINKING & STATUS AKUN
 
 Untuk menyinkronkan poin XP, streak harian, riwayat forum, dan sertifikat kelulusan ke Cloud Firestore, pengguna disarankan masuk menggunakan akun terdaftar atau Google Sign-In. Aplikasi juga mendukung **Masuk sebagai Tamu** (autentikasi anonim) yang nantinya dapat ditautkan ke akun Google tanpa kehilangan progres maupun membuat akun ganda di Papan Peringkat.
 
 | Layar Masuk (Login) | Layar Pendaftaran (Register) |
 | :---: | :---: |
 | ![Layar Masuk Login](manual_book_assets/mockup_03_login.png) | ![Layar Pendaftaran Register](manual_book_assets/mockup_03b_register.png) |
-| *Gambar 3A: Formulir Masuk Akun (Login)* | *Gambar 3B: Formulir Pendaftaran Akun Baru (Register)* |
+| *Gambar 6A: Formulir Masuk Akun (Login)* | *Gambar 6B: Formulir Pendaftaran Akun Baru (Register)* |
 
-### Langkah Masuk Akun (Login — Gambar 3A):
-1. Buka aplikasi CodeAcademy, lalu masukkan alamat email terdaftar Anda pada kolom **Email** **[1]**.
-2. Masukkan kata sandi pada kolom **Kata Sandi** **[1]** (gunakan ikon mata untuk menampilkan/menyembunyikan karakter sandi).
-3. Ketuk tombol **Masuk ke Akun** **[3]** untuk masuk ke Beranda aplikasi.
-4. **Masuk Instan dengan Google:** Ketuk tombol **Masuk dengan Google** untuk autentikasi satu ketukan via Google Credential Manager. Jika sebelumnya Anda memakai akun Tamu Anonim, sistem otomatis menjalankan penautan akun (*link credential*) agar UID dan poin XP Anda menyatu dan tidak ganda di Leaderboard.
-5. **Pemulihan Sandi:** Jika lupa kata sandi akun email, ketuk tautan **Lupa Kata Sandi?** **[2]** untuk mengatur ulang kata sandi.
+### Langkah Masuk Akun (Login — Gambar 6A):
+1. Buka aplikasi CodeAcademy, lalu masukkan alamat email terdaftar Anda pada kolom **Email** **[1]** dan kata sandi pada kolom **Kata Sandi** **[1]** (gunakan ikon mata untuk menampilkan/menyembunyikan sandi).
+2. Ketuk tombol **Masuk ke Akun** **[3]** untuk masuk ke Beranda aplikasi.
+3. **Masuk Instan dengan Google:** Ketuk tombol **Masuk dengan Google** untuk autentikasi satu ketukan via Google Credential Manager. Jika sebelumnya Anda memakai akun Tamu Anonim, sistem otomatis menjalankan penautan akun (*link credential*) agar UID dan poin XP menyatu.
+4. **Pemulihan Sandi:** Jika lupa kata sandi akun email, ketuk tautan **Lupa Kata Sandi?** **[2]** untuk mengatur ulang kata sandi.
+5. **Status Pembekuan Akun (`AccountBannedScreen`):** Jika akun melanggar aturan dan dibekukan oleh Super Admin, sistem menampilkan layar pembekuan lengkap dengan alasan, tanggal pembekuan, tombol **Periksa Status Ulang**, **Ajukan Banding via Email**, dan **Keluar & Ganti Akun**.
 
-### Langkah Pendaftaran Akun Baru (Register — Gambar 3B):
-1. Pada bagian bawah layar masuk, ketuk tautan **Daftar Sekarang** **[4]** untuk membuka layar pendaftaran (*"Mulai perjalanan codingmu"*).
-2. Lengkapi formulir pendaftaran: **Nama Lengkap** (minimal 2 huruf, tidak diawali angka), **Email aktif**, **Kata Sandi** (minimal 6 karakter), dan **Konfirmasi Kata Sandi**.
-3. Ketuk tombol **Daftar Akun** untuk membuat akun baru secara lokal & cloud, atau pilih **Daftar dengan Google** untuk registrasi otomatis.
-
-#### Keterangan Gambar 3A:
-- **[1] Kolom Input Email & Kata Sandi:** Area pengisian kredensial email dan kata sandi akun pengguna.
-- **[2] Tautan Lupa Kata Sandi?:** Membuka alur pemulihan/reset kata sandi pengguna.
-- **[3] Tombol Masuk ke Akun:** Memvalidasi kredensial dan membuka dashboard utama.
-- **[4] Tautan Daftar Sekarang:** Berpindah dari layar Masuk ke formulir Pendaftaran akun baru (Gambar 3B).
+### Langkah Pendaftaran Akun Baru (Register — Gambar 6B):
+1. Pada bagian bawah layar masuk, ketuk tautan **Daftar Sekarang** **[4]** untuk membuka layar pendaftaran.
+2. Lengkapi formulir pendaftaran: **Nama Lengkap** (minimal 2 huruf, tidak diawali angka), **Email aktif**, **Kata Sandi** (minimal 6 karakter), dan **Konfirmasi Kata Sandi**, lalu ketuk **Daftar Akun** atau **Daftar dengan Google**.
 
 ---
 
-## 4. ALUR ONBOARDING SISWA BARU (5 LANGKAH)
+## 7. ALUR ONBOARDING SISWA BARU (4 LANGKAH)
 
-Pengguna baru disambut alur **Onboarding Interaktif 5 Langkah** untuk memetakan tujuan belajar dan ritme harian sebelum masuk ke Beranda:
+Pengguna baru disambut alur **Onboarding Interaktif 4 Langkah** untuk mengenal ekosistem belajar, mencoba perubahan kode secara langsung, dan menentukan ritme belajar harian sebelum masuk ke Beranda:
 
 ![Alur Onboarding Siswa Baru](manual_book_assets/mockup_04_onboarding.png)
-*Gambar 4: Rangkaian 5 Langkah Layar Onboarding Siswa Baru*
+*Gambar 7: Rangkaian Layar Onboarding Siswa Baru*
 
-### Rincian Tahapan Onboarding:
+### Rincian 4 Tahapan Onboarding:
 
 | Langkah | Nama Tahap | Fungsi & Aksi Pengguna |
 | :---: | :--- | :--- |
-| **01** | **Welcome Step** | Sambutan bersama maskot **Codi** serta pengenalan metode *microlearning* Web Development 156 modul. |
-| **02** | **Code Preview Step** | Simulasi interaktif mengubah elemen kode HTML dan melihat hasil render tampilan secara langsung di layar. |
-| **03** | **Community Step** | Pengenalan fitur Forum Diskusi kelas, Papan Peringkat mingguan, serta bimbingan dari Fasilitator. |
-| **04** | **Track Selection Step** | Pemilihan jalur kurikulum utama **Front-End Web Development** (HTML5, CSS3, Flexbox/Grid, JavaScript ES6). |
-| **05** | **Plan Summary Step** | Penentuan target komitmen belajar harian (10–45 menit/hari), tujuan karier, dan estimasi selesai kelas pertama. |
+| **01** | **Welcome Step** | Sambutan bersama maskot **Codi** serta pengenalan 3 pilar utama: 156 modul terstruktur, Playground & AI Tutor terintegrasi, serta penilaian Fasilitator & sertifikat online. |
+| **02** | **Code Preview Step** | Simulasi interaktif mengubah preset HTML & CSS (*Judul Utama*, *Tema Teal*, *Tambah Tombol*) dan melihat **Pratinjau Live** terbarui seketika. |
+| **03** | **Roadmap Step** | Peta perjalanan kurikulum berjenjang dari Tahap 01 (Fondasi Web) → Tahap 02 (CSS Layout) → Tahap 03 (JS Fundamentals) → Tahap 04 (Proyek Akhir & Sertifikat). |
+| **04** | **Plan Summary Step** | Penentuan target komitmen belajar harian (10–45 menit/hari: *Santai*, *Ideal*, *Serius*, *Intensif*), pilihan tujuan utama, dan estimasi hari selesai kursus pertama. |
 
-1. Geser atau ketuk **Lanjut** untuk berpindah antar tahap onboarding, atau ketuk **Lewati** di pojok kanan atas jika ingin langsung menuju ringkasan akhir.
-2. Pada tahap 5 (*Atur Ritme Belajarmu*), pilih target waktu harian dan fokus tujuan utama lalu ketuk **Mulai Belajar** untuk membuka Beranda.
+1. Ketuk **Lanjut** untuk berpindah antar tahap onboarding, atau ketuk **Lewati** di pojok kanan atas jika ingin langsung menuju ringkasan akhir.
+2. Pada tahap 4 (*Atur Ritme Belajarmu*), pilih target waktu harian dan fokus tujuan utama lalu ketuk **Mulai Belajar** untuk membuka Beranda.
 
 ---
 
-## 5. BERANDA (HOME DASHBOARD), STREAK, MISI & TANTANGAN KILAT
+## 8. BERANDA (HOME DASHBOARD), STREAK, MISI & TANTANGAN KILAT
 
-Beranda merupakan pusat kendali belajar harian yang merangkum status streak, capaian XP, tips harian Codi, kuis kilat 1 menit, misi harian, dan pintasan kelas aktif.
+Beranda merupakan pusat kendali belajar harian yang merangkum status streak, capaian XP, tips harian Codi, kuis kilat 1 menit, misi harian, dan pintasan kursus aktif.
 
 ![Beranda Aplikasi CodeAcademy](manual_book_assets/mockup_05_home.png)
-*Gambar 5: Halaman Beranda (Home Dashboard) CodeAcademy*
+*Gambar 8: Halaman Beranda (Home Dashboard) CodeAcademy*
 
 ### Alur & Komponen Utama Beranda:
-1. **Header Atas & Badge Streak [1][2]:** Ketuk ikon **Menu Samping (☰)** **[1]** untuk membuka Navigation Drawer, ketuk ikon lonceng untuk membaca **Notifikasi & Pengumuman Fasilitator**, dan pantau **Badge Streak Api** **[2]** yang otomatis menyala ke **1 hari** sejak aktivitas modul atau perolehan XP pertama pada hari tersebut (tersinkronisasi seragam antara Beranda, Progres, dan Profil).
-2. **Carousel Atas Seragam (`196 dp`) [3]:** Geser 3 kartu utama dengan tinggi seragam: (a) **Banner Promo Mobile-First Coding** dengan tombol putih kontras tinggi, (b) **Kartu XP Minggu Ini** lengkap dengan animasi *count-up* akurat, level aktif, dan progres target 250 XP tanpa nilai fallback palsu, serta (c) **Kartu Rekomendasi Kelas**.
-3. **Strip Streak 7 Hari & Misi Harian:** Menampilkan grid keaktifan 7 hari (dimulai **Senin–Minggu** mengikuti bahasa aplikasi) dan kartu **Misi Harian (+50 XP)**.
+1. **Header Atas & Badge Streak [1][2]:** Ketuk ikon **Menu Samping (☰)** **[1]** untuk membuka Navigation Drawer, ketuk ikon lonceng untuk membaca **Notifikasi & Pengumuman Fasilitator** (terlokalisasi sesuai bahasa aktif), dan pantau **Badge Streak Api** **[2]** yang otomatis menyala sejak aktivitas belajar pertama pada hari tersebut.
+2. **Carousel Atas Seragam (`196 dp`) [3]:** Geser 3 kartu utama: (a) **Banner Promo Mobile-First Coding**, (b) **Kartu XP Minggu Ini** lengkap dengan animasi *count-up*, level aktif, dan target 250 XP, serta (c) **Kartu Rekomendasi Kursus**.
+3. **Strip Streak 7 Hari & Misi Harian:** Menampilkan grid keaktifan 7 hari (**Senin–Minggu**) dan kartu **Misi Harian (+50 XP)**.
 4. **Codi Daily Tip & Tantangan Kilat 1 Menit [6]:**
-   - **Codi Daily Tip:** Menampilkan tips pemrograman harian (sintaks ber-backtick otomatis dirender *monospace*), lengkap dengan tombol **Tanya AI** dan **Coba Kode**.
-   - **Tantangan Kilat 1 Menit (+15 XP):** Soal harian pilihan ganda berlabel badge **A / B / C** dengan *highlight* hijau/merah, ikon status, dan penjelasan inline code saat dijawab. Dilindungi guard 1x per hari (anti *double-tap* & anti-spam) yang tersimpan per tanggal (`yyyy-MM-dd`).
-5. **Kartu Lanjutkan Belajar & Jalur Belajar [4][5]:** Menampilkan kelas aktif dan daftar jalur kurikulum (*Front-End Development*) secara ringkas, sementara **Bilah Navigasi Bawah** **[5]** memberi akses satu ketukan ke tab **Beranda**, **Kelas**, **Progres**, **Peringkat**, dan **Profil**.
+   - **Codi Daily Tip:** Tips pemrograman harian lengkap dengan tombol **Tanya AI** dan **Coba Kode**.
+   - **Tantangan Kilat 1 Menit (+15 XP):** Soal harian pilihan ganda berlabel badge **A / B / C** dengan penjelasan pembahasan dan proteksi 1x per hari (`yyyy-MM-dd`).
+5. **Kartu Lanjutkan Belajar & Jalur Belajar [4][5]:** Menampilkan kursus aktif dan jalur kurikulum, sementara **Bilah Navigasi Bawah** **[5]** memberi akses satu ketukan ke tab **Beranda**, **Kursus**, **Progres**, **Komunitas**, dan **Profil**.
 
 ---
 
-## 6. MENU SAMPING (DRAWER), PENCARIAN GLOBAL & TERSIMPAN
+## 9. MENU SAMPING (DRAWER), PENCARIAN GLOBAL & TERSIMPAN
 
 | Menu Navigasi Samping (Drawer) | Pencarian Materi Global (Search) |
 | :---: | :---: |
 | ![Menu Drawer](manual_book_assets/mockup_06_drawer.png) | ![Pencarian Global](manual_book_assets/mockup_06b_search.png) |
-| *Gambar 6A: Laci Navigasi Samping (Drawer)* | *Gambar 6B: Layar Pencarian Materi Global* |
+| *Gambar 9A: Laci Navigasi Samping (Drawer)* | *Gambar 9B: Layar Pencarian Materi Global* |
 
 ### Langkah Menggunakan Menu Samping & Pencarian:
-1. Ketuk ikon **☰** di pojok kiri atas Beranda untuk membuka **Navigation Drawer** (Gambar 6A) yang memuat profil ringkas siswa, level XP, serta fitur-fitur utilitas yang tidak ada di Bottom Navigation: **Cari Materi**, **Modul Tersimpan (Bookmarks)**, **Playground Live**, **AI Tutor Codi**, **Cheat Sheet**, **Sertifikat Saya**, **Pusat Bantuan**, dan **Tentang Aplikasi**.
-2. Pilih **Cari Materi** (Gambar 6B) lalu ketik kata kunci teknis (misalnya `"Flexbox"`, `"Semantic"`, atau `"Promise"`) untuk menelusuri seluruh **156 modul** secara instan dan melompat langsung ke modul terkait.
-3. Pilih **Modul Tersimpan** untuk membuka daftar materi dan kelas yang telah di-bookmark oleh pengguna.
+1. Ketuk ikon **☰** di pojok kiri atas Beranda untuk membuka **Navigation Drawer** (Gambar 9A) yang memuat profil ringkas siswa, level XP, serta pintasan utilitas: **Cari Materi**, **Modul Tersimpan (Bookmarks)**, **Playground Live**, **AI Tutor Codi**, **Cheat Sheet**, **Sertifikat Saya**, dan **Pusat Bantuan**.
+2. Pilih **Cari Materi** (Gambar 9B) lalu ketik kata kunci teknis (misalnya `"Flexbox"`, `"Semantic"`, atau `"Promise"`) untuk menelusuri seluruh **156 modul** secara instan.
+3. Pilih **Modul Tersimpan** untuk membuka daftar materi dan kursus yang telah di-bookmark oleh pengguna.
 
 ---
 
-## 7. KATALOG KELAS, PLACEMENT TEST & DETAIL SILABUS KURSUS
+## 10. KATALOG KURSUS, PLACEMENT TEST & DETAIL SILABUS
 
-| Katalog Kelas (Course Catalog) | Detail Silabus Kelas (Class Detail) |
+| Katalog Kursus (Course Catalog) | Detail Silabus Kursus (Class Detail) |
 | :---: | :---: |
-| ![Katalog Kelas](manual_book_assets/mockup_07_courses.png) | ![Detail Silabus](manual_book_assets/mockup_07b_class_detail.png) |
-| *Gambar 7A: Katalog Kelas & Filter Tonal* | *Gambar 7B: Detail Silabus Kelas & Aksi* |
+| ![Katalog Kursus](manual_book_assets/mockup_07_courses.png) | ![Detail Silabus](manual_book_assets/mockup_07b_class_detail.png) |
+| *Gambar 10A: Katalog Kursus & Filter Tonal* | *Gambar 10B: Detail Silabus Kursus & Aksi* |
 
-### Fitur & Cara Menggunakan Menu Kelas:
-1. **Tab Filter Progres & Pencarian:** Ketuk tab **Semua**, **Dipelajari**, atau **Selesai**, atau ketik judul/topik pada kotak pencarian ringkas di bagian atas.
-2. **Filter Jalur & Tingkat Adaptif Light/Dark:** Saring kelas berdasarkan Jalur dan Tingkat (*Semua*, *Orientasi*, *Pemula*, *Pemula-Menengah*, *Lanjut*) menggunakan chip bergaya **Teal** saat terpilih dan palet tonal kontras tinggi baik pada **Light Mode** maupun **Dark Mode**.
-3. **Informasi Lengkap pada Setiap Kartu Kelas:** Setiap kartu menampilkan badge tingkat berwarna konsisten, jumlah modul (`X/Y Modul` atau `Y Modul`), progress bar proporsional, durasi ramah (mis. `9 jam 33 mnt` / `9h 33m`), ikon bookmark (`48 dp`) dengan notifikasi *Toast* `"Disimpan"`, serta tombol aksi **Mulai**, **Lanjutkan**, atau **Ulangi**.
-4. **Tes Penempatan (*Placement Test*):** Di bagian Detail Kelas (Gambar 7B), pengguna yang sudah berpengalaman dapat mengikuti *Placement Test* untuk membuka modul lanjutan lebih cepat (*fast-track*) atau langsung membuka daftar bab modul & tautan ke **Forum Diskusi Kelas**.
+### Fitur & Cara Menggunakan Menu Kursus:
+1. **Tab Filter Progres & Pencarian:** Ketuk tab **Semua**, **Dipelajari**, atau **Selesai**, atau ketik judul/topik pada kotak pencarian di bagian atas.
+2. **Filter Jalur & Tingkat Adaptif Light/Dark:** Saring kursus berdasarkan Jalur dan Tingkat (*Semua*, *Orientasi*, *Pemula*, *Pemula-Menengah*, *Lanjut*) dengan tampilan kontras tinggi pada **Light Mode** maupun **Dark Mode**.
+3. **Informasi Lengkap pada Kartu Kursus:** Menampilkan badge tingkat terlokalisasi, jumlah modul (`X/Y Modul`), progress bar proporsional, durasi belajar, ikon bookmark, serta tombol aksi **Mulai**, **Lanjutkan**, atau **Ulangi**.
+4. **Tes Penempatan (*Placement Test*):** Di Detail Kursus (Gambar 10B), pengguna berpengalaman dapat mengikuti *Placement Test* untuk melewati materi dasar (*fast-track*) sekaligus meraih bonus XP, atau langsung membuka daftar bab modul & **Forum Diskusi Kursus**.
 
 ---
 
-## 8. PEMBELAJARAN INTERAKTIF (MATERI READER)
+## 11. PEMBELAJARAN INTERAKTIF (MATERI READER)
 
 ![Materi Reader](manual_book_assets/mockup_08_materi_reader.png)
-*Gambar 8: Antarmuka Pembaca Modul Pembelajaran Interaktif*
+*Gambar 11: Antarmuka Pembaca Modul Pembelajaran Interaktif*
 
 ### Cara Belajar Menggunakan Materi Reader:
-1. Buka salah satu modul dari Detail Kelas untuk membaca penjelasan terstruktur, tabel ringkasan, catatan penting (*callout*), dan blok kode berwarna (*syntax highlighting*).
+1. Buka salah satu modul dari Detail Kursus untuk membaca penjelasan terstruktur, tabel ringkasan, catatan penting (*callout*), dan blok kode berwarna (*syntax highlighting*).
 2. Ketuk ikon **Bookmark [2]** di bilah atas untuk menyimpan modul favorit ke daftar *Tersimpan*.
-3. Pada setiap blok kode **[3]**, ketuk **Salin Kode** (`48 dp`) untuk menyalin ke clipboard, atau ketuk **Coba di Playground [4]** untuk langsung menjalankan potongan kode tersebut di sandbox eksekusi.
+3. Pada setiap blok kode **[3]**, ketuk **Salin Kode** untuk menyalin ke clipboard, atau ketuk **Coba di Playground [4]** untuk langsung menjalankan potongan kode tersebut di sandbox eksekusi.
 4. Jika ada bagian yang sulit dipahami, ketuk **Tanya AI Tutor [5]** agar konteks modul otomatis dikirim ke AI Tutor Codi.
 5. Setelah selesai membaca, ketuk **Tandai Selesai [6]** untuk menyimpan progres ke Room Database, menyalakan streak harian, dan meraih bonus **+20 XP**.
 
 ---
 
-## 9. PLAYGROUND INTERAKTIF (LIVE HTML/CSS/JS SANDBOX)
+## 12. PLAYGROUND INTERAKTIF (WEB STUDIO & JS CONSOLE)
 
 ![Playground Interaktif](manual_book_assets/mockup_09_playground.png)
-*Gambar 9: Layar Code Playground Multi-Tab dengan Live Preview*
+*Gambar 12: Layar Code Playground Multi-Mode (Web Studio & JS Console)*
 
 ### Alur Penggunaan Live Code Sandbox:
 1. Buka **Playground** dari Drawer, kartu Tips Codi, atau tombol **Coba di Playground** di dalam Materi Reader.
-2. Pilih tab berkas **`index.html`**, **`style.css`**, atau **`script.js`** untuk menulis atau mengedit kode secara terpisah tanpa *auto-correct* yang mengganggu sintaks. Draf perubahan otomatis tersimpan per kelas di perangkat (*auto-save*).
-3. Ketuk tombol **Jalankan / Tab Preview Web** untuk merender tampilan halaman web secara real-time di WebView terisolasi beserta panel **Output Console** (`console.log`) yang dapat dibersihkan.
-4. Ketuk **Tanya AI** langsung dari Playground untuk meminta AI Tutor Codi memeriksa kode yang sedang Anda tulis (sistem otomatis mengirim cuplikan kode aktif agar Codi memberi *hint* terarah).
+2. Gunakan **Mode Switcher** di bilah atas untuk memilih:
+   - **Web Studio:** Tab berkas **`index.html`**, **`style.css`**, dan **`script.js`** lengkap dengan **line numbers gutter**, *syntax highlighting*, dan *auto-save* per kursus. Ketuk **Jalankan Kode / Preview Web** untuk merender halaman web secara real-time di WebView terisolasi (`sandbox://preview`).
+   - **JS Console:** Editor khusus **`script.js` (ES6)** dengan terminal konsol permanen di bagian bawah. Ketuk **Jalankan JS** untuk mengeksekusi JavaScript secara *headless* (tanpa kilatan WebView) dan melihat output `console.log`, `[Warn]`, serta `[Error]` yang dapat disalin (*selectable*).
+3. Ketuk **Tanya AI** langsung dari Playground untuk mengirim cuplikan kode aktif ke AI Tutor Codi agar Codi memberikan *hint* perbaikan terarah.
 
 ---
 
-## 10. FITUR AI TUTOR CERDAS (CODI — GOOGLE GEMINI AI)
+## 13. FITUR AI TUTOR CERDAS (CODI — GOOGLE GEMINI AI)
 
 ![AI Tutor Codi](manual_book_assets/mockup_10_ai_tutor.png)
-*Gambar 10: Layar Percakapan AI Tutor Codi Berbasis Google Gemini AI*
+*Gambar 13: Layar Percakapan AI Tutor Codi Berbasis Google Gemini AI*
 
 ### Kemampuan & Cara Menggunakan AI Tutor Codi:
-1. **Identitas Konsisten & Status Koneksi:** Header menampilkan maskot resmi **Codi** beserta pill status koneksi 1-baris (*Gemini / Offline*) dan konteks kelas/modul aktif.
-2. **Respon Cerdas Sesuai Konteks:** Sapaan ringan (seperti *"hai"* atau *"halo"*) dijawab hangat dan singkat dalam 1–2 kalimat tanpa membanjiri layar dengan blok kode panjang, sedangkan pertanyaan teknis dijawab terstruktur dengan contoh kode ringkas dan *hint* pedagogis.
+1. **Identitas Konsisten & Status Koneksi:** Header menampilkan maskot resmi **Codi**, status koneksi (*Gemini Live / Offline Mode*), dan konteks kursus/modul aktif.
+2. **Dukungan 4 Bahasa (Live & Offline):** AI Tutor merespons secara natural sesuai bahasa aktif aplikasi (`id`, `en`, `ja`, `zh`) baik saat terhubung ke model **Gemini 2.5 Flash** maupun saat *offline fallback* (ID/EN).
 3. **Saran Pertanyaan Cepat (*Prompt Pills*) & Auto-Scroll Keyboard:** Ketuk pill saran di atas kolom ketik untuk langsung bertanya. Saat keyboard terbuka, area chat otomatis menyesuaikan (`imePadding`) dan menggulir ke pesan terbaru.
-4. **Hapus Riwayat Aman & Disclaimer:** Ketuk ikon tempat sampah di pojok kanan atas untuk membersihkan chat (dilengkapi **dialog konfirmasi** agar tidak terhapus tidak sengaja). Di bawah kolom input tertera catatan pengingat *"Jawaban AI bisa keliru, periksa kembali"*.
+4. **Hapus Riwayat Aman & Disclaimer:** Ketuk ikon tempat sampah di pojok kanan atas untuk membersihkan chat (dilengkapi dialog konfirmasi) serta catatan pengingat untuk selalu memverifikasi kode.
 
 ---
 
-## 11. SISTEM EVALUASI, KUIS BAB & EVALUASI AKHIR
+## 14. SISTEM EVALUASI, KUIS BAB & EVALUASI AKHIR
 
 | Pengerjaan Kuis (Section Quiz) | Hasil Evaluasi (Result Screen) |
 | :---: | :---: |
 | ![Pengerjaan Kuis](manual_book_assets/mockup_11_quiz.png) | ![Hasil Evaluasi](manual_book_assets/mockup_11b_quiz_result.png) |
-| *Gambar 11A: Layar Pengerjaan Kuis Berwaktu* | *Gambar 11B: Layar Hasil Evaluasi & Pembahasan* |
+| *Gambar 14A: Layar Pengerjaan Kuis Berwaktu* | *Gambar 14B: Layar Hasil Evaluasi & Pembahasan* |
 
 ### Aturan & Alur Pengerjaan Evaluasi:
-1. **Kuis Bab & Evaluasi Akhir:** Setiap kelas dilengkapi kuis per bab (total 9 Kuis Bab) dan 1 Evaluasi Akhir berwaktu sebelum pengumpulan Proyek Akhir.
+1. **Kuis Bab & Evaluasi Akhir:** Setiap kursus dilengkapi kuis per bab (total 9 Kuis Bab dengan deteksi fokus `ON_STOP`) dan 1 Evaluasi Akhir berwaktu sebelum pengumpulan Proyek Akhir.
 2. **Ambang Kelulusan (*Passing Grade*):** Siswa dinyatakan **LULUS** jika meraih nilai minimal **70%**. Kelulusan memberikan reward XP dan membuka tahapan kurikulum selanjutnya.
-3. **Ulang Kuis & Pembahasan:** Jika nilai belum mencapai 70%, siswa dapat meninjau umpan balik soal lalu menekan tombol **Ulangi Kuis** (*Retake*). Skor kuis akhir otomatis menjadi komponen **40%** dalam perhitungan nilai sertifikat kelulusan.
+3. **Ulang Kuis & Pembahasan:** Jika nilai belum mencapai 70%, siswa dapat meninjau umpan balik soal lalu menekan **Ulangi Kuis** (*Retake*). Skor kuis akhir otomatis menjadi komponen **40%** dalam perhitungan nilai sertifikat kelulusan.
 
 ---
 
-## 12. PENGUMPULAN TUGAS AKHIR (FINAL PROJECT SUBMISSION)
+## 15. PENGUMPULAN TUGAS AKHIR (FINAL PROJECT SUBMISSION)
 
 ![Pengumpulan Tugas Akhir](manual_book_assets/mockup_12_final_project.png)
-*Gambar 12: Layar Pengumpulan Proyek Akhir (Final Project)*
+*Gambar 15: Layar Pengumpulan Proyek Akhir (Final Project)*
 
 ### Langkah Mengumpulkan Proyek Akhir:
-1. Pastikan seluruh modul dan Evaluasi Akhir pada kelas bersangkutan telah selesai dengan skor minimal **70%**.
-2. Buka halaman **Proyek Akhir** kelas, baca instruksi studi kasus nyata dan daftar kriteria rubrik penilaian.
+1. Pastikan seluruh modul dan Evaluasi Akhir pada kursus bersangkutan telah selesai dengan skor minimal **70%**.
+2. Buka halaman **Proyek Akhir** kursus, baca instruksi studi kasus nyata dan daftar kriteria rubrik penilaian.
 3. Lengkapi **URL Repositori / Tautan Proyek**, **Catatan untuk Fasilitator**, serta kode sumber HTML/CSS/JS (dapat diimpor langsung dengan satu ketukan dari **Playground Draft**).
 4. Ketuk **Kirim Proyek** untuk mengunggah pengajuan ke koleksi `project_submissions` di Cloud Firestore dengan status awal **`PENDING_REVIEW`**.
 5. Pantau hasil review Fasilitator secara real-time di aplikasi:
-   - Jika berstatus **`REVISION_REQUESTED`**: baca catatan perbaikan dari Fasilitator, perbaiki kode, lalu kirim ulang (*resubmit*).
-   - Jika berstatus **`APPROVED`**: sertifikat digital ber-ID **`CC-...`** otomatis aktif di layar Sertifikat.
+   - **`REVISION_REQUESTED`**: baca catatan perbaikan dari Fasilitator, perbaiki kode, lalu kirim ulang (*resubmit*).
+   - **`APPROVED`**: sertifikat digital ber-ID **`CC-...`** otomatis aktif di layar Sertifikat.
 
 ---
 
-## 13. FORUM DISKUSI KELAS REAL-TIME & TARGETED REPLY
+## 16. FORUM DISKUSI REAL-TIME, TARGETED REPLY & BADGE STAF
 
 ![Forum Diskusi Komunitas](manual_book_assets/mockup_13_community.png)
-*Gambar 13: Antarmuka Forum Diskusi Kelas & Thread Komentar*
+*Gambar 16: Antarmuka Forum Diskusi Kursus & Thread Komentar*
 
 ### Fitur & Alur Diskusi di Aplikasi Android:
-1. **Sinkronisasi Dua Arah Real-Time:** Thread dan komentar langsung tersinkronisasi antara aplikasi Android dan **Portal Web Fasilitator** melalui koleksi `forum_posts` Firestore (query langsung tanpa bottleneck composite index dan memastikan autentikasi anonim/Google aktif sebelum memuat).
-2. **Filter Diskusi & Badge Fasilitator:** Saring thread menggunakan chip seragam (**Semua**, **Terjawab Fasilitator**, **Milik Saya**, **Populer**). Thread yang telah dibalas staf menampilkan badge **`Dijawab Fasilitator`** serta lencana khusus Fasilitator.
+1. **Sinkronisasi Dua Arah Real-Time:** Thread dan komentar langsung tersinkronisasi antara aplikasi Android dan **Portal Web Fasilitator** melalui koleksi `forum_posts` Firestore.
+2. **Filter Diskusi & Badge Peran Bertingkat:** Saring thread menggunakan chip (**Semua**, **Terjawab Fasilitator**, **Milik Saya**, **Populer**). Postingan staf menampilkan badge khusus yang jelas dibedakan:
+   - **`SUPER ADMIN`**: Badge berkilau *shimmer* kosmik-emas.
+   - **`FASILITATOR`**: Badge Emerald-Gold terverifikasi.
 3. **Buka Thread & Balas Spesifik (*Targeted Reply*):**
-   - Ketuk pill jumlah balasan untuk memperluas daftar komentar dengan garis vertikal thread penuh dan **Quote Box** kutipan target balasan.
-   - Ketuk **Balas** pada topik utama maupun pada komentar tertentu untuk memunculkan banner *"Membalas @Nama"* di atas kolom ketik.
-   - Batas penulisan hingga **4000 karakter** dengan validasi server timeout (`10 detik`) dan notifikasi *Toast* apabila jaringan terputus agar indikator kirim tidak berputar tanpa henti.
-4. **Error State 3 Varian Jelas:** Jika terjadi gangguan, layar membedakan kondisi **Koneksi Terputus (Offline)**, **Sesi atau Izin Bermasalah (Muat Ulang Sesi)**, dan **Kendala Server (Coba Lagi)** sekaligus menonaktifkan input dengan keterangan yang jelas.
+   - Ketuk pill jumlah balasan untuk memperluas daftar komentar lengkap dengan **Quote Box** kutipan target balasan dan waktu relatif terlokalisasi.
+   - Ketuk **Balas** pada topik utama maupun komentar tertentu untuk memunculkan banner *"Membalas @Nama"* (batas 4000 karakter + proteksi timeout jaringan).
+4. **Error State 3 Varian Jelas:** Membedakan kondisi **Koneksi Terputus (Offline)**, **Sesi/Izin Bermasalah**, dan **Kendala Server (Coba Lagi)**.
 
 ---
 
-## 14. PROGRES BELAJAR, PAPAN PERINGKAT & SERTIFIKAT DIGITAL
+## 17. PROGRES BELAJAR, PAPAN PERINGKAT & SERTIFIKAT DIGITAL
 
 ![Leaderboard dan Sertifikat](manual_book_assets/mockup_14_leaderboard_cert.png)
-*Gambar 14: Papan Peringkat Top 50 & Layar Sertifikat Digital Resmi*
+*Gambar 17: Papan Peringkat Top 50 & Layar Sertifikat Digital Resmi*
 
 ### Rincian Progres, Leaderboard & Sertifikat:
-1. **Layar Progres Jujur & Seimbang:** Menampilkan **Level & Sisa XP Menuju Level Berikutnya**, kartu **Streak** dan **Sertifikat** dengan tinggi seimbang, persentase penyelesaian per jalur belajar (minimal **1%** jika minimal 1 modul telah selesai, bukan `0%`), serta rincian per modul.
+1. **Layar Progres Terstruktur:** Menampilkan **Level & Sisa XP Menuju Level Berikutnya**, kartu **Streak** dan **Sertifikat**, persentase penyelesaian per jalur belajar, serta daftar kursus selesai dengan filter dan *load more*.
 2. **Papan Peringkat Pelajar (*Leaderboard* Top 50):**
-   - Filter periode (**Mingguan**, **Bulanan**, **Sepanjang Waktu**, **Streak 🔥**) dan filter **Jalur** dalam bahasa aktif aplikasi.
-   - **Podium Top 3 Simetris:** Jika peserta kurang dari 3, slot kosong tampil sebagai placeholder *"Menunggu"*; badge **`Kamu`** tampil terpisah rapi agar nama tidak terpotong.
-   - **Bar Peringkat Pribadi ("Kamu") & Daftar #4+:** Menampilkan peringkat di luar podium serta selisih poin ke peringkat tepat di atas Anda (misal *"Kurang 12 XP lagi ke #2"*).
-   - Ketuk baris pengguna lain untuk melihat **Profil Publik** siswa tersebut.
-3. **Sertifikat Digital (`CC-...`) & Berbagi Tautan Verifikasi:** Menampilkan nilai akhir gabungan (**40% Kuis + 60% Proyek**), predikat kelulusan, nomor kredensial unik, serta tombol **Bagikan** yang menyertakan URL langsung ke Portal Verifikasi Web (`verify.html?id=CC-...`).
+   - Filter periode (**Mingguan**, **Bulanan**, **Sepanjang Waktu**, **Streak 🔥**) dan filter **Jalur**.
+   - **Podium Top 3 Simetris** & **Bar Peringkat Pribadi ("Kamu")** beserta selisih poin ke peringkat di atasnya.
+   - Ketuk baris pengguna mana pun (termasuk di Forum) untuk membuka **Dialog Profil Publik** dengan tampilan unik sesuai peran (*Peserta*, *Fasilitator*, atau *Super Admin*).
+3. **Sertifikat Digital (`CC-...`) & Berbagi Tautan Verifikasi:** Menampilkan nilai akhir gabungan (**40% Kuis + 60% Proyek**), predikat kelulusan, nomor kredensial unik, tombol **Salin ID**, dan tombol **Bagikan** berisi tautan langsung ke Portal Verifikasi Web (`verify.html?id=CC-...`).
 
 ---
 
-## 15. PROFIL PENGGUNA, PETA AKTIVITAS, BAHASA & ZONA BERBAHAYA
+## 18. PROFIL PENGGUNA, PROFILE STUDIO, BAHASA & ZONA BERBAHAYA
 
 ![Profil dan Pengaturan](manual_book_assets/mockup_15_profile_settings.png)
-*Gambar 15: Layar Profil Pengguna, Peta Aktivitas & Pengaturan*
+*Gambar 18: Layar Profil Pengguna, Profile Studio, Peta Aktivitas & Pengaturan*
 
 ### Fitur Lengkap Halaman Profil:
-1. **Header Profil & Edit Profil Valid:** Menampilkan inisial/nama bersih (otomatis disanitasi tanpa prefiks angka) dan tombol **Edit Profil** dengan validasi nama (minimal 2 huruf, tidak diawali angka) serta **penghitung bio 100 karakter**. Tombol **Simpan** hanya aktif bila input valid dan ada perubahan.
-2. **Peta Aktivitas Belajar (*Heatmap* 12 Minggu):** Matriks kontribusi harian ber-outline pada sel kosong, tombol lihat mode 7 hari vs 12 minggu, legenda 2 baris yang bersih (*Kurang → Lebih*), detail harian saat kotak diketuk, serta label *"Hari tersibuk"* yang otomatis tersembunyi hingga minimal ada **3 hari aktif**.
-3. **Koleksi Lencana (*Badges*):** Menampilkan lencana terbuka maupun terkunci beserta deskripsi dan status syarat pencapaian.
-4. **Preferensi Bahasa, Tema & Notifikasi:** Pilihan **Mode Gelap / Mode Terang**, pengingat belajar (*Notifications*), mengulang Onboarding, dan **4 Bahasa** (*Bahasa Indonesia*, *English*, *日本語*, *中文*) dengan label bersih tanpa duplikasi nama bahasa.
-5. **Keluar Akun & Zona Berbahaya (Hapus Akun 2 Langkah):** Menu **Hapus Akun** dipisahkan ke kartu merah **Zona Berbahaya** di bagian paling bawah. Penghapusan akun mewajibkan konfirmasi dua langkah (mengetik kata **`HAPUS`** atau **`DELETE`**) lalu membersihkan data lokal Room, DataStore, serta dokumen `users/{uid}` di Firestore.
+1. **Profile Studio & Edit Profil:** Pengguna dapat menyesuaikan **Tema Banner Profil** (6 preset), **Gaya Ikon Avatar** (Inisial, Terminal, Code, Spark, Roket, Desain, Logic, Codi), **Bingkai Avatar**, **Julukan Developer**, hingga **3 Fokus Keahlian (*Skill Tags*)**, dan **Pin Lencana Unggulan**. Validasi nama otomatis aktif bersama penghitung bio 100 karakter.
+2. **Tampilan Profil Publik Staf Beranimasi:** Saat membuka profil staf melalui Forum atau Leaderboard, akun **Fasilitator** tampil dengan tema **Emerald-Gold Prestige** berdenyut halus, sedangkan akun **Super Admin** tampil dengan animasi *looping* **Cosmic Aurora Banner + Diagonal Light Sweep + Rotating 360° Halo Ring + Pulsing Aura**.
+3. **Peta Aktivitas Belajar (*Heatmap* 12 Minggu):** Matriks kontribusi harian (mode 7 hari vs 12 minggu) lengkap dengan detail aktivitas harian saat kotak diketuk.
+4. **Koleksi Lencana (*Badges*) & Preferensi 4 Bahasa:** Menampilkan 12 lencana pencapaian, pengaturan **Mode Gelap / Terang**, notifikasi pengingat, replay Onboarding, dan perpindahan instan **4 Bahasa** (*Bahasa Indonesia*, *English*, *日本語*, *中文*).
+5. **Keluar Akun & Zona Berbahaya (Hapus Akun 2 Langkah):** Memerlukan konfirmasi mengetik **`HAPUS`** atau **`DELETE`** untuk membersihkan data lokal Room, DataStore, serta dokumen `users/{uid}` di Firestore secara permanen.
 
 ---
 
-## 16. HALAMAN PUBLIK WEB & PINTU MASUK PORTAL STAF (`public/index.html`)
+## 19. HALAMAN PUBLIK WEB & PORTAL WEB FASILITATOR
 
-Untuk memisahkan fungsi informasi publik dari ruang kerja operasional staf, halaman utama web (`https://ivhan9867.github.io/codeacademy-web/`) berperan sebagai **Portal Publik**:
-1. **Ringkasan Platform & Pratinjau Aplikasi:** Memperkenalkan kurikulum mobile-first CodeAcademy serta tautan **Baca Manual Book di Web** dan **Unduh `.docx`**.
-2. **Akses Publik Verifikasi Sertifikat:** Tombol langsung ke `verify.html` bagi penguji, dosen, atau rekruter untuk mengecek keaslian sertifikat.
-3. **Pintu Masuk Khusus Staf (`Portal Fasilitator & Admin`):** Mengarahkan pengajar dan admin ke halaman autentikasi portal operasional terpisah (`facilitator/index.html`) agar menu staf tidak bercampur dengan beranda publik.
-
----
-
-## 17. PORTAL WEB FASILITATOR: PROYEK, FORUM TERVERIFIKASI & PROFIL
-
-Portal Staf (`public/facilitator/index.html`) menggunakan layout **Sidebar Workspace** khusus pengajar dengan 3 menu utama untuk peran **Fasilitator (`accessRole: "facilitator"`)**.
+Halaman utama web (`https://ivhan9867.github.io/codeacademy-web/`) berperan sebagai **Portal Publik** yang memuat ringkasan platform, tautan baca/unduh Manual Book, pintasan **Verifikasi Sertifikat (`verify.html`)**, serta pintu masuk terpisah ke **Portal Staf (`facilitator/index.html`)**.
 
 ![Portal Web Fasilitator](manual_book_assets/mockup_16_facilitator_web.png)
-*Gambar 16: Dashboard Portal Web Fasilitator CodeAcademy*
+*Gambar 19: Dashboard Portal Web Fasilitator CodeAcademy*
 
-### Alur Kerja & Fitur Fasilitator:
-1. **Otentikasi & Badge Identitas (`● Live Firebase` vs `● Demo Offline`):**
-   - Masuk dengan **Email/Password** atau **Masuk dengan Google** via Firebase Auth; sistem mengecek dokumen `/facilitators/{email}` di Firestore sebelum membuka dashboard.
-   - Tersedia pula tombol **Demo Fasilitator** dan **Demo Super Admin** di layar login untuk simulasi offline tanpa menulis ke Firestore.
-2. **Modal Profil Fasilitator (Kustomisasi Nama, Peran & Bio):**
-   - Klik pill identitas (`👤 Nama · Role`) di pojok kanan atas navbar untuk membuka **Profil Fasilitator**.
-   - Perubahan nama, spesialisasi/jabatan, dan bio disimpan ke `localStorage` serta disinkronkan ke `/facilitators/{email}` di Firestore dan otomatis dipakai di Forum, Pengumuman, maupun Sertifikat.
-3. **Proyek Akhir (Rubrik 40/60 & Live Preview Aman) [1][2][3]:**
-   - Pantau kartu statistik antrean (**Total**, **Menunggu Review**, **Perlu Revisi**, **Disetujui**) **[1]**, saring status/kelas **[2]**, lalu klik **Tinjau** **[3]**.
-   - Di Modal Review, telaah kode HTML/CSS/JS peserta sambil menguji hasil tampilannya di tab **Live Preview** bersandbox (`sandbox="allow-scripts"`).
-   - Isi checklist rubrik atau skor Proyek (`0–100`); kalkulator otomatis menggabungkan **40% Kuis + 60% Proyek**. Gunakan **Minta Revisi** (disertai tag umpan balik cepat) atau **Setujui & Terbitkan** (otomatis menulis dokumen ke koleksi `certificates`).
-4. **Forum Diskusi (Targeted Reply, Pin Terverifikasi & Tandai Membantu):**
-   - Filter thread *Semua Kursus* atau *Belum Dijawab Fasilitator*, dan buat topik diskusi baru langsung dari portal web.
-   - **Balas Spesifik (*Targeted Reply*):** Klik tombol **Balas** pada komentar mana pun untuk memunculkan banner *"Membalas @Nama"* (dan tombol batal `×`) sehingga balasan tersimpan lengkap dengan `replyToPostId`, `replyToAuthorName`, dan `replyToContentSnippet` yang selaras 100% dengan Android.
-   - **Pin Jawaban Terverifikasi (`📌 Pin`):** Menandai jawaban terbaik (`isVerifiedAnswer: true`), otomatis mem-pin jawaban ke urutan teratas balasan dalam thread, dan menyematkan status **`✓ Terjawab`** di header thread.
-   - **Tandai Jawaban Membantu (`💡`):** Memberi apresiasi `isHelpful: true` pada kontribusi siswa yang membantu.
-5. **Pengumuman Kelas:** Terbitkan pengumuman penting yang langsung dikirim ke koleksi `announcements` untuk tampil di aplikasi Android peserta.
+### Alur Kerja & Fitur Fasilitator (`accessRole: "facilitator"`):
+1. **Autentikasi Live Firebase (`● Live Firebase`):** Masuk dengan **Email/Password** atau **Masuk dengan Google** via Firebase Auth; sistem memverifikasi dokumen `/facilitators/{email}` di Firestore dan otomatis menyinkronkan profil publik staf ke `/users/{uid}` beserta `accessRole` agar tampil unik di aplikasi Android.
+2. **Modal Profil Fasilitator:** Klik pill identitas di navbar untuk memperbarui nama, spesialisasi/jabatan, dan bio (tersinkron ke `/facilitators/{email}` dan `/users/{uid}`).
+3. **Proyek Akhir (Rubrik 40/60 & Live Preview Aman) [1][2][3]:** Pantau antrean (**Total**, **Menunggu Review**, **Perlu Revisi**, **Disetujui**) **[1]**, saring status/kursus **[2]**, lalu klik **Tinjau** **[3]**. Telaah kode peserta di tab **Live Preview** bersandbox (`sandbox="allow-scripts"`), isi rubrik/skor (`0–100`), lalu pilih **Minta Revisi** atau **Setujui & Terbitkan** (otomatis menulis sertifikat `CC-...` ke Firestore).
+4. **Forum Diskusi & Pengumuman:** Filter thread belum terjawab, buat topik/balasan (*Targeted Reply* lengkap dengan `authorAccessRole`), **Pin Jawaban Terverifikasi (`📌`)**, **Tandai Membantu (`💡`)**, serta terbitkan **Pengumuman Kelas** real-time ke aplikasi Android.
 
 ---
 
-## 18. PANEL SUPER ADMIN: TIM FASILITATOR, AUDIT SERTIFIKAT & EXPORT CSV
+## 20. PANEL SUPER ADMIN: PROMOSI TIM, BAN SISWA & EXPORT CSV
 
-Akun staf yang memiliki field `accessRole: "super_admin"` pada dokumen Firestore `/facilitators/{email}` otomatis memperoleh lencana **`👑 Super Admin`** di navbar serta akses ke kelompok menu kedua pada **Sidebar Workspace**: **Panel Super Admin** (menu ini disembunyikan dari Fasilitator biasa).
+Akun staf dengan `accessRole: "super_admin"` pada `/facilitators/{email}` otomatis memperoleh lencana **`👑 Super Admin`** di navbar serta akses ke grup menu **Panel Super Admin** di Sidebar Workspace.
 
 ![Panel Super Admin Web](manual_book_assets/mockup_18_super_admin_web.png)
-*Gambar 18: Antarmuka Sidebar Workspace & Panel Super Admin CodeAcademy*
+*Gambar 20: Antarmuka Sidebar Workspace & Panel Super Admin CodeAcademy*
 
 ### Modul Khusus Super Admin **[1][2][3]**:
-1. **Badge Peran & Pemisahan Menu Sidebar [1][2]:** Navbar menandai status **`👑 Super Admin`** **[1]**, sedangkan sidebar kiri menampilkan grup khusus **Panel Super Admin** **[2]** yang terdiri atas 3 sub-panel:
-   - **Sertifikat & Audit:** Memantau seluruh sertifikat `CC-...` yang terbit lintas kursus serta mengekspor registri sertifikat.
-   - **Tim Fasilitator (`/facilitators/{email}`):** Menambah akun email Google baru sebagai staf, memilih atau mengubah peran (`Fasilitator` vs `Super Admin`), dan mencabut akses akun yang sudah tidak aktif tanpa harus membuka Firebase Console.
-   - **Ringkasan & Siswa (`/users`):** Memantau **Rasio Lulus Proyek (%)**, **Topik Forum Terverifikasi**, **Total Sertifikat Terbit**, **Jumlah Siswa Cloud**, dan tabel klasemen siswa aktif (Total XP, Level, Streak).
-2. **Unduh Laporan CSV [3]:** Tersedia tombol **Unduh CSV** pada panel **Sertifikat & Audit** maupun **Ringkasan & Siswa** untuk mengekspor rekap sertifikat kelulusan (`codeacademy-sertifikat.csv`) dan laporan nilai proyek akhir (`codeacademy-nilai-proyek.csv`) secara instan di browser.
+1. **Tim Fasilitator & Promosi Peran (`/facilitators/{email}`):**
+   - Menambah akun email Google baru sebagai Fasilitator atau Super Admin.
+   - **Promosi Peran (`⬆ Jadikan Super Admin`):** Super Admin dapat menaikkan anggota berstatus `facilitator` menjadi `super_admin` dengan dialog konfirmasi.
+   - **Perlindungan Sesama Super Admin:** Akun yang sudah berstatus `super_admin` berlabel *Dilindungi* dan tidak dapat diturunkan (*demote*) maupun dicabut aksesnya oleh sesama Super Admin.
+2. **Ringkasan Analitik, Klasemen & Kontrol Ban/Unban Siswa (`/users`):**
+   - Memantau **Rasio Lulus Proyek (%)**, **Topik Forum Terverifikasi**, **Total Sertifikat Terbit**, dan **Jumlah Siswa Cloud (termasuk status Ban)**.
+   - **Ban / Unban Akun Siswa:** Super Admin dapat membekukan akun siswa yang melanggar aturan beserta alasannya (langsung memicu `AccountBannedScreen` di Android) atau mencabut pembekuan (*Unban*) kapan saja.
+3. **Sertifikat, Audit & Unduh Laporan CSV [3]:** Memantau & mencabut sertifikat lintas kursus serta mengekspor `codeacademy-sertifikat.csv` dan `codeacademy-nilai-proyek.csv`.
 
 ---
 
-## 19. PORTAL VERIFIKASI SERTIFIKAT PUBLIK & KEAMANAN `firestore.rules`
+## 21. PORTAL VERIFIKASI SERTIFIKAT PUBLIK & KEAMANAN `firestore.rules`
 
-CodeAcademy menyediakan **Portal Verifikasi Kredensial Publik** di `https://ivhan9867.github.io/codeacademy-web/verify.html` (`public/verify.html`) yang terhubung langsung ke Cloud Firestore (`certificates/{certId}`).
+CodeAcademy menyediakan **Portal Verifikasi Kredensial Publik** di `https://ivhan9867.github.io/codeacademy-web/verify.html` (`public/verify.html`) yang melakukan validasi langsung ke Cloud Firestore (`certificates/{certId}`) tanpa data dummy/demo lokal.
 
 ![Portal Verifikasi Sertifikat](manual_book_assets/mockup_17_verify_web.png)
-*Gambar 17: Antarmuka Portal Web Verifikasi Sertifikat Digital*
+*Gambar 21: Antarmuka Portal Web Verifikasi Sertifikat Digital*
 
-### Cara Validasi & Perlindungan Keamanan Data:
-1. **Validasi ID Kredensial (`CC-...`):** Masukkan ID Kredensial sertifikat pada kolom pencarian atau buka langsung tautan bagikan dari aplikasi Android (`verify.html?id=CC-2026110101-A9K3P2`).
-2. **Tampilan Hasil Autentik:** Sertifikat valid menampilkan lencana hijau **`✓ KREDENSIAL TERVERIFIKASI`**, nama lengkap lulusan, nama kelas, nilai akhir (**40% Kuis + 60% Proyek**), predikat, tanggal terbit, dan nama fasilitator penilai.
-3. **Ringkasan Aturan Keamanan `firestore.rules`:**
-   - `/facilitators/{email}`: Hanya **`isSuperAdmin()`** yang dapat membaca seluruh daftar tim, menambah anggota, atau menghapus akses; fasilitator biasa hanya dapat membaca dan memperbarui profil miliknya sendiri tanpa izin mengubah `accessRole`.
-   - `/project_submissions/{id}`: Siswa hanya dapat membuat/memperbarui pengajuan miliknya sendiri dengan status `PENDING_REVIEW`; skor & keputusan akhir hanya boleh ditulis oleh `isFacilitator()`.
-   - `/forum_posts/{postId}`: Dapat dibaca oleh semua pengguna login (termasuk tamu anonim); siswa tidak dapat memalsukan flag `isMentor`/`authorIsMentor`; fasilitator memiliki hak moderasi, hapus, dan pin jawaban terverifikasi.
-   - `/certificates/{certId}`: Terbuka untuk dibaca publik (`verify.html`), namun pencabutan/hapus dibatasi khusus `isFacilitator()` / Admin dan skor valid wajib `70–100`.
-   - `/announcements/{id}`: Terbuka dibaca aplikasi siswa, dan hanya boleh dibuat/diubah/dihapus oleh `isFacilitator()`.
+### Cara Validasi & Ringkasan Keamanan `firestore.rules`:
+1. **Validasi ID Kredensial (`CC-...`):** Masukkan ID Kredensial pada kolom pencarian atau buka langsung tautan bagikan dari aplikasi (`verify.html?id=CC-...`). Sertifikat valid menampilkan lencana hijau **`✓ KREDENSIAL TERVERIFIKASI`**, nama lulusan, kursus, nilai akhir (**40% Kuis + 60% Proyek**), predikat, tanggal terbit, dan penilai.
+2. **Aturan Keamanan `firestore.rules`:**
+   - `/facilitators/{email}`: Hanya **`isSuperAdmin()`** yang dapat membaca daftar penuh, menambah, mempromosikan, atau menghapus anggota tim; fasilitator biasa hanya dapat membaca/memperbarui profilnya sendiri tanpa mengubah `accessRole`.
+   - `/users/{userId}`: Dapat dibaca oleh pengguna login (untuk Leaderboard & Profil Publik); hanya pemilik dokumen atau `isSuperAdmin()` yang dapat menulis, dan field `isBanned`, `banReason`, `bannedAt`, `bannedBy` hanya boleh diubah oleh `isSuperAdmin()`.
+   - `/project_submissions/{id}`: Siswa hanya dapat mengajukan status `PENDING_REVIEW`; skor & keputusan review hanya boleh ditulis oleh `isFacilitator()`.
+   - `/forum_posts/{postId}`: Siswa tidak dapat memalsukan flag `isMentor`/`authorIsMentor`; fasilitator berhak memoderasi, menghapus, dan mem-pin jawaban terverifikasi.
+   - `/certificates/{certId}` & `/announcements/{id}`: Terbuka dibaca publik/aplikasi, sementara penulisan/pencabutan dijaga ketat oleh aturan validasi skor (`70–100`) dan peran `isFacilitator()`.
 
 ---
 
 ### Informasi Dokumen:
 - **Platform:** CodeAcademy Mobile (Android) & Web Portal (Publik, Fasilitator, Super Admin, Verifikasi)
-- **Basis Konten:** Kode Sumber Terkini & Aset Kurikulum (`156 Modul` / `3 Kelas Front-End`)
+- **Basis Konten:** Kode Sumber Terkini (`AppDatabase v16`, 4 Bahasa, `156 Modul` / `3 Kursus Front-End`)
 - **Template Dokumen:** Pengembangan Bahan Ajar Edisi I 2026
 - **Tahun Pembuatan:** 2026

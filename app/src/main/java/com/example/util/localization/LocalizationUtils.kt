@@ -21,10 +21,10 @@ fun Context.localizedContext(languageCode: String?): Context {
 / * Converts AppLanguage enum to Java Locale.
  */
 fun AppLanguage.toLocale(): Locale = when (this) {
-    AppLanguage.INDONESIAN -> Locale("id", "ID")
-    AppLanguage.ENGLISH -> Locale("en", "US")
-    AppLanguage.JAPANESE -> Locale("ja", "JP")
-    AppLanguage.CHINESE -> Locale("zh", "CN")
+    AppLanguage.INDONESIAN -> Locale.forLanguageTag("id-ID")
+    AppLanguage.ENGLISH -> Locale.forLanguageTag("en-US")
+    AppLanguage.JAPANESE -> Locale.forLanguageTag("ja-JP")
+    AppLanguage.CHINESE -> Locale.forLanguageTag("zh-CN")
 }
 
 /**

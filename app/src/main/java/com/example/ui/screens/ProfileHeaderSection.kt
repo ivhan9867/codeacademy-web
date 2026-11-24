@@ -471,7 +471,7 @@ fun ProfileEditDialog(
                 )
 
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    items(ProfileCustomizationCatalog.headlinePresets) { preset ->
+                    items(ProfileCustomizationCatalog.headlinePresets, key = { it }) { preset ->
                         FilterChip(
                             selected = editHeadline == preset,
                             onClick = { editHeadline = preset },
@@ -506,7 +506,7 @@ fun ProfileEditDialog(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(vertical = 2.dp)
                 ) {
-                    items(ProfileCustomizationCatalog.bannerThemes) { theme ->
+                    items(ProfileCustomizationCatalog.bannerThemes, key = { it.id }) { theme ->
                         val selected = editBanner == theme.id
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -549,7 +549,7 @@ fun ProfileEditDialog(
                     fontWeight = FontWeight.Bold
                 )
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(ProfileCustomizationCatalog.avatarStyles) { styleItem ->
+                    items(ProfileCustomizationCatalog.avatarStyles, key = { it.id }) { styleItem ->
                         val selected = editAvatarStyle == styleItem.id
                         Surface(
                             onClick = { editAvatarStyle = styleItem.id },
@@ -585,7 +585,7 @@ fun ProfileEditDialog(
                     fontWeight = FontWeight.Bold
                 )
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    items(ProfileCustomizationCatalog.avatarFrames) { frameItem ->
+                    items(ProfileCustomizationCatalog.avatarFrames, key = { it.id }) { frameItem ->
                         FilterChip(
                             selected = editFrame == frameItem.id,
                             onClick = { editFrame = frameItem.id },

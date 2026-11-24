@@ -1529,4 +1529,12 @@
     <string name="forum_time_just_now">たった今</string>
     <string name="forum_time_mins_ago_format">%1$d分前</string>
     <string name="forum_time_hours_ago_format">%1$d時間前</string>
+
+    <!-- Multimodal AI Tutor & Module Translation -->
+    <string name="ai_tutor_attach_image_cd">コード画像を添付</string>
+    <string name="ai_tutor_remove_image_cd">添付画像を削除</string>
+    <string name="ai_tutor_image_attached_label">コード画像が添付されています</string>
+    <string name="ai_tutor_default_image_prompt">このコード画像またはエラーを分析し、修正・改善方法を説明してください。</string>
+    <string name="materi_translating_en">モジュールを英語に翻訳中...</string>
+    <string name="materi_translated_badge">English (Cached)</string>
 </resources>

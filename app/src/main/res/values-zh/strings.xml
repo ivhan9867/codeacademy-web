@@ -1529,4 +1529,12 @@
     <string name="forum_time_just_now">刚刚</string>
     <string name="forum_time_mins_ago_format">%1$d 分钟前</string>
     <string name="forum_time_hours_ago_format">%1$d 小时前</string>
+
+    <!-- Multimodal AI Tutor & Module Translation -->
+    <string name="ai_tutor_attach_image_cd">添加代码图片</string>
+    <string name="ai_tutor_remove_image_cd">移除图片</string>
+    <string name="ai_tutor_image_attached_label">已添加代码图片</string>
+    <string name="ai_tutor_default_image_prompt">请分析这张代码截图或错误信息，并解释如何修复或改进。</string>
+    <string name="materi_translating_en">正在将模块翻译为英文...</string>
+    <string name="materi_translated_badge">English (Cached)</string>
 </resources>

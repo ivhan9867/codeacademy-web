@@ -1,8 +1,13 @@
 package com.example.ui.screens
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,11 +18,13 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,12 +33,26 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.material.icons.filled.ZoomIn
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import coil.compose.AsyncImage
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -79,14 +100,24 @@ fun AiTutorScreen(
     moduleTitle: String,
     messages: List<ChatMessage>,
     isThinking: Boolean,
-    connectionStatus: String = "Gemini 2.0",
-    onSendMessage: (String) -> Unit,
+    connectionStatus: String = "Gemini Flash",
+    onSendMessage: (String, String?) -> Unit,
     onBack: () -> Unit,
     onClearChat: () -> Unit = {},
     onTryInPlayground: (String, String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     var textInput by remember { mutableStateOf("") }
+    var selectedImageUri by remember { mutableStateOf<String?>(null) }
+    var previewImageUri by remember { mutableStateOf<String?>(null) }
+    val defaultImagePrompt = stringResource(R.string.ai_tutor_default_image_prompt)
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        if (uri != null) {
+            selectedImageUri = uri.toString()
+        }
+    }
     val listState = rememberLazyListState()
 
     // Contextual suggestion prompt chips with stable unique IDs
@@ -104,7 +135,8 @@ fun AiTutorScreen(
     }
 
     val imeBottomPx = WindowInsets.ime.getBottom(androidx.compose.ui.platform.LocalDensity.current)
-    LaunchedEffect(messages.size, isThinking, imeBottomPx > 0) {
+    val isKeyboardOpen = imeBottomPx > 0
+    LaunchedEffect(messages.size, isThinking, isKeyboardOpen) {
         if (messages.isNotEmpty()) {
             try {
                 listState.animateScrollToItem((messages.size - 1).coerceAtLeast(0))
@@ -225,49 +257,119 @@ fun AiTutorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.surface)
-                    .navigationBarsPadding()
                     .imePadding()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                // Quick suggested prompts
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    contentPadding = PaddingValues(bottom = 8.dp)
-                ) {
-                    items(suggestions, key = { it.id }) { prompt ->
-                        Surface(
-                            shape = RoundedCornerShape(16.dp),
-                            color = MaterialTheme.colorScheme.surfaceVariant,
-                            modifier = Modifier.clickable {
-                                onSendMessage(prompt.text)
+                // Quick suggested prompts (auto-hide when keyboard is open for more chat space)
+                AnimatedVisibility(visible = !isKeyboardOpen) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(bottom = 8.dp)
+                    ) {
+                        items(suggestions, key = { it.id }) { prompt ->
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                modifier = Modifier.clickable {
+                                    onSendMessage(prompt.text, null)
+                                }
+                            ) {
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.AutoAwesome,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.primary,
+                                        modifier = Modifier.size(14.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = prompt.text,
+                                        fontSize = 11.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
                             }
+                        }
+                    }
+                }
+
+                // Attached Image Preview Bar
+                AnimatedVisibility(visible = selectedImageUri != null) {
+                    selectedImageUri?.let { uriStr ->
+                        Surface(
+                            shape = RoundedCornerShape(14.dp),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp)
                         ) {
                             Row(
-                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 10.dp, vertical = 8.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.AutoAwesome,
+                                AsyncImage(
+                                    model = uriStr,
                                     contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(14.dp)
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .clickable { previewImageUri = uriStr }
                                 )
-                                Spacer(modifier = Modifier.width(6.dp))
+                                Spacer(modifier = Modifier.width(10.dp))
                                 Text(
-                                    text = prompt.text,
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    text = stringResource(R.string.ai_tutor_image_attached_label),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.weight(1f),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
                                 )
+                                IconButton(
+                                    onClick = { selectedImageUri = null },
+                                    modifier = Modifier.size(32.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = stringResource(R.string.ai_tutor_remove_image_cd),
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
                             }
                         }
                     }
                 }
 
                 // Chat Input Field
+                val canSend = (textInput.isNotBlank() || selectedImageUri != null) && !isThinking
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    IconButton(
+                        onClick = { imagePickerLauncher.launch("image/*") },
+                        enabled = !isThinking,
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AddPhotoAlternate,
+                            contentDescription = stringResource(R.string.ai_tutor_attach_image_cd),
+                            tint = if (selectedImageUri != null) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
                     OutlinedTextField(
                         value = textInput,
                         onValueChange = { textInput = it },
@@ -287,33 +389,39 @@ fun AiTutorScreen(
 
                     IconButton(
                         onClick = {
-                            if (textInput.isNotBlank()) {
-                                val msg = textInput
+                            if (canSend) {
+                                val msg = textInput.ifBlank { defaultImagePrompt }
+                                val img = selectedImageUri
                                 textInput = ""
-                                onSendMessage(msg)
+                                selectedImageUri = null
+                                onSendMessage(msg, img)
                             }
                         },
-                        enabled = textInput.isNotBlank() && !isThinking,
+                        enabled = canSend,
                         modifier = Modifier
                             .size(46.dp)
                             .clip(CircleShape)
-                            .background(if (textInput.isNotBlank()) TealPrimary else MaterialTheme.colorScheme.surfaceVariant)
+                            .background(if (canSend) TealPrimary else MaterialTheme.colorScheme.surfaceVariant)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(R.string.ai_tutor_send_button),
-                            tint = if (textInput.isNotBlank()) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = if (canSend) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = stringResource(R.string.ai_disclaimer_note),
-                    fontSize = 10.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
+                AnimatedVisibility(visible = !isKeyboardOpen) {
+                    Column {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.ai_disclaimer_note),
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                        )
+                    }
+                }
             }
         },
         modifier = modifier
@@ -330,7 +438,8 @@ fun AiTutorScreen(
             items(messages, key = { it.id }) { message ->
                 ChatMessageBubble(
                     message = message,
-                    onTryInPlayground = onTryInPlayground
+                    onTryInPlayground = onTryInPlayground,
+                    onPreviewImage = { uri -> previewImageUri = uri }
                 )
             }
 
@@ -356,15 +465,83 @@ fun AiTutorScreen(
             }
         }
     }
+
+    previewImageUri?.let { uri ->
+        FullScreenImagePreviewDialog(
+            imageUri = uri,
+            onDismiss = { previewImageUri = null }
+        )
+    }
+}
+
+@Composable
+private fun FullScreenImagePreviewDialog(
+    imageUri: String,
+    onDismiss: () -> Unit
+) {
+    var scale by remember { mutableStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+    val transformState = rememberTransformableState { zoomChange, panChange, _ ->
+        val nextScale = (scale * zoomChange).coerceIn(1f, 4f)
+        scale = nextScale
+        offset = if (nextScale > 1f) offset + panChange else Offset.Zero
+    }
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.94f))
+                .clickable { onDismiss() },
+            contentAlignment = Alignment.Center
+        ) {
+            AsyncImage(
+                model = imageUri,
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+                    .graphicsLayer(
+                        scaleX = scale,
+                        scaleY = scale,
+                        translationX = offset.x,
+                        translationY = offset.y
+                    )
+                    .transformable(state = transformState)
+            )
+            IconButton(
+                onClick = onDismiss,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .statusBarsPadding()
+                    .padding(16.dp)
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black.copy(alpha = 0.6f))
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.common_close),
+                    tint = Color.White
+                )
+            }
+        }
+    }
 }
 
 @Composable
 fun ChatMessageBubble(
     message: ChatMessage,
     onTryInPlayground: (String, String) -> Unit = { _, _ -> },
+    onPreviewImage: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val isUser = message.isUser
+    val clipboard = LocalClipboardManager.current
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -374,16 +551,16 @@ fun ChatMessageBubble(
         if (!isUser) {
             Box(
                 modifier = Modifier
-                    .size(32.dp)
+                    .size(30.dp)
                     .clip(CircleShape)
                     .background(CyanAccent.copy(alpha = 0.2f)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Psychology,
-                    contentDescription = "AI",
+                    contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(17.dp)
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -391,54 +568,246 @@ fun ChatMessageBubble(
 
         Surface(
             shape = RoundedCornerShape(
-                topStart = 16.dp,
-                topEnd = 16.dp,
-                bottomStart = if (isUser) 16.dp else 4.dp,
-                bottomEnd = if (isUser) 4.dp else 16.dp
+                topStart = if (isUser) 18.dp else 6.dp,
+                topEnd = 18.dp,
+                bottomStart = 18.dp,
+                bottomEnd = if (isUser) 6.dp else 18.dp
             ),
-            color = if (isUser) TealPrimary else MaterialTheme.colorScheme.surfaceVariant,
+            color = if (isUser) TealPrimary else MaterialTheme.colorScheme.surface,
+            border = if (isUser) null else BorderStroke(
+                1.dp,
+                MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)
+            ),
+            tonalElevation = if (isUser) 0.dp else 1.dp,
             modifier = Modifier
                 .weight(1f, fill = false)
                 .padding(
-                    start = if (isUser) 48.dp else 0.dp,
-                    end = if (isUser) 0.dp else 32.dp
+                    start = if (isUser) 44.dp else 0.dp,
+                    end = if (isUser) 0.dp else 8.dp
                 )
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
-                // If message has code block ``` ... ```
-                if (message.text.contains("```")) {
-                    val parts = message.text.split("```")
-                    parts.forEachIndexed { index, part ->
-                        if (index % 2 == 1) {
-                            // Code section
-                            val lines = part.trim().lines()
-                            val lang = if (lines.isNotEmpty() && lines[0].length < 15 && !lines[0].contains(" ")) lines[0] else "code"
-                            val codeBody = if (lang != "code") lines.drop(1).joinToString("\n") else part.trim()
-                            CodeBlockView(
-                                code = codeBody,
-                                language = lang,
-                                onTryInPlayground = { snippet -> onTryInPlayground(snippet, lang) },
-                                modifier = Modifier.padding(vertical = 4.dp)
-                            )
-                        } else if (part.trim().isNotEmpty()) {
-                            MarkdownText(
-                                text = part.trim(),
-                                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
-                                color = if (isUser) Color.White else MaterialTheme.colorScheme.onSurface,
-                                lineHeight = 20.sp,
-                                codeBackgroundColor = if (isUser) Color.White.copy(alpha = 0.25f) else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
-                                codeTextColor = if (isUser) Color.White else MaterialTheme.colorScheme.primary
+            Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
+                if (!isUser) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.ai_tutor_title),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        IconButton(
+                            onClick = { clipboard.setText(AnnotatedString(message.text)) },
+                            modifier = Modifier.size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.size(14.dp)
                             )
                         }
                     }
-                } else {
+                }
+
+                if (!message.imageUri.isNullOrBlank()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 210.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable { onPreviewImage(message.imageUri) }
+                    ) {
+                        AsyncImage(
+                            model = message.imageUri,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(8.dp)
+                                .clip(CircleShape)
+                                .background(Color.Black.copy(alpha = 0.55f))
+                                .padding(5.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ZoomIn,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                SelectionContainer {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        if (message.text.contains("```")) {
+                            val parts = message.text.split("```")
+                            parts.forEachIndexed { index, part ->
+                                if (index % 2 == 1) {
+                                    val lines = part.trim().lines()
+                                    val lang = if (lines.isNotEmpty() && lines[0].length < 15 && !lines[0].contains(" ")) lines[0] else "code"
+                                    val codeBody = if (lang != "code") lines.drop(1).joinToString("\n") else part.trim()
+                                    CodeBlockView(
+                                        code = codeBody,
+                                        language = lang,
+                                        onTryInPlayground = { snippet -> onTryInPlayground(snippet, lang) },
+                                        modifier = Modifier.padding(vertical = 2.dp)
+                                    )
+                                } else if (part.trim().isNotEmpty()) {
+                                    AiFormattedMarkdown(
+                                        text = part.trim(),
+                                        isUser = isUser
+                                    )
+                                }
+                            }
+                        } else {
+                            AiFormattedMarkdown(
+                                text = message.text,
+                                isUser = isUser
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AiFormattedMarkdown(
+    text: String,
+    isUser: Boolean
+) {
+    val textColor = if (isUser) Color.White else MaterialTheme.colorScheme.onSurface
+    val codeBg = if (isUser) Color.White.copy(alpha = 0.25f) else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.65f)
+    val codeText = if (isUser) Color.White else MaterialTheme.colorScheme.primary
+    val bulletTint = if (isUser) Color.White else TealPrimary
+    val numberedRegex = remember { Regex("^(\\d+\\.)\\s+(.*)$") }
+
+    Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        text.lines().forEach { rawLine ->
+            val trimmed = rawLine.trim()
+            when {
+                trimmed.isEmpty() -> Spacer(modifier = Modifier.height(2.dp))
+                trimmed == "---" || trimmed == "***" -> {
+                    HorizontalDivider(
+                        color = if (isUser) Color.White.copy(alpha = 0.3f)
+                        else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                        modifier = Modifier.padding(vertical = 4.dp)
+                    )
+                }
+                trimmed.startsWith("### ") || trimmed.startsWith("## ") || trimmed.startsWith("# ") -> {
+                    val headingText = trimmed.trimStart('#').trim()
                     MarkdownText(
-                        text = message.text,
-                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp),
-                        color = if (isUser) Color.White else MaterialTheme.colorScheme.onSurface,
+                        text = headingText,
+                        style = MaterialTheme.typography.titleSmall.copy(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = if (isUser) Color.White else MaterialTheme.colorScheme.primary,
                         lineHeight = 20.sp,
-                        codeBackgroundColor = if (isUser) Color.White.copy(alpha = 0.25f) else MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
-                        codeTextColor = if (isUser) Color.White else MaterialTheme.colorScheme.primary
+                        codeBackgroundColor = codeBg,
+                        codeTextColor = codeText,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+                trimmed.startsWith("- ") || trimmed.startsWith("* ") || trimmed.startsWith("• ") -> {
+                    val itemBody = trimmed.drop(2).trim()
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(start = 4.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Text(
+                            text = "•",
+                            color = bulletTint,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                        MarkdownText(
+                            text = itemBody,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.5.sp),
+                            color = textColor,
+                            lineHeight = 20.5.sp,
+                            codeBackgroundColor = codeBg,
+                            codeTextColor = codeText,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+                numberedRegex.matches(trimmed) -> {
+                    val match = numberedRegex.find(trimmed)
+                    val numLabel = match?.groupValues?.getOrNull(1) ?: ""
+                    val itemBody = match?.groupValues?.getOrNull(2) ?: trimmed
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(start = 2.dp),
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Text(
+                            text = numLabel,
+                            color = bulletTint,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp,
+                            modifier = Modifier.padding(end = 6.dp)
+                        )
+                        MarkdownText(
+                            text = itemBody,
+                            style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.5.sp),
+                            color = textColor,
+                            lineHeight = 20.5.sp,
+                            codeBackgroundColor = codeBg,
+                            codeTextColor = codeText,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+                trimmed.startsWith("> ") -> {
+                    val quoteBody = trimmed.drop(2).trim()
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (isUser) Color.White.copy(alpha = 0.14f)
+                        else MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.28f),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .width(3.dp)
+                                    .height(18.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .background(bulletTint)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            MarkdownText(
+                                text = quoteBody,
+                                style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp),
+                                color = textColor,
+                                lineHeight = 19.sp,
+                                codeBackgroundColor = codeBg,
+                                codeTextColor = codeText,
+                                modifier = Modifier.weight(1f)
+                            )
+                        }
+                    }
+                }
+                else -> {
+                    MarkdownText(
+                        text = trimmed,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.5.sp),
+                        color = textColor,
+                        lineHeight = 21.sp,
+                        codeBackgroundColor = codeBg,
+                        codeTextColor = codeText
                     )
                 }
             }

@@ -158,7 +158,8 @@ data class ChatMessage(
     val text: String,
     val isUser: Boolean,
     val timestamp: Long = System.currentTimeMillis(),
-    val codeSnippet: String? = null
+    val codeSnippet: String? = null,
+    val imageUri: String? = null
 )
 
 object GamificationLevels {

@@ -30,9 +30,10 @@ class CodeAcademyApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
         initFirebaseAppCheck(this)
-        CourseCatalog.loadCatalogSync(this)
+        val initialLang = com.example.data.local.SessionManager(this).getCachedLanguageCode()
+        CourseCatalog.loadCatalogSync(this, initialLang)
         applicationScope.launch {
-            CourseCatalog.loadAssetCourses(this@CodeAcademyApplication)
+            CourseCatalog.loadAssetCourses(this@CodeAcademyApplication, initialLang)
         }
     }
 

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -162,7 +163,9 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalContext provides localizedContext,
                 LocalConfiguration provides localizedConfiguration,
-                LocalAppLanguage provides currentLanguage
+                LocalAppLanguage provides currentLanguage,
+                androidx.activity.compose.LocalActivityResultRegistryOwner provides this@MainActivity,
+                androidx.activity.compose.LocalOnBackPressedDispatcherOwner provides this@MainActivity
             ) {
                 CodeAcademyTheme(darkTheme = isDark) {
                     CodeAcademyApp(viewModel = viewModel, hostActivity = this@MainActivity)
@@ -735,6 +738,7 @@ fun CodeAcademyApp(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(if (isSplashScreen) PaddingValues(0.dp) else innerPadding)
+                .consumeWindowInsets(if (isSplashScreen) PaddingValues(0.dp) else innerPadding)
         ) {
             // 1. Splash
             composable("splash") {
@@ -1192,6 +1196,9 @@ fun CodeAcademyApp(
                                 subtitle = course.title,
                                 trackName = course.trackId
                             )
+                        },
+                        onTranslateToEnglish = { modId, markdown ->
+                            viewModel.translateModuleToEnglish(modId, markdown)
                         }
                     )
                 }
@@ -1567,8 +1574,8 @@ fun CodeAcademyApp(
                     messages = chatMessages,
                     isThinking = isAiThinking,
                     connectionStatus = aiConnectionStatus,
-                    onSendMessage = { query ->
-                        viewModel.askAi(query, courseTitle, moduleTitle)
+                    onSendMessage = { query, imageUri ->
+                        viewModel.askAi(query, courseTitle, moduleTitle, imageUri = imageUri)
                     },
                     onClearChat = { viewModel.clearAiChat() },
                     onTryInPlayground = { snippet, lang ->
@@ -1587,7 +1594,7 @@ fun CodeAcademyApp(
             // 17. Bookmarks
             composable("bookmarks") {
                 val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
-                val courses = remember { viewModel.getAllCourses() }
+                val courses by viewModel.catalogCourses.collectAsStateWithLifecycle()
                 BookmarksScreen(
                     bookmarks = bookmarks,
                     onBack = { navController.popBackStack() },

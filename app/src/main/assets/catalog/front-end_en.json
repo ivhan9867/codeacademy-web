@@ -1,0 +1,2720 @@
+{
+  "id": "front-end",
+  "name": "Front-End Development",
+  "description": "Learn how to build engaging, responsive, and interactive web interfaces from scratch.",
+  "iconEmoji": "🌐",
+  "courses": [
+    {
+      "id": "fe-web-foundation-00",
+      "trackId": "front-end",
+      "title": "Web Foundations: From Zero to Your First Line of Code",
+      "level": "Orientasi",
+      "durationMinutes": 573,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Learn complete HTML structure and CSS styling from the basics through positioning & float techniques. This course serves as the foundation before moving on to modern Flexbox and Grid layouts.",
+      "prerequisites": [
+        "Tidak ada prasyarat (Ramah Pemula)"
+      ],
+      "instructor": "Budi Santoso, Senior Front-End Engineer",
+      "contentPath": "content/fe-web-foundation-00",
+      "sectionTitles": {
+        "PERSIAPAN": "Preparation",
+        "PENDAHULUAN": "Introduction",
+        "INTI": "HTML Introduction",
+        "LANJUTAN": "HTML Deep Dive",
+        "CSS_DASAR": "CSS Basics",
+        "PENDALAMAN_CSS": "CSS Deep Dive",
+        "EVALUASI": "Evaluation"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "What is the main function of HTML when building a web page?",
+          "options": [
+            "Connecting the browser to a DNS server",
+            "Defining the skeleton and content structure of the page",
+            "Styling colors, typography, and page layout",
+            "Running interactive logic and animations in the browser"
+          ],
+          "correctIndex": 1,
+          "explanation": "HTML is responsible for building the skeleton and structure of a web page (what content is on the page), while visual appearance is handled by CSS and interactivity by JavaScript.",
+          "sourceModuleId": "web-foundation-inti-1"
+        },
+        {
+          "id": 2,
+          "question": "How does a browser treat plain text without HTML markup elements?",
+          "options": [
+            "The browser refuses to display the page and returns a 404 error",
+            "The browser automatically adds an <h1> tag to the first sentence",
+            "The browser automatically applies heading formatting and paragraph spacing",
+            "The browser ignores extra spaces and blank lines, merging the text into a single continuous flow"
+          ],
+          "correctIndex": 3,
+          "explanation": "Browsers read HTML using whitespace collapsing rules: extra spaces and line breaks are ignored, and text is merged into a single continuous line/flow unless marked up with elements.",
+          "sourceModuleId": "web-foundation-inti-2"
+        },
+        {
+          "id": 3,
+          "question": "Why does a website typically have a file named index.html in its root folder?",
+          "options": [
+            "Because browsers refuse to process HTML if the file is not named index",
+            "Because browsers require the main file to have the smallest possible size",
+            "Because the server automatically loads index.html when the domain is visited",
+            "Because web protocols restrict public access to only this single file"
+          ],
+          "correctIndex": 2,
+          "explanation": "By web server convention, when a URL does not specify a particular filename (for example https://contoh.com), the server looks for and serves index.html by default.",
+          "sourceModuleId": "web-foundation-inti-3"
+        },
+        {
+          "id": 4,
+          "question": "Which nested HTML element syntax follows the correct rules?",
+          "options": [
+            "<strong><p>Belajar HTML</strong></p>",
+            "<p>Belajar <strong>HTML</p></strong>",
+            "<p>Belajar <strong>HTML</strong></p>",
+            "<p><strong>Belajar HTML</p>"
+          ],
+          "correctIndex": 2,
+          "explanation": "The element opened last must be closed first (LIFO). In this case, <strong> is opened after <p>, so <strong> must be closed before </p>.",
+          "sourceModuleId": "web-foundation-inti-5"
+        },
+        {
+          "id": 5,
+          "question": "Where must HTML attributes be written and what is their basic format?",
+          "options": [
+            "Between the opening tag and closing tag using the format (name, value)",
+            "In either the opening or closing tag using the format [name=value]",
+            "In the opening tag only using the format name=\"value\"",
+            "In the closing tag using the format name: value;"
+          ],
+          "correctIndex": 2,
+          "explanation": "Attributes are always placed inside the opening tag, separated by a space after the tag name, using the syntax name=\"value\".",
+          "sourceModuleId": "web-foundation-inti-5"
+        },
+        {
+          "id": 6,
+          "question": "What is the fundamental difference between the id and class attributes in an HTML document?",
+          "options": [
+            "class must have a unique value per page, while the id attribute may be duplicated",
+            "id is written in the closing tag, while class must be written in the opening tag",
+            "id is only used for scripts, while class is only for color styling",
+            "id must be unique per element, while class can be shared across multiple elements"
+          ],
+          "correctIndex": 3,
+          "explanation": "The id attribute is a unique identifier (only one element per id in a document), whereas class is a group marker that can be assigned to many elements.",
+          "sourceModuleId": "web-foundation-inti-6"
+        },
+        {
+          "id": 7,
+          "question": "Why must the <!DOCTYPE html> declaration be placed on the very first line of an HTML document?",
+          "options": [
+            "So the browser applies modern HTML standards and prevents quirks mode",
+            "So all text in the document is automatically rendered in a large size",
+            "To load the basic JavaScript function library into the browser page",
+            "To enable an internet network connection for all document content"
+          ],
+          "correctIndex": 0,
+          "explanation": "<!DOCTYPE html> instructs the browser to render the page using modern HTML standards (standards mode) and avoid legacy quirks mode.",
+          "sourceModuleId": "web-foundation-inti-7"
+        },
+        {
+          "id": 8,
+          "question": "What is the main purpose of the <head> element in an HTML document?",
+          "options": [
+            "Displaying the largest article title centered on the page automatically",
+            "Storing document metadata that is not displayed directly in the web page body",
+            "Displaying the logo and main navigation bar at the top of the browser screen",
+            "Holding all article text, interactive forms, and content images"
+          ],
+          "correctIndex": 1,
+          "explanation": "The <head> element is a container for document metadata (tab <title>, charset, CSS links, scripts) and its contents are not rendered as visual page content.",
+          "sourceModuleId": "web-foundation-inti-7"
+        },
+        {
+          "id": 9,
+          "question": "The hierarchical tree structure of HTML elements stored in the browser's memory when reading a document is called...",
+          "options": [
+            "DOM Tree (Document Object Model)",
+            "DNS Tree",
+            "URL Scheme",
+            "HTTP Pipeline"
+          ],
+          "correctIndex": 0,
+          "explanation": "The DOM (Document Object Model) Tree represents the nested parent, child, and sibling relationships of all elements in a web document.",
+          "sourceModuleId": "web-foundation-inti-7"
+        },
+        {
+          "id": 10,
+          "question": "Consider the URL https://contoh.com/artikel/belajar-html. The protocol and domain name components are respectively...",
+          "options": [
+            "https and /artikel",
+            "/artikel/belajar-html and contoh.com",
+            "https and contoh.com",
+            "contoh.com and https"
+          ],
+          "correctIndex": 2,
+          "explanation": "URL components: the protocol is 'https', the domain name is 'contoh.com', and the path is '/artikel/belajar-html'.",
+          "sourceModuleId": "web-foundation-pend-3"
+        },
+        {
+          "id": 11,
+          "question": "Which element is appropriate for a step-by-step list of instructions where order matters?",
+          "options": [
+            "<dl>",
+            "<span>",
+            "<ul>",
+            "<ol>"
+          ],
+          "correctIndex": 3,
+          "explanation": "An ordered list (<ol>) is used when the sequence of items matters, displayed with automatic numbering.",
+          "sourceModuleId": "web-foundation-lanjutan-4"
+        },
+        {
+          "id": 12,
+          "question": "The required attribute on <img> that specifies the image source is...",
+          "options": [
+            "href",
+            "src",
+            "alt",
+            "title"
+          ],
+          "correctIndex": 1,
+          "explanation": "src specifies the image source. alt is alternative text, not the image source itself.",
+          "sourceModuleId": "web-foundation-lanjutan-6"
+        },
+        {
+          "id": 13,
+          "question": "Which element is used for a long quotation that stands alone as a block?",
+          "options": [
+            "<q>",
+            "<mark>",
+            "<cite>",
+            "<blockquote>"
+          ],
+          "correctIndex": 3,
+          "explanation": "blockquote is used for long block-level quotations, unlike q which is inline for short quotations.",
+          "sourceModuleId": "web-foundation-lanjutan-8"
+        },
+        {
+          "id": 14,
+          "question": "How many <main> elements are allowed in a single HTML page?",
+          "options": [
+            "Maximum of three",
+            "Unlimited",
+            "Maximum of one",
+            "Must equal the number of sections"
+          ],
+          "correctIndex": 2,
+          "explanation": "There may only be one <main> per page, because it represents the single primary content of that page.",
+          "sourceModuleId": "web-foundation-lanjutan-13"
+        },
+        {
+          "id": 15,
+          "question": "Why is <div class=\"header\"> considered worse practice than <header>?",
+          "options": [
+            "Browsers and search engines have difficulty recognizing its semantic role",
+            "div elements are forbidden from having styling classes under the HTML5 specification",
+            "div is only designed to wrap short inline text fragments",
+            "header uses built-in compression so it renders much faster"
+          ],
+          "correctIndex": 0,
+          "explanation": "div is a generic element with no semantic meaning, whereas header explicitly states its own role.",
+          "sourceModuleId": "web-foundation-lanjutan-12"
+        },
+        {
+          "id": 16,
+          "question": "The three basic elements that make up an HTML table are...",
+          "options": [
+            "table, tr, and td or th",
+            "table, thead, tfoot",
+            "table, section, item",
+            "table, row, column"
+          ],
+          "correctIndex": 0,
+          "explanation": "table acts as the container, tr represents a row, and td/th represent data or header cells inside that row.",
+          "sourceModuleId": "web-foundation-lanjutan-18"
+        },
+        {
+          "id": 17,
+          "question": "Which attribute makes a single table cell span across multiple columns at once?",
+          "options": [
+            "colspan",
+            "rowspan",
+            "width",
+            "span"
+          ],
+          "correctIndex": 0,
+          "explanation": "colspan stretches a cell horizontally, spanning across multiple columns at once.",
+          "sourceModuleId": "web-foundation-lanjutan-19"
+        },
+        {
+          "id": 18,
+          "question": "What happens if an <input> inside a form is not given a name attribute?",
+          "options": [
+            "The form fails to display",
+            "Data from that input is not sent when the form is submitted",
+            "The data is still sent with an automatic name",
+            "The browser displays an error"
+          ],
+          "correctIndex": 1,
+          "explanation": "name is the key paired with the value when data is submitted. Without name, that data is not included in the submission.",
+          "sourceModuleId": "web-foundation-lanjutan-23"
+        },
+        {
+          "id": 19,
+          "question": "The main difference between the GET and POST methods on a form element is...",
+          "options": [
+            "GET cannot be used to send data at all",
+            "Both behave identically",
+            "POST is only for search forms",
+            "GET places data in the URL, while POST places data in the request body"
+          ],
+          "correctIndex": 3,
+          "explanation": "GET appends data as parameters in the URL, whereas POST places data in the request body so it is not visible in the URL.",
+          "sourceModuleId": "web-foundation-lanjutan-24"
+        },
+        {
+          "id": 20,
+          "question": "Which character reference is correct for the '<' sign so it is not parsed as the start of a tag?",
+          "options": [
+            "&copy;",
+            "&lt;",
+            "&amp;",
+            "&gt;"
+          ],
+          "correctIndex": 1,
+          "explanation": "&lt; is the named entity for the < sign. &gt; is for the > sign, not for <.",
+          "sourceModuleId": "web-foundation-lanjutan-25"
+        }
+      ],
+      "cheatSheetMarkdown": "# Complete HTML Syntax Cheat Sheet\n\nA concise summary of HTML tags, attributes, & structure for quick reference:\n\n## 1. Standard Document Skeleton (HTML5)\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Browser Tab Title</title>\n  </head>\n  <body>\n    <!-- All visual content is placed here -->\n  </body>\n</html>\n```\n\n## 2. Semantic Layout Structure\n| Element | Semantic Role & Meaning |\n| :--- | :--- |\n| `<header>` | Page / section header area (logo, title, intro) |\n| `<nav>` | Collection of primary navigation links |\n| `<main>` | Main document content (only **1** allowed per page) |\n| `<article>` | Self-contained, standalone content (article, post, info card) |\n| `<section>` | Thematic document section (usually starts with a heading) |\n| `<aside>` | Complementary side content (sidebar, footnotes, related quotes) |\n| `<footer>` | Page / section footer area (copyright, social links) |\n| `<div>` | Generic block-level container (no semantic meaning) |\n| `<span>` | Generic inline container (no line break) |\n\n## 3. Headings & Text Formatting\n| Tag | Function | Example |\n| :--- | :--- | :--- |\n| `<h1>` - `<h6>` | Hierarchical headings (h1 is largest) | `<h1>Main Heading</h1>` |\n| `<p>` | General text paragraph | `<p>Body text...</p>` |\n| `<strong>` | Very important / bold text | `<strong>Important!</strong>` |\n| `<em>` | Emphasized / italicized text | `<em>Strongly recommended</em>` |\n| `<mark>` | Highlighted text (yellow highlight) | `<mark>Keyword</mark>` |\n| `<q>` | Short inline quotation | `<q>Inline quote</q>` |\n| `<blockquote>` | Long block quotation | `<blockquote>Long quote...</blockquote>` |\n| `<pre>` | Preformatted text (preserves spaces & line breaks) | `<pre>Formatted code / text</pre>` |\n| `<code>` | Computer code snippet | `<code>console.log()</code>` |\n| `<cite>` | Title of a creative work / reference | `<cite>Web Programming Book</cite>` |\n| `<dfn>` | Term being defined | `<dfn>HTML</dfn>` |\n| `<sub>` / `<sup>` | Subscript & Superscript | `H<sub>2</sub>O`, `x<sup>2</sup>` |\n| `<br>` | Line break (void element) | `Line 1<br>Line 2` |\n| `<hr>` | Thematic break / horizontal rule (void element) | `<hr>` |\n\n## 4. Links, Lists & Media\n| Tag | Function & Key Attributes | Example |\n| :--- | :--- | :--- |\n| `<a>` | Hyperlink (`href`, `target`) | `<a href=\"https://example.com\" target=\"_blank\">Web</a>` |\n| `<a href=\"#id\">` | Internal anchor link | `<a href=\"#profile\">Go to Profile Section</a>` |\n| `<img>` | Image (`src`, `alt`, `width`/`height`) | `<img src=\"photo.jpg\" alt=\"Profile Photo\" width=\"300\">` |\n| `<ul>`, `<li>` | Unordered list (bullets) | `<ul><li>Item 1</li><li>Item 2</li></ul>` |\n| `<ol>`, `<li>` | Ordered list (numbers/letters) | `<ol type=\"1\" start=\"1\"><li>Step 1</li></ol>` |\n| `<dl>`, `<dt>`, `<dd>` | Description list (terms & definitions) | `<dl><dt>HTML</dt><dd>Markup language</dd></dl>` |\n| `<figure>`, `<figcaption>` | Illustrative figure & its caption | `<figure><img src=\"g.jpg\" alt=\"g\"><figcaption>Caption</figcaption></figure>` |\n\n## 5. Data Tables\n| Tag / Attribute | Function | Example |\n| :--- | :--- | :--- |\n| `<table>` | Data table container | `<table>...</table>` |\n| `<caption>` | Table title / description | `<caption>Study Schedule</caption>` |\n| `<thead>`, `<tbody>`, `<tfoot>` | Table header, body, & footer structure | `<thead><tr><th>Day</th></tr></thead>` |\n| `<tr>` | Table row | `<tr>...</tr>` |\n| `<th>` | Column/row header cell (`scope=\"col/row\"`) | `<th scope=\"col\">Name</th>` |\n| `<td>` | Regular data cell | `<td>Rani</td>` |\n| `colspan=\"N\"` | Merges *N* columns into one cell | `<td colspan=\"2\">Merge 2 Columns</td>` |\n| `rowspan=\"N\"` | Merges *N* rows into one cell | `<td rowspan=\"2\">Merge 2 Rows</td>` |\n\n## 6. Forms & Input Interactivity\n| Tag / Attribute | Function | Example |\n| :--- | :--- | :--- |\n| `<form>` | Form container (`action`, `method=\"GET/POST\"`) | `<form action=\"/submit\" method=\"POST\">` |\n| `<label>` | Input label (`for=\"input-id\"`) | `<label for=\"name\">Name:</label>` |\n| `<input type=\"text\">` | Single-line text box | `<input type=\"text\" id=\"name\" name=\"name\" required>` |\n| `<input type=\"email\">` | Valid email format input | `<input type=\"email\" name=\"email\" placeholder=\"you@email.com\">` |\n| `<input type=\"password\">` | Password input (characters hidden) | `<input type=\"password\" name=\"password\">` |\n| `<input type=\"number\">` | Number input (`min`, `max`, `step`) | `<input type=\"number\" min=\"1\" max=\"100\">` |\n| `<input type=\"checkbox\">` | Independent / multiple checkbox choice | `<input type=\"checkbox\" name=\"agree\" id=\"s\">` |\n| `<input type=\"radio\">` | Single choice within a shared `name` group | `<input type=\"radio\" name=\"gender\" value=\"M\">` |\n| `<input type=\"submit\">` / `<button>` | Form submit button | `<button type=\"submit\">Submit Data</button>` |\n| `<textarea>` | Multi-line long text area | `<textarea name=\"message\" rows=\"4\"></textarea>` |\n| `<select>`, `<option>` | Dropdown selection menu | `<select name=\"city\"><option value=\"jkt\">Jakarta</option></select>` |\n\n## 7. Special Characters (HTML Entities)\n| Character | Entity Name | Entity Number | Meaning / Function |\n| :---: | :---: | :---: | :--- |\n| `<` | `&lt;` | `&#60;` | Less-than sign (prevents misparsing as a tag) |\n| `>` | `&gt;` | `&#62;` | Greater-than sign |\n| `&` | `&amp;` | `&#38;` | Ampersand sign |\n| `\"` | `&quot;` | `&#34;` | Double quotation mark |\n| `'` | `&apos;` | `&#39;` | Single quotation mark |\n| `©` | `&copy;` | `&#169;` | Copyright symbol |\n| `®` | `&reg;` | `&#174;` | Registered trademark symbol |\n| ` ` | `&nbsp;` | `&#160;` | Non-breaking space |",
+      "sectionQuizzes": [
+        {
+          "id": "web-foundation-quiz-pend",
+          "courseId": "fe-web-foundation-00",
+          "section": "PENDAHULUAN",
+          "title": "Introduction Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "What is the main function of a network switch in a network?",
+              "options": [
+                "Connecting multiple computers and forwarding data to the right target",
+                "Translating website domain names into the sender's destination IP address",
+                "Displaying the visual web page interface directly on the user's monitor",
+                "Securely storing website database files and multimedia assets"
+              ],
+              "correctIndex": 0,
+              "explanation": "A switch acts as a central point that connects multiple devices, so you don't have to run separate cables to every computer.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 2,
+              "question": "The term \"internet\" most accurately describes...",
+              "options": [
+                "The largest website in the world",
+                "A single giant computer that stores all websites",
+                "A network of many interconnected networks",
+                "A program for opening web pages"
+              ],
+              "correctIndex": 2,
+              "explanation": "Internet comes from the idea of an interconnected network: smaller networks connected together into one global network.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 3,
+              "question": "A company that operates routers and connects your home network to networks around the world is called...",
+              "options": [
+                "Web browser",
+                "ISP (Internet Service Provider)",
+                "Web server",
+                "Hyperlink"
+              ],
+              "correctIndex": 1,
+              "explanation": "An ISP manages routers that connect with other ISPs' routers, allowing data to reach different parts of the world.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 4,
+              "question": "Which statement best describes the difference between a website and a web page?",
+              "options": [
+                "A web page is a single page, whereas a website is a collection of interconnected web pages",
+                "A website can only be opened through an app, whereas a web page is opened through a browser",
+                "They are the exact same thing and only differ in spelling",
+                "A web page always contains videos, whereas a website only contains text"
+              ],
+              "correctIndex": 0,
+              "explanation": "A web page is like a single sheet of paper, while a website is the \"book\"—a collection of pages linked together.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 5,
+              "question": "What connects one web page to another web page within a website?",
+              "options": [
+                "Network switch",
+                "Modem",
+                "Hyperlink",
+                "DNS cache"
+              ],
+              "correctIndex": 2,
+              "explanation": "A hyperlink lets you navigate between pages, whether within the same domain or across different domains.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 6,
+              "question": "Who is the British scientist who proposed the idea of the World Wide Web while working at CERN?",
+              "options": [
+                "Linus Torvalds",
+                "Steve Jobs",
+                "Tim Berners-Lee",
+                "Alan Turing"
+              ],
+              "correctIndex": 2,
+              "explanation": "Tim Berners-Lee proposed the WWW in 1989 to make it easier for scientists to share information.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 7,
+              "question": "Which statement is true about the relationship between the internet and the web?",
+              "options": [
+                "The web is one of the services that runs on top of the internet infrastructure",
+                "The internet can only be used to open websites",
+                "The web is the network infrastructure, while the internet is one of its websites",
+                "The internet and the web are two names for the same thing"
+              ],
+              "correctIndex": 0,
+              "explanation": "The internet is like a highway, and the web is one of the \"vehicles\" traveling on it. Other services like email and online games also use the internet.",
+              "sourceModuleId": "web-foundation-pend-2"
+            },
+            {
+              "id": 8,
+              "question": "In the request-response cycle, the party that sends a request to the server is called...",
+              "options": [
+                "Protocol",
+                "Domain",
+                "Router",
+                "Client (browser)"
+              ],
+              "correctIndex": 3,
+              "explanation": "The browser acts as the client because it is the one requesting data, while the server responds to it.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 9,
+              "question": "Which statement is true about a web server?",
+              "options": [
+                "It can refer to both the computer (hardware) and the software that serves requests over HTTP",
+                "It is simply a cable that connects the browser to the internet",
+                "It is always a huge, ultra-high-performance computer",
+                "It is only a program that runs on the user's mobile phone"
+              ],
+              "correctIndex": 0,
+              "explanation": "A web server encompasses both the hardware side (the computer) and the software side (the program receiving requests) working together.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 10,
+              "question": "Which of the following is an example of web server software?",
+              "options": [
+                "Figma",
+                "Firefox",
+                "Microsoft Excel",
+                "NGINX"
+              ],
+              "correctIndex": 3,
+              "explanation": "NGINX and Apache are examples of web servers. Firefox is a browser.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 11,
+              "question": "What is the main job of a DNS server?",
+              "options": [
+                "Displaying web pages on the user's screen",
+                "Providing the IP address that corresponds to a domain name",
+                "Storing a website's HTML and CSS files",
+                "Encrypting all data sent by the browser"
+              ],
+              "correctIndex": 1,
+              "explanation": "DNS is like the phone book of the internet: it translates easy-to-remember domain names into IP addresses that computers use.",
+              "sourceModuleId": "web-foundation-pend-5"
+            },
+            {
+              "id": 12,
+              "question": "Before asking a DNS server, the browser first checks...",
+              "options": [
+                "The contents of the website's JavaScript configuration file",
+                "The local DNS cache containing records of previous IP addresses",
+                "The remaining storage capacity of the server's hard drive",
+                "A list of all internet service providers in the world"
+              ],
+              "correctIndex": 1,
+              "explanation": "If the IP address is already in the DNS cache, the browser doesn't need to ask the DNS server, making the process faster.",
+              "sourceModuleId": "web-foundation-pend-5"
+            },
+            {
+              "id": 13,
+              "question": "Why do we use domain names even though computers access websites via IP addresses?",
+              "options": [
+                "Because domains are easy for humans to remember, while machines use IPs behind the scenes",
+                "Because the numeric IP address format is outdated and has been abandoned globally",
+                "Because domain names completely eliminate the server's need for an IP address",
+                "Because browsers process text domain names much faster than numbers"
+              ],
+              "correctIndex": 0,
+              "explanation": "Domain names are just for human convenience. Computers still use IP addresses, and DNS translates between the two.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 14,
+              "question": "In the URL https://contoh.com/belajar/html, the contoh.com part is called the...",
+              "options": [
+                "Path",
+                "Domain name",
+                "Status code",
+                "Protocol"
+              ],
+              "correctIndex": 1,
+              "explanation": "Protocol = https, domain name = contoh.com, path = /belajar/html.",
+              "sourceModuleId": "web-foundation-pend-3"
+            },
+            {
+              "id": 15,
+              "question": "The standard protocol used by browsers and web servers to exchange data is...",
+              "options": [
+                "Bluetooth",
+                "HTML",
+                "HTTP",
+                "SMTP"
+              ],
+              "correctIndex": 2,
+              "explanation": "HTTP is the data exchange protocol on the web. HTML is a markup language for page structure, so don't confuse the two.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 16,
+              "question": "The browser receives a response with status code 404. What does this mean?",
+              "options": [
+                "The request was processed successfully",
+                "The server is experiencing an internal error",
+                "The user's internet connection was lost",
+                "The requested page or resource was not found"
+              ],
+              "correctIndex": 3,
+              "explanation": "200 means success, 404 means not found, and 500 means the server encountered a problem.",
+              "sourceModuleId": "web-foundation-pend-4"
+            },
+            {
+              "id": 17,
+              "question": "What is the role of HTML in a web page?",
+              "options": [
+                "Connecting the browser with the DNS server",
+                "Adding interactivity through programming logic",
+                "Controlling colors and layout",
+                "Defining the structure or skeleton of the page content"
+              ],
+              "correctIndex": 3,
+              "explanation": "HTML is the skeleton of the page. Colors and layout are handled by CSS, and interactivity is handled by JavaScript.",
+              "sourceModuleId": "web-foundation-pend-6"
+            },
+            {
+              "id": 18,
+              "question": "To change text colors and spacing between elements, you use...",
+              "options": [
+                "HTTP",
+                "HTML",
+                "CSS",
+                "JavaScript"
+              ],
+              "correctIndex": 2,
+              "explanation": "CSS is responsible for styling and appearance: colors, font sizes, spacing, and layout.",
+              "sourceModuleId": "web-foundation-pend-6"
+            },
+            {
+              "id": 19,
+              "question": "A button displays a message when clicked. Which technology plays the primary role in creating that interaction?",
+              "options": [
+                "CSS",
+                "JavaScript",
+                "DNS",
+                "HTTPS"
+              ],
+              "correctIndex": 1,
+              "explanation": "JavaScript makes a page react to user actions, such as button clicks.",
+              "sourceModuleId": "web-foundation-pend-6"
+            },
+            {
+              "id": 20,
+              "question": "A page appears with all its text and images, but without colors, spacing, or a neat layout. Which part likely failed to load?",
+              "options": [
+                "HTML",
+                "Web server",
+                "IP address",
+                "CSS"
+              ],
+              "correctIndex": 3,
+              "explanation": "HTML has already provided the page content. A plain appearance like this indicates that CSS was not applied or failed to load.",
+              "sourceModuleId": "web-foundation-pend-6"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-inti",
+          "courseId": "fe-web-foundation-00",
+          "section": "INTI",
+          "title": "HTML Introduction Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "HTML stands for...",
+              "options": [
+                "Hyperlink and Text Management Language",
+                "HyperText Markup Language",
+                "HighText Machine Language",
+                "Home Tool Markup Language"
+              ],
+              "correctIndex": 1,
+              "explanation": "HTML stands for HyperText Markup Language, the standard language for structuring documents and web pages.",
+              "sourceModuleId": "web-foundation-inti-1"
+            },
+            {
+              "id": 2,
+              "question": "Why is HTML categorized as a markup language rather than a programming language?",
+              "options": [
+                "Because HTML structures content without branching computation logic",
+                "Because HTML is limited to designing data tables and form elements",
+                "Because HTML files do not require a compilation process before running",
+                "Because HTML code cannot be processed directly by modern browsers"
+              ],
+              "correctIndex": 0,
+              "explanation": "HTML is a markup language: it defines what is a heading, paragraph, image, or link, without having algorithmic logic or conditions like if/else.",
+              "sourceModuleId": "web-foundation-inti-1"
+            },
+            {
+              "id": 3,
+              "question": "In a website-building analogy, the role of HTML is best compared to...",
+              "options": [
+                "Electrical wiring and automatic switches",
+                "The frame and walls of a house",
+                "The paint and floor colors of a house",
+                "A security fence protecting the house"
+              ],
+              "correctIndex": 1,
+              "explanation": "HTML is the physical frame (structure), CSS is the aesthetic finish (paint/decoration), and JavaScript is interactivity (electricity).",
+              "sourceModuleId": "web-foundation-inti-1"
+            },
+            {
+              "id": 4,
+              "question": "When you type text with many spaces and line breaks in an HTML file without markup tags, why does the browser merge them into one?",
+              "options": [
+                "Because the browser applies whitespace collapsing rules",
+                "Because the HTML file hasn't been compressed with a size-reduction algorithm",
+                "Because the browser's parser engine fails to read space characters",
+                "Because browsers require every space to be written in hexadecimal format"
+              ],
+              "correctIndex": 0,
+              "explanation": "Browser rendering rules ignore extra spaces and line breaks in plain text; structure must be explicitly declared using HTML tags.",
+              "sourceModuleId": "web-foundation-inti-2"
+            },
+            {
+              "id": 5,
+              "question": "In a website project folder, the main file that a server will automatically send by default is named...",
+              "options": [
+                "index.html",
+                "root.html",
+                "home.html",
+                "main.html"
+              ],
+              "correctIndex": 0,
+              "explanation": "The standard web server convention is to serve 'index.html' automatically when the requested URL points to a main directory without specifying a filename.",
+              "sourceModuleId": "web-foundation-inti-3"
+            },
+            {
+              "id": 6,
+              "question": "What is the difference between opening an HTML file with a 'file://' prefix compared to 'https://'?",
+              "options": [
+                "file:// opens it directly from your device's local storage without an internet server",
+                "There is no difference; both always fetch files from a cloud server",
+                "https:// can only be opened if the computer does not have a browser",
+                "file:// requires a high-speed internet connection"
+              ],
+              "correctIndex": 0,
+              "explanation": "The 'file://' URI scheme reads files directly from the computer's local storage, whereas 'https://' requests files from a web server over the internet.",
+              "sourceModuleId": "web-foundation-inti-3"
+            },
+            {
+              "id": 7,
+              "question": "The three parts that make up a complete HTML element are...",
+              "options": [
+                "Class, ID, and Style",
+                "Domain name, protocol, and status code",
+                "Header, footer, and sidebar",
+                "Opening tag, content, and closing tag"
+              ],
+              "correctIndex": 3,
+              "explanation": "An HTML element consists of an opening tag (e.g., <p>), content (text or child elements), and a closing tag (e.g., </p>).",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 8,
+              "question": "The key characteristic of a closing tag in HTML is...",
+              "options": [
+                "Using an exclamation mark after the angle bracket (!p>)",
+                "Repeating the element name twice (<pp>)",
+                "Using a hyphen at the end of the element name (<p->)",
+                "Using a forward slash before the element name (</p>)"
+              ],
+              "correctIndex": 3,
+              "explanation": "A closing tag is always marked with a forward slash '/' before the element name inside the angle brackets, such as </p> or </h1>.",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 9,
+              "question": "What happens if you forget to write a closing tag on an element?",
+              "options": [
+                "The text across the entire document will automatically flip to right-to-left",
+                "The operating system automatically cancels reading all files in the folder",
+                "The browser guesses the element's boundary, so content wrapping may turn out wrong",
+                "The browser immediately shows a fatal error message and closes the page"
+              ],
+              "correctIndex": 2,
+              "explanation": "Browsers have built-in error tolerance, but their guesses often cause subsequent content to be formatted unintentionally.",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 10,
+              "question": "Which hierarchy of heading tags (h1-h6) is semantically correct?",
+              "options": [
+                "Use <h1> as often as possible in every paragraph",
+                "The order of heading levels has no semantic meaning whatsoever",
+                "Use <h3> for the main title if you don't want the text to look too large",
+                "Use <h1> for the main page title, then <h2> for major subsections beneath it"
+              ],
+              "correctIndex": 3,
+              "explanation": "Headings reflect document hierarchy: <h1> is the main topic of the document, <h2> is a subtopic, and so on. Font size is controlled by CSS, not by arbitrarily changing heading levels.",
+              "sourceModuleId": "web-foundation-inti-4"
+            },
+            {
+              "id": 11,
+              "question": "Which of the following elements is an empty/void element without a closing tag?",
+              "options": [
+                "<h1>",
+                "<strong>",
+                "<br>",
+                "<p>"
+              ],
+              "correctIndex": 2,
+              "explanation": "<br> (line break) and <img> are examples of void elements in HTML that hold no text content inside them and therefore do not need a closing tag.",
+              "sourceModuleId": "web-foundation-inti-5"
+            },
+            {
+              "id": 12,
+              "question": "Where is the correct place to write an HTML attribute?",
+              "options": [
+                "Between the element's text content and the start of the document's closing tag",
+                "Inside the closing tag, placed right before the closing slash",
+                "Inside the opening tag, after the element name and separated by a space",
+                "Outside the angle brackets, right before the opening character of the element tag"
+              ],
+              "correctIndex": 2,
+              "explanation": "Attributes are always placed inside the opening tag after the tag name, separated by a space character.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 13,
+              "question": "Look at the following code: <p id=\"pesan\" class=\"catatan\">Halo</p>. Which statement is TRUE?",
+              "options": [
+                "Writing two attributes at once in a single tag is a syntax error",
+                "The id attribute may be reused repeatedly on other paragraph elements",
+                "The id attribute with the value 'pesan' must be unique within that document",
+                "The class attribute must have a unique value across the entire document"
+              ],
+              "correctIndex": 2,
+              "explanation": "The value of an id attribute must be unique within a single web page document, whereas a class name can be shared by many different elements.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 14,
+              "question": "The alt attribute on an image element <img src=\"foto.jpg\" alt=\"...\"> serves to...",
+              "options": [
+                "Apply color filter effects to the photo",
+                "Store a backup image on another server",
+                "Automatically resize the height and width of the image",
+                "Provide alternative text for screen readers or when the image fails to load"
+              ],
+              "correctIndex": 3,
+              "explanation": "The alt (alternative text) attribute is essential for screen reader accessibility and serves as fallback text when an image fails to display.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 15,
+              "question": "Which global attribute allows visitors to edit text directly in the browser?",
+              "options": [
+                "hidden=\"true\"",
+                "draggable=\"true\"",
+                "tabindex=\"1\"",
+                "contenteditable=\"true\""
+              ],
+              "correctIndex": 3,
+              "explanation": "The global attribute contenteditable=\"true\" makes an element's text content directly editable by the user in the browser.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 16,
+              "question": "The <!DOCTYPE html> declaration is placed on...",
+              "options": [
+                "The very first line of the entire HTML document file",
+                "The end of the document after the </html> tag",
+                "Inside the <body> tag at the very bottom",
+                "Inside the <head> tag after the <title> tag"
+              ],
+              "correctIndex": 0,
+              "explanation": "<!DOCTYPE html> must be placed on the very first line at the top before the opening <html> tag so the browser renders in standards mode.",
+              "sourceModuleId": "web-foundation-inti-6"
+            },
+            {
+              "id": 17,
+              "question": "Which element is the root element of the entire HTML document tree?",
+              "options": [
+                "<title>",
+                "<html>",
+                "<head>",
+                "<body>"
+              ],
+              "correctIndex": 1,
+              "explanation": "The <html> element wraps all of the web page's contents and serves as the root node in the DOM tree.",
+              "sourceModuleId": "web-foundation-inti-7"
+            },
+            {
+              "id": 18,
+              "question": "Which content belongs inside the <head> element?",
+              "options": [
+                "Article paragraphs and illustration images",
+                "The <meta charset=\"utf-8\"> tag and the <title> tag",
+                "Click buttons and registration forms",
+                "The website's main <h1> heading"
+              ],
+              "correctIndex": 1,
+              "explanation": "The <head> element contains metadata instructions and the browser document title (<title>), not visual content rendered on the main screen.",
+              "sourceModuleId": "web-foundation-inti-7"
+            },
+            {
+              "id": 19,
+              "question": "Which element holds all the visual content displayed in the user's browser window?",
+              "options": [
+                "<meta>",
+                "<body>",
+                "<base>",
+                "<head>"
+              ],
+              "correctIndex": 1,
+              "explanation": "All elements meant to be seen and interacted with by users (text, images, buttons, videos) must be placed inside the <body> tag.",
+              "sourceModuleId": "web-foundation-inti-7"
+            },
+            {
+              "id": 20,
+              "question": "In the Document Object Model (DOM) tree concept, the relationship of the <head> and <body> elements to the <html> element is...",
+              "options": [
+                "All three sit at the same hierarchy level without any parent-child relationship",
+                "<body> acts as the main parent of both the <head> and <html> elements",
+                "<head> and <body> are children of <html> and siblings to each other",
+                "<html> is a child element of <head>, while <body> is an outer element"
+              ],
+              "correctIndex": 2,
+              "explanation": "The <html> element is the parent, while <head> and <body> are direct child elements of <html> at the same level (siblings).",
+              "sourceModuleId": "web-foundation-inti-7"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-lanjutan",
+          "courseId": "fe-web-foundation-00",
+          "section": "LANJUTAN",
+          "title": "HTML Deep-Dive Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Which element is appropriate for a step-by-step list of instructions where order matters?",
+              "options": [
+                "<dl>",
+                "<ol>",
+                "<ul>",
+                "<li>"
+              ],
+              "correctIndex": 1,
+              "explanation": "An ordered list (<ol>) is used for lists where order matters, displayed with automatic numbering.",
+              "sourceModuleId": "web-foundation-lanjutan-4"
+            },
+            {
+              "id": 2,
+              "question": "In a <dl> element, what is the function of <dt>?",
+              "options": [
+                "Displays the term to be defined",
+                "Marks an ordered list",
+                "Wraps the entire list",
+                "Displays the term's description"
+              ],
+              "correctIndex": 0,
+              "explanation": "<dt> (description term) contains the term, while <dd> (description details) contains its explanation.",
+              "sourceModuleId": "web-foundation-lanjutan-4"
+            },
+            {
+              "id": 3,
+              "question": "You set width and height on <img> with a ratio that does not match the original image. What happens?",
+              "options": [
+                "The browser refuses to display the image",
+                "Nothing happens at all",
+                "The image is automatically cropped",
+                "The image appears squished or stretched, out of proportion"
+              ],
+              "correctIndex": 3,
+              "explanation": "Setting both width and height at once with the wrong ratio makes the image appear out of proportion. It is best to set only one of them.",
+              "sourceModuleId": "web-foundation-lanjutan-6"
+            },
+            {
+              "id": 4,
+              "question": "Which element preserves spaces and line breaks exactly as written in the source code?",
+              "options": [
+                "<figure>",
+                "<mark>",
+                "<blockquote>",
+                "<pre>"
+              ],
+              "correctIndex": 3,
+              "explanation": "<pre> displays its contents as-is, including extra spaces and line breaks that browsers normally ignore.",
+              "sourceModuleId": "web-foundation-lanjutan-8"
+            },
+            {
+              "id": 5,
+              "question": "The main difference between <blockquote> and <q> is...",
+              "options": [
+                "Both are identical in appearance and semantics, differing only in element name",
+                "<q> is specifically for book title quotes, while <blockquote> is for spoken dialogue quotes",
+                "<blockquote> formats text in italics, while <q> formats text in bold",
+                "<blockquote> is for long block quotations, while <q> is for short inline quotations"
+              ],
+              "correctIndex": 3,
+              "explanation": "blockquote is a block-level element for standalone long quotations, whereas q is inline for short quotations within a sentence.",
+              "sourceModuleId": "web-foundation-lanjutan-8"
+            },
+            {
+              "id": 6,
+              "question": "The required attribute on an <a> element for a link to work is...",
+              "options": [
+                "download",
+                "target",
+                "href",
+                "rel"
+              ],
+              "correctIndex": 2,
+              "explanation": "href specifies the link destination. Without href, the a element does not point anywhere.",
+              "sourceModuleId": "web-foundation-lanjutan-9"
+            },
+            {
+              "id": 7,
+              "question": "Which element is used to mark words that need vocal stress emphasis, and is displayed in italics by default?",
+              "options": [
+                "<mark>",
+                "<em>",
+                "<strong>",
+                "<cite>"
+              ],
+              "correctIndex": 1,
+              "explanation": "em (emphasis) marks stress emphasis and is displayed in italics by default. strong marks importance and is displayed in bold.",
+              "sourceModuleId": "web-foundation-lanjutan-9"
+            },
+            {
+              "id": 8,
+              "question": "You want to link navigation to another section on the same page, with id=\"hobi\" on the target element. How should href be written?",
+              "options": [
+                "href=\"#hobi\"",
+                "href=\"*hobi\"",
+                "href=\"hobi\"",
+                "href=\"id:hobi\""
+              ],
+              "correctIndex": 0,
+              "explanation": "A hash sign followed by the id name (for example: #hobi) tells the browser to jump to the element with that id on the same page.",
+              "sourceModuleId": "web-foundation-lanjutan-11"
+            },
+            {
+              "id": 9,
+              "question": "Which of the following correctly pairs an element with its function?",
+              "options": [
+                "<br> requires a closing tag",
+                "<mark> highlights text with a yellow background by default",
+                "<sup> displays smaller text below the baseline",
+                "<sub> displays larger text above the baseline"
+              ],
+              "correctIndex": 1,
+              "explanation": "mark highlights text, defaulting to a yellow background with black text. sub appears below the baseline and sup appears above the baseline, both in smaller text. br does not need a closing tag.",
+              "sourceModuleId": "web-foundation-lanjutan-10"
+            },
+            {
+              "id": 10,
+              "question": "Why is grouping content with just <div class=\"header\"> considered 'semantically meaningless'?",
+              "options": [
+                "Because browsers forbid using the header class name on a generic div element",
+                "Because browsers and screen readers cannot understand its meaning without reading the class name",
+                "Because div elements automatically trigger validation warnings in the HTML5 web standard",
+                "Because a div element may only be used at most once per file"
+              ],
+              "correctIndex": 1,
+              "explanation": "div is a generic element with no inherent meaning. Class names are only labels for humans, not structural role information understood by browsers or search engines.",
+              "sourceModuleId": "web-foundation-lanjutan-12"
+            },
+            {
+              "id": 11,
+              "question": "How many <main> elements are allowed on a single page?",
+              "options": [
+                "At most one",
+                "As many as the number of sections",
+                "Unlimited",
+                "Must match the number of articles"
+              ],
+              "correctIndex": 0,
+              "explanation": "There can only be one main element on a page, because it represents the single primary content of that page.",
+              "sourceModuleId": "web-foundation-lanjutan-13"
+            },
+            {
+              "id": 12,
+              "question": "An <aside> is placed inside an <article>. What does that mean?",
+              "options": [
+                "It contains info related to that article, but not part of its core content",
+                "It replaces the article header's function",
+                "It contains info related to the page as a whole",
+                "It serves as the main title of the article"
+              ],
+              "correctIndex": 0,
+              "explanation": "An aside inside an article contains supporting info for that article. Outside an article, an aside contains info related to the entire page.",
+              "sourceModuleId": "web-foundation-lanjutan-14"
+            },
+            {
+              "id": 13,
+              "question": "Which element should ideally begin with a heading as its first element?",
+              "options": [
+                "<section>",
+                "<div>",
+                "<aside>",
+                "<span>"
+              ],
+              "correctIndex": 0,
+              "explanation": "section is used to group thematically related content, and should ideally begin with a heading that serves as the title for that section.",
+              "sourceModuleId": "web-foundation-lanjutan-14"
+            },
+            {
+              "id": 14,
+              "question": "When should you use <div> instead of semantic elements like <article> or <section>?",
+              "options": [
+                "Only for text in the middle of a sentence",
+                "Always, div is safer to use anywhere",
+                "When no semantic element matches the meaning of that content",
+                "div should never be used anymore since HTML5"
+              ],
+              "correctIndex": 2,
+              "explanation": "div is used when no semantic element fits, purely for grouping or styling purposes.",
+              "sourceModuleId": "web-foundation-lanjutan-15"
+            },
+            {
+              "id": 15,
+              "question": "The difference between <div> and <span> is...",
+              "options": [
+                "div is inline, span is block",
+                "span can only be used inside a table",
+                "Both are block-level",
+                "div is block-level, span is inline"
+              ],
+              "correctIndex": 3,
+              "explanation": "div is a block-level generic container, while span is its inline version, used for a small portion of text within a sentence.",
+              "sourceModuleId": "web-foundation-lanjutan-15"
+            },
+            {
+              "id": 16,
+              "question": "The three basic building-block elements of an HTML table are...",
+              "options": [
+                "table, list, item",
+                "table, tr, and td or th",
+                "table, thead, tfoot",
+                "table, row, column"
+              ],
+              "correctIndex": 1,
+              "explanation": "table acts as the wrapper, tr for rows, and td or th for the cells inside those rows.",
+              "sourceModuleId": "web-foundation-lanjutan-18"
+            },
+            {
+              "id": 17,
+              "question": "Which attribute makes a single table cell span across multiple columns at once?",
+              "options": [
+                "rowspan",
+                "merge",
+                "colspan",
+                "span"
+              ],
+              "correctIndex": 2,
+              "explanation": "colspan stretches a cell horizontally (spanning multiple columns). rowspan stretches it vertically.",
+              "sourceModuleId": "web-foundation-lanjutan-19"
+            },
+            {
+              "id": 18,
+              "question": "Which table element serves as the title for the entire table?",
+              "options": [
+                "<caption>",
+                "<thead>",
+                "<th>",
+                "<colgroup>"
+              ],
+              "correctIndex": 0,
+              "explanation": "caption is the title for the entire table, written right after the opening table tag.",
+              "sourceModuleId": "web-foundation-lanjutan-20"
+            },
+            {
+              "id": 19,
+              "question": "Which input type hides typed characters as asterisks by default?",
+              "options": [
+                "hidden",
+                "password",
+                "text",
+                "search"
+              ],
+              "correctIndex": 1,
+              "explanation": "type=\"password\" displays each character as an asterisk or dot, hiding the input from view on screen.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 20,
+              "question": "What happens if an <input> is not given a name attribute when a form is submitted?",
+              "options": [
+                "The form fails completely and cannot be submitted",
+                "The browser will add a random name",
+                "The data from that input is not submitted",
+                "The data is still submitted with an automatic name"
+              ],
+              "correctIndex": 2,
+              "explanation": "name is the key paired with the value when data is sent. Without name, that input's data is not included in the submission.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 21,
+              "question": "Which element is used for multi-line long text input, such as a comment box?",
+              "options": [
+                "<pre>",
+                "<input type=\"text\">",
+                "<textarea>",
+                "<label>"
+              ],
+              "correctIndex": 2,
+              "explanation": "textarea is specifically designed for multi-line long text, unlike input which is always a single line.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 22,
+              "question": "How do you associate a <label> with its corresponding input?",
+              "options": [
+                "Setting a name attribute with the same value on both the label and the input",
+                "Relying on the browser to automatically link it to the nearest input",
+                "Placing the label element right above the input without additional attributes",
+                "Giving the input an id and the label a for attribute with identical values"
+              ],
+              "correctIndex": 3,
+              "explanation": "The for attribute on label must have the exact same value as the id on the target input.",
+              "sourceModuleId": "web-foundation-lanjutan-22"
+            },
+            {
+              "id": 23,
+              "question": "The main difference between the GET and POST methods on a form is...",
+              "options": [
+                "GET puts data in the URL, while POST puts data in the request body",
+                "POST is slower because the data is larger",
+                "Both are identical, there is no difference",
+                "GET is only for login forms"
+              ],
+              "correctIndex": 0,
+              "explanation": "GET includes data as parameters in the URL, whereas POST places data in the request body so it is not visible in the URL.",
+              "sourceModuleId": "web-foundation-lanjutan-24"
+            },
+            {
+              "id": 24,
+              "question": "Why can't the '<' sign be written directly as part of HTML text content?",
+              "options": [
+                "Because that sign is not on the keyboard",
+                "Because it may only be used inside attributes",
+                "Because the browser will mistake it for the start of a tag",
+                "Because lowercase letters are forbidden in HTML"
+              ],
+              "correctIndex": 2,
+              "explanation": "The < sign has a special meaning as the start of a tag in HTML, so to display it as plain text you need a character reference such as &lt;.",
+              "sourceModuleId": "web-foundation-lanjutan-25"
+            },
+            {
+              "id": 25,
+              "question": "Which is the correct character reference for the copyright symbol (©)?",
+              "options": [
+                "&c;",
+                "&copyright;",
+                "&cr;",
+                "&copy;"
+              ],
+              "correctIndex": 3,
+              "explanation": "&copy; is the named entity for the copyright symbol. Alternatively, the numeric entity &#169; produces the same display.",
+              "sourceModuleId": "web-foundation-lanjutan-25"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-css-dasar",
+          "courseId": "fe-web-foundation-00",
+          "section": "CSS_DASAR",
+          "title": "CSS Basics Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Why is CSS called a declarative language rather than a programming language?",
+              "options": [
+                "Because CSS requires a database to store styling rules",
+                "Because CSS only runs on the server side without browser interaction",
+                "Because CSS must be compiled first before it can be read by the browser",
+                "Because CSS only declares the desired appearance without having logic such as branching or loops"
+              ],
+              "correctIndex": 3,
+              "explanation": "CSS is declarative because developers simply declare the desired visual properties (for example, color or size), and the browser executes them without needing programming logic like if-else or loops.",
+              "sourceModuleId": "web-foundation-css-1"
+            },
+            {
+              "id": 2,
+              "question": "What does the acronym CSS officially stand for?",
+              "options": [
+                "Computer Style System",
+                "Colorful Screen Standard",
+                "Cascading Style Sheet",
+                "Creative Styling Sheet"
+              ],
+              "correctIndex": 2,
+              "explanation": "CSS stands for Cascading Style Sheet, the official web standard for controlling the presentation and appearance of HTML documents.",
+              "sourceModuleId": "web-foundation-css-1"
+            },
+            {
+              "id": 3,
+              "question": "One of the main advantages of separating styling using CSS compared to setting appearance directly in the HTML structure is...",
+              "options": [
+                "CSS eliminates the need for HTML tags in a document",
+                "A CSS file can completely replace a web server's function",
+                "CSS automatically gives a website login and authentication features",
+                "A single CSS file can be shared across many HTML pages at once"
+              ],
+              "correctIndex": 3,
+              "explanation": "With external CSS, a single stylesheet file can be linked to multiple HTML pages, so styling changes only need to be made in one place without editing every page again.",
+              "sourceModuleId": "web-foundation-css-1"
+            },
+            {
+              "id": 4,
+              "question": "A CSS rule consists of two main parts, namely...",
+              "options": [
+                "Function and parameter",
+                "Tag and attribute",
+                "Variable and condition",
+                "Selector and declaration block"
+              ],
+              "correctIndex": 3,
+              "explanation": "The basic structure of a CSS rule always starts with a selector (the target HTML element) followed by a declaration block inside curly braces { }.",
+              "sourceModuleId": "web-foundation-css-2"
+            },
+            {
+              "id": 5,
+              "question": "Among the following CSS declarations, which one is considered INVALID by the browser?",
+              "options": [
+                "color: green;",
+                "margin: 20px;",
+                "margin: 2 em;",
+                "font-size: small;"
+              ],
+              "correctIndex": 2,
+              "explanation": "In CSS length values, there must be no space between the number and its unit. Writing 'margin: 2 em;' is invalid and will be ignored by the browser; the correct form is 'margin: 2em;'.",
+              "sourceModuleId": "web-foundation-css-2"
+            },
+            {
+              "id": 6,
+              "question": "What is the correct syntax for writing a comment inside a CSS file?",
+              "options": [
+                "/* This is a comment */",
+                "// This is a comment",
+                "# This is a comment",
+                "<!-- This is a comment -->"
+              ],
+              "correctIndex": 0,
+              "explanation": "Comments in CSS are written using the /* ... */ format. The <!-- ... --> format is an HTML comment, while // and # are not official comment syntax in standard CSS.",
+              "sourceModuleId": "web-foundation-css-2"
+            },
+            {
+              "id": 7,
+              "question": "What is the most appropriate way to attach an External Style Sheet to an HTML document?",
+              "options": [
+                "Using a <link rel=\"stylesheet\" href=\"style.css\"> tag inside the <head> tag",
+                "Using a <meta css=\"style.css\"> tag in the <html> tag",
+                "Using a <script src=\"style.css\"> tag at the end of the <body> tag",
+                "Using a <style href=\"style.css\"> tag inside the <footer> tag"
+              ],
+              "correctIndex": 0,
+              "explanation": "An External Style Sheet is linked using a <link rel=\"stylesheet\" href=\"...\"> element placed in the <head> section of the HTML document.",
+              "sourceModuleId": "web-foundation-css-3"
+            },
+            {
+              "id": 8,
+              "question": "The main characteristic of an Embedded (Internal) Style Sheet is...",
+              "options": [
+                "It can be used automatically by the entire website without needing to be linked",
+                "CSS rules are written inside a <style> tag and apply only to that single HTML document",
+                "CSS rules are written in a separate .js file",
+                "Styling is applied directly on an element attribute without using a selector"
+              ],
+              "correctIndex": 1,
+              "explanation": "An Embedded Style Sheet is placed inside a <style> tag (usually inside <head>) and its scope is limited only to the HTML file where that tag is located.",
+              "sourceModuleId": "web-foundation-css-3"
+            },
+            {
+              "id": 9,
+              "question": "Why is using Inline Styles (<tag style='...'>) generally NOT recommended for large-scale projects?",
+              "options": [
+                "Because inline styles can only display black and white colors",
+                "Because inline styles automatically disable all hyperlinks on the page",
+                "Because modern browsers no longer support the style attribute",
+                "Because it mixes content structure with presentation styling, making it hard to maintain and impossible to reuse"
+              ],
+              "correctIndex": 3,
+              "explanation": "Inline styles attach styling directly to individual tags, mixing HTML and CSS together and making code maintenance very complicated when uniform design changes are needed.",
+              "sourceModuleId": "web-foundation-css-3"
+            },
+            {
+              "id": 10,
+              "question": "Look at the following CSS rule:\n\nh2, h3 {\n  color: #00a2c6;\n}\n\nThe selector-writing technique above is called a...",
+              "options": [
+                "Universal selector",
+                "Group selector",
+                "Nested selector",
+                "Pseudo-class selector"
+              ],
+              "correctIndex": 1,
+              "explanation": "A group selector allows combining multiple selectors using commas so that the same declaration block can be applied to all of those elements concisely.",
+              "sourceModuleId": "web-foundation-css-4"
+            },
+            {
+              "id": 11,
+              "question": "You have written CSS code properly in the style.css file, but when opening index.html in the browser, the appearance is still plain with no styling. What is the most common possible cause of this issue?",
+              "options": [
+                "Not including a <canvas> graphic element inside the document structure",
+                "The HTML file does not yet contain an <h1> heading element inside the page body",
+                "Not including a <link rel=\"stylesheet\"> tag in the <head> section of the HTML file",
+                "The web browser has not enabled JavaScript language processing support"
+              ],
+              "correctIndex": 2,
+              "explanation": "An external CSS file will not be applied to an HTML page unless it is explicitly linked using a <link rel=\"stylesheet\" href=\"...\"> tag inside <head>.",
+              "sourceModuleId": "web-foundation-css-4"
+            },
+            {
+              "id": 12,
+              "question": "Which CSS property is used to set the background color of an element like <footer>?",
+              "options": [
+                "font-color",
+                "color",
+                "background-color",
+                "text-background"
+              ],
+              "correctIndex": 2,
+              "explanation": "The 'background-color' property sets an element's background color, whereas 'color' is used for text color.",
+              "sourceModuleId": "web-foundation-css-4"
+            },
+            {
+              "id": 13,
+              "question": "How does the concept of inheritance work in CSS?",
+              "options": [
+                "All CSS selectors automatically inherit JavaScript functions",
+                "Some styling properties from a parent element are automatically passed down to elements inside it",
+                "A child HTML file automatically copies all HTML code from its parent",
+                "Browsers automatically remove styling from outer elements"
+              ],
+              "correctIndex": 1,
+              "explanation": "Inheritance in CSS means child elements inherit the values of certain properties (such as color and font-family) from their wrapping parent element.",
+              "sourceModuleId": "web-foundation-css-5"
+            },
+            {
+              "id": 14,
+              "question": "If there are two rules for the same element (for example 'p { color: blue; }' followed on the next line by 'p { color: green; }'), what color will appear on the <p> text, and why?",
+              "options": [
+                "Blue, because the declaration written first is always prioritized",
+                "A mix of teal, because the browser combines both pigment values",
+                "Green, because the cascading rule gives precedence to the rule in the last position",
+                "Black, because a conflict between two color values causes the browser to cancel the style"
+              ],
+              "correctIndex": 2,
+              "explanation": "The cascading principle reads CSS from top to bottom. When there are two rules with the same specificity on the same element, the rule written lowest/last is applied.",
+              "sourceModuleId": "web-foundation-css-5"
+            },
+            {
+              "id": 15,
+              "question": "What is the function of adding '!important' to a CSS declaration (for example: 'color: red !important;')?",
+              "options": [
+                "Marks that the property applies only in offline mode",
+                "Speeds up the browser's download of the CSS file",
+                "Turns the text bold and makes it blink",
+                "Forces that declaration to win and ignore the normal rule reading order"
+              ],
+              "correctIndex": 3,
+              "explanation": "!important gives a declaration the highest priority, overriding the normal cascading order. It should be used wisely because it makes debugging harder.",
+              "sourceModuleId": "web-foundation-css-5"
+            },
+            {
+              "id": 16,
+              "question": "What is the main difference between specifying colors using color names (color keywords) and hex codes in CSS?",
+              "options": [
+                "Color names are only for inline styles, whereas hex codes are for external files",
+                "Hex codes provide millions of color variations, whereas color names have limited options",
+                "Color names are obsolete and no longer supported by modern browsers today",
+                "Hex codes can only be used for text color, not for backgrounds"
+              ],
+              "correctIndex": 1,
+              "explanation": "Color names (such as red, blue) are limited to a standard list of keywords, whereas hex codes (#RRGGBB) provide the flexibility to produce over 16 million color combinations.",
+              "sourceModuleId": "web-foundation-css-6"
+            },
+            {
+              "id": 17,
+              "question": "Which is an example of valid hex code syntax for the color property in CSS?",
+              "options": [
+                "color: #1E90FF;",
+                "color: @1E90FF;",
+                "color: hex(1E90FF);",
+                "color: &1E90FF;"
+              ],
+              "correctIndex": 0,
+              "explanation": "Hexadecimal codes in CSS must start with a hash sign (#) followed by a combination of numbers and letters (for example #1E90FF).",
+              "sourceModuleId": "web-foundation-css-6"
+            },
+            {
+              "id": 18,
+              "question": "Which CSS property is specifically used to change the text color of an element?",
+              "options": [
+                "color",
+                "font-color",
+                "text-style",
+                "content-color"
+              ],
+              "correctIndex": 0,
+              "explanation": "In the CSS standard, the property for coloring text is 'color', not 'font-color' or 'text-color'.",
+              "sourceModuleId": "web-foundation-css-6"
+            },
+            {
+              "id": 19,
+              "question": "Based on the CSS basics summary, which of the following statements is MOST ACCURATE?",
+              "options": [
+                "CSS is a declarative language that controls visual presentation, where child elements can inherit their parent's styles",
+                "CSS rules are read randomly without paying attention to the order of lines of code",
+                "Inline style is the most recommended method for industry-standard web development",
+                "CSS is responsible for managing data flow logic and database storage"
+              ],
+              "correctIndex": 0,
+              "explanation": "CSS works specifically for declarative visual presentation, takes advantage of inheritance from parent elements, and is read in order according to cascading rules.",
+              "sourceModuleId": "web-foundation-css-7"
+            },
+            {
+              "id": 20,
+              "question": "After understanding CSS basics (syntax, selectors, and coloring), what topic is commonly learned at the next stage to arrange the layout of a web page?",
+              "options": [
+                "SQL database connections and server queries",
+                "Box model, layout (such as flexbox/grid), and responsive design",
+                "Microcontroller programming and hardware assembly",
+                "Password encryption and SSL certificates"
+              ],
+              "correctIndex": 1,
+              "explanation": "After mastering basic styling, the next step in CSS is learning the box model, layout (layout/positioning), and responsive design for different screen sizes.",
+              "sourceModuleId": "web-foundation-css-7"
+            }
+          ]
+        },
+        {
+          "id": "web-foundation-quiz-pcss",
+          "courseId": "fe-web-foundation-00",
+          "section": "PENDALAMAN_CSS",
+          "title": "CSS Deep Dive Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 15,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Which selector can be used across multiple elements of different types at once (shareable), unlike the id selector which must be unique?",
+              "options": [
+                "Type selector",
+                "Universal selector",
+                "ID selector",
+                "Class selector"
+              ],
+              "correctIndex": 3,
+              "explanation": "The class selector is shareable: a single class name can be applied to many elements, even across different tag types. An ID must be unique throughout the entire document.",
+              "sourceModuleId": "web-foundation-pcss-2"
+            },
+            {
+              "id": 2,
+              "question": "Consider the selector: img[alt]. Which elements will match this rule?",
+              "options": [
+                "Only img elements with an empty alt value",
+                "Only img elements that have an alt attribute, regardless of its value",
+                "All img elements, regardless of their attributes",
+                "All elements that have any attribute"
+              ],
+              "correctIndex": 1,
+              "explanation": "The [attr] form in an attribute selector targets elements that possess that attribute, regardless of its value.",
+              "sourceModuleId": "web-foundation-pcss-3"
+            },
+            {
+              "id": 3,
+              "question": "What is the main difference between the adjacent sibling selector (+) and the general sibling selector (~)?",
+              "options": [
+                "+ only works on inline elements, ~ is for block elements",
+                "~ requires using a target class, whereas + only applies to tags",
+                "+ selects the single immediate next sibling, ~ selects all following siblings",
+                "Both behave identically for styling, only differing in symbol character"
+              ],
+              "correctIndex": 2,
+              "explanation": "The adjacent sibling selector (+) only matches the second element that immediately follows the first element. The general sibling selector (~) matches all occurrences of the second element that appear after it, as long as they share the same parent.",
+              "sourceModuleId": "web-foundation-pcss-4"
+            },
+            {
+              "id": 4,
+              "question": "The selector .kotak > p will only target paragraphs that...",
+              "options": [
+                "Have the class kotak",
+                "Are located anywhere inside .kotak, no matter how deeply nested",
+                "Are located immediately before .kotak",
+                "Are direct children of .kotak"
+              ],
+              "correctIndex": 3,
+              "explanation": "The child selector (>) only targets direct children, unlike the descendant selector (space) which reaches all descendants at any nesting depth.",
+              "sourceModuleId": "web-foundation-pcss-5"
+            },
+            {
+              "id": 5,
+              "question": "The property content: \"\"; must be specified for the following pseudo-elements to appear, except...",
+              "options": [
+                ":hover",
+                "::after",
+                "::before",
+                "Both (::before and ::after) require content"
+              ],
+              "correctIndex": 0,
+              "explanation": ":hover is a pseudo-class (selecting based on state), not a pseudo-element, so it does not require the content property. ::before and ::after must have content in order to render.",
+              "sourceModuleId": "web-foundation-pcss-6"
+            },
+            {
+              "id": 6,
+              "question": "Why is writing font-size: 1.5 em; (with a space) considered invalid by browsers?",
+              "options": [
+                "Because the em unit is only allowed for margin, not for font size",
+                "Because decimal numbers must be rounded to the nearest whole number",
+                "Because CSS measurement values and units must be written together without a space",
+                "Because modern web browser engines only accept pixel (px) units"
+              ],
+              "correctIndex": 2,
+              "explanation": "Values and units on size properties such as font-size must be written directly adjacent without a space, for example 1.5em. If there is a space, the entire declaration is ignored by the browser.",
+              "sourceModuleId": "web-foundation-pcss-8"
+            },
+            {
+              "id": 7,
+              "question": "Which font-size unit is calculated relative to the font size of the root element (<html>), making it more predictable than em?",
+              "options": [
+                "rem",
+                "vh",
+                "px",
+                "%"
+              ],
+              "correctIndex": 0,
+              "explanation": "rem is relative to the root element's font size, whereas em is relative to the font size of the element itself, which can compound when used repeatedly on nested elements.",
+              "sourceModuleId": "web-foundation-pcss-8"
+            },
+            {
+              "id": 8,
+              "question": "The shorthand font: italic bold 16px/1.5 sans-serif; follows the order...",
+              "options": [
+                "style weight size/line-height family",
+                "family size weight style",
+                "weight style family/size",
+                "size weight style family"
+              ],
+              "correctIndex": 0,
+              "explanation": "The font shorthand must follow the order style weight size/line-height family. If the order is wrong, the entire declaration is considered invalid.",
+              "sourceModuleId": "web-foundation-pcss-9"
+            },
+            {
+              "id": 9,
+              "question": "Which property is used to change text capitalization to all uppercase without modifying the original text in HTML?",
+              "options": [
+                "text-indent",
+                "text-transform",
+                "text-shadow",
+                "text-decoration"
+              ],
+              "correctIndex": 1,
+              "explanation": "text-transform changes the visual capitalization (for example, uppercase) without altering the source text in HTML, keeping it friendly for search and screen readers.",
+              "sourceModuleId": "web-foundation-pcss-11"
+            },
+            {
+              "id": 10,
+              "question": "Which statement is true about color formats in CSS?",
+              "options": [
+                "The HSL format only applies to background properties, not to text",
+                "HEX color codes must begin with an opening rgb( parenthesis",
+                "RGB uses numeric values from 0-255, whereas HEX notation is hexadecimal-based",
+                "Standard named colors support millions of color shades just like HEX values"
+              ],
+              "correctIndex": 2,
+              "explanation": "RGB specifies red, green, and blue values from 0-255 each. HEX is a compact six-digit hexadecimal representation of the same RGB combination.",
+              "sourceModuleId": "web-foundation-pcss-16"
+            },
+            {
+              "id": 11,
+              "question": "What happens if an element is given opacity: 0%?",
+              "options": [
+                "Only the element's border disappears",
+                "The element along with all its contents becomes completely invisible",
+                "The element is displayed in solid black",
+                "The element remains visible, but its color turns gray"
+              ],
+              "correctIndex": 1,
+              "explanation": "opacity: 0% makes the element along with all its contents and descendants completely invisible, unlike an alpha channel which only makes a specific color transparent.",
+              "sourceModuleId": "web-foundation-pcss-18"
+            },
+            {
+              "id": 12,
+              "question": "A box has width: 200px, padding: 20px, and border: 2px solid. With box-sizing: content-box (default), what is the total width of the box?",
+              "options": [
+                "240px",
+                "200px",
+                "244px",
+                "220px"
+              ],
+              "correctIndex": 2,
+              "explanation": "With content-box, padding and border are added outside of width: 200 + (20x2) + (2x2) = 244px. With border-box, the total width would remain 200px.",
+              "sourceModuleId": "web-foundation-pcss-19"
+            },
+            {
+              "id": 13,
+              "question": "The property box-sizing: border-box; is useful for...",
+              "options": [
+                "Hiding an element's border lines without changing the physical size of the box",
+                "Making padding and border included within the specified element width",
+                "Removing all default margin spacing that HTML elements have",
+                "Rounding the corners of an element's border smoothly and symmetrically"
+              ],
+              "correctIndex": 1,
+              "explanation": "border-box keeps the final size of an element (including padding and border) matching the specified width, which is very useful when building layouts with floats or percentages.",
+              "sourceModuleId": "web-foundation-pcss-22"
+            },
+            {
+              "id": 14,
+              "question": "Two sibling elements are stacked vertically: the top element has margin-bottom: 30px, and the bottom element has margin-top: 20px. What is the final space between them?",
+              "options": [
+                "30px, because margin collapsing uses the larger value",
+                "50px, because both vertical margin values are added together by the browser",
+                "20px, because CSS rules prioritize the smallest margin value",
+                "0px, because both vertical margins cancel each other out"
+              ],
+              "correctIndex": 0,
+              "explanation": "Vertical margins between siblings undergo margin collapsing: their values are not added together, but instead the larger of the two is used.",
+              "sourceModuleId": "web-foundation-pcss-24"
+            },
+            {
+              "id": 15,
+              "question": "What is the main requirement for the margin: 0 auto; technique to successfully center an element horizontally?",
+              "options": [
+                "The element must be given display: inline",
+                "The element must have padding larger than its margin",
+                "The element must have a specified width",
+                "The element must be inside an element with position: relative"
+              ],
+              "correctIndex": 2,
+              "explanation": "Without a specified width, a block element fills the full width of its parent, leaving no leftover horizontal space on the left and right for centering.",
+              "sourceModuleId": "web-foundation-pcss-25"
+            },
+            {
+              "id": 16,
+              "question": "Which display value prevents an element from starting a new line (like inline), while still allowing its dimensions to be set with width and height (like block)?",
+              "options": [
+                "inline-block",
+                "inline",
+                "block",
+                "none"
+              ],
+              "correctIndex": 0,
+              "explanation": "inline-block combines two behaviors: it does not create a new line like inline, yet its dimensions can still be set like block.",
+              "sourceModuleId": "web-foundation-pcss-26"
+            },
+            {
+              "id": 17,
+              "question": "The properties top, left, right, and bottom only take effect if the element has a position value of...",
+              "options": [
+                "static only",
+                "They have no relation to position",
+                "inline or block",
+                "relative, absolute, or fixed"
+              ],
+              "correctIndex": 3,
+              "explanation": "The top/right/bottom/left properties only work on elements outside normal static positioning, namely position relative, absolute, or fixed. On static (default), these properties have no effect.",
+              "sourceModuleId": "web-foundation-pcss-35"
+            },
+            {
+              "id": 18,
+              "question": "What is the main difference between position: relative and position: absolute regarding the space left behind by the element?",
+              "options": [
+                "Both remove the element's allocated space from the normal document flow",
+                "absolute preserves the original allocated space, while relative removes it",
+                "relative preserves the element's original space, while absolute removes its space",
+                "Both preserve empty space at the element's original position in the document"
+              ],
+              "correctIndex": 2,
+              "explanation": "relative keeps space reserved at its original position as if the element were still there. absolute removes the element completely from the flow, so elements below it move up to fill that space.",
+              "sourceModuleId": "web-foundation-pcss-38"
+            },
+            {
+              "id": 19,
+              "question": "position: fixed is always calculated relative to...",
+              "options": [
+                "The browser window, staying in place even when the page is scrolled",
+                "The mobile viewport size only; it does not apply on desktop",
+                "The previous sibling element",
+                "The nearest parent element, regardless of the parent's position"
+              ],
+              "correctIndex": 0,
+              "explanation": "Unlike absolute, which can be relative to a non-static positioned ancestor, fixed is always relative to the browser window and does not move when the page is scrolled.",
+              "sourceModuleId": "web-foundation-pcss-39"
+            },
+            {
+              "id": 20,
+              "question": "A <div> contains only a single <img> with float: left, and the div has no other styling. What happens to the height of that <div>?",
+              "options": [
+                "The div element hits a rendering error and the image does not display at all",
+                "The element's height doubles compared to the original image dimensions",
+                "The element's height automatically expands to match the image inside it",
+                "Its height becomes 0px because the floated element leaves the parent's normal flow"
+              ],
+              "correctIndex": 3,
+              "explanation": "A floated element is taken out of normal flow, so the parent does not account for it when calculating height. This is the common parent collapse issue when using float.",
+              "sourceModuleId": "web-foundation-pcss-41"
+            },
+            {
+              "id": 21,
+              "question": "Two common ways to fix a parent element losing its height due to floated child elements are...",
+              "options": [
+                "Applying a combination of display: none and opacity: 0 on the parent container",
+                "Using a closing clear property or overflow: auto on the parent element",
+                "Removing all floated elements from the parent container's structure",
+                "Replacing all float properties with a combination of negative margin and padding"
+              ],
+              "correctIndex": 1,
+              "explanation": "clear (usually on an empty element after the floated elements) and overflow: auto on the parent are two common techniques to make the parent calculate the height of its floated children again.",
+              "sourceModuleId": "web-foundation-pcss-42"
+            },
+            {
+              "id": 22,
+              "question": "What is the main function of the meta tag <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">?",
+              "options": [
+                "Speeding up web page file downloads on slow mobile connections",
+                "Matching the browser's viewport width to the physical screen size of the device",
+                "Enabling automatic dark mode for all user interface components",
+                "Disabling external CSS file loading on mobile phone screens"
+              ],
+              "correctIndex": 1,
+              "explanation": "Without this meta tag, mobile browsers tend to display the page zoomed out to fit a small screen, making text too small to read.",
+              "sourceModuleId": "web-foundation-pcss-45"
+            },
+            {
+              "id": 23,
+              "question": "Consider the following code:\n\naside { width: 25%; }\n@media screen and (max-width: 600px) { aside { width: 100%; } }\n\nWhat happens to the aside element when the viewport width is 500px?",
+              "options": [
+                "An error occurs because the two rules conflict",
+                "Its width stays 25%, and the media query is ignored",
+                "The aside element disappears from the page",
+                "Its width becomes 100%, because the max-width: 600px condition is met"
+              ],
+              "correctIndex": 3,
+              "explanation": "Because 500px is smaller than the specified max-width: 600px limit, the rule inside the media query applies and overrides the previous rule, making aside 100% wide.",
+              "sourceModuleId": "web-foundation-pcss-46"
+            },
+            {
+              "id": 24,
+              "question": "position: sticky is a combination of the behaviors of two other position values, namely...",
+              "options": [
+                "relative and absolute",
+                "absolute and static",
+                "static and fixed",
+                "relative and fixed"
+              ],
+              "correctIndex": 3,
+              "explanation": "sticky behaves like relative until it reaches a viewport edge, then sticks like fixed once it hits the specified offset (for example, top: 0) as the page is scrolled.",
+              "sourceModuleId": "web-foundation-pcss-48"
+            },
+            {
+              "id": 25,
+              "question": "What is the main benefit of minifying CSS files before using them on a production website?",
+              "options": [
+                "Reducing file size so the page loads faster in the browser",
+                "Unlocking experimental CSS features that are not yet stable in browsers",
+                "Making the CSS code structure much neater for humans to read",
+                "Automatically increasing color brightness and contrast in the UI"
+              ],
+              "correctIndex": 0,
+              "explanation": "Minification removes whitespace, line breaks, and comments that do not affect CSS functionality, resulting in a smaller file size and faster page loads.",
+              "sourceModuleId": "web-foundation-pcss-49"
+            }
+          ]
+        }
+      ],
+      "finalProject": {
+        "id": "fp-fe-web-foundation-00",
+        "title": "Final Project: Personal Developer Portfolio & Profile Page",
+        "description": "Build a personal developer portfolio web page applying semantic HTML5 structure and foundational CSS styling up to the Box Model.",
+        "scenario": "Create a single-page developer profile that displays: (1) A Header containing your name and role, (2) An About Me section and skills list using HTML lists, (3) A projects/learning goals card section styled with CSS Box Model (margin, padding, border, background), and (4) A contact Footer.",
+        "language": "html-css-js",
+        "starterCode": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>My Portfolio</title>\n  <style>\n    body { font-family: sans-serif; margin: 0; padding: 24px; background: #f8fafc; color: #0f172a; }\n    .card { background: #ffffff; padding: 16px; border: 1px solid #cbd5e1; border-radius: 12px; margin-bottom: 16px; }\n  </style>\n</head>\n<body>\n  <header class=\"card\">\n    <h1>Your Full Name</h1>\n    <p>Junior Web Developer</p>\n  </header>\n  <main>\n    <section class=\"card\">\n      <h2>Core Skills</h2>\n      <ul>\n        <li>Semantic HTML5</li>\n        <li>CSS Box Model</li>\n      </ul>\n    </section>\n  </main>\n</body>\n</html>",
+        "minPassingScore": 75,
+        "xpReward": 100,
+        "rubrics": [
+          {
+            "id": "r1",
+            "title": "Semantic HTML Structure",
+            "description": "Uses <!DOCTYPE html>, header, main, section, and footer properly.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r2",
+            "title": "Profile Content & Navigation",
+            "description": "Displays a complete personal/portfolio profile with skills list and links.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r3",
+            "title": "Basic Styling & CSS Box Model",
+            "description": "Applies clean colors, typography, margin, padding, and borders.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r4",
+            "title": "Code Cleanliness & Validity",
+            "description": "Clean nested HTML tags and CSS selectors without syntax errors.",
+            "weightPercent": 25
+          }
+        ]
+      }
+    },
+    {
+      "id": "fe-css-02",
+      "trackId": "front-end",
+      "title": "Modern CSS Layout: Flexbox & Grid",
+      "level": "Pemula-Menengah",
+      "durationMinutes": 136,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Master modern web layout techniques using one-dimensional CSS Flexbox and two-dimensional CSS Grid to build flexible, responsive, and professional web interfaces.",
+      "prerequisites": [
+        "Selesai Fondasi Web: Dari Nol ke Baris Kode Pertama"
+      ],
+      "instructor": "Siti Rahmawati, UI/UX & Web Designer",
+      "contentPath": "content/fe-css-02",
+      "sectionTitles": {
+        "PERSIAPAN": "Preparation",
+        "PENDAHULUAN": "Why Modern Layout",
+        "INTI": "Flexbox",
+        "LANJUTAN": "CSS Grid",
+        "EVALUASI": "Project & Evaluation"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Which CSS Flexbox property is used to align and distribute items along the main axis?",
+          "options": [
+            "align-items",
+            "align-content",
+            "flex-wrap",
+            "justify-content"
+          ],
+          "correctIndex": 3,
+          "explanation": "justify-content distributes remaining free space and controls item alignment along the main axis (horizontal by default when flex-direction: row).",
+          "sourceModuleId": "css-layout-inti-3"
+        },
+        {
+          "id": 2,
+          "question": "What does the display: grid property do on a CSS container element?",
+          "options": [
+            "Enables a two-dimensional grid layout for rows and columns",
+            "Hides the element from visual rendering and browser accessibility",
+            "Removes all padding and margin from child elements inside it",
+            "Converts the element into plain inline text without box dimensions"
+          ],
+          "correctIndex": 0,
+          "explanation": "display: grid activates a two-dimensional grid layout system that allows positioning child elements simultaneously in rows and columns.",
+          "sourceModuleId": "css-layout-lanjutan-1"
+        },
+        {
+          "id": 3,
+          "question": "What is the fundamental philosophical difference between CSS Flexbox and CSS Grid?",
+          "options": [
+            "Flexbox only works in desktop browsers, whereas Grid works in all browsers",
+            "Flexbox only arranges text layout, whereas Grid arranges image layout",
+            "Flexbox requires JavaScript dependencies, whereas Grid is pure CSS",
+            "Flexbox is a 1-dimensional layout, whereas Grid is a 2-dimensional layout"
+          ],
+          "correctIndex": 3,
+          "explanation": "Flexbox is designed to arrange the flow of elements along a single linear dimension, while CSS Grid is designed to define a two-dimensional blueprint of rows and columns at once.",
+          "sourceModuleId": "css-layout-prep-2"
+        },
+        {
+          "id": 4,
+          "question": "Why was using the CSS float property to divide page columns considered problematic in the past?",
+          "options": [
+            "Because older browsers refused to render colors on elements with the float property",
+            "Because float removes child elements from the page DOM document hierarchy",
+            "Because elements are taken out of normal flow, causing their parent to collapse",
+            "Because it triggers high CPU usage that slows down browser rendering"
+          ],
+          "correctIndex": 2,
+          "explanation": "Floated elements are lifted out of normal flow, causing the parent container's height to collapse to 0 (container collapsing) and requiring clearfix hacks.",
+          "sourceModuleId": "css-layout-pend-3"
+        },
+        {
+          "id": 5,
+          "question": "What behavior immediately happens to direct child elements when a parent element is given 'display: flex'?",
+          "options": [
+            "Child elements are automatically converted in structure to HTML table elements",
+            "All text inside child elements is automatically formatted in italics",
+            "Child elements line up horizontally in a row and automatically match heights",
+            "All child elements are temporarily hidden from the browser display flow"
+          ],
+          "correctIndex": 2,
+          "explanation": "Enabling display: flex makes direct children line up horizontally (default row) and by default stretch to equalize their height along the cross axis.",
+          "sourceModuleId": "css-layout-inti-1"
+        },
+        {
+          "id": 6,
+          "question": "If a container has 'flex-direction: column', which direction does the Main Axis flow?",
+          "options": [
+            "Diagonally from the top-left corner to the bottom-right corner",
+            "Horizontally from left to right",
+            "Vertically downward from top to bottom",
+            "Horizontally from right to left"
+          ],
+          "correctIndex": 2,
+          "explanation": "With flex-direction: column, the main axis changes direction to vertical from top to bottom, while the cross axis becomes horizontal.",
+          "sourceModuleId": "css-layout-inti-2"
+        },
+        {
+          "id": 7,
+          "question": "Which justify-content value is most commonly used in a Navbar to place the logo on the far left and the menu on the far right?",
+          "options": [
+            "flex-start",
+            "space-around",
+            "center",
+            "space-between"
+          ],
+          "correctIndex": 3,
+          "explanation": "space-between places the first item at the start edge, the last item at the end edge, and distributes the remaining space evenly between them.",
+          "sourceModuleId": "css-layout-inti-3"
+        },
+        {
+          "id": 8,
+          "question": "Which two lines of CSS Flexbox declarations produce perfect centering (horizontally and vertically centered)?",
+          "options": [
+            "margin: auto; float: center;",
+            "text-align: center; vertical-align: middle;",
+            "flex-direction: center; flex-wrap: center;",
+            "justify-content: center; align-items: center;"
+          ],
+          "correctIndex": 3,
+          "explanation": "Combining justify-content: center (on the main axis) and align-items: center (on the cross axis) centers elements perfectly in both directions.",
+          "sourceModuleId": "css-layout-inti-4"
+        },
+        {
+          "id": 9,
+          "question": "What is the purpose of the 'flex-wrap: wrap' property on a Flexbox container?",
+          "options": [
+            "Wraps all text inside the container in special parentheses",
+            "Turns the outer border of the container into a decorative folding frame",
+            "Allows elements to wrap onto a new line when the container width is insufficient",
+            "Prevents elements from overflowing by clipping content that exceeds the container bounds"
+          ],
+          "correctIndex": 2,
+          "explanation": "By default Flexbox uses nowrap (forcing a single line). flex-wrap: wrap allows child elements to move onto new lines when horizontal space runs out.",
+          "sourceModuleId": "css-layout-inti-5"
+        },
+        {
+          "id": 10,
+          "question": "What is the advantage of using the 'gap: 16px' property compared to adding margins to Flexbox/Grid child elements?",
+          "options": [
+            "gap adds spacing between items without adding extra margins against the outer walls",
+            "gap turns the background color between elements transparent",
+            "gap dynamically calculates spacing proportions using screen percentages",
+            "gap can be applied automatically only to interactive image elements"
+          ],
+          "correctIndex": 0,
+          "explanation": "gap provides clean spacing strictly between child element cells without adding extra margin on the outer edges of the container.",
+          "sourceModuleId": "css-layout-inti-5"
+        },
+        {
+          "id": 11,
+          "question": "What does the shorthand declaration 'flex: 1' mean when applied to multiple Flexbox child elements?",
+          "options": [
+            "All elements divide the remaining container space equally and uniformly",
+            "Only the first element in order is allowed to stretch to fill the container",
+            "Elements are prohibited from shrinking even when space inside the container runs out",
+            "All elements are forced to have a fixed size of exactly one pixel"
+          ],
+          "correctIndex": 0,
+          "explanation": "flex: 1 is shorthand for flex-grow: 1, flex-shrink: 1, flex-basis: 0%, which distributes remaining space equally among all items that have it.",
+          "sourceModuleId": "css-layout-inti-6"
+        },
+        {
+          "id": 12,
+          "question": "Does manipulating visual order using the 'order: -1' property change the reading order for Screen Readers and Tab key navigation?",
+          "options": [
+            "Yes, the server-side HTML document is mutated to match the display order",
+            "No, order only changes visual appearance; the DOM accessibility order stays the same",
+            "Yes, the DOM reading order and Tab key navigation shift automatically as well",
+            "It depends on the web browser and the device type used by the user"
+          ],
+          "correctIndex": 1,
+          "explanation": "The order property only manipulates visual presentation on screen and does not alter the original HTML document structure (DOM order) for screen readers and keyboard navigation.",
+          "sourceModuleId": "css-layout-inti-7"
+        },
+        {
+          "id": 13,
+          "question": "What does the '1fr' unit mean in the declaration 'grid-template-columns: 200px 1fr'?",
+          "options": [
+            "The full height of one row from the container downward",
+            "One fractional share of the remaining space after 200px",
+            "An animation speed of one frame per second in the browser",
+            "A relative size equivalent to one root em in the browser"
+          ],
+          "correctIndex": 1,
+          "explanation": "The fr (fractional unit) allocates a fraction of the remaining free space in the container after fixed widths (such as 200px) and gaps are accounted for.",
+          "sourceModuleId": "css-layout-lanjutan-3"
+        },
+        {
+          "id": 14,
+          "question": "How do you concisely write 4 columns each 1fr wide using CSS Grid?",
+          "options": [
+            "grid-template-columns: times(4, 1fr);",
+            "grid-template-columns: repeat(4, 1fr);",
+            "grid-template-columns: auto-fit(4, 1fr);",
+            "grid-template-columns: 4fr;"
+          ],
+          "correctIndex": 1,
+          "explanation": "The repeat(4, 1fr) function is the standard way to repeat a 1fr size declaration 4 times.",
+          "sourceModuleId": "css-layout-lanjutan-3"
+        },
+        {
+          "id": 15,
+          "question": "Which CSS Grid declaration spans a card element from column grid line 1 to column grid line 3?",
+          "options": [
+            "grid-column: 1 / 3;",
+            "grid-row: 1 / 3;",
+            "column-span: 3;",
+            "grid-column: 1 to 3;"
+          ],
+          "correctIndex": 0,
+          "explanation": "grid-column: 1 / 3 (or grid-column: span 2) stretches an element starting from grid line 1 to grid line 3.",
+          "sourceModuleId": "css-layout-lanjutan-4"
+        },
+        {
+          "id": 16,
+          "question": "What is the magic behind the pattern 'grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))'?",
+          "options": [
+            "Rotates card content orientation by two hundred degrees in a circle",
+            "Creates an automatic responsive gallery without media queries across screen sizes",
+            "Removes card elements whose width is below a minimum limit of two hundred pixels",
+            "Restricts the card gallery layout to always consist of exactly one column"
+          ],
+          "correctIndex": 1,
+          "explanation": "The combination of auto-fit and minmax automatically calculates how many columns fit and wraps rows responsively without needing a single @media query.",
+          "sourceModuleId": "css-layout-lanjutan-6"
+        }
+      ],
+      "sectionQuizzes": [
+        {
+          "id": "css-layout-quiz-inti",
+          "courseId": "fe-css-02",
+          "section": "INTI",
+          "title": "Flexbox Core Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Which CSS property enables Flexbox mode on a container?",
+              "options": [
+                "display: flex;",
+                "position: flex;",
+                "layout: flexbox;",
+                "float: flex;"
+              ],
+              "correctIndex": 0,
+              "explanation": "display: flex; turns an element into a flex container and its direct children into flex items.",
+              "sourceModuleId": "css-layout-inti-1"
+            },
+            {
+              "id": 2,
+              "question": "If flex-direction is set to row, which direction does the Main Axis run?",
+              "options": [
+                "Vertical (top to bottom)",
+                "Horizontal (left to right)",
+                "Diagonal",
+                "Randomly based on element height"
+              ],
+              "correctIndex": 1,
+              "explanation": "With flex-direction: row (default), the Main Axis runs horizontally and the Cross Axis runs vertically.",
+              "sourceModuleId": "css-layout-inti-2"
+            },
+            {
+              "id": 3,
+              "question": "Which property controls item alignment along the Main Axis in Flexbox?",
+              "options": [
+                "align-items",
+                "justify-content",
+                "place-self",
+                "text-align"
+              ],
+              "correctIndex": 1,
+              "explanation": "justify-content controls space distribution and alignment along the Main Axis.",
+              "sourceModuleId": "css-layout-inti-3"
+            },
+            {
+              "id": 4,
+              "question": "What declaration allows flex items to automatically wrap onto a new line when space is narrow?",
+              "options": [
+                "flex-wrap: wrap;",
+                "flex-flow: overflow;",
+                "align-content: wrap;",
+                "white-space: wrap;"
+              ],
+              "correctIndex": 0,
+              "explanation": "flex-wrap: wrap; allows items to wrap onto the next line instead of being forced to shrink.",
+              "sourceModuleId": "css-layout-inti-5"
+            },
+            {
+              "id": 5,
+              "question": "Which modern property adds spacing between Flexbox or Grid items without margin hacks?",
+              "options": [
+                "spacing",
+                "gutter",
+                "gap",
+                "padding-between"
+              ],
+              "correctIndex": 2,
+              "explanation": "The gap property adds consistent spacing only between items, not on the outer edges.",
+              "sourceModuleId": "css-layout-inti-6"
+            }
+          ]
+        },
+        {
+          "id": "css-layout-quiz-lanjutan",
+          "courseId": "fe-css-02",
+          "section": "LANJUTAN",
+          "title": "Advanced CSS Grid & Responsive Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "What is the main advantage of CSS Grid compared to Flexbox?",
+              "options": [
+                "It is only for text",
+                "It handles 2-dimensional layouts (rows and columns simultaneously)",
+                "It does not require a modern browser",
+                "It replaces HTML completely"
+              ],
+              "correctIndex": 1,
+              "explanation": "CSS Grid is designed for 2-dimensional layouts (rows and columns together), while Flexbox excels at 1-dimensional layouts.",
+              "sourceModuleId": "css-layout-lanjutan-1"
+            },
+            {
+              "id": 2,
+              "question": "What does the fr unit mean in grid-template-columns: 1fr 2fr;?",
+              "options": [
+                "Fixed Ratio in pixels",
+                "Fraction of the remaining available free space",
+                "Animation frame rate",
+                "Font relative"
+              ],
+              "correctIndex": 1,
+              "explanation": "1fr and 2fr divide the container's remaining free space in a 1-to-2 ratio.",
+              "sourceModuleId": "css-layout-lanjutan-2"
+            },
+            {
+              "id": 3,
+              "question": "Which CSS function creates an automatically responsive gallery column layout without media queries?",
+              "options": [
+                "repeat(auto-fit, minmax(220px, 1fr))",
+                "columns: auto 220px;",
+                "flex: auto-grid;",
+                "grid-auto: responsive;"
+              ],
+              "correctIndex": 0,
+              "explanation": "The combination repeat(auto-fit, minmax(...)) automatically adjusts the number of columns based on the container width.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 4,
+              "question": "Which CSS rule is used to apply styles only at specific screen widths?",
+              "options": [
+                "@import",
+                "@keyframes",
+                "@media",
+                "@supports"
+              ],
+              "correctIndex": 2,
+              "explanation": "@media queries enable responsive breakpoints based on viewport size.",
+              "sourceModuleId": "css-layout-lanjutan-5"
+            },
+            {
+              "id": 5,
+              "question": "Which CSS Grid property centers content both horizontally and vertically at once?",
+              "options": [
+                "place-items: center;",
+                "float: center;",
+                "vertical-align: middle;",
+                "margin: 0;"
+              ],
+              "correctIndex": 0,
+              "explanation": "place-items: center; is shorthand for align-items: center and justify-items: center.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            }
+          ]
+        }
+      ],
+      "cheatSheetMarkdown": "# Modern CSS Layout Cheat Sheet\n\n## Flexbox (1-Dimensional)\n- `display: flex;` — Enable flex container\n- `flex-direction: row | column;` — Main Axis direction\n- `justify-content: flex-start | center | space-between | space-evenly;` — Main Axis alignment\n- `align-items: stretch | center | flex-start | flex-end;` — Cross Axis alignment\n- `flex-wrap: wrap;` — Allow items to wrap onto new lines\n- `gap: 16px;` — Spacing between items\n\n## CSS Grid (2-Dimensional)\n- `display: grid;` — Enable grid container\n- `grid-template-columns: repeat(3, 1fr);` — 3 equal-width columns\n- `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));` — Auto-responsive gallery\n- `place-items: center;` — Center vertically & horizontally\n\n## Responsive\n```css\n@media (max-width: 768px) {\n  .grid { grid-template-columns: 1fr; }\n}\n```",
+      "finalProject": {
+        "id": "fp-fe-css-02",
+        "title": "Final Project: Responsive Catalog Dashboard with Flexbox & Grid",
+        "description": "Design a modern web page layout combining Flexbox navigation and a responsive CSS Grid card gallery.",
+        "scenario": "Build a product/course showcase page featuring: (1) A responsive Navbar using Flexbox (logo on the left, menu on the right), (2) A concise Hero section, and (3) A card grid of at least 3 items using CSS Grid (grid-template-columns) with @media query rules so it stays clean on mobile screens.",
+        "language": "html-css-js",
+        "starterCode": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <style>\n    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #0f172a; color: white; }\n    .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; padding: 16px; }\n    .card { padding: 16px; border-radius: 12px; background: #f1f5f9; }\n  </style>\n</head>\n<body>\n  <nav class=\"navbar\"><strong>CodeShowcase</strong><span>Menu</span></nav>\n  <section class=\"grid-container\">\n    <article class=\"card\"><h3>Project 1</h3><p>Short project description.</p></article>\n    <article class=\"card\"><h3>Project 2</h3><p>Short project description.</p></article>\n    <article class=\"card\"><h3>Project 3</h3><p>Short project description.</p></article>\n  </section>\n</body>\n</html>",
+        "minPassingScore": 75,
+        "xpReward": 100,
+        "rubrics": [
+          {
+            "id": "r1",
+            "title": "Flexbox Navigation & Header",
+            "description": "Uses display: flex, justify-content, and align-items on the navigation bar.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r2",
+            "title": "CSS Grid Card Gallery",
+            "description": "Uses display: grid and grid-template-columns for arranging project cards.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r3",
+            "title": "Responsive Design (Media Query)",
+            "description": "Adapts layout for mobile and desktop viewports using @media.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r4",
+            "title": "Spacing Consistency & Aesthetics",
+            "description": "Uses gap, balanced whitespace, and readable color contrast.",
+            "weightPercent": 25
+          }
+        ]
+      }
+    },
+    {
+      "id": "fe-js-03",
+      "trackId": "front-end",
+      "title": "JavaScript Fundamentals",
+      "level": "Pemula",
+      "durationMinutes": 142,
+      "rating": 0.0,
+      "studentsCount": 0,
+      "description": "Master modern web programming logic (ES2015+): let/const variables, data types, operators, if/else control flow and loops, arrays & objects, arrow functions, DOM manipulation & event listeners, and an introduction to asynchronous concepts through an interactive to-do list project.",
+      "prerequisites": [
+        "Fondasi Web: Dari Nol ke Baris Kode Pertama",
+        "CSS Layout Modern: Flexbox & Grid"
+      ],
+      "instructor": "Andi Wijaya, Fullstack Developer",
+      "contentPath": "content/fe-js-03",
+      "sectionTitles": {
+        "PERSIAPAN": "Preparation",
+        "PENDAHULUAN": "JavaScript Basics",
+        "INTI": "Program Logic & Flow",
+        "LANJUTAN": "Functions, Objects & DOM",
+        "EVALUASI": "Project & Evaluation"
+      },
+      "modules": [],
+      "quizQuestions": [
+        {
+          "id": 1,
+          "question": "Which variable declaration keyword prevents its value from being reassigned?",
+          "options": [
+            "let",
+            "const",
+            "var",
+            "static"
+          ],
+          "correctIndex": 1,
+          "explanation": "const (constant) prevents variable reassignment after initialization.",
+          "sourceModuleId": "js-inti-1"
+        },
+        {
+          "id": 2,
+          "question": "Consider the following code:\n```javascript\nlet a = 10;\nlet b = \"10\";\nconsole.log(a === b);\n```\nWhat output is displayed in the Console?",
+          "options": [
+            "undefined",
+            "false",
+            "TypeError",
+            "true"
+          ],
+          "correctIndex": 1,
+          "explanation": "The === operator checks both value and data type equality. Since a is a number and b is a string, the result is false.",
+          "sourceModuleId": "js-inti-3"
+        },
+        {
+          "id": 3,
+          "question": "Consider the following code:\n```javascript\nconst buah = [\"Apel\", \"Jeruk\", \"Mangga\"];\nconsole.log(buah[1]);\n```\nWhat output is produced?",
+          "options": [
+            "Mangga",
+            "Apel",
+            "undefined",
+            "Jeruk"
+          ],
+          "correctIndex": 3,
+          "explanation": "Array indices in JavaScript start at 0. Index 0 is 'Apel', and index 1 is 'Jeruk'.",
+          "sourceModuleId": "js-inti-8"
+        },
+        {
+          "id": 4,
+          "question": "Consider the following code:\n```javascript\nconst kuadrat = (x) => x * x;\nconsole.log(kuadrat(6));\n```\nWhat output value is printed?",
+          "options": [
+            "NaN",
+            "12",
+            "36",
+            "undefined"
+          ],
+          "correctIndex": 2,
+          "explanation": "Single-line arrow functions use an implicit return, so kuadrat(6) returns 6 * 6 = 36.",
+          "sourceModuleId": "js-lanjutan-2"
+        },
+        {
+          "id": 5,
+          "question": "Consider the following code:\n```javascript\nconst angka = [1, 2, 3, 4, 5];\nconst hasil = angka.filter((n) => n > 3);\nconsole.log(hasil.length);\n```\nWhat output is produced?",
+          "options": [
+            "3",
+            "5",
+            "2",
+            "4"
+          ],
+          "correctIndex": 2,
+          "explanation": "The filter method only keeps elements greater than 3, which are [4, 5]. The length of the resulting array hasil.length is 2.",
+          "sourceModuleId": "js-lanjutan-5"
+        },
+        {
+          "id": 6,
+          "question": "Consider the following code:\n```javascript\nlet hitung = 0;\nfor (let i = 0; i < 3; i++) {\n  hitung += 2;\n}\nconsole.log(hitung);\n```\nWhat output is displayed in the Console?",
+          "options": [
+            "6",
+            "3",
+            "8",
+            "4"
+          ],
+          "correctIndex": 0,
+          "explanation": "The for loop iterates 3 times (i = 0, 1, 2). Each iteration adds 2 to hitung, making the final total 6.",
+          "sourceModuleId": "js-inti-7"
+        },
+        {
+          "id": 7,
+          "question": "Consider the following code:\n```javascript\nconst nama = \"Budi\";\nconst salam = `Halo ${nama}!`;\nconsole.log(salam);\n```\nWhat text is printed in the Console?",
+          "options": [
+            "undefined",
+            "Halo ${nama}!",
+            "Halo \"Budi\"!",
+            "Halo Budi!"
+          ],
+          "correctIndex": 3,
+          "explanation": "Template literals use backticks and the ${...} syntax to dynamically interpolate variable values into text.",
+          "sourceModuleId": "js-inti-4"
+        },
+        {
+          "id": 8,
+          "question": "The official standard that governs the specification and evolution of the JavaScript language is...",
+          "options": [
+            "TypeScript Foundation",
+            "W3C Standards",
+            "ECMAScript",
+            "JSON Schema"
+          ],
+          "correctIndex": 2,
+          "explanation": "ECMAScript (commonly abbreviated as ES, such as ES6 / ES2015) is the official standard specification for the JavaScript language.",
+          "sourceModuleId": "js-pend-1"
+        },
+        {
+          "id": 9,
+          "question": "Where is the most recommended position to place the <script src=\"app.js\"> tag in an HTML document?",
+          "options": [
+            "Inside the <head> tag",
+            "Inside the <title> tag",
+            "On the first line of the document before <!DOCTYPE html>",
+            "Right before the closing </body> tag"
+          ],
+          "correctIndex": 3,
+          "explanation": "Placing the script tag right before the closing body tag ensures all HTML elements have been downloaded and parsed by the browser before the script runs.",
+          "sourceModuleId": "js-pend-2"
+        },
+        {
+          "id": 10,
+          "question": "What standard JavaScript command is used to print information or values to the developer console?",
+          "options": [
+            "terminal.echo()",
+            "document.write()",
+            "console.log()",
+            "print()"
+          ],
+          "correctIndex": 2,
+          "explanation": "console.log() is the standard command for printing output to the developer console.",
+          "sourceModuleId": "js-pend-3"
+        },
+        {
+          "id": 11,
+          "question": "What type of error appears when you reference a variable that has never been declared?",
+          "options": [
+            "ReferenceError",
+            "RangeError",
+            "TypeError",
+            "SyntaxError"
+          ],
+          "correctIndex": 0,
+          "explanation": "A ReferenceError occurs when JavaScript tries to look up a variable name that cannot be found in memory/scope.",
+          "sourceModuleId": "js-pend-5"
+        },
+        {
+          "id": 12,
+          "question": "What is the result of the expression typeof 'CodeAcademy'?",
+          "options": [
+            "'text'",
+            "'string'",
+            "'object'",
+            "'character'"
+          ],
+          "correctIndex": 1,
+          "explanation": "The typeof operator returns the string 'string' for all text data enclosed in quotes.",
+          "sourceModuleId": "js-inti-2"
+        },
+        {
+          "id": 13,
+          "question": "What is the result of the arithmetic operation 14 % 4?",
+          "options": [
+            "3.5",
+            "3",
+            "0",
+            "2"
+          ],
+          "correctIndex": 3,
+          "explanation": "The modulo operator (%) produces the remainder of integer division. 14 divided by 4 equals 3 with a remainder of 2.",
+          "sourceModuleId": "js-inti-3"
+        },
+        {
+          "id": 14,
+          "question": "What keyword must be included at the end of each case block in a switch statement so execution does not fall through to the case below it?",
+          "options": [
+            "stop",
+            "continue",
+            "exit",
+            "break"
+          ],
+          "correctIndex": 3,
+          "explanation": "The break statement stops evaluation of the switch block and exits it, preventing fall-through behavior.",
+          "sourceModuleId": "js-inti-6"
+        },
+        {
+          "id": 15,
+          "question": "Which statement is TRUE regarding a variable declared with 'const' inside curly braces {}?",
+          "options": [
+            "It can only be accessed within that curly-brace block (Block Scope)",
+            "It will produce a SyntaxError when the program runs",
+            "It can be accessed freely from outside the curly braces anywhere",
+            "It automatically becomes a global variable"
+          ],
+          "correctIndex": 0,
+          "explanation": "const and let variables have block scope, meaning they are isolated within the curly braces where they are declared.",
+          "sourceModuleId": "js-lanjutan-3"
+        },
+        {
+          "id": 16,
+          "question": "Given the object const pengguna = { nama: 'Rani', umur: 21 }, how do you read the umur property using dot notation?",
+          "options": [
+            "pengguna->umur",
+            "pengguna.umur",
+            "pengguna:umur",
+            "pengguna(umur)"
+          ],
+          "correctIndex": 1,
+          "explanation": "Dot notation uses a period between the object name and the property name: pengguna.umur.",
+          "sourceModuleId": "js-lanjutan-4"
+        },
+        {
+          "id": 17,
+          "question": "Which document method is used to select the first HTML element that has the id 'tombol-kirim'?",
+          "options": [
+            "document.findTag('tombol-kirim')",
+            "document.selectId('tombol-kirim')",
+            "document.querySelector('#tombol-kirim')",
+            "document.querySelector('.tombol-kirim')"
+          ],
+          "correctIndex": 2,
+          "explanation": "document.querySelector() uses CSS selectors, where the hash symbol (#) indicates searching by an element's id.",
+          "sourceModuleId": "js-lanjutan-6"
+        },
+        {
+          "id": 18,
+          "question": "Which method is used to register a click handler function on an HTML button element?",
+          "options": [
+            "tombol.addEventListener('click', handler)",
+            "tombol.registerAction('click')",
+            "tombol.onClickHandler()",
+            "tombol.listenEvent('press', handler)"
+          ],
+          "correctIndex": 0,
+          "explanation": "addEventListener('click', handler) is the standard method for handling click events on DOM elements.",
+          "sourceModuleId": "js-lanjutan-7"
+        },
+        {
+          "id": 19,
+          "question": "Which keyword is paired with 'async' inside a function to wait for a Promise to settle in a non-blocking manner?",
+          "options": [
+            "pause",
+            "await",
+            "wait",
+            "defer"
+          ],
+          "correctIndex": 1,
+          "explanation": "The await keyword can only be used inside a function prefixed with the async keyword.",
+          "sourceModuleId": "js-lanjutan-8"
+        },
+        {
+          "id": 20,
+          "question": "Which array method is used to add a new item to the very end of an array?",
+          "options": [
+            "push()",
+            "pop()",
+            "shift()",
+            "unshift()"
+          ],
+          "correctIndex": 0,
+          "explanation": "The .push() method inserts one or more new elements at the end of an array and updates its length.",
+          "sourceModuleId": "js-inti-8"
+        }
+      ],
+      "sectionQuizzes": [
+        {
+          "id": "js-quiz-inti",
+          "courseId": "fe-js-03",
+          "section": "INTI",
+          "title": "JS Logic & Data Structures Core Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Which keyword should be prioritized when declaring a variable whose value will not be reassigned?",
+              "options": [
+                "var",
+                "let",
+                "const",
+                "static"
+              ],
+              "correctIndex": 2,
+              "explanation": "Use const by default to keep variable references safe from accidental changes; use let only when the value needs to change.",
+              "sourceModuleId": "js-pend-1"
+            },
+            {
+              "id": 2,
+              "question": "Which comparison operator checks equality of both value and data type?",
+              "options": [
+                "==",
+                "=",
+                "===",
+                "!="
+              ],
+              "correctIndex": 2,
+              "explanation": "=== (strict equality) compares both value and data type without implicit type conversion.",
+              "sourceModuleId": "js-pend-3"
+            },
+            {
+              "id": 3,
+              "question": "Which array method adds a new element to the end of an array?",
+              "options": [
+                ".push()",
+                ".pop()",
+                ".shift()",
+                ".slice()"
+              ],
+              "correctIndex": 0,
+              "explanation": ".push() adds one or more elements to the end of an array.",
+              "sourceModuleId": "js-inti-8"
+            },
+            {
+              "id": 4,
+              "question": "How do you access the nama property from the object const user = { nama: 'Rani' };?",
+              "options": [
+                "user->nama",
+                "user.nama",
+                "user::nama",
+                "user(nama)"
+              ],
+              "correctIndex": 1,
+              "explanation": "In JavaScript, object properties are accessed using dot notation (user.nama) or bracket notation (user['nama']).",
+              "sourceModuleId": "js-inti-7"
+            },
+            {
+              "id": 5,
+              "question": "Which is a valid Arrow Function syntax in ES6?",
+              "options": [
+                "const sapa = (nama) => `Halo ${nama}`;",
+                "function => sapa(nama) {}",
+                "def sapa(nama) -> {}",
+                "arrow sapa(nama) {}"
+              ],
+              "correctIndex": 0,
+              "explanation": "Arrow functions use the syntax (parameters) => expression or block { ... }.",
+              "sourceModuleId": "js-inti-6"
+            }
+          ]
+        },
+        {
+          "id": "js-quiz-lanjutan",
+          "courseId": "fe-js-03",
+          "section": "LANJUTAN",
+          "title": "Advanced DOM & Events Quiz",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Which DOM method selects the first element that matches a CSS selector?",
+              "options": [
+                "document.querySelector()",
+                "document.selectCss()",
+                "window.getTag()",
+                "dom.findFirst()"
+              ],
+              "correctIndex": 0,
+              "explanation": "document.querySelector('#id' or '.class') returns the first element that matches the CSS selector.",
+              "sourceModuleId": "js-lanjutan-2"
+            },
+            {
+              "id": 2,
+              "question": "Which property is safer to use for changing an element's text content without executing HTML?",
+              "options": [
+                "innerHTML",
+                "textContent",
+                "outerHTML",
+                "scriptText"
+              ],
+              "correctIndex": 1,
+              "explanation": "textContent inserts plain text, making it safer against XSS risks compared to innerHTML.",
+              "sourceModuleId": "js-lanjutan-3"
+            },
+            {
+              "id": 3,
+              "question": "Which method is used to attach a button click handler to a DOM element?",
+              "options": [
+                ".onEvent('click', fn)",
+                ".addEventListener('click', fn)",
+                ".attachClick(fn)",
+                ".listen('click', fn)"
+              ],
+              "correctIndex": 1,
+              "explanation": "addEventListener('click', fn) is the modern DOM standard for handling events.",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 4,
+              "question": "Why is event.preventDefault() often called on a form submit event?",
+              "options": [
+                "To clear all inputs",
+                "To prevent the page from automatically reloading when the form is submitted",
+                "To close the browser tab",
+                "To disable CSS"
+              ],
+              "correctIndex": 1,
+              "explanation": "event.preventDefault() stops the form's default behavior so we can process the data via JavaScript without reloading.",
+              "sourceModuleId": "js-lanjutan-5"
+            },
+            {
+              "id": 5,
+              "question": "Which array method produces a new array containing elements that pass a specific condition?",
+              "options": [
+                ".filter()",
+                ".push()",
+                ".join()",
+                ".reverse()"
+              ],
+              "correctIndex": 0,
+              "explanation": ".filter() returns a new array containing elements for which the callback returns true.",
+              "sourceModuleId": "js-lanjutan-1"
+            }
+          ]
+        }
+      ],
+      "cheatSheetMarkdown": "# JavaScript Fundamentals Cheat Sheet\n\n## Variables & Data Types\n- `const nama = \"Budi\";` (constant value, top priority)\n- `let skor = 0;` (mutable value)\n- Strict comparison: `===` and `!==`\n\n## Functions & Arrays\n```javascript\nconst tambah = (a, b) => a + b;\nconst angka = [1, 2, 3, 4];\nconst genap = angka.filter((n) => n % 2 === 0);\n```\n\n## DOM Manipulation & Events\n```javascript\nconst btn = document.querySelector(\"#btn\");\nconst teks = document.querySelector(\"#hasil\");\n\nbtn.addEventListener(\"click\", () => {\n  teks.textContent = \"Tombol diklik!\";\n});\n```",
+      "finalProject": {
+        "id": "fp-fe-js-03",
+        "title": "Final Project: Interactive Learning Goal Tracker (DOM & Events)",
+        "description": "Build an interactive web application using ES6+ JavaScript, DOM manipulation, and Event Listeners.",
+        "scenario": "Create an interactive To-Do / Learning Goal Tracker app that lets users: (1) Add new learning goals via a text input and button, (2) Validate that empty inputs are not added, (3) Render the goal list from a JavaScript array into the DOM along with a completed goals counter.",
+        "language": "html-css-js",
+        "starterCode": "// Final Project JavaScript Code (or combine HTML+JS)\nconst tasks = [\n  { id: 1, title: 'Complete DOM Module', completed: true },\n  { id: 2, title: 'Build JS Final Project', completed: false }\n];\n\nfunction addTask(title) {\n  if (!title || title.trim() === '') return false;\n  tasks.push({ id: Date.now(), title: title.trim(), completed: false });\n  return true;\n}\n\nconsole.log('Total tasks:', tasks.length);",
+        "minPassingScore": 75,
+        "xpReward": 100,
+        "rubrics": [
+          {
+            "id": "r1",
+            "title": "Variable Declaration & Data Structures",
+            "description": "Uses const/let, arrays, and objects to store application items.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r2",
+            "title": "Dynamic DOM Manipulation",
+            "description": "Renders, adds, or updates HTML elements dynamically via JavaScript.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r3",
+            "title": "Interactive Event Handling",
+            "description": "Uses addEventListener to respond to button clicks or user input.",
+            "weightPercent": 25
+          },
+          {
+            "id": "r4",
+            "title": "Input Validation & Function Modularity",
+            "description": "Prevents empty inputs and organizes logic into clean functions.",
+            "weightPercent": 25
+          }
+        ]
+      }
+    }
+  ]
+}

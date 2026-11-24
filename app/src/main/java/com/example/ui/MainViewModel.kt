@@ -134,6 +134,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun setAppLanguage(language: AppLanguage) {
         viewModelScope.launch {
             repo.sessionManager.saveAppLanguage(language.code)
+            com.example.data.CourseCatalog.loadAssetCourses(getApplication(), language.code)
+            val currentChats = _chatMessages.value
+            if (currentChats.size == 1 && !currentChats[0].isUser) {
+                _chatMessages.value = listOf(
+                    ChatMessage(
+                        id = currentChats[0].id,
+                        text = aiGreetingFor(language),
+                        isUser = false
+                    )
+                )
+            }
         }
     }
 
@@ -493,7 +504,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val catalogJob = async(Dispatchers.IO) {
             try {
                 if (!com.example.data.CourseCatalog.isAssetCoursesLoaded.value) {
-                    com.example.data.CourseCatalog.loadAssetCourses(context)
+                    com.example.data.CourseCatalog.loadAssetCourses(context, appLanguage.value.code)
                 }
             } catch (e: Exception) {
                 android.util.Log.w("MainViewModel", "Catalog preload skipped: ${e.message}")
@@ -812,14 +823,22 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         courseTitle: String,
         moduleTitle: String,
         moduleContent: String? = null,
-        currentPlaygroundCode: String? = null
+        currentPlaygroundCode: String? = null,
+        imageUri: String? = null
     ) {
         if (_isAiThinking.value) return
-        val query = userQuery.ifBlank { "Halo AI Tutor" }
+        val query = userQuery.ifBlank {
+            if (!imageUri.isNullOrBlank()) {
+                getApplication<Application>().getString(com.example.R.string.ai_tutor_default_image_prompt)
+            } else {
+                "Halo AI Tutor"
+            }
+        }
         val userMsg = ChatMessage(
             id = UUID.randomUUID().toString(),
             text = query,
-            isUser = true
+            isUser = true,
+            imageUri = imageUri
         )
         _chatMessages.value = _chatMessages.value + userMsg
         _isAiThinking.value = true
@@ -844,13 +863,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
 
+                val compressedImageBytes = if (!imageUri.isNullOrBlank()) {
+                    loadCompressedImageBytes(imageUri)
+                } else {
+                    null
+                }
+
                 val result = aiService.askTutorDetailed(
                     userMessage = query,
                     courseTitle = courseTitle,
                     moduleTitle = moduleTitle,
                     moduleContent = contentContext,
                     currentPlaygroundCode = codeContext,
-                    language = appLanguage.value.code
+                    language = appLanguage.value.code,
+                    imageBytes = compressedImageBytes,
+                    imageMimeType = "image/jpeg"
                 )
                 _aiConnectionStatus.value = result.provider
                 val aiMsg = ChatMessage(
@@ -878,6 +905,74 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    private suspend fun loadCompressedImageBytes(uriString: String): ByteArray? =
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                val resolver = getApplication<Application>().contentResolver
+                val uri = android.net.Uri.parse(uriString)
+                val boundsOpts = android.graphics.BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                }
+                resolver.openInputStream(uri)?.use { stream ->
+                    android.graphics.BitmapFactory.decodeStream(stream, null, boundsOpts)
+                }
+                val maxDim = 1024
+                var sampleSize = 1
+                val origW = boundsOpts.outWidth
+                val origH = boundsOpts.outHeight
+                if (origW <= 0 || origH <= 0) return@withContext null
+                if (origW > maxDim || origH > maxDim) {
+                    while ((origW / sampleSize) > maxDim || (origH / sampleSize) > maxDim) {
+                        sampleSize *= 2
+                    }
+                }
+                val decodeOpts = android.graphics.BitmapFactory.Options().apply {
+                    inSampleSize = sampleSize
+                }
+                val bitmap = resolver.openInputStream(uri)?.use { stream ->
+                    android.graphics.BitmapFactory.decodeStream(stream, null, decodeOpts)
+                } ?: return@withContext null
+
+                try {
+                    val out = java.io.ByteArrayOutputStream()
+                    bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, out)
+                    out.toByteArray()
+                } finally {
+                    bitmap.recycle()
+                }
+            } catch (e: Throwable) {
+                android.util.Log.w("MainViewModel", "Failed to compress attached image: ${e.message}")
+                null
+            }
+        }
+
+    suspend fun translateModuleToEnglish(moduleId: String, markdown: String): String? =
+        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+            if (markdown.isBlank()) return@withContext null
+            val safeId = moduleId.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+            val cacheDir = java.io.File(getApplication<Application>().cacheDir, "translated_modules/en")
+            val cacheFile = java.io.File(cacheDir, "$safeId.md")
+            try {
+                if (cacheFile.exists() && cacheFile.length() > 0L) {
+                    val cached = cacheFile.readText(Charsets.UTF_8)
+                    if (cached.isNotBlank()) return@withContext cached
+                }
+            } catch (_: Throwable) {
+                // Ignore corrupted cache and re-translate
+            }
+
+            val translated = aiService.translateMarkdownToEnglish(markdown)
+            if (!translated.isNullOrBlank()) {
+                try {
+                    cacheDir.mkdirs()
+                    cacheFile.writeText(translated, Charsets.UTF_8)
+                } catch (e: Throwable) {
+                    android.util.Log.w("MainViewModel", "Failed to cache translated module $moduleId: ${e.message}")
+                }
+            }
+            translated
+        }
 
     fun clearAiChat() {
         _chatMessages.value = listOf(

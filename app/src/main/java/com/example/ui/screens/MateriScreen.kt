@@ -46,6 +46,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -62,8 +63,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -108,6 +113,7 @@ fun MateriScreen(
     onOpenPlayground: (String, String, String?, String?) -> Unit,
     onOpenAiTutor: (String, String) -> Unit,
     onToggleBookmark: (CourseModule) -> Unit,
+    onTranslateToEnglish: suspend (String, String) -> String? = { _, _ -> null },
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -560,6 +566,23 @@ fun MateriScreen(
             }
         ) { paddingValues ->
             val currentLanguage = LocalAppLanguage.current
+            var translatedContent by remember(currentModule.id, currentLanguage) { mutableStateOf<String?>(null) }
+            var isTranslating by remember(currentModule.id, currentLanguage) { mutableStateOf(false) }
+
+            LaunchedEffect(currentModule.id, currentLanguage) {
+                if (currentLanguage != AppLanguage.INDONESIAN) {
+                    isTranslating = true
+                    translatedContent = try {
+                        onTranslateToEnglish(currentModule.id, currentModule.content)
+                    } catch (_: Throwable) {
+                        null
+                    }
+                    isTranslating = false
+                } else {
+                    translatedContent = null
+                    isTranslating = false
+                }
+            }
 
             LazyColumn(
                 modifier = Modifier
@@ -569,7 +592,7 @@ fun MateriScreen(
                 contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Notice banner if language is not Indonesian
+                // Language / Auto-translation status banner if language is not Indonesian
                 if (currentLanguage != AppLanguage.INDONESIAN) {
                     item(key = "language_content_notice_banner") {
                         Card(
@@ -588,15 +611,27 @@ fun MateriScreen(
                                     .padding(horizontal = 14.dp, vertical = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.Info,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                    modifier = Modifier.size(18.dp)
-                                )
+                                if (isTranslating) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        strokeWidth = 2.dp,
+                                        color = MaterialTheme.colorScheme.secondary
+                                    )
+                                } else {
+                                    Icon(
+                                        imageVector = if (translatedContent != null) Icons.Default.AutoAwesome else Icons.Default.Info,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.secondary,
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Text(
-                                    text = stringResource(R.string.materi_content_id_only),
+                                    text = when {
+                                        isTranslating -> stringResource(R.string.materi_translating_en)
+                                        translatedContent != null -> stringResource(R.string.materi_translated_badge)
+                                        else -> stringResource(R.string.materi_content_id_only)
+                                    },
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
@@ -773,7 +808,7 @@ fun MateriScreen(
 
                             // Formatted Markdown Content with Glossary Tooltip
                             MarkdownContent(
-                                content = currentModule.content,
+                                content = translatedContent ?: currentModule.content,
                                 courseId = course.id
                             )
 

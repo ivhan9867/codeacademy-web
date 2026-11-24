@@ -97,9 +97,9 @@ object CourseCatalog {
     /**
      * Fast synchronous loader for the JSON catalog definitions.
      */
-    fun loadCatalogSync(context: Context) {
+    fun loadCatalogSync(context: Context, languageCode: String = "id") {
         try {
-            val catalogData = CourseCatalogParser.loadCatalog(context)
+            val catalogData = CourseCatalogParser.loadCatalog(context, languageCode)
             if (catalogData.tracks.isNotEmpty() || catalogData.courses.isNotEmpty()) {
                 applyCatalogData(catalogData)
             }
@@ -112,17 +112,17 @@ object CourseCatalog {
      * Suspended loader that reads JSON catalog definitions and loads
      * markdown modules from assets/content/ for courses that declare contentPath.
      */
-    suspend fun loadAssetCourses(context: Context) = withContext(Dispatchers.IO) {
+    suspend fun loadAssetCourses(context: Context, languageCode: String = "id") = withContext(Dispatchers.IO) {
         try {
-            val catalogData = CourseCatalogParser.loadCatalog(context)
+            val catalogData = CourseCatalogParser.loadCatalog(context, languageCode)
             if (catalogData.tracks.isNotEmpty() || catalogData.courses.isNotEmpty()) {
                 applyCatalogData(catalogData)
             }
 
-            // Load markdown modules for courses declaring contentPath
+            // Load markdown modules for courses declaring contentPath (skip if already cached in memory)
             for (course in _baseCourses) {
                 val contentPath = _contentPaths[course.id]
-                if (!contentPath.isNullOrBlank()) {
+                if (!contentPath.isNullOrBlank() && getDynamicModules(course.id).isEmpty()) {
                     val modules = CourseContentParser.loadCourseModules(context, course.id)
                     if (modules.isNotEmpty()) {
                         setDynamicModules(course.id, modules)

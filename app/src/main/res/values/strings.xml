@@ -1293,4 +1293,12 @@
     <string name="forum_time_just_now">Baru saja</string>
     <string name="forum_time_mins_ago_format">%1$d mnt lalu</string>
     <string name="forum_time_hours_ago_format">%1$d jam lalu</string>
+
+    <!-- Multimodal AI Tutor & Module Translation -->
+    <string name="ai_tutor_attach_image_cd">Lampirkan gambar kode</string>
+    <string name="ai_tutor_remove_image_cd">Hapus gambar lampiran</string>
+    <string name="ai_tutor_image_attached_label">Gambar kode terlampir</string>
+    <string name="ai_tutor_default_image_prompt">Tolong analisis gambar kode atau error ini dan jelaskan cara memperbaikinya.</string>
+    <string name="materi_translating_en">Menerjemahkan modul ke Bahasa Inggris...</string>
+    <string name="materi_translated_badge">English (Cached)</string>
 </resources>

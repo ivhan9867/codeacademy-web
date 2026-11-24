@@ -1293,4 +1293,12 @@
     <string name="forum_time_just_now">Just now</string>
     <string name="forum_time_mins_ago_format">%1$d min ago</string>
     <string name="forum_time_hours_ago_format">%1$d hr ago</string>
+
+    <!-- Multimodal AI Tutor & Module Translation -->
+    <string name="ai_tutor_attach_image_cd">Attach code image</string>
+    <string name="ai_tutor_remove_image_cd">Remove attached image</string>
+    <string name="ai_tutor_image_attached_label">Code image attached</string>
+    <string name="ai_tutor_default_image_prompt">Please analyze this code screenshot or error and explain how to fix or improve it.</string>
+    <string name="materi_translating_en">Translating module to English...</string>
+    <string name="materi_translated_badge">English (Cached)</string>
 </resources>

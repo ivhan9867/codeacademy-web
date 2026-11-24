@@ -317,10 +317,42 @@ object CourseCatalogParser {
         }
     }
 
+    private val LOCALIZED_SUFFIX_REGEX = Regex("_[a-z]{2}\\.json$", RegexOption.IGNORE_CASE)
+
+    /**
+     * Resolves which catalog file names to load for the given languageCode.
+     * Prevents loading both base (e.g. front-end.json) and localized (e.g. front-end_en.json) files.
+     */
+    internal fun resolveCatalogFileNames(allJsonFiles: List<String>, languageCode: String): List<String> {
+        val baseFiles = allJsonFiles.filterNot { LOCALIZED_SUFFIX_REGEX.containsMatchIn(it) }
+        val defaultOrder = DEFAULT_TRACK_IDS.map { "$it.json" }
+        val orderedBases = baseFiles.sortedBy { name ->
+            val idx = defaultOrder.indexOf(name)
+            if (idx >= 0) idx else 999
+        }
+        val useEnglish = languageCode.lowercase() != "id"
+        return orderedBases.map { baseName ->
+            if (useEnglish) {
+                val stem = baseName.removeSuffix(".json")
+                val exactLang = "${stem}_${languageCode.lowercase()}.json"
+                val enFallback = "${stem}_en.json"
+                when {
+                    allJsonFiles.any { it.equals(exactLang, ignoreCase = true) } ->
+                        allJsonFiles.first { it.equals(exactLang, ignoreCase = true) }
+                    allJsonFiles.any { it.equals(enFallback, ignoreCase = true) } ->
+                        allJsonFiles.first { it.equals(enFallback, ignoreCase = true) }
+                    else -> baseName
+                }
+            } else {
+                baseName
+            }
+        }
+    }
+
     /**
      * Loads catalog from Android assets folder 'catalog/'.
      */
-    fun loadCatalog(context: Context): CatalogData {
+    fun loadCatalog(context: Context, languageCode: String = "id"): CatalogData {
         val tracks = mutableListOf<LearningTrack>()
         val courses = mutableListOf<Course>()
         val contentPaths = mutableMapOf<String, String>()
@@ -332,11 +364,7 @@ object CourseCatalogParser {
         } ?: DEFAULT_TRACK_IDS.map { "$it.json" }
 
         val orderedFileNames = if (fileNames.isNotEmpty()) {
-            val defaultOrder = DEFAULT_TRACK_IDS.map { "$it.json" }
-            fileNames.sortedBy { name ->
-                val idx = defaultOrder.indexOf(name)
-                if (idx >= 0) idx else 999
-            }
+            resolveCatalogFileNames(fileNames, languageCode)
         } else {
             DEFAULT_TRACK_IDS.map { "$it.json" }
         }
@@ -358,14 +386,14 @@ object CourseCatalogParser {
             }
         }
 
-        logDebug("Loaded ${tracks.size} tracks and ${courses.size} courses from assets")
+        logDebug("Loaded ${tracks.size} tracks and ${courses.size} courses from assets (lang=$languageCode)")
         return CatalogData(tracks = tracks, courses = courses, contentPaths = contentPaths)
     }
 
     /**
      * Loads catalog from local File directory (used for Unit/Robolectric Tests).
      */
-    fun loadCatalogFromDirectory(dir: File): CatalogData {
+    fun loadCatalogFromDirectory(dir: File, languageCode: String = "id"): CatalogData {
         val tracks = mutableListOf<LearningTrack>()
         val courses = mutableListOf<Course>()
         val contentPaths = mutableMapOf<String, String>()
@@ -378,11 +406,8 @@ object CourseCatalogParser {
         val files = dir.listFiles { file -> file.isFile && file.extension.equals("json", ignoreCase = true) }
             ?: emptyArray()
 
-        val orderedFiles = files.sortedBy { f ->
-            val trackId = f.nameWithoutExtension
-            val idx = DEFAULT_TRACK_IDS.indexOf(trackId)
-            if (idx >= 0) idx else 999
-        }
+        val selectedNames = resolveCatalogFileNames(files.map { it.name }, languageCode)
+        val orderedFiles = selectedNames.mapNotNull { name -> files.firstOrNull { it.name == name } }
 
         for (f in orderedFiles) {
             try {

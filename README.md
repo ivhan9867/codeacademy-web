@@ -1,4 +1,4 @@
-# CodeAcademy — Mobile Web Development Learning App
+# CodeAcademy Mobile Web Development Learning App
 
 Aplikasi Android native berbasis **Kotlin & Jetpack Compose** untuk belajar Front-End Web Development (HTML, CSS, dan JavaScript) secara terstruktur, interaktif, dan *offline-first*.
 

@@ -85,7 +85,7 @@ const authError = document.getElementById("authError");
 let verifyingSessionPromise = null;
 const activeReplyTargetByThread = new Map();
 const PROFILE_STORAGE_KEY = "ca_fac_profile_v1";
-const DEFAULT_LECTURER_EMAIL = "dosen@codeacademy.id";
+const ACCESS_REQUEST_RECIPIENT = "ivhanafikaprila@gmail.com";
 
 function loadSavedFacilitatorProfile() {
   try {
@@ -342,45 +342,23 @@ async function verifyAndEnterFacilitatorSession(user) {
         data: allowDoc.exists ? allowDoc.data() : null
       });
 
-      if (!allowDoc.exists && email === DEFAULT_LECTURER_EMAIL) {
-        setAuthStatus("Menyiapkan profil Super Admin Dosen Penguji...");
-        const defaultDoc = {
-          email: DEFAULT_LECTURER_EMAIL,
-          name: "Dosen Penguji",
-          role: "Super Admin & Penilai",
-          accessRole: "super_admin",
-          bio: "Dosen Penguji & Reviewer Proyek Akhir CodeAcademy",
-          createdAt: Date.now()
-        };
-        try {
-          await db.collection("facilitators").doc(DEFAULT_LECTURER_EMAIL).set(defaultDoc, { merge: true });
-          allowDoc = await db.collection("facilitators").doc(DEFAULT_LECTURER_EMAIL).get();
-        } catch (seedErr) {
-          console.warn("[FacilitatorAuth] Auto-seed lecturer doc warning:", seedErr?.code || seedErr?.message);
-        }
-      }
-
-      if (!allowDoc.exists && email !== DEFAULT_LECTURER_EMAIL) {
-        const msg = `Akses ditolak: dokumen Firestore facilitators/${email} tidak ditemukan. Minta admin menambahkan dokumen tersebut di Firebase Console.`;
+      if (!allowDoc.exists) {
+        const msg = `Akses ditolak: dokumen Firestore facilitators/${email} tidak ditemukan. Gunakan tombol "Ajukan Akses" di bawah form login untuk mendaftarkan email Anda.`;
         setAuthStatus("");
         showAuthError(msg);
         await auth.signOut();
         return;
       }
 
-      if (!user.emailVerified && email !== DEFAULT_LECTURER_EMAIL) {
+      if (!user.emailVerified) {
         console.warn("[FacilitatorAuth] Warning: user.emailVerified === false; Firestore write rules require email_verified == true.");
       }
 
-      const profileData = allowDoc.exists ? (allowDoc.data() || {}) : {
-        name: "Dosen Penguji",
-        role: "Super Admin & Penilai",
-        accessRole: "super_admin"
-      };
+      const profileData = allowDoc.data() || {};
       const savedLocal = loadSavedFacilitatorProfile();
       const resolvedDisplayName = savedLocal.name || profileData.name || user.displayName || "Fasilitator CodeAcademy";
       const resolvedRole = savedLocal.role || profileData.role || "";
-      const accessRole = (email === DEFAULT_LECTURER_EMAIL || profileData.accessRole === "super_admin") ? "super_admin" : "facilitator";
+      const accessRole = profileData.accessRole === "super_admin" ? "super_admin" : "facilitator";
       currentFacilitatorUser = {
         uid: user.uid,
         email,
@@ -588,6 +566,8 @@ function attachEventListeners() {
       showAuthError("Gagal masuk: " + (err.message || err.code));
     }
   });
+
+  attachAccessRequestModalListeners();
 
   btnGoogleSignIn.addEventListener("click", async () => {
     console.log("[FacilitatorAuth] Google Sign-In clicked");
@@ -2315,4 +2295,166 @@ function showToast(msg) {
   setTimeout(() => {
     toastMsg.classList.remove("show");
   }, 3500);
+}
+
+// ==========================================
+// ACCESS REQUEST MODAL (ADMIN / FASILITATOR)
+// ==========================================
+function generateAccessRequestId() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+  return `REQ-${y}${m}${d}-${rand}`;
+}
+
+function buildFormattedAccessEmailText(payload) {
+  return [
+    "PENGAJUAN AKSES PORTAL CODEACADEMY",
+    "========================================",
+    `ID Referensi     : ${payload.requestId}`,
+    `Peran Diajukan   : ${payload.role}`,
+    `Nama Lengkap     : ${payload.name}`,
+    `Email Didaftarkan: ${payload.email}`,
+    `Instansi/Jabatan : ${payload.affiliation}`,
+    `Waktu Pengajuan  : ${payload.submittedAt}`,
+    `URL Portal       : ${payload.portalUrl}`,
+    "",
+    "Catatan Pemohon:",
+    payload.reason,
+    "",
+    "----------------------------------------",
+    "Tindak lanjut: Masuk ke Portal Admin CodeAcademy > Manajemen Tim,",
+    `lalu tambahkan ${payload.email} sebagai ${payload.role}.`
+  ].join("\n");
+}
+
+function attachAccessRequestModalListeners() {
+  const modal = document.getElementById("accessRequestModal");
+  const btnOpen = document.getElementById("btnOpenAccessRequest");
+  const btnClose = document.getElementById("btnCloseAccessRequest");
+  const btnCancel = document.getElementById("btnCancelAccessRequest");
+  const form = document.getElementById("accessRequestForm");
+  const feedbackEl = document.getElementById("reqFeedback");
+  const btnSubmit = document.getElementById("btnSubmitAccessRequest");
+
+  if (!modal || !btnOpen || !form) return;
+
+  const setFeedback = (type, html) => {
+    if (!feedbackEl) return;
+    feedbackEl.className = type ? `req-feedback ${type}` : "req-feedback";
+    feedbackEl.innerHTML = html || "";
+  };
+
+  const openModal = () => {
+    setFeedback("", "");
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+    const nameInput = document.getElementById("reqFullName");
+    if (nameInput) nameInput.focus();
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+  };
+
+  btnOpen.addEventListener("click", openModal);
+  if (btnClose) btnClose.addEventListener("click", closeModal);
+  if (btnCancel) btnCancel.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fullName = (document.getElementById("reqFullName")?.value || "").trim();
+    const applicantEmail = (document.getElementById("reqEmail")?.value || "").trim().toLowerCase();
+    const affiliation = (document.getElementById("reqAffiliation")?.value || "").trim();
+    const reason = (document.getElementById("reqReason")?.value || "").trim();
+    const selectedRole = form.querySelector('input[name="reqRole"]:checked')?.value || "Fasilitator";
+
+    if (!fullName || !applicantEmail || !affiliation || !reason) {
+      setFeedback("error", "Harap lengkapi seluruh kolom pengajuan terlebih dahulu.");
+      return;
+    }
+
+    const requestId = generateAccessRequestId();
+    const submittedAt = new Date().toLocaleString("id-ID", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    }) + " WIB";
+    const portalUrl = window.location.href.split("#")[0];
+    const subject = `[CodeAcademy Portal] Pengajuan Akses ${selectedRole} — ${fullName} (${requestId})`;
+
+    const payload = {
+      requestId,
+      role: selectedRole,
+      name: fullName,
+      email: applicantEmail,
+      affiliation,
+      reason,
+      submittedAt,
+      portalUrl
+    };
+
+    const mailtoHref = `mailto:${ACCESS_REQUEST_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+      buildFormattedAccessEmailText(payload)
+    )}`;
+
+    if (btnSubmit) {
+      btnSubmit.disabled = true;
+      btnSubmit.textContent = "Mengirim pengajuan...";
+    }
+    setFeedback("info", `Mengirim pengajuan akses (${escapeHtml(requestId)}) ke pengelola CodeAcademy...`);
+
+    try {
+      const response = await fetch(`https://formsubmit.co/ajax/${ACCESS_REQUEST_RECIPIENT}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          _subject: subject,
+          _replyto: applicantEmail,
+          _template: "table",
+          _captcha: "false",
+          "ID Referensi": requestId,
+          "Peran Diajukan": selectedRole,
+          "Nama Pemohon": fullName,
+          "Email Didaftarkan": applicantEmail,
+          "Instansi / Jabatan": affiliation,
+          "Waktu Pengajuan": submittedAt,
+          "Catatan Pemohon": reason,
+          "URL Portal": portalUrl
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      form.reset();
+      setFeedback(
+        "success",
+        `<strong>Pengajuan terkirim (${escapeHtml(requestId)}).</strong><br>` +
+          `Permintaan akses <strong>${escapeHtml(selectedRole)}</strong> untuk <strong>${escapeHtml(applicantEmail)}</strong> telah dikirim ke <strong>${ACCESS_REQUEST_RECIPIENT}</strong>. Anda akan dihubungi setelah akun diaktifkan.`
+      );
+      showToast(`Pengajuan akses ${requestId} berhasil dikirim.`);
+    } catch (err) {
+      console.warn("[AccessRequest] Direct form submit failed, offering mailto fallback:", err);
+      setFeedback(
+        "error",
+        `Pengiriman otomatis sedang tidak tersedia (${escapeHtml(err.message || "offline")}). ` +
+          `<a href="${mailtoHref}" style="color:#0F766E;font-weight:700;text-decoration:underline;">Klik di sini untuk mengirim via aplikasi email Anda</a>.`
+      );
+    } finally {
+      if (btnSubmit) {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = "Kirim Pengajuan Akses";
+      }
+    }
+  });
 }

@@ -507,6 +507,213 @@ body {
   color: var(--obsidian);
 }
 
+/* Request Access Strip & Modal */
+.auth-request-box {
+  margin-top: 16px;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #F8FAFC;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.auth-request-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.auth-request-copy strong {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.auth-request-copy span {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.btn-request-access {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--obsidian);
+  background: var(--surface);
+  color: var(--obsidian);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.btn-request-access:hover {
+  background: var(--obsidian);
+  color: #FFFFFF;
+}
+
+.access-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  background: rgba(15, 23, 42, 0.56);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.access-modal-backdrop.open {
+  display: flex;
+}
+.access-modal-card {
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+}
+.access-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.access-modal-head h3 {
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 2px 0 0;
+}
+.access-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.access-modal-close:hover {
+  color: var(--obsidian);
+  border-color: var(--obsidian);
+}
+.access-modal-desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+.role-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.role-choice-card {
+  position: relative;
+  cursor: pointer;
+  display: block;
+}
+.role-choice-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.role-choice-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1.5px solid var(--line);
+  background: #F8FAFC;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  height: 100%;
+}
+.role-choice-body strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.role-choice-body small {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.role-choice-card input:checked + .role-choice-body {
+  border-color: var(--obsidian);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(24, 26, 31, 0.08);
+}
+.access-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.access-textarea {
+  resize: vertical;
+  min-height: 76px;
+  font-family: inherit;
+}
+.access-modal-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.btn-request-secondary {
+  padding: 11px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.req-feedback {
+  display: none;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+.req-feedback.info {
+  display: block;
+  background: #EFF6FF;
+  color: #1D4ED8;
+  border: 1px solid #BFDBFE;
+}
+.req-feedback.success {
+  display: block;
+  background: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #A7F3D0;
+}
+.req-feedback.error {
+  display: block;
+  background: #FEF2F2;
+  color: #991B1B;
+  border: 1px solid #FECACA;
+}
+@media (max-width: 560px) {
+  .role-choice-grid,
+  .access-form-row {
+    grid-template-columns: 1fr;
+  }
+  .auth-request-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* =========================================
    FLOATING APP SHELL & TOP CAPSULE NAVBAR
 ========================================= */

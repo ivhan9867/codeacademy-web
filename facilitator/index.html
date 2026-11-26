@@ -92,8 +92,80 @@
           Masuk dengan Google
         </button>
 
+        <div class="auth-request-box">
+          <div class="auth-request-copy">
+            <strong>Belum memiliki akses portal?</strong>
+            <span>Ajukan pendaftaran akun sebagai Admin atau Fasilitator CodeAcademy.</span>
+          </div>
+          <button type="button" id="btnOpenAccessRequest" class="btn-request-access">Ajukan Akses</button>
+        </div>
+
         <a href="../index.html" class="auth-back">← Kembali ke beranda utama</a>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL PENGAJUAN AKSES ADMIN / FASILITATOR -->
+  <div id="accessRequestModal" class="access-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="accessModalTitle" aria-hidden="true">
+    <div class="access-modal-card">
+      <div class="access-modal-head">
+        <div>
+          <span class="auth-eyebrow">CODEACADEMY STAFF ACCESS</span>
+          <h3 id="accessModalTitle">Ajukan Akses Portal</h3>
+        </div>
+        <button type="button" id="btnCloseAccessRequest" class="access-modal-close" aria-label="Tutup">&times;</button>
+      </div>
+      <p class="access-modal-desc">Isi formulir di bawah ini untuk mengajukan akses resmi. Permintaan akan dikirim langsung ke pengelola utama CodeAcademy untuk verifikasi.</p>
+
+      <form id="accessRequestForm" class="auth-form-stack">
+        <div class="auth-input-group">
+          <label>Peran yang Diajukan</label>
+          <div class="role-choice-grid" role="radiogroup" aria-label="Pilih peran akses">
+            <label class="role-choice-card">
+              <input type="radio" name="reqRole" value="Fasilitator" checked>
+              <span class="role-choice-body">
+                <strong>Fasilitator</strong>
+                <small>Review proyek akhir, penilaian rubrik, dan moderasi forum peserta.</small>
+              </span>
+            </label>
+            <label class="role-choice-card">
+              <input type="radio" name="reqRole" value="Admin (Super Admin)">
+              <span class="role-choice-body">
+                <strong>Admin (Super Admin)</strong>
+                <small>Akses penuh penilaian, manajemen tim, peserta, dan pengumuman portal.</small>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="access-form-row">
+          <div class="auth-input-group">
+            <label for="reqFullName">Nama Lengkap</label>
+            <input type="text" id="reqFullName" class="auth-input" placeholder="Nama lengkap & gelar (opsional)" required>
+          </div>
+          <div class="auth-input-group">
+            <label for="reqEmail">Email yang Didaftarkan</label>
+            <input type="email" id="reqEmail" class="auth-input" placeholder="nama@domain.ac.id" required>
+          </div>
+        </div>
+
+        <div class="auth-input-group">
+          <label for="reqAffiliation">Instansi / Jabatan</label>
+          <input type="text" id="reqAffiliation" class="auth-input" placeholder="Contoh: Dosen Penguji — Teknik Informatika" required>
+        </div>
+
+        <div class="auth-input-group">
+          <label for="reqReason">Tujuan Pengajuan</label>
+          <textarea id="reqReason" class="auth-input access-textarea" rows="3" placeholder="Jelaskan singkat kebutuhan akses Anda pada portal CodeAcademy..." required></textarea>
+        </div>
+
+        <div id="reqFeedback" class="req-feedback" aria-live="polite"></div>
+
+        <div class="access-modal-actions">
+          <button type="button" id="btnCancelAccessRequest" class="btn-request-secondary">Batal</button>
+          <button type="submit" id="btnSubmitAccessRequest" class="btn-auth-submit" style="flex: 1;">Kirim Pengajuan Akses</button>
+        </div>
+      </form>
     </div>
   </div>
 

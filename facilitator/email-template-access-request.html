@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pengajuan Akses Portal — CodeAcademy</title>
+</head>
+<body style="margin:0;padding:0;background-color:#F1F5F9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0F172A;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F1F5F9;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;width:100%;background-color:#FFFFFF;border:1px solid #E2E8F0;border-radius:16px;overflow:hidden;">
+          <!-- Header -->
+          <tr>
+            <td style="background-color:#181A1F;padding:24px 32px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="vertical-align:middle;">
+                    <span style="display:inline-block;background-color:#0F766E;color:#FFFFFF;font-family:'SFMono-Regular',Consolas,monospace;font-size:13px;font-weight:700;padding:6px 10px;border-radius:8px;letter-spacing:0.02em;">&gt;_</span>
+                    <span style="margin-left:10px;color:#FFFFFF;font-size:16px;font-weight:700;letter-spacing:-0.01em;vertical-align:middle;">CodeAcademy</span>
+                  </td>
+                  <td align="right" style="vertical-align:middle;">
+                    <span style="color:#94A3B8;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;">STAFF ACCESS REQUEST</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Title & Role Badge -->
+          <tr>
+            <td style="padding:28px 32px 16px;">
+              <span style="display:inline-block;background-color:#CCFBF1;color:#0F766E;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:4px 10px;border-radius:6px;">
+                {{REQUESTED_ROLE}}
+              </span>
+              <h1 style="margin:12px 0 6px;font-size:20px;line-height:1.3;font-weight:700;color:#0F172A;">
+                Pengajuan Akses Portal CodeAcademy
+              </h1>
+              <p style="margin:0;font-size:14px;line-height:1.55;color:#475569;">
+                Permintaan pendaftaran akun staf baru telah dikirim melalui halaman login Portal Fasilitator &amp; Admin.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Structured Metadata Table -->
+          <tr>
+            <td style="padding:8px 32px 20px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border:1px solid #E2E8F0;border-radius:12px;border-collapse:separate;overflow:hidden;">
+                <tr>
+                  <td style="padding:11px 16px;background-color:#F8FAFC;border-bottom:1px solid #E2E8F0;width:36%;font-size:12px;font-weight:600;color:#64748B;">ID Referensi</td>
+                  <td style="padding:11px 16px;background-color:#FFFFFF;border-bottom:1px solid #E2E8F0;font-family:'SFMono-Regular',Consolas,monospace;font-size:12.5px;font-weight:600;color:#0F172A;">{{REQUEST_ID}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;background-color:#F8FAFC;border-bottom:1px solid #E2E8F0;font-size:12px;font-weight:600;color:#64748B;">Nama Pemohon</td>
+                  <td style="padding:11px 16px;background-color:#FFFFFF;border-bottom:1px solid #E2E8F0;font-size:13.5px;font-weight:600;color:#0F172A;">{{APPLICANT_NAME}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;background-color:#F8FAFC;border-bottom:1px solid #E2E8F0;font-size:12px;font-weight:600;color:#64748B;">Email Didaftarkan</td>
+                  <td style="padding:11px 16px;background-color:#FFFFFF;border-bottom:1px solid #E2E8F0;font-size:13.5px;color:#0F766E;font-weight:600;">{{APPLICANT_EMAIL}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;background-color:#F8FAFC;border-bottom:1px solid #E2E8F0;font-size:12px;font-weight:600;color:#64748B;">Peran Diajukan</td>
+                  <td style="padding:11px 16px;background-color:#FFFFFF;border-bottom:1px solid #E2E8F0;font-size:13.5px;font-weight:600;color:#0F172A;">{{REQUESTED_ROLE}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;background-color:#F8FAFC;border-bottom:1px solid #E2E8F0;font-size:12px;font-weight:600;color:#64748B;">Instansi / Jabatan</td>
+                  <td style="padding:11px 16px;background-color:#FFFFFF;border-bottom:1px solid #E2E8F0;font-size:13.5px;color:#334155;">{{AFFILIATION}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:11px 16px;background-color:#F8FAFC;font-size:12px;font-weight:600;color:#64748B;">Waktu Pengajuan</td>
+                  <td style="padding:11px 16px;background-color:#FFFFFF;font-size:13px;color:#475569;">{{SUBMITTED_AT_WIB}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Applicant Notes -->
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <div style="font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#64748B;margin-bottom:8px;">
+                Catatan Pemohon
+              </div>
+              <div style="background-color:#F8FAFC;border-left:3px solid #0F766E;border-radius:0 10px 10px 0;padding:14px 16px;font-size:13.5px;line-height:1.6;color:#1E293B;">
+                {{REASON}}
+              </div>
+            </td>
+          </tr>
+
+          <!-- Action CTA -->
+          <tr>
+            <td style="padding:0 32px 28px;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:#F8FAFC;border:1px solid #E2E8F0;border-radius:12px;padding:16px;">
+                <tr>
+                  <td style="font-size:13px;line-height:1.5;color:#334155;padding-bottom:12px;">
+                    <strong>Tindak lanjut:</strong> Untuk menyetujui, buka <strong>Portal Admin &rarr; Manajemen Tim</strong> lalu tambahkan alamat email pemohon dengan peran yang sesuai.
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <a href="{{PORTAL_URL}}" style="display:inline-block;background-color:#181A1F;color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:600;padding:10px 18px;border-radius:10px;">
+                      Buka Portal Admin CodeAcademy
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:16px 32px;background-color:#F8FAFC;border-top:1px solid #E2E8F0;font-size:11.5px;line-height:1.5;color:#64748B;">
+              Email ini dikirim otomatis dari formulir Pengajuan Akses CodeAcademy Portal. Balas langsung email ini untuk menghubungi pemohon ({{APPLICANT_EMAIL}}).
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

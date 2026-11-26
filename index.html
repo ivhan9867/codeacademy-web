@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
-  <title>CodeAcademy — Belajar coding praktis di smartphone</title>
-  <meta name="description" content="Portal CodeAcademy: penilaian proyek akhir untuk fasilitator, verifikasi sertifikat, dan manual aplikasi.">
+  <title>CodeAcademy — Practical coding on your smartphone</title>
+  <meta name="description" content="CodeAcademy Portal: final project grading for facilitators, certificate verification, and application manual.">
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
+<body data-i18n-title="landing_title">
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -19,7 +19,7 @@
     <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
     <symbol id="i-code" viewBox="0 0 24 24"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
     <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/><path d="M9 11h.01M12 11h.01M15 11h.01"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12.5l2.5 2.5 4-5"/></symbol>
     <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
   </defs>
@@ -28,11 +28,16 @@
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>CodeAcademy</a>
-    <nav class="nav-links" aria-label="Utama">
-      <a href="#portal">Portal</a>
-      <a href="#aplikasi">Aplikasi</a>
-      <a href="docs/Manual_Book_CodeAcademy.html">Manual</a>
-      <a class="btn btn-primary" href="verify.html" style="padding:11px 16px;font-size:14px;color:#fff">Verifikasi sertifikat</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#portal" data-i18n="nav_portal">Portal</a>
+      <a href="#aplikasi" data-i18n="nav_app">App</a>
+      <a href="docs/Manual_Book_CodeAcademy.html" data-i18n="nav_manual">Manual</a>
+      <button type="button" class="lang-slide-toggle" role="switch" aria-label="Switch language EN / ID" aria-checked="false" data-lang="en">
+        <span class="lang-thumb" aria-hidden="true"></span>
+        <span class="lang-opt" data-code="en">EN</span>
+        <span class="lang-opt" data-code="id">ID</span>
+      </button>
+      <a class="btn btn-primary" href="verify.html" style="padding:11px 16px;font-size:14px;color:#fff" data-i18n="nav_verify">Verify Certificate</a>
     </nav>
   </div>
 </header>
@@ -41,24 +46,24 @@
   <section class="hero" data-particles data-colors="#1FB5B0,#3B6BFF,#8B5CF6,#EC4899,#E26D45,#F2A93B" data-alpha="0.5" data-density="22" data-radius="240">
     <div class="wrap">
       <div>
-        <h1>Belajar coding praktis di smartphone</h1>
-        <p class="lead">Kelas, latihan kode, dan proyek akhir dalam satu aplikasi. Portal ini dipakai fasilitator untuk menilai proyek, dan siapa pun untuk memeriksa sertifikat.</p>
+        <h1 data-i18n="hero_h1">Practical coding on your smartphone</h1>
+        <p class="lead" data-i18n="hero_lead">Courses, interactive code exercises, and final projects in one mobile app. This portal is used by facilitators to grade submissions, and by anyone to verify certificates.</p>
         <div class="actions">
-          <a class="btn btn-primary" href="facilitator/index.html">Portal Fasilitator &amp; Admin</a>
-          <a class="btn btn-quiet" href="verify.html">Verifikasi sertifikat</a>
+          <a class="btn btn-primary" href="facilitator/index.html" data-i18n="hero_cta_portal">Facilitator &amp; Admin Portal</a>
+          <a class="btn btn-quiet" href="verify.html" data-i18n="hero_cta_verify">Verify Certificate</a>
         </div>
       </div>
 
-      <div class="phone" role="img" aria-label="Layar beranda aplikasi CodeAcademy: kelas Fondasi Web HTML dan CSS selesai 60 persen">
+      <div class="phone" role="img" aria-label="CodeAcademy mobile home screen mockup">
         <div class="screen" aria-hidden="true">
           <div class="status"><span>12:10</span><span>5G 100%</span></div>
-          <div class="greet"><div><b>Halo, Ahmad!</b><br><small style="color:#A9A39A">Semangat belajar coding hari ini</small></div><span class="streak">7 hari</span></div>
-          <div class="banner"><small>MOBILE-FIRST CODING</small><strong>Belajar Coding Praktis di Smartphone</strong><span>Mulai belajar</span></div>
-          <h4>Lanjutkan belajar</h4>
-          <div class="course"><b>Fondasi Web: HTML &amp; CSS</b><em>Modul 5 dari 8 · 60% selesai</em><div class="bar"><i></i></div></div>
-          <h4>Misi harian</h4>
-          <div><div class="mission"><span>Selesaikan 1 modul</span><b>+25 XP</b></div><div class="mission"><span>Tanya AI Tutor 1x</span><b>+15 XP</b></div></div>
-          <div class="tabs"><span class="on">Beranda</span><span>Kelas</span><span>Progres</span><span>Komunitas</span><span>Profil</span></div>
+          <div class="greet"><div><b data-i18n="phone_greet">Hello, Ahmad!</b><br><small style="color:#A9A39A" data-i18n="phone_sub">Ready to code today</small></div><span class="streak" data-i18n="phone_streak">7 days</span></div>
+          <div class="banner"><small>MOBILE-FIRST CODING</small><strong data-i18n="phone_banner_title">Practical Mobile Coding</strong><span data-i18n="phone_banner_cta">Start learning</span></div>
+          <h4 data-i18n="phone_continue">Continue learning</h4>
+          <div class="course"><b data-i18n="phone_course">Web Foundation: HTML &amp; CSS</b><em data-i18n="phone_course_meta">Module 5 of 8 · 60% complete</em><div class="bar"><i></i></div></div>
+          <h4 data-i18n="phone_missions">Daily quests</h4>
+          <div><div class="mission"><span data-i18n="phone_m1">Complete 1 module</span><b>+25 XP</b></div><div class="mission"><span data-i18n="phone_m2">Ask AI Tutor 1x</span><b>+15 XP</b></div></div>
+          <div class="tabs"><span class="on" data-i18n="phone_tab_home">Home</span><span data-i18n="phone_tab_courses">Courses</span><span data-i18n="phone_tab_progress">Progress</span><span data-i18n="phone_tab_community">Community</span><span data-i18n="phone_tab_profile">Profile</span></div>
         </div>
       </div>
     </div>
@@ -66,25 +71,25 @@
 
   <section class="section" id="portal">
     <div class="wrap">
-      <h2>Tiga hal yang bisa dilakukan di sini</h2>
+      <h2 data-i18n="portal_h2">Three things you can do here</h2>
       <div class="rows">
         <a class="row" href="facilitator/index.html">
           <span class="ico"><svg class="i"><use href="#i-shield"/></svg></span>
-          <h3>Portal Fasilitator &amp; Admin<span class="tag">Perlu Login</span></h3>
-          <p>Workspace khusus staf: review proyek akhir, moderasi forum, serta panel Super Admin untuk tim &amp; sertifikat.</p>
-          <span class="go acts">Masuk portal staf <svg class="i"><use href="#i-arrow"/></svg></span>
+          <h3><span data-i18n="portal_fac_title">Facilitator &amp; Admin Portal</span><span class="tag" data-i18n="portal_fac_tag">Login Required</span></h3>
+          <p data-i18n="portal_fac_desc">Dedicated staff workspace: review final projects, moderate discussions, and manage team roles &amp; certificates as Super Admin.</p>
+          <span class="go acts"><span data-i18n="portal_fac_go">Open staff portal</span> <svg class="i"><use href="#i-arrow"/></svg></span>
         </a>
         <a class="row" href="verify.html">
           <span class="ico"><svg class="i"><use href="#i-badge"/></svg></span>
-          <h3>Verifikasi sertifikat</h3>
-          <p>Masukkan ID kredensial untuk memastikan sertifikat itu asli dan terdaftar.</p>
-          <span class="go acts">Periksa ID <svg class="i"><use href="#i-arrow"/></svg></span>
+          <h3 data-i18n="portal_ver_title">Certificate Verification</h3>
+          <p data-i18n="portal_ver_desc">Enter a credential ID to confirm that a certificate is authentic and registered.</p>
+          <span class="go acts"><span data-i18n="portal_ver_go">Check ID</span> <svg class="i"><use href="#i-arrow"/></svg></span>
         </a>
         <div class="row has-links">
           <span class="ico"><svg class="i"><use href="#i-book"/></svg></span>
-          <h3>Manual aplikasi</h3>
-          <p>Panduan 21 bab lengkap dengan Use Case, Flowchart, User Flow, dan mockup setiap layar beserta langkah penggunaannya.</p>
-          <span class="acts"><span class="go"><a href="docs/Manual_Book_CodeAcademy.html">Baca di web</a></span><span class="go"><a href="docs/Manual_Book_CodeAcademy.docx" download>Unduh Word (.docx)</a></span></span>
+          <h3 data-i18n="portal_man_title">Application Manual</h3>
+          <p data-i18n="portal_man_desc">21-chapter guide complete with Use Case, Flowcharts, User Flow, and screen-by-screen walkthroughs.</p>
+          <span class="acts"><span class="go"><a href="docs/Manual_Book_CodeAcademy.html" data-i18n="portal_man_read">Read on web</a></span><span class="go"><a href="docs/Manual_Book_CodeAcademy.docx" download data-i18n="portal_man_docx">Download Word (.docx)</a></span></span>
         </div>
       </div>
     </div>
@@ -93,16 +98,16 @@
   <section class="section" id="aplikasi" style="padding-top:8px">
     <div class="wrap inside">
       <div>
-        <h2>Isi aplikasinya</h2>
-        <p class="sub">Semua dirancang untuk layar ponsel, dari membaca materi sampai mengirim proyek akhir.</p>
+        <h2 data-i18n="app_h2">Inside the app</h2>
+        <p class="sub" data-i18n="app_sub">Designed for mobile screens, from reading structured lessons to submitting your final project.</p>
       </div>
       <div class="feat">
-        <div><svg class="i"><use href="#i-layers"/></svg><h3>Kelas bertahap</h3><p>Materi dipecah jadi modul pendek, dengan progres yang tersimpan.</p></div>
-        <div><svg class="i"><use href="#i-code"/></svg><h3>Playground live</h3><p>Tulis HTML, CSS, dan JS, lalu lihat hasilnya langsung di ponsel.</p></div>
-        <div><svg class="i"><use href="#i-chat"/></svg><h3>AI Tutor</h3><p>Tanya saat buntu tanpa menunggu jawaban dari orang lain.</p></div>
-        <div><svg class="i"><use href="#i-check"/></svg><h3>Kuis per modul</h3><p>Uji pemahaman dan lihat skor setelah selesai.</p></div>
-        <div><svg class="i"><use href="#i-flag"/></svg><h3>Proyek akhir</h3><p>Kirim proyek untuk dinilai fasilitator lewat portal ini.</p></div>
-        <div><svg class="i"><use href="#i-badge"/></svg><h3>Sertifikat digital</h3><p>Setiap sertifikat punya ID yang bisa diperiksa siapa saja.</p></div>
+        <div><svg class="i"><use href="#i-layers"/></svg><h3 data-i18n="feat_1_t">Structured courses</h3><p data-i18n="feat_1_d">Bite-sized modules with local progress tracking and interactive glossaries.</p></div>
+        <div><svg class="i"><use href="#i-code"/></svg><h3 data-i18n="feat_2_t">Live playground</h3><p data-i18n="feat_2_d">Write HTML, CSS, and JavaScript and preview the output directly on your phone.</p></div>
+        <div><svg class="i"><use href="#i-chat"/></svg><h3 data-i18n="feat_3_t">AI Tutor</h3><p data-i18n="feat_3_d">Ask questions or attach code screenshots/photos for instant guided help.</p></div>
+        <div><svg class="i"><use href="#i-check"/></svg><h3 data-i18n="feat_4_t">Section quizzes</h3><p data-i18n="feat_4_d">Test your understanding per section with detailed explanations.</p></div>
+        <div><svg class="i"><use href="#i-flag"/></svg><h3 data-i18n="feat_5_t">Final projects</h3><p data-i18n="feat_5_d">Upload your project files or ZIP directly for facilitator review.</p></div>
+        <div><svg class="i"><use href="#i-badge"/></svg><h3 data-i18n="feat_6_t">Digital certificates</h3><p data-i18n="feat_6_d">Every issued certificate carries a unique publicly verifiable ID.</p></div>
       </div>
     </div>
   </section>
@@ -110,11 +115,12 @@
 
 <footer class="foot">
   <div class="wrap">
-    <span>© 2026 CodeAcademy Mobile — Proyek Tugas Akhir Pengembangan Aplikasi Perangkat Bergerak</span>
-    <a href="docs/Manual_Book_CodeAcademy.html">Manual aplikasi</a>
+    <span data-i18n="footer_copy">© 2026 CodeAcademy Mobile — Mobile Application Development Final Project</span>
+    <a href="docs/Manual_Book_CodeAcademy.html" data-i18n="footer_manual">Application manual</a>
   </div>
 </footer>
 
 <script src="assets/particles.js"></script>
+<script src="assets/web-i18n.js"></script>
 </body>
 </html>

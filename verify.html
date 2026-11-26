@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com;">
-  <title>Verifikasi sertifikat — CodeAcademy</title>
+  <title>Verify Certificate — CodeAcademy</title>
   <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
   <link rel="stylesheet" href="assets/site.css">
 </head>
-<body>
+<body data-i18n-title="verify_title">
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -20,10 +20,15 @@
 <header class="nav">
   <div class="wrap">
     <a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">&lt;/&gt;</span>CodeAcademy</a>
-    <nav class="nav-links" aria-label="Utama">
-      <a href="index.html#portal">Portal</a>
-      <a href="docs/Manual_Book_CodeAcademy.html">Manual</a>
-      <a class="is-here" href="verify.html" aria-current="page">Verifikasi sertifikat</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="index.html#portal" data-i18n="nav_portal">Portal</a>
+      <a href="docs/Manual_Book_CodeAcademy.html" data-i18n="nav_manual">Manual</a>
+      <button type="button" class="lang-slide-toggle" role="switch" aria-label="Switch language EN / ID" aria-checked="false" data-lang="en">
+        <span class="lang-thumb" aria-hidden="true"></span>
+        <span class="lang-opt" data-code="en">EN</span>
+        <span class="lang-opt" data-code="id">ID</span>
+      </button>
+      <a class="is-here" href="verify.html" aria-current="page" data-i18n="nav_verify">Verify Certificate</a>
     </nav>
   </div>
 </header>
@@ -31,45 +36,45 @@
 <main class="verify">
   <div class="wrap">
     <div>
-      <h1>Cek keaslian sertifikat</h1>
-      <p class="lead">Masukkan ID kredensial yang tercetak di sertifikat (format <code>CC-yyyyMMxxxx-xxxxxx</code>). Portal memeriksa langsung ke basis data Firestore CodeAcademy.</p>
+      <h1 data-i18n="verify_h1">Verify certificate authenticity</h1>
+      <p class="lead" data-i18n="verify_lead">Enter the credential ID printed on the certificate (format CC-yyyyMMxxxx-xxxxxx). The portal checks directly against CodeAcademy's Firestore registry.</p>
 
       <form id="verifyForm" novalidate>
         <div class="field">
-          <label for="certIdInput">ID kredensial</label>
+          <label for="certIdInput" data-i18n="verify_label">Credential ID</label>
           <input type="text" id="certIdInput" placeholder="CC-2026110101-A9K3P2" autocomplete="off" autocapitalize="characters" spellcheck="false" required autofocus>
-          <button type="submit" id="btnVerifySubmit">Periksa ID</button>
+          <button type="submit" id="btnVerifySubmit" data-i18n="verify_btn">Check ID</button>
         </div>
       </form>
 
       <div id="certResult" class="result" role="status">
-        <div class="status"><svg class="i"><use href="#i-seal"/></svg><span id="resStatusBadge">Sertifikat asli dan terdaftar di Firestore</span></div>
+        <div class="status"><svg class="i"><use href="#i-seal"/></svg><span id="resStatusBadge" data-i18n="verify_status_ok">Authentic certificate registered in Firestore</span></div>
         <div class="body">
           <div class="who" id="resRecipientName">-</div>
-          <p class="what">Menyelesaikan seluruh kurikulum dan evaluasi proyek akhir CodeAcademy.</p>
+          <p class="what" data-i18n="verify_what">Completed the full curriculum and final project evaluation on CodeAcademy.</p>
           <dl>
-            <div><dt>ID Kredensial</dt><dd id="resCertId">-</dd></div>
-            <div><dt>Kelas</dt><dd id="resCourseTitle">-</dd></div>
-            <div><dt>Nilai akhir</dt><dd class="score" id="resScore">-</dd></div>
-            <div><dt>Diterbitkan</dt><dd id="resDate">-</dd></div>
-            <div><dt>Penilai</dt><dd id="resFacilitator">-</dd></div>
-            <div><dt>Status</dt><dd id="resRegistrySource">Terdaftar di basis data Firestore</dd></div>
+            <div><dt data-i18n="verify_dt_id">Credential ID</dt><dd id="resCertId">-</dd></div>
+            <div><dt data-i18n="verify_dt_course">Course</dt><dd id="resCourseTitle">-</dd></div>
+            <div><dt data-i18n="verify_dt_score">Final Score</dt><dd class="score" id="resScore">-</dd></div>
+            <div><dt data-i18n="verify_dt_date">Issued On</dt><dd id="resDate">-</dd></div>
+            <div><dt data-i18n="verify_dt_fac">Reviewer</dt><dd id="resFacilitator">-</dd></div>
+            <div><dt data-i18n="verify_dt_status">Status</dt><dd id="resRegistrySource" data-i18n="verify_reg_src">Registered in Firestore database</dd></div>
           </dl>
         </div>
       </div>
 
       <div id="certNotFound" class="notfound" role="alert">
         <svg class="i"><use href="#i-alert"/></svg>
-        <div><strong>ID tidak ditemukan</strong><span id="notFoundHint">Periksa kembali penulisannya. Format ID resmi sertifikat CodeAcademy diawali <code>CC-</code> (misalnya <code>CC-2026110101-A9K3P2</code>) dan hanya lolos jika tercatat di Firestore.</span></div>
+        <div><strong data-i18n="verify_not_found_t">ID not found</strong><span id="notFoundHint" data-i18n="verify_not_found_d">Double-check the spelling. Official CodeAcademy IDs start with CC- (e.g. CC-2026110101-A9K3P2) and only pass if recorded in Firestore.</span></div>
       </div>
     </div>
 
     <aside class="side">
-      <h2>Cara memeriksa</h2>
+      <h2 data-i18n="verify_side_h2">How to verify</h2>
       <ol>
-        <li>Cari ID kredensial berawalan <code>CC-</code> di sertifikat digital aplikasi Android.</li>
-        <li>Ketik ID tersebut persis seperti tertulis, lalu pilih <strong>Periksa ID</strong>.</li>
-        <li>Cocokkan nama peserta, nama kelas, serta nilai akhir yang muncul dari basis data.</li>
+        <li data-i18n="verify_step_1">Find the credential ID starting with CC- on the Android app's digital certificate.</li>
+        <li data-i18n="verify_step_2">Type the ID exactly as shown, then click Check ID.</li>
+        <li data-i18n="verify_step_3">Match the recipient name, course title, and final score returned from the database.</li>
       </ol>
     </aside>
   </div>
@@ -79,5 +84,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js"></script>
 <script src="verify.js"></script>
+<script src="assets/web-i18n.js"></script>
 </body>
 </html>

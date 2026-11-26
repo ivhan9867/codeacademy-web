@@ -2402,6 +2402,24 @@ function attachAccessRequestModalListeners() {
     const mailtoHref = `mailto:${ACCESS_REQUEST_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
       buildFormattedAccessEmailText(payload)
     )}`;
+    const gmailWebHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+      ACCESS_REQUEST_RECIPIENT
+    )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(buildFormattedAccessEmailText(payload))}`;
+
+    const fields = {
+      _subject: subject,
+      _replyto: applicantEmail,
+      _template: "table",
+      _captcha: "false",
+      "ID Referensi": requestId,
+      "Peran Diajukan": selectedRole,
+      "Nama Pemohon": fullName,
+      "Email Didaftarkan": applicantEmail,
+      "Instansi / Jabatan": affiliation,
+      "Waktu Pengajuan": submittedAt,
+      "Catatan Pemohon": reason,
+      "URL Portal": portalUrl
+    };
 
     if (btnSubmit) {
       btnSubmit.disabled = true;
@@ -2409,52 +2427,80 @@ function attachAccessRequestModalListeners() {
     }
     setFeedback("info", `Mengirim pengajuan akses (${escapeHtml(requestId)}) ke pengelola CodeAcademy...`);
 
+    const submitViaHiddenIframe = () => {
+      let iframe = document.getElementById("caAccessHiddenFrame");
+      if (!iframe) {
+        iframe = document.createElement("iframe");
+        iframe.id = "caAccessHiddenFrame";
+        iframe.name = "caAccessHiddenFrame";
+        iframe.style.display = "none";
+        document.body.appendChild(iframe);
+      }
+      const hiddenForm = document.createElement("form");
+      hiddenForm.method = "POST";
+      hiddenForm.action = `https://formsubmit.co/${ACCESS_REQUEST_RECIPIENT}`;
+      hiddenForm.target = "caAccessHiddenFrame";
+      hiddenForm.style.display = "none";
+      Object.entries(fields).forEach(([k, v]) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = k;
+        input.value = String(v);
+        hiddenForm.appendChild(input);
+      });
+      document.body.appendChild(hiddenForm);
+      hiddenForm.submit();
+      setTimeout(() => hiddenForm.remove(), 4000);
+    };
+
+    let delivered = false;
     try {
+      const formData = new FormData();
+      Object.entries(fields).forEach(([k, v]) => formData.append(k, String(v)));
       const response = await fetch(`https://formsubmit.co/ajax/${ACCESS_REQUEST_RECIPIENT}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json"
-        },
-        body: JSON.stringify({
-          _subject: subject,
-          _replyto: applicantEmail,
-          _template: "table",
-          _captcha: "false",
-          "ID Referensi": requestId,
-          "Peran Diajukan": selectedRole,
-          "Nama Pemohon": fullName,
-          "Email Didaftarkan": applicantEmail,
-          "Instansi / Jabatan": affiliation,
-          "Waktu Pengajuan": submittedAt,
-          "Catatan Pemohon": reason,
-          "URL Portal": portalUrl
-        })
+        body: formData
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+      if (response.ok) {
+        delivered = true;
       }
+    } catch (err) {
+      console.warn("[AccessRequest] FormData AJAX blocked, falling back to hidden form POST:", err);
+    }
 
+    if (!delivered) {
+      try {
+        submitViaHiddenIframe();
+        delivered = true;
+      } catch (iframeErr) {
+        console.warn("[AccessRequest] Hidden iframe POST failed:", iframeErr);
+      }
+    }
+
+    if (delivered) {
       form.reset();
       setFeedback(
         "success",
         `<strong>Pengajuan terkirim (${escapeHtml(requestId)}).</strong><br>` +
-          `Permintaan akses <strong>${escapeHtml(selectedRole)}</strong> untuk <strong>${escapeHtml(applicantEmail)}</strong> telah dikirim ke <strong>${ACCESS_REQUEST_RECIPIENT}</strong>. Anda akan dihubungi setelah akun diaktifkan.`
+          `Permintaan akses <strong>${escapeHtml(selectedRole)}</strong> untuk <strong>${escapeHtml(applicantEmail)}</strong> telah dikirim ke <strong>${ACCESS_REQUEST_RECIPIENT}</strong>.<br>` +
+          `<span style="display:inline-flex;gap:12px;margin-top:8px;flex-wrap:wrap;">` +
+          `<a href="${gmailWebHref}" target="_blank" rel="noopener" style="color:#0F766E;font-weight:700;text-decoration:underline;">Kirim cadangan via Gmail Web</a>` +
+          `<a href="${mailtoHref}" style="color:#334155;font-weight:600;text-decoration:underline;">Buka Aplikasi Email</a>` +
+          `</span>`
       );
       showToast(`Pengajuan akses ${requestId} berhasil dikirim.`);
-    } catch (err) {
-      console.warn("[AccessRequest] Direct form submit failed, offering mailto fallback:", err);
+    } else {
       setFeedback(
         "error",
-        `Pengiriman otomatis sedang tidak tersedia (${escapeHtml(err.message || "offline")}). ` +
-          `<a href="${mailtoHref}" style="color:#0F766E;font-weight:700;text-decoration:underline;">Klik di sini untuk mengirim via aplikasi email Anda</a>.`
+        `Pengiriman otomatis sedang tidak tersedia. ` +
+          `<a href="${gmailWebHref}" target="_blank" rel="noopener" style="color:#0F766E;font-weight:700;text-decoration:underline;">Kirim lewat Gmail Web</a> atau ` +
+          `<a href="${mailtoHref}" style="color:#0F766E;font-weight:700;text-decoration:underline;">Aplikasi Email</a>.`
       );
-    } finally {
-      if (btnSubmit) {
-        btnSubmit.disabled = false;
-        btnSubmit.textContent = "Kirim Pengajuan Akses";
-      }
+    }
+
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = "Kirim Pengajuan Akses";
     }
   });
 }

@@ -1570,4 +1570,54 @@
     <string name="ai_tutor_attach_gallery">从相册选择</string>
     <string name="ai_tutor_attach_gallery_desc">上传手机中保存的代码截图或界面设计图。</string>
     <string name="ai_tutor_camera_permission_denied">需要相机权限才能拍照。</string>
+
+    <!-- Localization Leak Fix -->
+    <string name="community_streak_days_format">%1$d 天</string>
+    <string name="onboarding_btn_start">开始</string>
+    <string name="onboarding_btn_next">下一步</string>
+    <string name="onboarding_btn_start_learning">开始学习</string>
+    <string name="leaderboard_error_offline">无法加载排行榜。请检查您的网络连接。</string>
+    <string name="leaderboard_error_session">会话或访问权限未激活。请重新加载会话以继续。</string>
+    <string name="leaderboard_error_server">服务器暂时不可用。请重试。</string>
+    <string name="python_sandbox_load_error">加载 Python 引擎失败</string>
+    <string name="python_sandbox_not_ready">Pyodide 引擎尚未就绪。请等待初始化完成。</string>
+    <string name="python_sandbox_cdn_error">无法从 CDN 加载 Pyodide。请确保设备已连接互联网。</string>
+
+    <!-- Playground IDE & Quiz/Code Submission Context -->
+    <string name="playground_mission_title">模块实践任务</string>
+    <string name="playground_mission_subtitle_format">完成以下 %1$d 项代码要求以解锁模块：</string>
+    <string name="playground_mission_tap_file_hint">点击要求跳转到目标文件</string>
+    <string name="playground_mission_ask_ai">向 AI 咨询此任务</string>
+    <string name="playground_mission_submit_continue">提交并返回课程</string>
+    <string name="playground_mission_passed_banner">所有代码检测已通过！可以继续学习。</string>
+    <string name="playground_mission_pill_format">任务 %1$d/%2$d</string>
+    <string name="playground_mission_expand">详情</string>
+    <string name="playground_mission_collapse">收起</string>
+    <string name="playground_file_any">任意文件</string>
+    <string name="playground_quick_bar_tab">Tab</string>
+    <string name="playground_preview_tab">预览</string>
+    <string name="playground_python_reset_toast">Python 代码已重置为初始模板</string>
+    <string name="playground_python_reloading_toast">正在重新加载 Pyodide 引擎...</string>
+    <string name="playground_python_still_loading_toast">Python 引擎仍在加载中，请稍候...</string>
+    <string name="materi_practice_card_title">必做代码检测</string>
+    <string name="materi_practice_card_desc_format">在 Playground 中编写满足以下 %1$d 项要求的代码即可解锁下一步：</string>
+    <string name="quiz_context_banner_format">及格分：%1$d%% • 共 %2$d 题 • 剩余 %3$d 题未答</string>
+    <string name="quiz_context_all_answered_format">及格分：%1$d%% • 全部 %2$d 题已作答 ✓</string>
+    <string name="quiz_submit_dialog_title">提交测验答案？</string>
+    <string name="quiz_submit_dialog_summary_format">您已作答 %1$d / %2$d 题。</string>
+    <string name="quiz_submit_dialog_unanswered_warn_format">还有 %1$d 道题未作答，未答题将按错题计分。</string>
+    <string name="quiz_submit_dialog_jump_unanswered">查看未答题</string>
+    <string name="quiz_submit_dialog_confirm">立即提交</string>
+    <string name="final_project_precheck_title">提交前就绪检查</string>
+    <string name="final_project_precheck_code_ok">已填写项目代码或仓库链接</string>
+    <string name="final_project_precheck_code_missing">请添加代码（或上传文件/ZIP）或项目链接</string>
+    <string name="final_project_precheck_structure_ok">已检测到有效代码结构</string>
+    <string name="final_project_precheck_structure_hint">请确保代码包含完整的 HTML 标签、CSS 样式或 JS 逻辑</string>
+    <string name="final_project_precheck_rubric_format">评分标准核对：%1$d/%2$d 已完成</string>
+
+    <!-- Submission & Quiz Progression Fixes -->
+    <string name="notif_project_submitted_title">结业项目已提交</string>
+    <string name="notif_project_submitted_msg_format">您已提交 %1$s 的结业项目（第 #%2$d 次），正在等待导师评审。</string>
+    <string name="section_quiz_result_btn_next_module">继续下一模块</string>
+    <string name="materi_btn_finish_and_quiz">完成并参加章节测验</string>
 </resources>

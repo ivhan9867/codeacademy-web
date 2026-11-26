@@ -1334,4 +1334,54 @@
     <string name="ai_tutor_attach_gallery">Choose from Gallery</string>
     <string name="ai_tutor_attach_gallery_desc">Upload a code screenshot or UI mockup saved on your phone.</string>
     <string name="ai_tutor_camera_permission_denied">Camera permission is required to take a photo.</string>
+
+    <!-- Localization Leak Fix -->
+    <string name="community_streak_days_format">%1$d Days</string>
+    <string name="onboarding_btn_start">Get Started</string>
+    <string name="onboarding_btn_next">Next</string>
+    <string name="onboarding_btn_start_learning">Start Learning</string>
+    <string name="leaderboard_error_offline">Failed to load the leaderboard. Please check your internet connection.</string>
+    <string name="leaderboard_error_session">Your session or access permission is inactive. Reload your session to continue.</string>
+    <string name="leaderboard_error_server">The server is temporarily unavailable. Please try again.</string>
+    <string name="python_sandbox_load_error">Failed to load Python engine</string>
+    <string name="python_sandbox_not_ready">Pyodide engine is not ready yet. Please wait for initialization to finish.</string>
+    <string name="python_sandbox_cdn_error">Failed to load Pyodide from CDN. Please ensure your device is connected to the internet.</string>
+
+    <!-- Playground IDE & Quiz/Code Submission Context -->
+    <string name="playground_mission_title">Module Practice Mission</string>
+    <string name="playground_mission_subtitle_format">Complete these %1$d code requirements to unlock the module:</string>
+    <string name="playground_mission_tap_file_hint">Tap a requirement to jump to its target file</string>
+    <string name="playground_mission_ask_ai">Ask AI about this task</string>
+    <string name="playground_mission_submit_continue">Submit &amp; Return to Lesson</string>
+    <string name="playground_mission_passed_banner">All code checks passed! You\'re ready to continue.</string>
+    <string name="playground_mission_pill_format">Checks %1$d/%2$d</string>
+    <string name="playground_mission_expand">Details</string>
+    <string name="playground_mission_collapse">Hide</string>
+    <string name="playground_file_any">Any File</string>
+    <string name="playground_quick_bar_tab">Tab</string>
+    <string name="playground_preview_tab">Preview</string>
+    <string name="playground_python_reset_toast">Python code reset to starter template</string>
+    <string name="playground_python_reloading_toast">Reloading Pyodide engine...</string>
+    <string name="playground_python_still_loading_toast">Python engine is still loading, please wait...</string>
+    <string name="materi_practice_card_title">Required Code Check</string>
+    <string name="materi_practice_card_desc_format">Write code in Playground matching these %1$d checks to unlock Next:</string>
+    <string name="quiz_context_banner_format">Passing score: %1$d%% • %2$d questions • %3$d unanswered</string>
+    <string name="quiz_context_all_answered_format">Passing score: %1$d%% • All %2$d questions answered ✓</string>
+    <string name="quiz_submit_dialog_title">Submit Quiz Answers?</string>
+    <string name="quiz_submit_dialog_summary_format">You have answered %1$d of %2$d questions.</string>
+    <string name="quiz_submit_dialog_unanswered_warn_format">%1$d question(s) are still unanswered and will be marked incorrect.</string>
+    <string name="quiz_submit_dialog_jump_unanswered">Jump to Unanswered</string>
+    <string name="quiz_submit_dialog_confirm">Submit Now</string>
+    <string name="final_project_precheck_title">Pre-Submit Readiness Check</string>
+    <string name="final_project_precheck_code_ok">Project code or repository URL provided</string>
+    <string name="final_project_precheck_code_missing">Add code (or upload file/ZIP) or a project URL</string>
+    <string name="final_project_precheck_structure_ok">Valid code structure detected</string>
+    <string name="final_project_precheck_structure_hint">Ensure your code includes complete HTML tags, CSS rules, or JS logic</string>
+    <string name="final_project_precheck_rubric_format">Rubric checklist: %1$d/%2$d completed</string>
+
+    <!-- Submission & Quiz Progression Fixes -->
+    <string name="notif_project_submitted_title">Final Project Submitted</string>
+    <string name="notif_project_submitted_msg_format">Your final project for %1$s (Attempt #%2$d) has been submitted and is awaiting facilitator review.</string>
+    <string name="section_quiz_result_btn_next_module">Continue to Next Module</string>
+    <string name="materi_btn_finish_and_quiz">Finish &amp; Take Section Quiz</string>
 </resources>

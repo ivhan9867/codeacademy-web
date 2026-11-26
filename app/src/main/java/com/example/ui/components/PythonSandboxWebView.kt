@@ -16,9 +16,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.size
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.R
 import org.json.JSONObject
 
 class PythonBridge(
@@ -68,8 +70,13 @@ fun PythonSandboxWebView(
 ) {
     val mainHandler = remember { Handler(Looper.getMainLooper()) }
     var webViewRef = remember { mutableMapOf<String, WebView?>() }
+    val loadErrFallback = stringResource(R.string.python_sandbox_load_error)
+    val notReadyErrMsg = stringResource(R.string.python_sandbox_not_ready)
+    val cdnErrMsg = stringResource(R.string.python_sandbox_cdn_error)
 
-    val pyodideHtml = remember {
+    val pyodideHtml = remember(loadErrFallback, notReadyErrMsg) {
+        val jsLoadErr = JSONObject.quote(loadErrFallback)
+        val jsNotReady = JSONObject.quote("$notReadyErrMsg\n")
         """
         <!DOCTYPE html>
         <html>
@@ -89,7 +96,7 @@ fun PythonSandboxWebView(
                 isReady = true;
                 if (window.AndroidBridge) window.AndroidBridge.onStatus("READY");
               } catch (err) {
-                const msg = err ? (err.message || String(err)) : "Gagal memuat engine Python";
+                const msg = err ? (err.message || String(err)) : $jsLoadErr;
                 if (window.AndroidBridge) window.AndroidBridge.onStatus("LOAD_ERROR:" + msg);
               }
             }
@@ -97,7 +104,7 @@ fun PythonSandboxWebView(
             async function runCode(codeStr) {
               if (!isReady || !pyodide) {
                 if (window.AndroidBridge) {
-                  window.AndroidBridge.onStderr("Engine Pyodide belum siap. Mohon tunggu proses inisialisasi selesai.\n");
+                  window.AndroidBridge.onStderr($jsNotReady);
                   window.AndroidBridge.onFinished(false, 0);
                 }
                 return;
@@ -214,7 +221,7 @@ finally:
                         super.onReceivedError(view, request, error)
                         if (request?.isForMainFrame == true || request?.url?.toString()?.contains("pyodide") == true) {
                             mainHandler.post {
-                                onStatus("LOAD_ERROR: Gagal memuat Pyodide dari CDN. Pastikan perangkat terhubung ke internet.")
+                                onStatus("LOAD_ERROR: $cdnErrMsg")
                             }
                         }
                     }

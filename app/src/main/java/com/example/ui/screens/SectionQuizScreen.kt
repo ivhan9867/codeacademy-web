@@ -384,6 +384,28 @@ fun SectionQuizScreen(
                 trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
 
+            // Context Strip: Passing threshold & remaining unanswered count
+            val remainingUnanswered = (activeQuestions.size - answeredCount).coerceAtLeast(0)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = if (remainingUnanswered == 0) {
+                        stringResource(R.string.quiz_context_all_answered_format, quiz.passingPercent, activeQuestions.size)
+                    } else {
+                        stringResource(R.string.quiz_context_banner_format, quiz.passingPercent, activeQuestions.size, remainingUnanswered)
+                    },
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (remainingUnanswered == 0) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+
             // Interactive Question Number Navigator
             LazyRow(
                 modifier = Modifier
@@ -714,13 +736,34 @@ fun SectionQuizScreen(
                             shape = RoundedCornerShape(10.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                text = stringResource(R.string.section_quiz_submit_dialog_unanswered_format, activeQuestions.size - answeredCount),
-                                color = ErrorRed,
-                                fontSize = 12.sp,
-                                lineHeight = 17.sp,
-                                modifier = Modifier.padding(10.dp)
-                            )
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.section_quiz_submit_dialog_unanswered_format, activeQuestions.size - answeredCount),
+                                    color = ErrorRed,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp
+                                )
+                                TextButton(
+                                    onClick = {
+                                        val firstUnansweredIdx = activeQuestions.indexOfFirst { !userAnswers.containsKey(it.id) }
+                                        if (firstUnansweredIdx >= 0) {
+                                            currentQuestionIndex = firstUnansweredIdx
+                                        }
+                                        showSubmitDialog = false
+                                    },
+                                    contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.quiz_submit_dialog_jump_unanswered),
+                                        color = TealPrimary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
                         }
                     }
                 }

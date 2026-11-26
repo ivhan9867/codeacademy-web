@@ -135,16 +135,32 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repo.sessionManager.saveAppLanguage(language.code)
             com.example.data.CourseCatalog.loadAssetCourses(getApplication(), language.code)
-            val currentChats = _chatMessages.value
-            if (currentChats.size == 1 && !currentChats[0].isUser) {
-                _chatMessages.value = listOf(
-                    ChatMessage(
-                        id = currentChats[0].id,
-                        text = aiGreetingFor(language),
-                        isUser = false
-                    )
+            syncAiGreetingForLanguage(language)
+        }
+    }
+
+    private fun syncAiGreetingForLanguage(language: AppLanguage) {
+        val currentChats = _chatMessages.value
+        if (currentChats.size == 1 && !currentChats[0].isUser) {
+            _chatMessages.value = listOf(
+                ChatMessage(
+                    id = currentChats[0].id,
+                    text = aiGreetingFor(language),
+                    isUser = false
                 )
-            }
+            )
+        }
+    }
+
+    private fun localizedString(@androidx.annotation.StringRes resId: Int, vararg args: Any): String {
+        val app = getApplication<Application>()
+        val config = android.content.res.Configuration(app.resources.configuration)
+        config.setLocale(appLanguage.value.toLocale())
+        val localizedContext = app.createConfigurationContext(config)
+        return if (args.isEmpty()) {
+            localizedContext.getString(resId)
+        } else {
+            localizedContext.getString(resId, *args)
         }
     }
 
@@ -306,6 +322,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         )
     )
     val chatMessages: StateFlow<List<ChatMessage>> = _chatMessages.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            appLanguage.collect { lang ->
+                com.example.data.CourseCatalog.loadAssetCourses(getApplication(), lang.code)
+                syncAiGreetingForLanguage(lang)
+            }
+        }
+    }
 
     private val _isAiThinking = MutableStateFlow(false)
     val isAiThinking: StateFlow<Boolean> = _isAiThinking.asStateFlow()
@@ -503,9 +528,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
         val catalogJob = async(Dispatchers.IO) {
             try {
-                if (!com.example.data.CourseCatalog.isAssetCoursesLoaded.value) {
-                    com.example.data.CourseCatalog.loadAssetCourses(context, appLanguage.value.code)
-                }
+                val activeLang = repo.sessionManager.appLanguageCode.first()
+                com.example.data.CourseCatalog.loadAssetCourses(context, activeLang)
             } catch (e: Exception) {
                 android.util.Log.w("MainViewModel", "Catalog preload skipped: ${e.message}")
             }
@@ -829,9 +853,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (_isAiThinking.value) return
         val query = userQuery.ifBlank {
             if (!imageUri.isNullOrBlank()) {
-                getApplication<Application>().getString(com.example.R.string.ai_tutor_default_image_prompt)
-            } else {
+                localizedString(com.example.R.string.ai_tutor_default_image_prompt)
+            } else if (appLanguage.value == AppLanguage.INDONESIAN) {
                 "Halo AI Tutor"
+            } else {
+                "Hi AI Tutor"
             }
         }
         val userMsg = ChatMessage(
@@ -890,7 +916,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 throw e
             } catch (e: Throwable) {
                 android.util.Log.e("MainViewModel", "AI Tutor communication error", e)
-                val fallbackMsg = getApplication<Application>().getString(
+                val fallbackMsg = localizedString(
                     com.example.R.string.ai_tutor_error_communication,
                     e.localizedMessage ?: "offline"
                 )

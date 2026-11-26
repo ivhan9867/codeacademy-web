@@ -30,6 +30,15 @@ import kotlinx.coroutines.launch
 class SocialViewModel(application: Application) : AndroidViewModel(application) {
     private val socialRepo: SocialRepository = SocialRepository.getInstance(application)
 
+    private fun localizedString(@androidx.annotation.StringRes resId: Int): String {
+        val app = getApplication<Application>()
+        val langCode = com.example.data.local.SessionManager(app).getCachedLanguageCode()
+        val lang = com.example.util.localization.AppLanguage.fromCode(langCode)
+        val config = android.content.res.Configuration(app.resources.configuration)
+        config.setLocale(lang.toLocale())
+        return app.createConfigurationContext(config).getString(resId)
+    }
+
     // ==========================================
     // LEADERBOARD (CLOUD DATA + ROOM CACHE MULTI-SCOPE)
     // ==========================================
@@ -106,9 +115,9 @@ class SocialViewModel(application: Application) : AndroidViewModel(application) 
                 val kind = com.example.util.classifyFirestoreError(e)
                 _leaderboardErrorKind.value = kind
                 _leaderboardError.value = when (kind) {
-                    com.example.util.NetworkErrorKind.OFFLINE -> "Gagal memuat papan peringkat. Periksa koneksi internetmu."
-                    com.example.util.NetworkErrorKind.SESSION_OR_PERMISSION -> "Sesi atau izin akses belum aktif. Muat ulang sesi untuk melanjutkan."
-                    com.example.util.NetworkErrorKind.SERVER_OR_OTHER -> "Server sedang mengalami gangguan sementara. Silakan coba lagi."
+                    com.example.util.NetworkErrorKind.OFFLINE -> localizedString(com.example.R.string.leaderboard_error_offline)
+                    com.example.util.NetworkErrorKind.SESSION_OR_PERMISSION -> localizedString(com.example.R.string.leaderboard_error_session)
+                    com.example.util.NetworkErrorKind.SERVER_OR_OTHER -> localizedString(com.example.R.string.leaderboard_error_server)
                 }
             } finally {
                 _isLeaderboardRefreshing.value = false

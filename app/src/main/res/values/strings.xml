@@ -1334,4 +1334,54 @@
     <string name="ai_tutor_attach_gallery">Pilih dari Galeri</string>
     <string name="ai_tutor_attach_gallery_desc">Unggah screenshot kode atau desain UI yang tersimpan di HP.</string>
     <string name="ai_tutor_camera_permission_denied">Izin kamera diperlukan untuk mengambil foto kode.</string>
+
+    <!-- Localization Leak Fix -->
+    <string name="community_streak_days_format">%1$d Hari</string>
+    <string name="onboarding_btn_start">Mulai</string>
+    <string name="onboarding_btn_next">Lanjut</string>
+    <string name="onboarding_btn_start_learning">Mulai Belajar</string>
+    <string name="leaderboard_error_offline">Gagal memuat papan peringkat. Periksa koneksi internetmu.</string>
+    <string name="leaderboard_error_session">Sesi atau izin akses belum aktif. Muat ulang sesi untuk melanjutkan.</string>
+    <string name="leaderboard_error_server">Server sedang mengalami gangguan sementara. Silakan coba lagi.</string>
+    <string name="python_sandbox_load_error">Gagal memuat engine Python</string>
+    <string name="python_sandbox_not_ready">Engine Pyodide belum siap. Mohon tunggu proses inisialisasi selesai.</string>
+    <string name="python_sandbox_cdn_error">Gagal memuat Pyodide dari CDN. Pastikan perangkat terhubung ke internet.</string>
+
+    <!-- Playground IDE & Quiz/Code Submission Context -->
+    <string name="playground_mission_title">Misi Praktik Modul</string>
+    <string name="playground_mission_subtitle_format">Lengkapi %1$d syarat kode berikut agar modul terbuka:</string>
+    <string name="playground_mission_tap_file_hint">Ketuk syarat untuk lompat ke file target</string>
+    <string name="playground_mission_ask_ai">Tanya AI soal tugas ini</string>
+    <string name="playground_mission_submit_continue">Submit &amp; Lanjut Materi</string>
+    <string name="playground_mission_passed_banner">Semua syarat kode terpenuhi! Kamu siap lanjut.</string>
+    <string name="playground_mission_pill_format">Misi %1$d/%2$d</string>
+    <string name="playground_mission_expand">Detail</string>
+    <string name="playground_mission_collapse">Tutup</string>
+    <string name="playground_file_any">Semua File</string>
+    <string name="playground_quick_bar_tab">Tab</string>
+    <string name="playground_preview_tab">Preview</string>
+    <string name="playground_python_reset_toast">Kode Python direset ke awal</string>
+    <string name="playground_python_reloading_toast">Mencoba memuat ulang Pyodide...</string>
+    <string name="playground_python_still_loading_toast">Engine Python masih memuat, mohon tunggu sebentar...</string>
+    <string name="materi_practice_card_title">Tugas Uji Kode Wajib</string>
+    <string name="materi_practice_card_desc_format">Tulis kode di Playground yang memenuhi %1$d syarat berikut untuk membuka tombol Lanjut:</string>
+    <string name="quiz_context_banner_format">Syarat lulus: %1$d%% • %2$d soal • Tersisa %3$d belum dijawab</string>
+    <string name="quiz_context_all_answered_format">Syarat lulus: %1$d%% • Semua %2$d soal sudah dijawab ✓</string>
+    <string name="quiz_submit_dialog_title">Kirim Jawaban Kuis?</string>
+    <string name="quiz_submit_dialog_summary_format">Kamu telah menjawab %1$d dari %2$d soal.</string>
+    <string name="quiz_submit_dialog_unanswered_warn_format">Masih ada %1$d soal yang belum dijawab. Soal kosong akan dihitung salah.</string>
+    <string name="quiz_submit_dialog_jump_unanswered">Cek Soal Kosong</string>
+    <string name="quiz_submit_dialog_confirm">Kirim Sekarang</string>
+    <string name="final_project_precheck_title">Pemeriksaan Sebelum Kirim</string>
+    <string name="final_project_precheck_code_ok">Kode atau URL proyek tersedia</string>
+    <string name="final_project_precheck_code_missing">Tambahkan kode (atau upload file/ZIP) atau URL proyek</string>
+    <string name="final_project_precheck_structure_ok">Struktur dasar kode terdeteksi</string>
+    <string name="final_project_precheck_structure_hint">Pastikan kode memiliki tag HTML, aturan CSS, atau script JS yang lengkap</string>
+    <string name="final_project_precheck_rubric_format">Checklist rubrik: %1$d/%2$d selesai</string>
+
+    <!-- Submission & Quiz Progression Fixes -->
+    <string name="notif_project_submitted_title">Proyek Akhir Terkirim</string>
+    <string name="notif_project_submitted_msg_format">Proyek akhir %1$s (Percobaan #%2$d) telah dikirim dan menunggu penilaian Fasilitator.</string>
+    <string name="section_quiz_result_btn_next_module">Lanjut ke Modul Berikutnya</string>
+    <string name="materi_btn_finish_and_quiz">Selesai &amp; Kerjakan Kuis</string>
 </resources>

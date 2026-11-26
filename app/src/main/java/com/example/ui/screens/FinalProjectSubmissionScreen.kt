@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.RadioButtonUnchecked
 import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Save
@@ -178,7 +179,7 @@ fun FinalProjectSubmissionScreen(
     var uploadedFileSizeKb by remember(submission?.courseId) { mutableIntStateOf(0) }
     var showPreviewDialog by remember { mutableStateOf(false) }
 
-    val isEditable = status != ProjectSubmissionStatus.PENDING_REVIEW
+    val isEditable = status != ProjectSubmissionStatus.PENDING_REVIEW && status != ProjectSubmissionStatus.APPROVED
     val toastDraftSaved = stringResource(R.string.final_project_toast_draft_saved)
     val toastCheckAllRubrics = stringResource(R.string.final_project_toast_check_all_rubrics)
     val toastSubmitted = stringResource(R.string.final_project_toast_submitted)
@@ -319,6 +320,36 @@ fun FinalProjectSubmissionScreen(
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
+                    }
+                }
+            } else if (status == ProjectSubmissionStatus.APPROVED) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 4.dp,
+                    shadowElevation = 8.dp,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Button(
+                        onClick = onViewCertificate,
+                        colors = ButtonDefaults.buttonColors(containerColor = SuccessGreen),
+                        shape = RoundedCornerShape(12.dp),
+                        contentPadding = PaddingValues(vertical = 13.dp, horizontal = 16.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.WorkspacePremium,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.eval_result_btn_view_cert),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -1161,6 +1192,92 @@ fun FinalProjectSubmissionScreen(
                                 .fillMaxWidth()
                                 .testTag("final_project_notes_input")
                         )
+                    }
+                }
+            }
+
+            // 6. Pre-Submit Readiness Auto-Check Card
+            if (isEditable) {
+                item(key = "pre_submit_readiness_card") {
+                    val hasCodeOrUrl = workspaceCode.isNotBlank() || (projectUrl.isNotBlank() && !isUrlInvalid)
+                    val hasStructuredCode = workspaceCode.contains("<") ||
+                        workspaceCode.contains("{") ||
+                        workspaceCode.contains("function", ignoreCase = true) ||
+                        workspaceCode.contains("const ", ignoreCase = true) ||
+                        workspaceCode.contains("let ", ignoreCase = true) ||
+                        (projectUrl.isNotBlank() && !isUrlInvalid)
+                    val checkedCount = spec.rubrics.count { it.id in checkedRubricIds }
+                    val allRubricsDone = spec.rubrics.isNotEmpty() && checkedCount == spec.rubrics.size
+                    val isAllReady = hasCodeOrUrl && hasStructuredCode && allRubricsDone
+
+                    Card(
+                        shape = RoundedCornerShape(18.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isAllReady) SuccessGreen.copy(alpha = 0.08f) else MaterialTheme.colorScheme.surface
+                        ),
+                        border = BorderStroke(
+                            1.dp,
+                            if (isAllReady) SuccessGreen.copy(alpha = 0.45f) else MaterialTheme.colorScheme.outlineVariant
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = if (isAllReady) Icons.Default.CheckCircle else Icons.Default.AssignmentTurnedIn,
+                                    contentDescription = null,
+                                    tint = if (isAllReady) SuccessGreen else TealPrimary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.final_project_precheck_title),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = if (isAllReady) SuccessGreen else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            listOf(
+                                hasCodeOrUrl to if (hasCodeOrUrl) {
+                                    stringResource(R.string.final_project_precheck_code_ok)
+                                } else {
+                                    stringResource(R.string.final_project_precheck_code_missing)
+                                },
+                                hasStructuredCode to if (hasStructuredCode) {
+                                    stringResource(R.string.final_project_precheck_structure_ok)
+                                } else {
+                                    stringResource(R.string.final_project_precheck_structure_hint)
+                                },
+                                allRubricsDone to stringResource(
+                                    R.string.final_project_precheck_rubric_format,
+                                    checkedCount,
+                                    spec.rubrics.size
+                                )
+                            ).forEach { (passed, label) ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = if (passed) Icons.Default.CheckCircle else Icons.Default.RadioButtonUnchecked,
+                                        contentDescription = null,
+                                        tint = if (passed) SuccessGreen else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(15.dp)
+                                    )
+                                    Text(
+                                        text = label,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = if (passed) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }

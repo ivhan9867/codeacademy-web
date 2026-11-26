@@ -1201,6 +1201,11 @@ fun CodeAcademyApp(
                                 subtitle = course.title,
                                 trackName = course.trackId
                             )
+                        },
+                        onOpenSectionQuiz = { quizId ->
+                            navController.navigate("section_quiz_rules/${course.id}/$quizId") {
+                                popUpTo("classDetail/${course.id}")
+                            }
                         }
                     )
                 }
@@ -1509,7 +1514,9 @@ fun CodeAcademyApp(
                                 }
                             },
                             onNavigateToModule = { targetModuleId ->
-                                navController.navigate("materi/$courseId/$targetModuleId")
+                                navController.navigate("materi/$courseId/$targetModuleId") {
+                                    popUpTo("classDetail/$courseId")
+                                }
                             }
                         )
                     }

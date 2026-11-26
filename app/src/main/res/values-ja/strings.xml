@@ -1570,4 +1570,54 @@
     <string name="ai_tutor_attach_gallery">ギャラリーから選択</string>
     <string name="ai_tutor_attach_gallery_desc">端末に保存されたスクリーンショットやUI画像をアップロードします。</string>
     <string name="ai_tutor_camera_permission_denied">写真を撮影するにはカメラの権限が必要です。</string>
+
+    <!-- Localization Leak Fix -->
+    <string name="community_streak_days_format">%1$d日</string>
+    <string name="onboarding_btn_start">はじめる</string>
+    <string name="onboarding_btn_next">次へ</string>
+    <string name="onboarding_btn_start_learning">学習を始める</string>
+    <string name="leaderboard_error_offline">ランキングを読み込めませんでした。インターネット接続を確認してください。</string>
+    <string name="leaderboard_error_session">セッションまたはアクセス権限が無効です。セッションを再読み込みしてください。</string>
+    <string name="leaderboard_error_server">サーバーで一時的な障害が発生しています。もう一度お試しください。</string>
+    <string name="python_sandbox_load_error">Pythonエンジンの読み込みに失敗しました</string>
+    <string name="python_sandbox_not_ready">Pyodideエンジンの準備ができていません。初期化が完了するまでお待ちください。</string>
+    <string name="python_sandbox_cdn_error">CDNからPyodideを読み込めませんでした。インターネット接続を確認してください。</string>
+
+    <!-- Playground IDE & Quiz/Code Submission Context -->
+    <string name="playground_mission_title">モジュール実践ミッション</string>
+    <string name="playground_mission_subtitle_format">モジュールを完了するため、次の%1$d件のコード要件を満たしてください：</string>
+    <string name="playground_mission_tap_file_hint">要件をタップして対象ファイルへ移動</string>
+    <string name="playground_mission_ask_ai">この課題についてAIに質問</string>
+    <string name="playground_mission_submit_continue">提出してレッスンに戻る</string>
+    <string name="playground_mission_passed_banner">すべてのコード要件をクリアしました！次に進めます。</string>
+    <string name="playground_mission_pill_format">課題 %1$d/%2$d</string>
+    <string name="playground_mission_expand">詳細</string>
+    <string name="playground_mission_collapse">閉じる</string>
+    <string name="playground_file_any">いずれか</string>
+    <string name="playground_quick_bar_tab">Tab</string>
+    <string name="playground_preview_tab">プレビュー</string>
+    <string name="playground_python_reset_toast">Pythonコードを初期状態にリセットしました</string>
+    <string name="playground_python_reloading_toast">Pyodideエンジンを再読み込み中...</string>
+    <string name="playground_python_still_loading_toast">Pythonエンジンを読み込み中です。しばらくお待ちください...</string>
+    <string name="materi_practice_card_title">必須コード実践課題</string>
+    <string name="materi_practice_card_desc_format">「次へ」を解放するため、Playgroundで次の%1$d件を満たすコードを書いてください：</string>
+    <string name="quiz_context_banner_format">合格基準：%1$d%%・全%2$d問・未回答%3$d問</string>
+    <string name="quiz_context_all_answered_format">合格基準：%1$d%%・全%2$d問回答済み ✓</string>
+    <string name="quiz_submit_dialog_title">クイズの回答を提出しますか？</string>
+    <string name="quiz_submit_dialog_summary_format">%2$d問中%1$d問に回答しました。</string>
+    <string name="quiz_submit_dialog_unanswered_warn_format">未回答の問題が%1$d問あります。未回答は不正解になります。</string>
+    <string name="quiz_submit_dialog_jump_unanswered">未回答へ移動</string>
+    <string name="quiz_submit_dialog_confirm">今すぐ提出</string>
+    <string name="final_project_precheck_title">提出前チェック</string>
+    <string name="final_project_precheck_code_ok">コードまたはプロジェクトURLが入力済み</string>
+    <string name="final_project_precheck_code_missing">コード（またはZIP）かURLを入力してください</string>
+    <string name="final_project_precheck_structure_ok">基本的なコード構造を検出しました</string>
+    <string name="final_project_precheck_structure_hint">完全なHTMLタグ・CSS・JSが含まれているか確認してください</string>
+    <string name="final_project_precheck_rubric_format">ルーブリック確認：%1$d/%2$d 完了</string>
+
+    <!-- Submission & Quiz Progression Fixes -->
+    <string name="notif_project_submitted_title">最終課題を提出しました</string>
+    <string name="notif_project_submitted_msg_format">%1$s の最終課題（提出 #%2$d）を提出しました。講師の評価をお待ちください。</string>
+    <string name="section_quiz_result_btn_next_module">次のモジュールへ進む</string>
+    <string name="materi_btn_finish_and_quiz">完了してセクションクイズへ</string>
 </resources>

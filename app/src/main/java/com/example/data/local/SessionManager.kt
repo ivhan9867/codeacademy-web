@@ -34,7 +34,11 @@ class SessionManager(private val context: Context) {
     }
 
     val appLanguageCode: Flow<String> = context.sessionDataStore.data.map { prefs ->
-        prefs[KEY_APP_LANGUAGE] ?: getCachedLanguageCode()
+        val code = prefs[KEY_APP_LANGUAGE] ?: getCachedLanguageCode()
+        if (syncPrefs.getString("app_language", null) != code) {
+            syncPrefs.edit().putString("app_language", code).apply()
+        }
+        code
     }
 
     suspend fun saveAppLanguage(code: String) {

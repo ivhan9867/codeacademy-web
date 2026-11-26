@@ -49,6 +49,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -86,6 +87,7 @@ fun QuizScreen(
 
     var currentQuestionIndex by remember { mutableIntStateOf(0) }
     val userAnswers = remember { mutableStateMapOf<Int, Int>() } // questionIndex to selectedOptionIndex
+    var showSubmitConfirmDialog by remember { mutableStateOf(false) }
 
     // Question Timer (counts up seconds spent)
     var secondsElapsed by remember { mutableIntStateOf(0) }
@@ -192,14 +194,7 @@ fun QuizScreen(
                         text = if (isLast) stringResource(R.string.quiz_screen_btn_submit) else stringResource(R.string.quiz_screen_btn_next),
                         onClick = {
                             if (isLast) {
-                                var correctCount = 0
-                                questions.forEachIndexed { idx, q ->
-                                    if (userAnswers[idx] == q.correctIndex) {
-                                        correctCount++
-                                    }
-                                }
-                                val scorePercent = ((correctCount.toFloat() / questions.size.toFloat()) * 100).toInt()
-                                onSubmit(scorePercent)
+                                showSubmitConfirmDialog = true
                             } else {
                                 currentQuestionIndex++
                             }
@@ -222,7 +217,29 @@ fun QuizScreen(
         ) {
             // Question Progress + Interactive Navigator
             item(key = "quiz_progress_header") {
+                val unansweredCount = (questions.size - userAnswers.size).coerceAtLeast(0)
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Surface(
+                        color = if (unansweredCount == 0) TealPrimary.copy(alpha = 0.12f) else MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f),
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(
+                            1.dp,
+                            if (unansweredCount == 0) TealPrimary.copy(alpha = 0.35f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = if (unansweredCount == 0) {
+                                stringResource(R.string.quiz_context_all_answered_format, 70, questions.size)
+                            } else {
+                                stringResource(R.string.quiz_context_banner_format, 70, questions.size, unansweredCount)
+                            },
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (unansweredCount == 0) TealPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 7.dp)
+                        )
+                    }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -408,5 +425,97 @@ fun QuizScreen(
                 }
             }
         }
+    }
+
+    if (showSubmitConfirmDialog) {
+        val answeredCount = userAnswers.size
+        val unansweredCount = (questions.size - answeredCount).coerceAtLeast(0)
+        com.example.ui.components.AppDialog(
+            onDismissRequest = { showSubmitConfirmDialog = false },
+            title = {
+                Text(
+                    text = stringResource(R.string.quiz_submit_dialog_title),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
+                )
+            },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(
+                        text = stringResource(R.string.quiz_submit_dialog_summary_format, answeredCount, questions.size),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    if (unansweredCount > 0) {
+                        Surface(
+                            color = com.example.ui.theme.ErrorRed.copy(alpha = 0.10f),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(10.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.quiz_submit_dialog_unanswered_warn_format, unansweredCount),
+                                    color = com.example.ui.theme.ErrorRed,
+                                    fontSize = 12.sp,
+                                    lineHeight = 17.sp
+                                )
+                                androidx.compose.material3.TextButton(
+                                    onClick = {
+                                        val firstMissing = questions.indices.firstOrNull { !userAnswers.containsKey(it) }
+                                        if (firstMissing != null) {
+                                            currentQuestionIndex = firstMissing
+                                        }
+                                        showSubmitConfirmDialog = false
+                                    },
+                                    contentPadding = PaddingValues(0.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.quiz_submit_dialog_jump_unanswered),
+                                        color = TealPrimary,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 12.sp
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                androidx.compose.material3.Button(
+                    onClick = {
+                        showSubmitConfirmDialog = false
+                        var correctCount = 0
+                        questions.forEachIndexed { idx, q ->
+                            if (userAnswers[idx] == q.correctIndex) {
+                                correctCount++
+                            }
+                        }
+                        val scorePercent = ((correctCount.toFloat() / questions.size.toFloat()) * 100).toInt()
+                        onSubmit(scorePercent)
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = TealPrimary)
+                ) {
+                    Text(
+                        text = stringResource(R.string.quiz_submit_dialog_confirm),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                androidx.compose.material3.OutlinedButton(
+                    onClick = { showSubmitConfirmDialog = false },
+                    shape = RoundedCornerShape(12.dp),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+                ) {
+                    Text(stringResource(R.string.common_cancel))
+                }
+            }
+        )
     }
 }

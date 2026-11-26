@@ -247,60 +247,114 @@ fun HelpScreen(
 @Composable
 private fun FaqSection() {
     val isDark = isSystemInDarkTheme()
+    val currentLanguage = com.example.util.localization.LocalAppLanguage.current
     var searchQuery by remember { mutableStateOf("") }
     val expandedStates = remember { mutableStateMapOf<String, Boolean>() }
 
-    val allFaqItems = remember {
-        listOf(
-            FaqItem(
-                id = "faq_placement",
-                category = "Placement Test",
-                question = "Bagaimana cara kerja placement test, dan apakah saya bisa mengulanginya?",
-                answer = "Placement test adalah asesmen adaptif singkat untuk mengukur kemampuan awal koding kamu. Jika lulus dengan skor tinggi, modul-modul materi dasar di jalur belajarmu akan otomatis ditandai selesai (fast-tracked) sehingga kamu bisa langsung melompat ke materi inti. Kamu bisa mengulangi tes ini kapan saja lewat menu Pengaturan Profil > 'Restart Onboarding / Tes Diagnostik'."
-            ),
-            FaqItem(
-                id = "faq_local_progress",
-                category = "Progres & Data",
-                question = "Kenapa progres belajar saya tidak muncul lagi setelah ganti HP atau install ulang?",
-                answer = "Seluruh progres belajar, modul yang telah diselesaikan, riwayat section quiz, serta catatan kode kamu disimpan secara lokal di memori perangkat menggunakan Room Database (SQLite). Karena data tidak disinkronkan ke cloud secara penuh, mencopot aplikasi atau berpindah perangkat akan mereset data lokal ke kondisi awal."
-            ),
-            FaqItem(
-                id = "faq_quiz_exit",
-                category = "Section Quiz & Fokus",
-                question = "Kenapa quiz saya otomatis dibatalkan/gagal padahal saya cuma sebentar keluar aplikasi?",
-                answer = "Untuk menjaga kejujuran dan fokus penuh saat Section Quiz berlangsung, aplikasi menerapkan sistem deteksi fokus:\n\n• Pelanggaran Pertama: Ketika aplikasi keluar foreground (misal membuka Recent Apps, Home, atau notifikasi), kamu masih mendapat toleransi berupa dialog peringatan saat kembali ke quiz.\n• Pelanggaran Kedua: Quiz akan otomatis dibatalkan, dicatat gagal dengan alasan 'FOCUS_VIOLATION', dan memicu fail-streak.\n\nCatatan: Memutar layar atau rotasi perangkat diizinkan dan tidak dihitung sebagai pelanggaran."
-            ),
-            FaqItem(
-                id = "faq_certificate",
-                category = "Sertifikat",
-                question = "Bagaimana cara mendapatkan sertifikat setelah menyelesaikan sebuah kelas?",
-                answer = "Setelah kamu menyelesaikan seluruh modul dalam suatu kelas (100%) dan lulus kuis evaluasi akhir/section quiz, kamu dapat langsung membuka layar 'Hasil Evaluasi' atau mengunjungi menu 'Sertifikat Kelulusan' di profil akun. Sertifikat diterbitkan dengan ID verifikasi unik yang dapat kamu simpan atau unduh."
-            ),
-            FaqItem(
-                id = "faq_playground",
-                category = "Playground",
-                question = "Apakah kode yang saya tulis di Playground tersimpan otomatis?",
-                answer = "Kode yang sedang kamu ketik di Playground tersimpan selama sesi aplikasi aktif. Namun, jika kamu ingin mengembalikan kode ke contoh template modul aslinya, kamu cukup mengetuk tombol 'Reset' di pojok kanan atas layar Playground."
-            ),
-            FaqItem(
-                id = "faq_ai_tutor",
-                category = "AI Tutor",
-                question = "Apa bedanya AI Tutor dengan mengerjakan soal sendiri — apakah AI Tutor akan memberi jawaban langsung?",
-                answer = "AI Tutor dirancang sebagai mentor belajar yang menggunakan metode bimbingan terarah (Socratic guidance). AI Tutor akan memberikan analogi konsep, petunjuk alur logika, dan penjelasan penyebab bug/error, bukan langsung menyuapkan jawaban akhir. Hal ini bertujuan agar pemahaman problem-solving kamu berkembang maksimal."
-            ),
-            FaqItem(
-                id = "faq_forum",
-                category = "Forum Komunitas",
-                question = "Bagaimana cara ikut forum diskusi kelas, dan apakah postingan saya terlihat oleh murid lain?",
-                answer = "Ya! Tab Diskusi/Forum terhubung ke Firebase Firestore cloud. Setiap pertanyaan, kendala kode, atau jawaban diskusi yang kamu kirimkan akan dapat dilihat dan direspons oleh seluruh murid yang sedang mempelajari kelas tersebut secara real-time."
-            ),
-            FaqItem(
-                id = "faq_password_reset",
-                category = "Akun & Keamanan",
-                question = "Saya lupa kata sandi akun saya, bagaimana cara reset?",
-                answer = "Pada layar Masuk (Login), pilih opsi 'Lupa Kata Sandi'. Karena akun disimpan di database lokal perangkat, kamu dapat mereset PIN/kata sandi akun lokal dengan memasukkan email terdaftar, atau mendaftarkan akun lokal baru tanpa kehilangan unduhan modul pembelajaran."
+    val allFaqItems = remember(currentLanguage) {
+        if (currentLanguage == com.example.util.localization.AppLanguage.INDONESIAN) {
+            listOf(
+                FaqItem(
+                    id = "faq_placement",
+                    category = "Placement Test",
+                    question = "Bagaimana cara kerja placement test, dan apakah saya bisa mengulanginya?",
+                    answer = "Placement test adalah asesmen adaptif singkat untuk mengukur kemampuan awal koding kamu. Jika lulus dengan skor tinggi, modul-modul materi dasar di jalur belajarmu akan otomatis ditandai selesai (fast-tracked) sehingga kamu bisa langsung melompat ke materi inti. Kamu bisa mengulangi tes ini kapan saja lewat menu Pengaturan Profil > 'Restart Onboarding / Tes Diagnostik'."
+                ),
+                FaqItem(
+                    id = "faq_local_progress",
+                    category = "Progres & Data",
+                    question = "Kenapa progres belajar saya tidak muncul lagi setelah ganti HP atau install ulang?",
+                    answer = "Seluruh progres belajar, modul yang telah diselesaikan, riwayat section quiz, serta catatan kode kamu disimpan secara lokal di memori perangkat menggunakan Room Database (SQLite). Karena data tidak disinkronkan ke cloud secara penuh, mencopot aplikasi atau berpindah perangkat akan mereset data lokal ke kondisi awal."
+                ),
+                FaqItem(
+                    id = "faq_quiz_exit",
+                    category = "Section Quiz & Fokus",
+                    question = "Kenapa quiz saya otomatis dibatalkan/gagal padahal saya cuma sebentar keluar aplikasi?",
+                    answer = "Untuk menjaga kejujuran dan fokus penuh saat Section Quiz berlangsung, aplikasi menerapkan sistem deteksi fokus:\n\n• Pelanggaran Pertama: Ketika aplikasi keluar foreground (misal membuka Recent Apps, Home, atau notifikasi), kamu masih mendapat toleransi berupa dialog peringatan saat kembali ke quiz.\n• Pelanggaran Kedua: Quiz akan otomatis dibatalkan, dicatat gagal dengan alasan 'FOCUS_VIOLATION', dan memicu fail-streak.\n\nCatatan: Memutar layar atau rotasi perangkat diizinkan dan tidak dihitung sebagai pelanggaran."
+                ),
+                FaqItem(
+                    id = "faq_certificate",
+                    category = "Sertifikat",
+                    question = "Bagaimana cara mendapatkan sertifikat setelah menyelesaikan sebuah kelas?",
+                    answer = "Setelah kamu menyelesaikan seluruh modul dalam suatu kelas (100%) dan lulus kuis evaluasi akhir/section quiz, kamu dapat langsung membuka layar 'Hasil Evaluasi' atau mengunjungi menu 'Sertifikat Kelulusan' di profil akun. Sertifikat diterbitkan dengan ID verifikasi unik yang dapat kamu simpan atau unduh."
+                ),
+                FaqItem(
+                    id = "faq_playground",
+                    category = "Playground",
+                    question = "Apakah kode yang saya tulis di Playground tersimpan otomatis?",
+                    answer = "Kode yang sedang kamu ketik di Playground tersimpan selama sesi aplikasi aktif. Namun, jika kamu ingin mengembalikan kode ke contoh template modul aslinya, kamu cukup mengetuk tombol 'Reset' di pojok kanan atas layar Playground."
+                ),
+                FaqItem(
+                    id = "faq_ai_tutor",
+                    category = "AI Tutor",
+                    question = "Apa bedanya AI Tutor dengan mengerjakan soal sendiri — apakah AI Tutor akan memberi jawaban langsung?",
+                    answer = "AI Tutor dirancang sebagai mentor belajar yang menggunakan metode bimbingan terarah (Socratic guidance). AI Tutor akan memberikan analogi konsep, petunjuk alur logika, dan penjelasan penyebab bug/error, bukan langsung menyuapkan jawaban akhir. Hal ini bertujuan agar pemahaman problem-solving kamu berkembang maksimal."
+                ),
+                FaqItem(
+                    id = "faq_forum",
+                    category = "Forum Komunitas",
+                    question = "Bagaimana cara ikut forum diskusi kelas, dan apakah postingan saya terlihat oleh murid lain?",
+                    answer = "Ya! Tab Diskusi/Forum terhubung ke Firebase Firestore cloud. Setiap pertanyaan, kendala kode, atau jawaban diskusi yang kamu kirimkan akan dapat dilihat dan direspons oleh seluruh murid yang sedang mempelajari kelas tersebut secara real-time."
+                ),
+                FaqItem(
+                    id = "faq_password_reset",
+                    category = "Akun & Keamanan",
+                    question = "Saya lupa kata sandi akun saya, bagaimana cara reset?",
+                    answer = "Pada layar Masuk (Login), pilih opsi 'Lupa Kata Sandi'. Karena akun disimpan di database lokal perangkat, kamu dapat mereset PIN/kata sandi akun lokal dengan memasukkan email terdaftar, atau mendaftarkan akun lokal baru tanpa kehilangan unduhan modul pembelajaran."
+                )
             )
-        )
+        } else {
+            listOf(
+                FaqItem(
+                    id = "faq_placement",
+                    category = "Placement Test",
+                    question = "How does the placement test work, and can I retake it?",
+                    answer = "The placement test is a short adaptive assessment that measures your initial coding level. If you pass with a high score, foundational modules in your learning track are automatically marked completed (fast-tracked) so you can jump straight into core topics. You can retake it anytime from Profile Settings > 'Restart Onboarding / Diagnostic Test'."
+                ),
+                FaqItem(
+                    id = "faq_local_progress",
+                    category = "Progress & Data",
+                    question = "Why is my learning progress missing after switching phones or reinstalling?",
+                    answer = "Your learning progress, completed modules, section quiz history, and code drafts are stored locally on your device using Room Database (SQLite). Because local learning data is not fully mirrored to the cloud, uninstalling the app or switching devices resets local progress."
+                ),
+                FaqItem(
+                    id = "faq_quiz_exit",
+                    category = "Section Quiz & Focus",
+                    question = "Why was my quiz automatically cancelled/failed when I briefly left the app?",
+                    answer = "To preserve integrity and focus during a Section Quiz, the app monitors foreground focus:\n\n• First Violation: Leaving the foreground (opening Recent Apps, Home, or notifications) shows a warning dialog when you return.\n• Second Violation: The quiz is automatically cancelled, recorded as failed with reason 'FOCUS_VIOLATION', and increments your fail-streak.\n\nNote: Rotating your screen is allowed and is not counted as a violation."
+                ),
+                FaqItem(
+                    id = "faq_certificate",
+                    category = "Certificates",
+                    question = "How do I earn a certificate after finishing a course?",
+                    answer = "Once you complete 100% of the modules in a course and pass the required section quizzes and final evaluation, open the Evaluation Results screen or visit 'Graduation Certificates' in your Profile. Each certificate includes a unique verification ID you can save or share."
+                ),
+                FaqItem(
+                    id = "faq_playground",
+                    category = "Playground",
+                    question = "Is the code I write in the Playground saved automatically?",
+                    answer = "Yes, your Playground code is saved during your active session. If you want to restore the original module starter template at any time, tap the 'Reset' button in the top-right corner of the Playground."
+                ),
+                FaqItem(
+                    id = "faq_ai_tutor",
+                    category = "AI Tutor",
+                    question = "How is the AI Tutor different from solving exercises myself — does it give direct answers?",
+                    answer = "The AI Tutor acts as a mentor using Socratic guidance. Instead of handing out final answers right away, it explains concepts with analogies, walks through logic step-by-step, and helps you diagnose bugs so your problem-solving skills grow."
+                ),
+                FaqItem(
+                    id = "faq_forum",
+                    category = "Community Forum",
+                    question = "How do I join a course discussion forum, and are my posts visible to other students?",
+                    answer = "Yes! The Discussion/Forum tab is connected to Firebase Firestore in the cloud. Every question, code issue, or reply you post is visible in real time to other learners taking the same course."
+                ),
+                FaqItem(
+                    id = "faq_password_reset",
+                    category = "Account & Security",
+                    question = "I forgot my account password. How can I reset it?",
+                    answer = "On the Login screen, choose 'Forgot Password'. Because accounts are stored in your device's local database, you can reset your local PIN/password using your registered email, or register a new local account without losing downloaded course modules."
+                )
+            )
+        }
     }
 
     val filteredItems = remember(searchQuery, allFaqItems) {

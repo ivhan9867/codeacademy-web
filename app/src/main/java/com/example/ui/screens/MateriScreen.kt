@@ -113,6 +113,7 @@ fun MateriScreen(
     onOpenPlayground: (String, String, String?, String?) -> Unit,
     onOpenAiTutor: (String, String) -> Unit,
     onToggleBookmark: (CourseModule) -> Unit,
+    onOpenSectionQuiz: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -500,24 +501,41 @@ fun MateriScreen(
                                 horizontalAlignment = Alignment.End,
                                 modifier = if (hasPrevious) Modifier.weight(0.58f) else Modifier.fillMaxWidth()
                             ) {
-                                val missingRulesText = currentModule.verificationRules.joinToString(", ") { rawRule ->
-                                    when {
-                                        rawRule.startsWith("html:", ignoreCase = true) -> rawRule.substring(5).trim()
-                                        rawRule.startsWith("css:", ignoreCase = true) -> rawRule.substring(4).trim()
-                                        rawRule.startsWith("js:", ignoreCase = true) -> rawRule.substring(3).trim()
-                                        else -> rawRule
+                                Surface(
+                                    color = FlameOrange.copy(alpha = 0.10f),
+                                    shape = RoundedCornerShape(10.dp),
+                                    border = BorderStroke(1.dp, FlameOrange.copy(alpha = 0.30f)),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 8.dp)
+                                        .testTag("verification_rule_notice")
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 7.dp),
+                                        verticalArrangement = Arrangement.spacedBy(3.dp)
+                                    ) {
+                                        Text(
+                                            text = stringResource(R.string.materi_practice_card_title),
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.Bold,
+                                            color = FlameOrange
+                                        )
+                                        val formattedRules = currentModule.verificationRules.joinToString(" • ") { rawRule ->
+                                            when {
+                                                rawRule.startsWith("html:", ignoreCase = true) -> "[HTML] ${rawRule.substring(5).trim()}"
+                                                rawRule.startsWith("css:", ignoreCase = true) -> "[CSS] ${rawRule.substring(4).trim()}"
+                                                rawRule.startsWith("js:", ignoreCase = true) -> "[JS] ${rawRule.substring(3).trim()}"
+                                                else -> rawRule
+                                            }
+                                        }
+                                        Text(
+                                            text = formattedRules,
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                            maxLines = 2
+                                        )
                                     }
                                 }
-                                Text(
-                                    text = stringResource(R.string.materi_verify_rule_notice_format, missingRulesText),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = FlameOrange,
-                                    textAlign = androidx.compose.ui.text.style.TextAlign.End,
-                                    modifier = Modifier
-                                        .padding(bottom = 4.dp)
-                                        .widthIn(max = 220.dp)
-                                        .testTag("verification_rule_notice")
-                                )
                                 Button(
                                     onClick = {
                                         onOpenPlayground(
@@ -532,7 +550,9 @@ fun MateriScreen(
                                         contentColor = Color.White
                                     ),
                                     shape = RoundedCornerShape(12.dp),
-                                    modifier = Modifier.testTag("open_playground_button")
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .testTag("open_playground_button")
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Code,
@@ -547,18 +567,31 @@ fun MateriScreen(
                                 }
                             }
                         } else {
+                            val nextMod = if (hasNext) course.modules[currentModuleIndex + 1] else null
+                            val isLeavingSection = nextMod == null || nextMod.section != currentModule.section
+                            val pendingSectionQuiz = if (isLeavingSection) {
+                                course.sectionQuizzes.firstOrNull {
+                                    it.section == currentModule.section && it.id !in passedQuizIds
+                                }
+                            } else {
+                                null
+                            }
+
                             com.example.ui.components.PrimaryButton(
-                                text = if (hasNext) stringResource(R.string.materi_btn_finish_and_next) else stringResource(R.string.materi_btn_finish_course),
+                                text = when {
+                                    pendingSectionQuiz != null -> stringResource(R.string.materi_btn_finish_and_quiz)
+                                    hasNext -> stringResource(R.string.materi_btn_finish_and_next)
+                                    else -> stringResource(R.string.materi_btn_finish_course)
+                                },
                                 onClick = {
                                     onCompleteModule(course.id, currentModule.id)
-                                    if (hasNext) {
-                                        val nextMod = course.modules[currentModuleIndex + 1]
-                                        onSelectModule(nextMod.id)
-                                    } else {
-                                        onBack()
+                                    when {
+                                        pendingSectionQuiz != null -> onOpenSectionQuiz(pendingSectionQuiz.id)
+                                        nextMod != null -> onSelectModule(nextMod.id)
+                                        else -> onBack()
                                     }
                                 },
-                                icon = if (hasNext) Icons.AutoMirrored.Filled.ArrowForward else Icons.Default.Check,
+                                icon = if (hasNext || pendingSectionQuiz != null) Icons.AutoMirrored.Filled.ArrowForward else Icons.Default.Check,
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 contentColor = MaterialTheme.colorScheme.onPrimary,
                                 modifier = Modifier

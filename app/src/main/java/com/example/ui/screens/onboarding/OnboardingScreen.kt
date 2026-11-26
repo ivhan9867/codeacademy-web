@@ -27,8 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.edit
+import com.example.R
 import com.example.data.local.sessionDataStore
 import kotlinx.coroutines.launch
 
@@ -142,9 +144,9 @@ fun OnboardingScreen(
         Spacer(modifier = Modifier.height(12.dp))
 
         val buttonText = when (pagerState.currentPage) {
-            0 -> "Mulai"
-            in 1..2 -> "Lanjut"
-            else -> "Mulai Belajar"
+            0 -> stringResource(R.string.onboarding_btn_start)
+            in 1..2 -> stringResource(R.string.onboarding_btn_next)
+            else -> stringResource(R.string.onboarding_btn_start_learning)
         }
 
         OnboardingActionButton(

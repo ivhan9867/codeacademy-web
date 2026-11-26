@@ -104,6 +104,18 @@ fun SectionQuizResultScreen(
 
     val isPassed = attempt.passed
     val isFocusViolation = attempt.failReason == "FOCUS_VIOLATION"
+    val nextSectionFirstModuleId = remember(course, quiz, isPassed) {
+        if (!isPassed) null
+        else {
+            val sorted = course.modules.sortedBy { it.order }
+            val lastIdxOfThisSection = sorted.indexOfLast { it.section == quiz.section }
+            if (lastIdxOfThisSection in 0 until sorted.lastIndex) {
+                sorted[lastIdxOfThisSection + 1].id
+            } else {
+                null
+            }
+        }
+    }
     val cooldownMinutes = remember(attempt) {
         if (isPassed) 0
         else minOf(30, 1 shl (attempt.failStreak - 1).coerceAtLeast(0))
@@ -161,15 +173,29 @@ fun SectionQuizResultScreen(
                     }
 
                     Button(
-                        onClick = onBackToCourse,
+                        onClick = {
+                            if (isPassed && nextSectionFirstModuleId != null) {
+                                onNavigateToModule(nextSectionFirstModuleId)
+                            } else {
+                                onBackToCourse()
+                            }
+                        },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = TealPrimary
+                            containerColor = if (isPassed) SuccessGreen else TealPrimary
                         ),
                         shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1.2f),
                         contentPadding = PaddingValues(vertical = 12.dp)
                     ) {
-                        Text(stringResource(R.string.section_quiz_result_btn_back_course), color = Color.White, fontWeight = FontWeight.Bold)
+                        Text(
+                            text = if (isPassed && nextSectionFirstModuleId != null) {
+                                stringResource(R.string.section_quiz_result_btn_next_module)
+                            } else {
+                                stringResource(R.string.section_quiz_result_btn_back_course)
+                            },
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }

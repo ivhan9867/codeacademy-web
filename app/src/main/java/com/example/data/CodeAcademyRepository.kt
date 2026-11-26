@@ -390,8 +390,14 @@ class CodeAcademyRepository(
             }?.takeIf { it.isNotBlank() } ?: course.finalProject?.starterCode.orEmpty()
 
             val updatedSubmission = if (existingSub != null) {
+                val upgradedStatus = if (existingSub.status == ProjectSubmissionStatus.LOCKED.name) {
+                    ProjectSubmissionStatus.DRAFT.name
+                } else {
+                    existingSub.status
+                }
                 existingSub.copy(
                     finalQuizScore = maxOf(existingSub.finalQuizScore, scorePercent),
+                    status = upgradedStatus,
                     workspaceCode = existingSub.workspaceCode.ifBlank { draftCode }
                 )
             } else {
@@ -498,7 +504,14 @@ class CodeAcademyRepository(
         val course = getCourseById(courseId) ?: return@withContext null
         val accountId = getActiveAccountId()
         val existing = projectSubmissionDao.getSubmissionOnce(accountId, course.id)
-        if (existing != null) return@withContext existing
+        if (existing != null) {
+            if (existing.finalQuizScore >= 70 && existing.status == ProjectSubmissionStatus.LOCKED.name) {
+                val unlocked = existing.copy(status = ProjectSubmissionStatus.DRAFT.name)
+                projectSubmissionDao.upsertSubmission(unlocked)
+                return@withContext unlocked
+            }
+            return@withContext existing
+        }
 
         val user = userDao.getUserProfileOnce(accountId)
         val draftCode = playDao.getDraft(accountId, course.id)?.let { d ->
@@ -570,17 +583,21 @@ class CodeAcademyRepository(
         )
         projectSubmissionDao.upsertSubmission(submitted)
 
-        // Sync to Firestore 'project_submissions' collection for Facilitator Web
-        firestoreService.upsertProjectSubmission(submitted)
+        // Sync to Firestore 'project_submissions' collection for Facilitator Web (offline-first safe)
+        try {
+            firestoreService.upsertProjectSubmission(submitted)
+        } catch (e: Throwable) {
+            android.util.Log.w("CodeAcademyRepo", "Project submission saved locally; cloud sync deferred: ${e.message}")
+        }
 
         notifDao.insertNotification(
             NotificationEntity(
                 UUID.randomUUID().toString(),
                 accountId,
-                "📤 Proyek Akhir Terkirim",
-                "Proyek akhir ${course.title} (Percobaan #$nextAttempt) telah dikirim dan sedang menunggu penilaian Fasilitator.",
+                getLocalizedString(R.string.notif_project_submitted_title),
+                getLocalizedString(R.string.notif_project_submitted_msg_format, course.title, nextAttempt),
                 "SYSTEM",
-                "Baru saja"
+                getLocalizedString(R.string.notif_time_just_now)
             )
         )
 

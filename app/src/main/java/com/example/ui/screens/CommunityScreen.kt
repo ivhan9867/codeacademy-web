@@ -469,7 +469,11 @@ fun CommunityScreen(
                                     )
                                 } else {
                                     Text(
-                                        text = if (selectedPeriod == "streak") "$displayScore Hari" else "$displayScore XP",
+                                        text = if (selectedPeriod == "streak") {
+                                            stringResource(R.string.community_streak_days_format, displayScore)
+                                        } else {
+                                            "$displayScore XP"
+                                        },
                                         style = MaterialTheme.typography.labelMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = if (selectedPeriod == "streak") FlameOrange else AmberGold

@@ -1331,10 +1331,10 @@ fun FinalProjectSubmissionScreen(
                         }
                     }
                     CodeSandboxWebView(
-                        htmlCode = previewHtml,
-                        cssCode = "",
-                        jsCode = "",
-                        runTrigger = 1,
+                        html = previewHtml,
+                        css = "",
+                        js = "",
+                        runId = 1,
                         onConsoleLog = {},
                         modifier = Modifier
                             .fillMaxWidth()

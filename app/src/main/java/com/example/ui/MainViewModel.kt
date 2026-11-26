@@ -32,6 +32,7 @@ import com.example.data.models.PlacementTestQuestion
 import com.example.data.models.PlacementTestResult
 import com.example.data.util.CourseUnlockUtils
 import com.example.util.localization.AppLanguage
+import com.example.util.localization.toLocale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.FlowPreview

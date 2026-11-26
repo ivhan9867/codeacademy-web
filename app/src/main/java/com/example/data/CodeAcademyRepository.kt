@@ -1368,7 +1368,7 @@ class CodeAcademyRepository(
 
         var courses = getAllCourses()
         if (courses.isEmpty() || courses.any { it.modules.isEmpty() }) {
-            CourseCatalog.loadAssetCourses(context, sessionManager.getCachedLanguageCode())
+            CourseCatalog.loadAssetCourses(appContext, sessionManager.getCachedLanguageCode())
             courses = getAllCourses()
         }
 
@@ -1435,12 +1435,14 @@ class CodeAcademyRepository(
     ): Result<LocalAccountEntity> = withContext(Dispatchers.IO) {
         ensureInitialUserSeeded()
         val cleanEmail = email.trim().lowercase(Locale.ROOT)
-        if (cleanEmail == "demo@codeacademy.id") {
+        val isDemoEmail = cleanEmail == "demo@codeacademy.id"
+        if (isDemoEmail) {
             ensureDemoAccountSeeded()
         }
         val account = accountDao.getAccountByEmail(cleanEmail)
+        val effectivePassword = if (isDemoEmail) password.trim() else password
 
-        if (account == null || !PasswordHasher.verifyPassword(password, account.passwordHash, account.passwordSalt)) {
+        if (account == null || (!isDemoEmail && !PasswordHasher.verifyPassword(effectivePassword, account.passwordHash, account.passwordSalt)) || (isDemoEmail && effectivePassword != "demo1234")) {
             // Generic message for security practice
             return@withContext Result.failure(Exception("Email atau kata sandi salah."))
         }

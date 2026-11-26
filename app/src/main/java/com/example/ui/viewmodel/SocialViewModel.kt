@@ -7,6 +7,7 @@ import com.example.data.SocialRepository
 import com.example.data.local.ForumPostEntity
 import com.example.data.local.LeaderboardEntryCacheEntity
 import com.example.data.local.WeeklyChallengeEntity
+import com.example.util.localization.toLocale
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.ExperimentalCoroutinesApi

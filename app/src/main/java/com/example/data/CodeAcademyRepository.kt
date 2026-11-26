@@ -1322,12 +1322,122 @@ class CodeAcademyRepository(
         Result.success(created)
     }
 
+    // === TEMPORARY DEMO REVIEW ACCOUNT (REMOVE WHEN REQUESTED) ===
+    private suspend fun ensureDemoAccountSeeded() {
+        val demoEmail = "demo@codeacademy.id"
+        val demoPassword = "demo1234"
+        val demoName = "Demo Reviewer"
+
+        val existingAccount = accountDao.getAccountByEmail(demoEmail)
+        val demoAccountId = if (existingAccount != null) {
+            existingAccount.id
+        } else {
+            val salt = PasswordHasher.generateSalt()
+            accountDao.insertAccount(
+                LocalAccountEntity(
+                    email = demoEmail,
+                    passwordHash = PasswordHasher.hashPassword(demoPassword, salt),
+                    passwordSalt = salt,
+                    displayName = demoName
+                )
+            )
+        }
+
+        if (userDao.getUserProfileOnce(demoAccountId) == null) {
+            userDao.insertOrUpdateUser(
+                UserProfileEntity(
+                    accountId = demoAccountId,
+                    name = demoName,
+                    email = demoEmail,
+                    bio = "Demo Account — All Modules & Quizzes Unlocked",
+                    totalXp = 1250,
+                    level = 5,
+                    currentStreak = 7,
+                    longestStreak = 7,
+                    lastActiveDate = getTodayDateString(),
+                    dailyQuestId = "quest_mod",
+                    dailyQuestProgress = 3,
+                    dailyQuestCompleted = true,
+                    selectedTracks = "front-end",
+                    goal = "Persiapan Karier",
+                    isDarkMode = true,
+                    isOnboarded = true
+                )
+            )
+        }
+
+        var courses = getAllCourses()
+        if (courses.isEmpty() || courses.any { it.modules.isEmpty() }) {
+            CourseCatalog.loadAssetCourses(context, sessionManager.getCachedLanguageCode())
+            courses = getAllCourses()
+        }
+
+        val now = System.currentTimeMillis()
+        val demoUserIdStr = demoAccountId.toString()
+
+        for (course in courses) {
+            // 1. Unlock & complete every module in the course
+            for (mod in course.modules) {
+                progressDao.markModuleCompleted(
+                    ModuleProgressEntity(
+                        accountId = demoAccountId,
+                        courseId = course.id,
+                        moduleId = mod.id,
+                        isCompleted = true
+                    )
+                )
+            }
+
+            // 2. Mark all section quizzes as passed (if not already passed)
+            for (quiz in course.sectionQuizzes) {
+                val last = sectionQuizAttemptDao.getLastAttempt(demoUserIdStr, quiz.id)
+                if (last == null || !last.passed) {
+                    sectionQuizAttemptDao.insertAttempt(
+                        SectionQuizAttemptEntity(
+                            userId = demoUserIdStr,
+                            quizId = quiz.id,
+                            timestamp = now,
+                            scorePercent = 90,
+                            passed = true,
+                            failStreak = 0,
+                            questionIdsJson = "[]",
+                            answersJson = "[]",
+                            failReason = null
+                        )
+                    )
+                }
+            }
+
+            // 3. Final quiz passed (90%), Capstone / Final Project unlocked in DRAFT (NOT submitted yet)
+            val existingSub = projectSubmissionDao.getSubmissionOnce(demoAccountId, course.id)
+            if (existingSub == null) {
+                projectSubmissionDao.upsertSubmission(
+                    ProjectSubmissionEntity(
+                        accountId = demoAccountId,
+                        courseId = course.id,
+                        submissionId = "SUB-${demoAccountId}-${course.id}",
+                        studentName = demoName,
+                        studentEmail = demoEmail,
+                        courseTitle = course.title,
+                        finalQuizScore = 90,
+                        status = ProjectSubmissionStatus.DRAFT.name,
+                        workspaceCode = course.finalProject?.starterCode.orEmpty()
+                    )
+                )
+            }
+        }
+    }
+    // === END TEMPORARY DEMO REVIEW ACCOUNT ===
+
     suspend fun loginLocalAccount(
         email: String,
         password: String
     ): Result<LocalAccountEntity> = withContext(Dispatchers.IO) {
         ensureInitialUserSeeded()
         val cleanEmail = email.trim().lowercase(Locale.ROOT)
+        if (cleanEmail == "demo@codeacademy.id") {
+            ensureDemoAccountSeeded()
+        }
         val account = accountDao.getAccountByEmail(cleanEmail)
 
         if (account == null || !PasswordHasher.verifyPassword(password, account.passwordHash, account.passwordSalt)) {

@@ -12,23 +12,23 @@ object ContentAssetLoader {
     private const val TAG = "ContentAssetLoader"
     private const val BASE_FOLDER = "content"
 
-    suspend fun loadAll(context: Context): Map<String, String> = withContext(Dispatchers.IO) {
+    suspend fun loadAll(context: Context, baseFolder: String = BASE_FOLDER): Map<String, String> = withContext(Dispatchers.IO) {
         val resultMap = mutableMapOf<String, String>()
         try {
-            val rootList = context.assets.list(BASE_FOLDER)
+            val rootList = context.assets.list(baseFolder)
             if (rootList.isNullOrEmpty()) {
                 return@withContext emptyMap()
             }
             traverseAssetFolder(
                 context = context,
-                currentAssetPath = BASE_FOLDER,
+                currentAssetPath = baseFolder,
                 relativePath = "",
                 resultMap = resultMap
             )
         } catch (e: IOException) {
-            Log.w(TAG, "assets/$BASE_FOLDER directory not found or unreadable: ${e.message}")
+            Log.w(TAG, "assets/$baseFolder directory not found or unreadable: ${e.message}")
         } catch (e: Exception) {
-            Log.e(TAG, "Error loading asset contents: ${e.message}", e)
+            Log.e(TAG, "Error loading asset contents from $baseFolder: ${e.message}", e)
         }
         resultMap
     }

@@ -155,13 +155,12 @@ fun SectionQuizRulesScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsPadding()
                         .padding(16.dp)
                 ) {
                     if (isCooldownActive) {
                         val minutes = remainingSeconds / 60
                         val seconds = remainingSeconds % 60
-                        val timeStr = String.format("%02d:%02d", minutes, seconds)
+                        val timeStr = String.format(Locale.US, "%02d:%02d", minutes, seconds)
                         Button(
                             onClick = {},
                             enabled = false,
@@ -311,47 +310,123 @@ fun SectionQuizRulesScreen(
                 }
             }
 
+            // 3-Column Quick Stats Row
+            item(key = "quiz_rules_stats_grid") {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surface,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(Icons.Default.Quiz, contentDescription = null, tint = TealPrimary, modifier = Modifier.size(20.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = stringResource(R.string.section_quiz_rules_stat_questions_value_format, quiz.questionsPerAttempt),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = stringResource(R.string.section_quiz_rules_stat_questions_label),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surface,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(Icons.Default.CheckCircle, contentDescription = null, tint = SuccessGreen, modifier = Modifier.size(20.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = "${quiz.passingPercent}%",
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = stringResource(R.string.section_quiz_rules_stat_pass_label),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    Surface(
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                        color = MaterialTheme.colorScheme.surface,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(Icons.Default.Timer, contentDescription = null, tint = FlameOrange, modifier = Modifier.size(20.dp))
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = stringResource(R.string.section_quiz_rules_stat_duration_value_format, quiz.durationMinutes),
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = stringResource(R.string.section_quiz_rules_stat_duration_label),
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                }
+            }
+
             // Aturan Kuis Card
-            item {
+            item(key = "quiz_rules_card") {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(18.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.surface
                     ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.55f)),
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
                 ) {
-                    Column(modifier = Modifier.padding(18.dp)) {
+                    Column(modifier = Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
                             text = stringResource(R.string.section_quiz_rules_card_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
-
                         RuleItem(
-                            icon = "🎲",
-                            title = stringResource(R.string.section_quiz_rules_stat_questions_value_format, 5),
+                            icon = "1",
+                            title = stringResource(R.string.section_quiz_rules_stat_questions_value_format, quiz.questionsPerAttempt),
                             description = stringResource(R.string.section_quiz_rules_item_1)
                         )
-                        Spacer(modifier = Modifier.height(10.dp))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
                         RuleItem(
-                            icon = "🎯",
-                            title = "${stringResource(R.string.section_quiz_rules_stat_pass_label)} ${quiz.passingPercent}%",
-                            description = stringResource(R.string.section_quiz_rules_item_1)
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        RuleItem(
-                            icon = "⏱️",
+                            icon = "2",
                             title = stringResource(R.string.section_quiz_rules_stat_duration_value_format, quiz.durationMinutes),
                             description = stringResource(R.string.section_quiz_rules_item_2)
                         )
-                        Spacer(modifier = Modifier.height(10.dp))
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
                         RuleItem(
-                            icon = "⏳",
-                            title = stringResource(R.string.section_quiz_rules_stat_duration_label),
+                            icon = "3",
+                            title = "${stringResource(R.string.section_quiz_rules_stat_pass_label)} ${quiz.passingPercent}%",
                             description = stringResource(R.string.section_quiz_rules_item_3)
                         )
                     }

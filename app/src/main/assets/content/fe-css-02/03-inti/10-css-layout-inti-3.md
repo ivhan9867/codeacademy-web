@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-3
 courseId: fe-css-02
-order: 10
+order: 12
 title: "Meratakan Sumbu Utama dengan justify-content"
 readingMinutes: 6
 section: INTI
@@ -67,7 +67,12 @@ Saat total lebar elemen anak lebih kecil daripada lebar kontainer induknya, akan
 
 Bagaimana cara kita membagikan atau menaruh sisa ruang kosong tersebut di sepanjang Sumbu Utama (*Main Axis*)? Jawabannya adalah properti **`justify-content`**.
 
-> **Ilustrasi Konsep:** Variasi Nilai justify-content pada Sumbu Utama
+```text
+flex-start    : |[1][2][3]              |
+center        : |       [1][2][3]       |
+space-between : |[1]       [2]       [3]|
+space-evenly  : |   [1]    [2]    [3]   |
+```
 ## 6 Nilai Utama `justify-content`
 
 Mari kita bedah perilakunya saat `flex-direction: row` (sumbu horizontal):

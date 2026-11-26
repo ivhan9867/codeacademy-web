@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-8
 courseId: fe-css-02
-order: 15
+order: 17
 title: "Latihan Praktik: Membangun Navigation Bar Modern & Responsif"
 readingMinutes: 7
 section: INTI
@@ -117,7 +117,12 @@ Sebuah navbar yang baik memiliki tiga zona elemen:
 2. **Daftar Tautan Halaman** di tengah atau samping logo.
 3. **Tombol Panggilan Aksi (*Call-to-Action*)** di sisi kanan.
 
-> **Ilustrasi Konsep:** Anatomi Navbar Flexbox Modern
+```text
+.navbar (display: flex; justify-content: space-between; align-items: center)
++-------------------------------------------------------------+
+| [Logo]              [Beranda] [Kelas] [Forum]       [Masuk] |
++-------------------------------------------------------------+
+```
 ## Bedah Arsitektur: Flexbox Bersarang (*Nested Flexbox*)
 
 Perhatikan struktur HTML pada latihan ini:

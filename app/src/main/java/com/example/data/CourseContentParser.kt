@@ -96,13 +96,32 @@ object CourseContentParser {
     }
 
     /**
-     * Suspended loader that reads all markdown assets via ContentAssetLoader,
+     * Suspended loader that reads markdown assets via ContentAssetLoader for the requested language,
      * parses them, and returns modules for the given courseId sorted by order.
+     * For non-Indonesian languages, loads from assets/content_en/ and falls back per-module to assets/content/.
      */
-    suspend fun loadCourseModules(context: Context, courseId: String): List<CourseModule> {
-        val allAssets = ContentAssetLoader.loadAll(context)
-        val parsed = parseAll(allAssets, courseId)
-        logDebug("Loaded ${parsed.size} modules from assets for course '$courseId'")
+    suspend fun loadCourseModules(
+        context: Context,
+        courseId: String,
+        languageCode: String = "id"
+    ): List<CourseModule> {
+        val useEnglish = languageCode.lowercase() != "id"
+        if (useEnglish) {
+            val enAssets = ContentAssetLoader.loadAll(context, "content_en/$courseId")
+            val enModules = parseAll(enAssets, courseId)
+            if (enModules.isNotEmpty()) {
+                logDebug("Loaded ${enModules.size} EN modules from assets/content_en/$courseId")
+                return enModules
+            }
+        }
+        val idAssets = ContentAssetLoader.loadAll(context, "content/$courseId")
+        val parsed = if (idAssets.isNotEmpty()) {
+            parseAll(idAssets, courseId)
+        } else {
+            val allAssets = ContentAssetLoader.loadAll(context)
+            parseAll(allAssets, courseId)
+        }
+        logDebug("Loaded ${parsed.size} modules from assets for course '$courseId' (lang=$languageCode)")
         return parsed
     }
 

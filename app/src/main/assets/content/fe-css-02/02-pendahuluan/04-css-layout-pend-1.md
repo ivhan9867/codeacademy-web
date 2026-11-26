@@ -1,7 +1,7 @@
 ---
 id: css-layout-pend-1
 courseId: fe-css-02
-order: 4
+order: 6
 title: "Mengapa Kita Sangat Membutuhkan Layout Modern?"
 readingMinutes: 5
 section: PENDAHULUAN
@@ -14,7 +14,10 @@ Ketika web pertama kali diciptakan oleh Tim Berners-Lee pada awal tahun 1990-an,
 
 Namun, dalam dua dekade berikutnya, web bertransformasi menjadi platform aplikasi terbesar di dunia.
 
-> **Ilustrasi Konsep:** Evolusi Tata Letak Web dari Dokumen Teks ke Desain Responsif
+```text
+Era 1990-an (Table) -> Era 2000-an (Float/Clearfix) -> Era Modern (Flexbox & Grid)
+  [Kaku & Rapuh]        [Rentan Collapsing]             [Responsif & Presisi]
+```
 ## Gelombang Evolusi Tata Letak Web
 
 Perjalanan menata letak elemen di browser melewati beberapa era yang cukup menguras tenaga para pengembang web terdahulu:

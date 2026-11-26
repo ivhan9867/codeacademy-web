@@ -113,7 +113,6 @@ fun MateriScreen(
     onOpenPlayground: (String, String, String?, String?) -> Unit,
     onOpenAiTutor: (String, String) -> Unit,
     onToggleBookmark: (CourseModule) -> Unit,
-    onTranslateToEnglish: suspend (String, String) -> String? = { _, _ -> null },
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -478,7 +477,6 @@ fun MateriScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .navigationBarsPadding()
                             .padding(horizontal = 16.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -502,7 +500,14 @@ fun MateriScreen(
                                 horizontalAlignment = Alignment.End,
                                 modifier = if (hasPrevious) Modifier.weight(0.58f) else Modifier.fillMaxWidth()
                             ) {
-                                val missingRulesText = currentModule.verificationRules.joinToString(", ")
+                                val missingRulesText = currentModule.verificationRules.joinToString(", ") { rawRule ->
+                                    when {
+                                        rawRule.startsWith("html:", ignoreCase = true) -> rawRule.substring(5).trim()
+                                        rawRule.startsWith("css:", ignoreCase = true) -> rawRule.substring(4).trim()
+                                        rawRule.startsWith("js:", ignoreCase = true) -> rawRule.substring(3).trim()
+                                        else -> rawRule
+                                    }
+                                }
                                 Text(
                                     text = stringResource(R.string.materi_verify_rule_notice_format, missingRulesText),
                                     style = MaterialTheme.typography.labelSmall,
@@ -566,23 +571,6 @@ fun MateriScreen(
             }
         ) { paddingValues ->
             val currentLanguage = LocalAppLanguage.current
-            var translatedContent by remember(currentModule.id, currentLanguage) { mutableStateOf<String?>(null) }
-            var isTranslating by remember(currentModule.id, currentLanguage) { mutableStateOf(false) }
-
-            LaunchedEffect(currentModule.id, currentLanguage) {
-                if (currentLanguage != AppLanguage.INDONESIAN) {
-                    isTranslating = true
-                    translatedContent = try {
-                        onTranslateToEnglish(currentModule.id, currentModule.content)
-                    } catch (_: Throwable) {
-                        null
-                    }
-                    isTranslating = false
-                } else {
-                    translatedContent = null
-                    isTranslating = false
-                }
-            }
 
             LazyColumn(
                 modifier = Modifier
@@ -592,8 +580,8 @@ fun MateriScreen(
                 contentPadding = PaddingValues(top = 16.dp, bottom = 80.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Language / Auto-translation status banner if language is not Indonesian
-                if (currentLanguage != AppLanguage.INDONESIAN) {
+                // Show language fallback notice only for languages without dedicated local content (e.g. JA/ZH)
+                if (currentLanguage != AppLanguage.INDONESIAN && currentLanguage != AppLanguage.ENGLISH) {
                     item(key = "language_content_notice_banner") {
                         Card(
                             modifier = Modifier
@@ -611,27 +599,15 @@ fun MateriScreen(
                                     .padding(horizontal = 14.dp, vertical = 10.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                if (isTranslating) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.size(16.dp),
-                                        strokeWidth = 2.dp,
-                                        color = MaterialTheme.colorScheme.secondary
-                                    )
-                                } else {
-                                    Icon(
-                                        imageVector = if (translatedContent != null) Icons.Default.AutoAwesome else Icons.Default.Info,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.secondary,
-                                        modifier = Modifier.size(18.dp)
-                                    )
-                                }
+                                Icon(
+                                    imageVector = Icons.Default.Info,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.secondary,
+                                    modifier = Modifier.size(18.dp)
+                                )
                                 Spacer(modifier = Modifier.width(10.dp))
                                 Text(
-                                    text = when {
-                                        isTranslating -> stringResource(R.string.materi_translating_en)
-                                        translatedContent != null -> stringResource(R.string.materi_translated_badge)
-                                        else -> stringResource(R.string.materi_content_id_only)
-                                    },
+                                    text = stringResource(R.string.materi_content_id_only),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
@@ -808,7 +784,7 @@ fun MateriScreen(
 
                             // Formatted Markdown Content with Glossary Tooltip
                             MarkdownContent(
-                                content = translatedContent ?: currentModule.content,
+                                content = currentModule.content,
                                 courseId = course.id
                             )
 

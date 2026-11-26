@@ -1537,4 +1537,37 @@
     <string name="ai_tutor_default_image_prompt">このコード画像またはエラーを分析し、修正・改善方法を説明してください。</string>
     <string name="materi_translating_en">モジュールを英語に翻訳中...</string>
     <string name="materi_translated_badge">English (Cached)</string>
+
+    <!-- Deep QA & Real Upload Submission -->
+    <string name="progress_tab_active_format">学習中 (%1$d)</string>
+    <string name="progress_tab_completed_format">完了 (%1$d)</string>
+    <string name="progress_tab_all_tracks_format">全トラック (%1$d)</string>
+    <string name="home_rec_foundation_desc">セマンティックHTMLと基礎CSSをスマートフォンでそのまま学び始めましょう。</string>
+    <string name="home_rec_css_desc">FlexboxとGridを使ったレスポンシブレイアウトを実践で習得しましょう。</string>
+    <string name="home_rec_js_desc">ES6 JavaScript、DOM操作、イベントリスナーでWebページに動きをつけましょう。</string>
+    <string name="help_email_subject_format">CodeAcademy サポート＆フィードバック v%1$s</string>
+    <string name="help_email_body_format">CodeAcademyチーム様\n\n以下の質問・ご意見・不具合を報告します：\n\n[ここにメッセージを入力]\n\nアプリ情報：\nバージョン: %1$s</string>
+    <string name="help_email_chooser_title">メール送信アプリを選択…</string>
+    <string name="help_email_no_app">この端末にメールアプリが見つかりませんでした。</string>
+    <string name="playground_share_subject_python">CodeAcademy Pythonコード</string>
+    <string name="playground_share_subject_js">CodeAcademy JavaScriptコード</string>
+    <string name="playground_share_subject_web">CodeAcademy Webプロジェクト</string>
+    <string name="final_project_upload_title">プロジェクトファイルをアップロード</string>
+    <string name="final_project_upload_subtitle">端末からコードファイル（.html, .css, .js）またはZIPアーカイブを選択してください。</string>
+    <string name="final_project_upload_btn">ファイル / ZIP を選択</string>
+    <string name="final_project_upload_success_format">%1$s を読み込みました (%2$d KB)</string>
+    <string name="final_project_upload_error">ファイルの読み込みに失敗しました。有効な .html/.css/.js/.zip（最大250KB）を選択してください。</string>
+    <string name="final_project_upload_remove_cd">アップロード済みファイルを削除</string>
+    <string name="final_project_preview_btn">プレビュー</string>
+    <string name="final_project_preview_title">プロジェクトライブプレビュー</string>
+    <string name="final_project_url_invalid">URLは https:// または http:// で始まる必要があります</string>
+    <string name="final_project_cloud_sync_badge">ファシリテーターポータルとライブ同期中</string>
+
+    <!-- AI Tutor Camera Attachment -->
+    <string name="ai_tutor_attach_sheet_title">コード・エラー画像を添付</string>
+    <string name="ai_tutor_attach_camera">カメラで撮影</string>
+    <string name="ai_tutor_attach_camera_desc">画面やノート、エラー表示をカメラで直接撮影します。</string>
+    <string name="ai_tutor_attach_gallery">ギャラリーから選択</string>
+    <string name="ai_tutor_attach_gallery_desc">端末に保存されたスクリーンショットやUI画像をアップロードします。</string>
+    <string name="ai_tutor_camera_permission_denied">写真を撮影するにはカメラの権限が必要です。</string>
 </resources>

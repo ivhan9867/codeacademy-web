@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-1
 courseId: fe-css-02
-order: 8
+order: 10
 title: "Keluarga Flexbox: Flex Container dan Flex Items"
 readingMinutes: 6
 section: INTI
@@ -100,7 +100,14 @@ Selamat datang di materi inti! Aturan nomor satu dalam Flexbox yang wajib kamu t
 
 Kamu tidak bisa begitu saja memberikan perintah Flexbox pada elemen anak tanpa terlebih dahulu mengaktifkan mode fleksibel pada elemen induk pembungkusnya.
 
-> **Ilustrasi Konsep:** Hubungan Flex Container dan Flex Items
+```text
+.flex-container (display: flex)
++---------------------------------------------+
+|  +--------+   +--------+   +--------+       |
+|  | Item A |   | Item B |   | Item C |       |  <-- Anak langsung (Flex Items)
+|  +--------+   +--------+   +--------+       |
++---------------------------------------------+
+```
 ## Langkah Pertama: Membuka Gerbang `display: flex`
 
 Untuk mengubah elemen biasa menjadi wadah fleksibel, cukup berikan satu baris CSS ajaib pada elemen pembungkusnya:

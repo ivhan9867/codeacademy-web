@@ -1301,4 +1301,37 @@
     <string name="ai_tutor_default_image_prompt">Tolong analisis gambar kode atau error ini dan jelaskan cara memperbaikinya.</string>
     <string name="materi_translating_en">Menerjemahkan modul ke Bahasa Inggris...</string>
     <string name="materi_translated_badge">English (Cached)</string>
+
+    <!-- Deep QA & Real Upload Submission -->
+    <string name="progress_tab_active_format">Sedang Dipelajari (%1$d)</string>
+    <string name="progress_tab_completed_format">Selesai (%1$d)</string>
+    <string name="progress_tab_all_tracks_format">Semua Jalur (%1$d)</string>
+    <string name="home_rec_foundation_desc">Mulai dari struktur HTML semantik dan styling CSS dasar langsung di smartphone.</string>
+    <string name="home_rec_css_desc">Kuasai tata letak responsif dengan Flexbox &amp; Grid langsung di smartphone dengan praktik instan.</string>
+    <string name="home_rec_js_desc">Hidupkan halaman web dengan logika JavaScript ES6, manipulasi DOM, dan event listener.</string>
+    <string name="help_email_subject_format">Bantuan &amp; Feedback CodeAcademy v%1$s</string>
+    <string name="help_email_body_format">Halo Tim CodeAcademy,\n\nSaya ingin menyampaikan pertanyaan / saran / kendala berikut:\n\n[Tulis pesan Anda di sini]\n\nInformasi Aplikasi:\nVersi: %1$s</string>
+    <string name="help_email_chooser_title">Kirim email dengan…</string>
+    <string name="help_email_no_app">Tidak ditemukan aplikasi email di perangkat ini.</string>
+    <string name="playground_share_subject_python">Kode Python CodeAcademy</string>
+    <string name="playground_share_subject_js">Kode JavaScript CodeAcademy</string>
+    <string name="playground_share_subject_web">Proyek Web CodeAcademy</string>
+    <string name="final_project_upload_title">Unggah File Proyek</string>
+    <string name="final_project_upload_subtitle">Pilih file kode (.html, .css, .js) atau arsip proyek (.zip) langsung dari perangkatmu.</string>
+    <string name="final_project_upload_btn">Pilih File / ZIP</string>
+    <string name="final_project_upload_success_format">Berhasil memuat %1$s (%2$d KB)</string>
+    <string name="final_project_upload_error">Gagal membaca file. Pastikan format .html, .css, .js, atau .zip valid (maks 250 KB).</string>
+    <string name="final_project_upload_remove_cd">Hapus file terunggah</string>
+    <string name="final_project_preview_btn">Preview</string>
+    <string name="final_project_preview_title">Live Preview Proyek</string>
+    <string name="final_project_url_invalid">URL harus diawali https:// atau http://</string>
+    <string name="final_project_cloud_sync_badge">Tersinkronisasi Live ke Portal Fasilitator</string>
+
+    <!-- AI Tutor Camera Attachment -->
+    <string name="ai_tutor_attach_sheet_title">Lampirkan Gambar Kode / Error</string>
+    <string name="ai_tutor_attach_camera">Ambil Foto dengan Kamera</string>
+    <string name="ai_tutor_attach_camera_desc">Foto layar laptop, buku catatan, atau error langsung dari kamera.</string>
+    <string name="ai_tutor_attach_gallery">Pilih dari Galeri</string>
+    <string name="ai_tutor_attach_gallery_desc">Unggah screenshot kode atau desain UI yang tersimpan di HP.</string>
+    <string name="ai_tutor_camera_permission_denied">Izin kamera diperlukan untuk mengambil foto kode.</string>
 </resources>

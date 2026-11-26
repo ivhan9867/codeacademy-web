@@ -1,7 +1,7 @@
 ---
 id: css-layout-eval-1
 courseId: fe-css-02
-order: 23
+order: 31
 title: "Mini Proyek: Halaman Dasbor Web Modern"
 readingMinutes: 7
 section: EVALUASI
@@ -193,7 +193,15 @@ Saatnya menguji kemampuanmu dengan merakit proyek puncak kelas ini: **Halaman Da
 
 Perhatikan bagaimana halaman ini menggabungkan semua materi yang telah kamu pelajari menjadi satu kesatuan yang solid:
 
-> **Ilustrasi Konsep:** Arsitektur Halaman Dasbor: CSS Grid Makro dan Flexbox Mikro
+```text
++--------------------------------------------------+
+| HEADER (Flexbox: Brand + Search + Avatar)        |
++------------+-------------------------------------+
+|  SIDEBAR   |  [KPI 1]   [KPI 2]   [KPI 3]        |
+|  (Nav)     |  +-------------------------------+  |
+|            |  | Tabel / Kartu Aktivitas       |  |
++------------+--+-------------------------------+--+
+```
 ## Bedah Arsitektur Proyek
 
 ### 1. Fondasi Makro: CSS Grid dengan `grid-template-areas`

@@ -336,9 +336,9 @@ fun ProgressScreen(
                         val totalTracksCount = allTrackProgress.size
 
                         val tabItems = listOf(
-                            Triple(0, "Sedang Dipelajari ($activeTabCount)", "tab_in_progress"),
-                            Triple(1, "Selesai ($completedTabCount)", "tab_completed"),
-                            Triple(2, "Semua Jalur ($totalTracksCount)", "tab_all_tracks")
+                            Triple(0, stringResource(R.string.progress_tab_active_format, activeTabCount), "tab_in_progress"),
+                            Triple(1, stringResource(R.string.progress_tab_completed_format, completedTabCount), "tab_completed"),
+                            Triple(2, stringResource(R.string.progress_tab_all_tracks_format, totalTracksCount), "tab_all_tracks")
                         )
 
                         tabItems.forEach { (index, tabLabel, tag) ->

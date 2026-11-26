@@ -244,6 +244,11 @@ fun CodeAcademyApp(
     // and system status/navigation bar icons match this fixed cream background on those routes.
     val isFixedLightAuthScreen = currentRoute == "login" || currentRoute == "register" || currentRoute == "forgot_password"
     val isDark by viewModel.isDarkMode.collectAsStateWithLifecycle()
+    val reactiveCatalogCourses by viewModel.catalogCourses.collectAsStateWithLifecycle()
+    val resolveCourse: (String) -> com.example.data.models.Course? = { id ->
+        val targetId = if (id == "fe-html-01") "fe-web-foundation-00" else id
+        reactiveCatalogCourses.find { it.id == targetId } ?: viewModel.getCourseById(id)
+    }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -1026,7 +1031,7 @@ fun CodeAcademyApp(
                 )
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     val progressList by viewModel.moduleProgressList.collectAsStateWithLifecycle()
                     val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
@@ -1091,7 +1096,7 @@ fun CodeAcademyApp(
                 )
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     CheatSheetScreen(
                         course = course,
@@ -1108,7 +1113,7 @@ fun CodeAcademyApp(
                 )
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     var questions by remember(courseId) { mutableStateOf<List<PlacementTestQuestion>>(emptyList()) }
                     var isLoadingQuestions by remember(courseId) { mutableStateOf(true) }
@@ -1148,7 +1153,7 @@ fun CodeAcademyApp(
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
                 val moduleId = backStackEntry.arguments?.getString("moduleId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     val progressList by viewModel.moduleProgressList.collectAsStateWithLifecycle()
                     val bookmarks by viewModel.bookmarks.collectAsStateWithLifecycle()
@@ -1196,9 +1201,6 @@ fun CodeAcademyApp(
                                 subtitle = course.title,
                                 trackName = course.trackId
                             )
-                        },
-                        onTranslateToEnglish = { modId, markdown ->
-                            viewModel.translateModuleToEnglish(modId, markdown)
                         }
                     )
                 }
@@ -1243,7 +1245,7 @@ fun CodeAcademyApp(
                     onBack = { navController.popBackStack() },
                     onOpenAiTutor = { prompt ->
                         try {
-                            val cObj = viewModel.getCourseById(courseId)
+                            val cObj = resolveCourse(courseId)
                             val courseTitle = cObj?.title ?: "Playground"
                             val moduleTitle = moduleAnalysisTitle
 
@@ -1276,7 +1278,7 @@ fun CodeAcademyApp(
                 )
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     QuizScreen(
                         course = course,
@@ -1304,7 +1306,7 @@ fun CodeAcademyApp(
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
                 val scorePercent = backStackEntry.arguments?.getInt("scorePercent") ?: 0
                 val isPassed = backStackEntry.arguments?.getBoolean("isPassed") ?: false
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     val certificates by viewModel.certificates.collectAsStateWithLifecycle()
                     val cert = certificates.find { it.courseId == course.id }
@@ -1349,7 +1351,7 @@ fun CodeAcademyApp(
                 )
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     val submission by viewModel.getProjectSubmissionFlow(course.id).collectAsStateWithLifecycle(initialValue = null)
                     val certificates by viewModel.certificates.collectAsStateWithLifecycle()
@@ -1416,7 +1418,7 @@ fun CodeAcademyApp(
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
                 val quizId = backStackEntry.arguments?.getString("quizId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 val quiz = course?.sectionQuizzes?.find { it.id == quizId }
                 if (course != null && quiz != null) {
                     val attempts by viewModel.getSectionQuizAttempts(quizId).collectAsStateWithLifecycle(emptyList())
@@ -1445,7 +1447,7 @@ fun CodeAcademyApp(
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
                 val quizId = backStackEntry.arguments?.getString("quizId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 val quiz = course?.sectionQuizzes?.find { it.id == quizId }
                 if (course != null && quiz != null) {
                     var questions by remember { mutableStateOf<List<QuizQuestion>>(emptyList()) }
@@ -1479,7 +1481,7 @@ fun CodeAcademyApp(
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
                 val quizId = backStackEntry.arguments?.getString("quizId") ?: ""
                 val attemptId = backStackEntry.arguments?.getLong("attemptId") ?: 0L
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 val quiz = course?.sectionQuizzes?.find { it.id == quizId }
                 if (course != null && quiz != null) {
                     var attempt by remember { mutableStateOf<SectionQuizAttemptEntity?>(null) }
@@ -1643,7 +1645,7 @@ fun CodeAcademyApp(
                 )
             ) { backStackEntry ->
                 val courseId = backStackEntry.arguments?.getString("courseId") ?: ""
-                val course = viewModel.getCourseById(courseId)
+                val course = resolveCourse(courseId)
                 if (course != null) {
                     CourseForumScreen(
                         course = course,

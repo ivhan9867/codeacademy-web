@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-3
 courseId: fe-js-03
-order: 19
+order: 23
 title: "Batas Wilayah Variabel: Global Scope vs Block Scope"
 readingMinutes: 5
 section: LANJUTAN

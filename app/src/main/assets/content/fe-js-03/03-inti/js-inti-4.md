@@ -1,7 +1,7 @@
 ---
 id: js-inti-4
 courseId: fe-js-03
-order: 12
+order: 14
 title: "Merangkai Teks Bersih dengan Template Literals"
 readingMinutes: 5
 section: INTI

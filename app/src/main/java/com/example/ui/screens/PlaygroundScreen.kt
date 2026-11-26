@@ -358,13 +358,30 @@ print("Coba ubah kode ini lalu tekan tombol Jalankan!")
         }
     }
 
-    // Verification rules checking
+    // Verification rules checking (supports optional html:/css:/js: language prefixes)
     val rulesPassedStatus = remember(htmlCode, cssCode, jsCode, verificationRules) {
-        verificationRules.map { rule ->
-            val passed = htmlCode.contains(rule, ignoreCase = true) ||
-                cssCode.contains(rule, ignoreCase = true) ||
-                jsCode.contains(rule, ignoreCase = true)
-            rule to passed
+        verificationRules.map { rawRule ->
+            val lower = rawRule.lowercase()
+            val (displayRule, passed) = when {
+                lower.startsWith("html:") -> {
+                    val target = rawRule.substring(5).trim()
+                    target to htmlCode.contains(target, ignoreCase = true)
+                }
+                lower.startsWith("css:") -> {
+                    val target = rawRule.substring(4).trim()
+                    target to cssCode.contains(target, ignoreCase = true)
+                }
+                lower.startsWith("js:") -> {
+                    val target = rawRule.substring(3).trim()
+                    target to jsCode.contains(target, ignoreCase = true)
+                }
+                else -> rawRule to (
+                    htmlCode.contains(rawRule, ignoreCase = true) ||
+                        cssCode.contains(rawRule, ignoreCase = true) ||
+                        jsCode.contains(rawRule, ignoreCase = true)
+                    )
+            }
+            displayRule to passed
         }
     }
     val allRulesPassed = verificationRules.isNotEmpty() && rulesPassedStatus.all { it.second }
@@ -560,9 +577,9 @@ console.log("Total:", angka.reduce((a, b) => a + b, 0));"""
                                 }
                             }
                             val shareSubject = when {
-                                isPythonMode -> "Kode Python CodeAcademy"
-                                workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE -> "Kode JavaScript CodeAcademy"
-                                else -> "Proyek Web CodeAcademy"
+                                isPythonMode -> context.getString(R.string.playground_share_subject_python)
+                                workspaceMode == PlaygroundWorkspaceMode.JS_CONSOLE -> context.getString(R.string.playground_share_subject_js)
+                                else -> context.getString(R.string.playground_share_subject_web)
                             }
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"

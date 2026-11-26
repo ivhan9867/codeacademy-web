@@ -1,7 +1,7 @@
 ---
 id: js-inti-1
 courseId: fe-js-03
-order: 9
+order: 11
 title: "Kotak Berlabel: Menyimpan Data dengan let dan const"
 readingMinutes: 5
 section: INTI
@@ -40,7 +40,14 @@ Saat kamu berselancar di internet, aplikasi web perlu mengingat banyak hal: siap
 
 Untuk mengingat informasi tersebut, komputer menyediakan tempat di memori yang disebut **Variabel**.
 
-> **Ilustrasi Konsep:** Analogi Variabel sebagai Kotak Berlabel
+```text
+Memori Komputer:
+  +------------------+      +------------------+
+  | label: namaSitus |      | label: poin      |
+  | "CodeAcademy"    |      | 100 -> 125       |
+  +------------------+      +------------------+
+      (const: tetap)           (let: dinamis)
+```
 ---
 
 ## Analogi Kotak Penyimpanan Berlabel

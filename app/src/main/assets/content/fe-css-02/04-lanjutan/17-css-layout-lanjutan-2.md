@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-2
 courseId: fe-css-02
-order: 17
+order: 21
 title: "Membagi Lajur: grid-template-columns & grid-template-rows"
 readingMinutes: 6
 section: LANJUTAN
@@ -70,7 +70,12 @@ Setelah menyalakan `display: grid`, langkah berikutnya adalah memberitahu browse
 
 Pertanyaan ini dijawab oleh dua properti fundamental: **`grid-template-columns`** dan **`grid-template-rows`**.
 
-> **Ilustrasi Konsep:** Membagi Kolom dan Baris pada CSS Grid
+```text
+grid-template-columns: 200px 1fr 200px;
++------------+------------------------+------------+
+|   200px    |     1fr (Sisa Ruang)   |   200px    |
++------------+------------------------+------------+
+```
 ## Menentukan Kolom: `grid-template-columns`
 
 Setiap nilai yang kamu pisahkan dengan spasi mewakili **satu lajur kolom**:

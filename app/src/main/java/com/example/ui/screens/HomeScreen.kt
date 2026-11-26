@@ -194,24 +194,20 @@ fun HomeScreen(
         }
     }
 
-    val (recommendedCourseId, recTitle, recDesc) = remember(courses, progressList) {
+    val recFoundationTitle = stringResource(R.string.course_fe_web_foundation_00_title)
+    val recFoundationDesc = stringResource(R.string.home_rec_foundation_desc)
+    val recCssTitle = stringResource(R.string.course_fe_css_02_title)
+    val recCssDesc = stringResource(R.string.home_rec_css_desc)
+    val recJsTitle = stringResource(R.string.course_fe_js_03_title)
+    val recJsDesc = stringResource(R.string.home_rec_js_desc)
+    val (recommendedCourseId, recTitle, recDesc) = remember(
+        courses, progressList, recFoundationTitle, recFoundationDesc, recCssTitle, recCssDesc, recJsTitle, recJsDesc
+    ) {
         val completedIds = progressList.filter { it.isCompleted }.map { it.courseId }.toSet()
         when {
-            "fe-web-foundation-00" !in completedIds -> Triple(
-                "fe-web-foundation-00",
-                "Fondasi Web: Dari Nol ke Baris Kode Pertama",
-                "Mulai dari struktur HTML semantik dan styling CSS dasar langsung di smartphone."
-            )
-            "fe-css-02" !in completedIds -> Triple(
-                "fe-css-02",
-                "CSS Layout Modern: Flexbox & Grid",
-                "Kuasai tata letak responsif dengan Flexbox & Grid langsung di smartphone dengan praktik instan."
-            )
-            else -> Triple(
-                "fe-js-03",
-                "JavaScript Fundamentals",
-                "Hidupkan halaman web dengan logika JavaScript ES6, manipulasi DOM, dan event listener."
-            )
+            "fe-web-foundation-00" !in completedIds -> Triple("fe-web-foundation-00", recFoundationTitle, recFoundationDesc)
+            "fe-css-02" !in completedIds -> Triple("fe-css-02", recCssTitle, recCssDesc)
+            else -> Triple("fe-js-03", recJsTitle, recJsDesc)
         }
     }
 

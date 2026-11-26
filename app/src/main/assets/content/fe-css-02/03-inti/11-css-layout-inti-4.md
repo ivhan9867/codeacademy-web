@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-4
 courseId: fe-css-02
-order: 11
+order: 13
 title: "Penyelarasan Sumbu Silang dengan align-items & align-self"
 readingMinutes: 6
 section: INTI
@@ -73,7 +73,14 @@ Di era CSS klasik, ada satu lelucon terkenal di kalangan programmer: *"Cara pali
 
 Dengan hadirnya Flexbox, masalah itu selesai selamanya berkat properti **`align-items`**.
 
-> **Ilustrasi Konsep:** Penyelarasan Sumbu Silang dengan align-items
+```text
+align-items: flex-start   align-items: center     align-items: stretch
++--------------------+    +--------------------+  +--------------------+
+| [1] [2] [3]        |    |                    |  | [1] [2] [3]        |
+|                    |    | [1] [2] [3]        |  | [1] [2] [3]        |
+|                    |    |                    |  | [1] [2] [3]        |
++--------------------+    +--------------------+  +--------------------+
+```
 ## Apa itu `align-items`?
 
 Jika `justify-content` bertugas di **Sumbu Utama (Main Axis)**, maka `align-items` bertugas mengatur posisi item pada **Sumbu Silang (Cross Axis)** yang tegak lurus dengannya.

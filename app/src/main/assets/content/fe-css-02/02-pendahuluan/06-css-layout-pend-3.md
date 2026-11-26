@@ -1,7 +1,7 @@
 ---
 id: css-layout-pend-3
 courseId: fe-css-02
-order: 6
+order: 8
 title: "Masa Lalu yang Melelahkan: Jebakan CSS Float & Positioning"
 readingMinutes: 5
 section: PENDAHULUAN
@@ -80,7 +80,12 @@ playgroundTask: "Coba amati panel Live Preview: kotak pembungkus (.pembungkus) t
 ---
 Sebelum kita bersyukur atas kemudahan Flexbox dan Grid, penting untuk memahami "trauma kolektif" yang pernah dialami seluruh pengembang web di seluruh dunia: **membuat kolom dengan `float`**.
 
-> **Ilustrasi Konsep:** Fenomena Container Collapsing Akibat Float dan Mantra Clearfix
+```text
+Sebelum Clearfix (Parent Collapsing):     Sesudah Flexbox / Clearfix:
++-------- .parent (height: 0px) --------+ +-------- .parent (auto height) ------+
+  [float: left]  [float: left]            |  [ Item 1 ]   [ Item 2 ]            |
+                                          +-------------------------------------+
+```
 ## Apa Sebenarnya Tujuan Awal `float`?
 
 Properti `float` (dengan nilai `left` atau `right`) diciptakan untuk meniru tata letak surat kabar:

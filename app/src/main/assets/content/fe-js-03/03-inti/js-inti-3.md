@@ -1,7 +1,7 @@
 ---
 id: js-inti-3
 courseId: fe-js-03
-order: 11
+order: 13
 title: "Operator Matematika, Perbandingan & Logika"
 readingMinutes: 6
 section: INTI

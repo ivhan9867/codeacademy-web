@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-7
 courseId: fe-css-02
-order: 22
+order: 26
 title: "Latihan Praktik: Galeri Kartu Produk E-Commerce Responsif"
 readingMinutes: 7
 section: LANJUTAN
@@ -151,7 +151,12 @@ Banyak desainer pemula mengalami masalah klasik pada kartu produk:
 - Kartu dengan teks deskripsi pendek menjadi bantet.
 - Akibatnya, tombol "Beli" atau "Daftar" di bawah kartu berada pada ketinggian yang naik-turun berantakan!
 
-> **Ilustrasi Konsep:** Kolaborasi Grid untuk Luar dan Flexbox untuk Dalam Kartu
+```text
+Grid (Galeri Luar) -> [ Flexbox Card (column) ]
+                      | [  Gambar Produk    ] |
+                      | [  Judul & Harga    ] |
+                      | [  Tombol Beli      ] | (margin-top: auto)
+```
 ## Resep Kolaborasi Juara
 
 Kita membagi tugas secara harmonis:

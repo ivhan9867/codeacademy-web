@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-7
 courseId: fe-js-03
-order: 23
+order: 27
 title: "Merespons Aksi Pengguna: Event Listener & Tombol Interaktif"
 readingMinutes: 7
 section: LANJUTAN
@@ -50,7 +50,15 @@ Sebuah website menjadi benar-benar hidup ketika dapat merespons tindakan yang di
 
 Di dunia browser, setiap aksi interaksi pengguna tersebut disebut sebagai **Event (Peristiwa)**.
 
-> **Ilustrasi Konsep:** Alur Kerja Event Listener
+```text
+[ Pengguna Klik Tombol ] ---> [ Browser Trigger Event "click" ]
+                                         |
+                                         v
+                              [ Callback Function Berjalan ]
+                                         |
+                                         v
+                              [ Tampilan DOM Diperbarui ]
+```
 ---
 
 ## Memasang "Telinga Pendengar": addEventListener

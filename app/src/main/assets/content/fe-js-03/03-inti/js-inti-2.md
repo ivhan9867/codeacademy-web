@@ -1,7 +1,7 @@
 ---
 id: js-inti-2
 courseId: fe-js-03
-order: 10
+order: 12
 title: "Ragam Jenis Data Primitif JavaScript"
 readingMinutes: 6
 section: INTI

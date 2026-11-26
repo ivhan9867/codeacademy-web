@@ -845,21 +845,21 @@ private fun ContactFeedbackSection(versionName: String) {
                             data = Uri.parse("mailto:support@codeacademy.app")
                             putExtra(
                                 Intent.EXTRA_SUBJECT,
-                                "Bantuan & Feedback CodeAcademy v$versionName"
+                                context.getString(R.string.help_email_subject_format, versionName)
                             )
                             putExtra(
                                 Intent.EXTRA_TEXT,
-                                "Halo Tim CodeAcademy,\n\nSaya ingin menyampaikan pertanyaan / saran / kendala berikut:\n\n[Tulis pesan Anda di sini]\n\nInformasi Aplikasi:\nVersi: $versionName"
+                                context.getString(R.string.help_email_body_format, versionName)
                             )
                         }
                         try {
                             context.startActivity(
-                                Intent.createChooser(emailIntent, "Kirim email dengan...")
+                                Intent.createChooser(emailIntent, context.getString(R.string.help_email_chooser_title))
                             )
                         } catch (e: Exception) {
                             Toast.makeText(
                                 context,
-                                "Tidak ditemukan aplikasi email di perangkat ini.",
+                                context.getString(R.string.help_email_no_app),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

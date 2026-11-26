@@ -1,7 +1,7 @@
 ---
 id: js-inti-8
 courseId: fe-js-03
-order: 16
+order: 18
 title: "Rak Bernomor: Menyimpan Koleksi dengan Array Dasar"
 readingMinutes: 6
 section: INTI
@@ -43,7 +43,11 @@ Kode ini sangat merepotkan untuk dikelola. Bagaimana jika jumlah siswanya bertam
 
 Untuk menyimpan kumpulan banyak data di dalam satu nama variabel, JavaScript menyediakan wadah spesial bernama **Array**.
 
-> **Ilustrasi Konsep:** Indeks Array Berbasis Nol
+```text
+const buah = ["Apel", "Jeruk", "Mangga", "Pisang"];
+Index :          0        1         2         3
+Length: 4 (indeks terakhir = buah.length - 1)
+```
 ---
 
 ## Analogi Rak Bernomor

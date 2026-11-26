@@ -2013,6 +2013,147 @@
       ],
       "sectionQuizzes": [
         {
+          "id": "css-layout-quiz-pend",
+          "courseId": "fe-css-02",
+          "section": "PENDAHULUAN",
+          "title": "Kuis Pendahuluan: Fondasi Layout Modern",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Dalam konsep Normal Flow HTML, bagaimana perilaku default elemen bertipe block seperti <div> atau <section>?",
+              "options": [
+                "Tersusun bersebelahan secara horizontal mengikuti lebar teksnya",
+                "Menempati satu baris penuh dan mendorong elemen berikutnya ke bawah",
+                "Selalu mengambang di sisi kanan viewport tanpa memakan ruang dokumen",
+                "Mengabaikan properti width dan height yang diberikan lewat CSS"
+              ],
+              "correctIndex": 1,
+              "explanation": "Elemen block secara default mengambil 100% lebar kontainer induknya dan selalu memulai baris baru di bawah elemen sebelumnya.",
+              "sourceModuleId": "css-layout-pend-2"
+            },
+            {
+              "id": 2,
+              "question": "Mengapa elemen bertipe inline (seperti <span>) tidak cocok langsung dijadikan kolom layout berdampingan dengan lebar tetap?",
+              "options": [
+                "Karena elemen inline tidak dapat diberi warna latar belakang maupun teks",
+                "Karena elemen inline tidak dapat berada di dalam elemen <div>",
+                "Karena properti width, height, serta margin atas-bawahnya diabaikan browser",
+                "Karena elemen inline selalu memaksa halaman melakukan horizontal scroll"
+              ],
+              "correctIndex": 2,
+              "explanation": "Elemen inline hanya selebar kontennya dan mengabaikan width, height, serta margin vertikal, sehingga tidak ideal untuk membentuk kolom terstruktur.",
+              "sourceModuleId": "css-layout-pend-2"
+            },
+            {
+              "id": 3,
+              "question": "Apa masalah utama yang terjadi pada sebuah kontainer induk ketika seluruh elemen anaknya diberi float: left;?",
+              "options": [
+                "Tinggi kontainer induk menyusut menjadi 0px (container collapsing)",
+                "Seluruh teks di dalam kontainer otomatis berubah menjadi rata kanan",
+                "Browser menonaktifkan seluruh aturan padding dan border di halaman",
+                "Elemen anak berubah menjadi transparan dan tidak bisa diklik pengguna"
+              ],
+              "correctIndex": 0,
+              "explanation": "Elemen dengan float keluar dari Normal Flow, sehingga kontainer induknya menganggap tidak ada isi di dalam dan tingginya runtuh menjadi 0px tanpa teknik clearfix.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 4,
+              "question": "Pada CSS Box Model default (content-box), jika elemen memiliki width: 200px, padding: 20px, dan border: 5px solid, berapa total lebar terender elemen tersebut?",
+              "options": [
+                "200px",
+                "225px",
+                "245px",
+                "250px"
+              ],
+              "correctIndex": 3,
+              "explanation": "Pada box-sizing: content-box, total lebar = width (200) + padding kiri-kanan (20 + 20) + border kiri-kanan (5 + 5) = 250px.",
+              "sourceModuleId": "css-layout-pend-2"
+            },
+            {
+              "id": 5,
+              "question": "Mengapa pengaturan box-sizing: border-box; sangat dianjurkan dalam menyusun layout modern?",
+              "options": [
+                "Agar browser otomatis mengubah seluruh elemen inline menjadi grid item",
+                "Agar padding dan border sudah dihitung di dalam nilai width dan height yang ditentukan",
+                "Agar margin antar-elemen otomatis hilang tanpa perlu ditulis ulang",
+                "Agar elemen tidak memerlukan media query saat dibuka di layar ponsel"
+              ],
+              "correctIndex": 1,
+              "explanation": "Dengan border-box, lebar yang kamu tulis (misalnya width: 300px) sudah mencakup konten, padding, dan border sehingga ukuran kartu tidak meluber keluar kontainer.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 6,
+              "question": "Apa tujuan awal sebenarnya dari properti CSS float sebelum disalahgunakan untuk membuat layout multi-kolom?",
+              "options": [
+                "Membuat animasi transisi kartu produk agar bergerak halus",
+                "Menengahkan dialog modal tepat di tengah layar secara vertikal",
+                "Mengalirkan teks artikel mengelilingi gambar seperti tata letak majalah",
+                "Menentukan urutan tumpukan elemen di sumbu Z menggunakan z-index"
+              ],
+              "correctIndex": 2,
+              "explanation": "Properti float awalnya dirancang khusus untuk efek editorial seperti teks berita yang mengalir di samping foto, bukan untuk arsitektur halaman web penuh.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 7,
+              "question": "Mengapa mengandalkan position: absolute untuk menyusun seluruh tata letak halaman utama dianggap praktik yang buruk?",
+              "options": [
+                "Karena elemen berisiko saling bertabrakan dan menumpuk saat ukuran layar berubah",
+                "Karena position: absolute hanya didukung oleh peramban versi lama",
+                "Karena elemen absolut tidak dapat menampilkan teks maupun gambar",
+                "Karena position: absolute selalu memaksa halaman memuat ulang CSS"
+              ],
+              "correctIndex": 0,
+              "explanation": "Elemen dengan position: absolute dicabut dari aliran dokumen sehingga tidak saling mendorong secara alami, menyebabkan tabrakan antarkonten pada layar berbeda.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 8,
+              "question": "Kelemahan klasik apa yang paling terasa pada teknik tata letak berbasis tabel (<table>) maupun float di era web responsif?",
+              "options": [
+                "Tidak mendukung penggunaan warna latar belakang pada kolom",
+                "Sulit menyamakan tinggi antar-kolom yang isi teksnya berbeda panjang secara otomatis",
+                "Tidak dapat digabungkan dengan tag semantik HTML5 seperti <header>",
+                "Hanya mampu menampilkan maksimal dua kolom dalam satu halaman web"
+              ],
+              "correctIndex": 1,
+              "explanation": "Pada teknik float, tinggi setiap kolom bergantung pada isi kontennya sendiri sehingga menyamakan tinggi kartu sejajar membutuhkan trik tambahan yang rapuh.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 9,
+              "question": "Apa perbedaan mendasar peran Flexbox dan CSS Grid ketika keduanya digabungkan dalam satu halaman modern?",
+              "options": [
+                "CSS Grid mengatur struktur makro 2 dimensi, sedangkan Flexbox merapikan komponen 1 dimensi",
+                "Flexbox khusus untuk tampilan desktop, sedangkan CSS Grid khusus untuk layar ponsel",
+                "CSS Grid hanya dipakai untuk teks paragraf, sedangkan Flexbox khusus untuk gambar",
+                "Flexbox menggantikan CSS Grid sepenuhnya sehingga keduanya tidak boleh digabung"
+              ],
+              "correctIndex": 0,
+              "explanation": "CSS Grid unggul di level makro (kerangka baris dan kolom halaman sekaligus), sedangkan Flexbox ideal di level mikro untuk menyelaraskan isi komponen satu arah seperti navbar atau tombol.",
+              "sourceModuleId": "css-layout-pend-4"
+            },
+            {
+              "id": 10,
+              "question": "Mengapa CSS layout modern (Flexbox dan Grid) menandai perubahan dari era hack ke sistem tata letak sejati?",
+              "options": [
+                "Karena keduanya menulis ulang struktur HTML secara otomatis di sisi server",
+                "Karena keduanya menghilangkan kebutuhan memakai selector class di CSS",
+                "Karena keduanya hanya bekerja tanpa perlu mendefinisikan properti warna atau font",
+                "Karena tata letak kini deklaratif, sadar ruang kosong, dan mudah beradaptasi lintas ukuran layar"
+              ],
+              "correctIndex": 3,
+              "explanation": "Flexbox dan Grid dirancang khusus untuk tata letak: elemen tetap berada dalam aliran dokumen, dapat membagi ruang sisa secara proporsional, dan responsif tanpa trik clearfix.",
+              "sourceModuleId": "css-layout-pend-1"
+            }
+          ]
+        },
+        {
           "id": "css-layout-quiz-inti",
           "courseId": "fe-css-02",
           "section": "INTI",
@@ -2085,6 +2226,136 @@
               "correctIndex": 2,
               "explanation": "Properti gap memberi jarak konsisten hanya di antara item, bukan di tepi luar.",
               "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 6,
+              "question": "Jika sebuah flex container diberi flex-direction: column;, ke arah mana Main Axis dan Cross Axis berjalan?",
+              "options": [
+                "Main Axis vertikal (atas ke bawah) dan Cross Axis horizontal (kiri ke kanan)",
+                "Main Axis tetap horizontal dan Cross Axis tetap vertikal seperti bawaan",
+                "Keduanya berjalan vertikal sehingga align-items menjadi tidak berfungsi",
+                "Main Axis berjalan dari kanan ke kiri dan Cross Axis dari bawah ke atas"
+              ],
+              "correctIndex": 0,
+              "explanation": "Mengubah flex-direction menjadi column memutar Main Axis menjadi vertikal (atas ke bawah), sehingga Cross Axis ikut berputar menjadi horizontal.",
+              "sourceModuleId": "css-layout-inti-2"
+            },
+            {
+              "id": 7,
+              "question": "Apa perbedaan hasil antara justify-content: space-between; dan justify-content: space-evenly;?",
+              "options": [
+                "space-between memberi jarak di tepi kontainer, sedangkan space-evenly tidak",
+                "space-between menempelkan item pertama dan terakhir ke tepi, sedangkan space-evenly membagi semua celah termasuk tepi sama besar",
+                "space-evenly hanya bekerja pada flex-direction: column, sedangkan space-between hanya pada row",
+                "Keduanya menghasilkan jarak identik selama hanya ada dua atau lebih flex items"
+              ],
+              "correctIndex": 1,
+              "explanation": "space-between membuang jarak di tepi kiri-kanan sehingga item ujung menempel ke batas kontainer, sedangkan space-evenly membuat jarak tepi dan jarak antar-item tepat sama lebar.",
+              "sourceModuleId": "css-layout-inti-3"
+            },
+            {
+              "id": 8,
+              "question": "Nilai bawaan (default) dari properti align-items pada flex container adalah...",
+              "options": [
+                "center",
+                "flex-start",
+                "stretch",
+                "baseline"
+              ],
+              "correctIndex": 2,
+              "explanation": "Secara default align-items bernilai stretch, yang membuat semua flex item tanpa height tetap otomatis meregang memenuhi tinggi Cross Axis kontainer.",
+              "sourceModuleId": "css-layout-inti-4"
+            },
+            {
+              "id": 9,
+              "question": "Kapan properti align-content memiliki efek visual pada sebuah flex container?",
+              "options": [
+                "Setiap kali flex-grow bernilai 0 pada seluruh anak langsung",
+                "Setiap kali kontainer hanya memiliki satu baris flex item yang renggang",
+                "Hanya ketika flex-direction bernilai row-reverse tanpa batas lebar",
+                "Hanya ketika flex-wrap: wrap aktif dan item terbungkus menjadi lebih dari satu baris"
+              ],
+              "correctIndex": 3,
+              "explanation": "align-content mengatur distribusi ruang antar-baris sepanjang Cross Axis, sehingga baru berpengaruh ketika flex-wrap: wrap membentuk multi-baris.",
+              "sourceModuleId": "css-layout-inti-5"
+            },
+            {
+              "id": 10,
+              "question": "Mengapa item di dalam flex container dengan flex-wrap: nowrap (default) sering tampak menyusut melebihi width yang ditentukan saat layar sempit?",
+              "options": [
+                "Karena Flexbox mengabaikan properti width dan hanya membaca min-height",
+                "Karena flex-wrap: nowrap otomatis mengubah unit px menjadi persentase",
+                "Karena nilai default flex-shrink adalah 1 sehingga item diizinkan mengecil agar muat satu baris",
+                "Karena browser memaksa gap bernilai negatif saat ruang kontainer penuh"
+              ],
+              "correctIndex": 2,
+              "explanation": "Pada konfigurasi bawaan nowrap dan flex-shrink: 1, item akan menyusut secara proporsional untuk mencegah overflow keluar dari satu baris kontainer.",
+              "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 11,
+              "question": "Jika kamu menulis gap: 16px 24px; pada sebuah flex container, apa arti masing-masing angka tersebut?",
+              "options": [
+                "16px untuk jarak luar kontainer dan 24px untuk padding internal tiap item",
+                "16px untuk jarak antar-item kiri-kanan dan 24px untuk ukuran border item",
+                "16px untuk row-gap (jarak antar-baris) dan 24px untuk column-gap (jarak antar-kolom)",
+                "16px untuk batas minimum dan 24px untuk batas maksimum lebar item"
+              ],
+              "correctIndex": 2,
+              "explanation": "Shorthand gap dengan dua nilai mengikuti urutan row-gap lalu column-gap: 16px memisahkan baris secara vertikal dan 24px memisahkan kolom secara horizontal.",
+              "sourceModuleId": "css-layout-inti-5"
+            },
+            {
+              "id": 12,
+              "question": "Di dalam kontainer selebar 600px tanpa gap, terdapat dua item dengan flex-basis: 0;. Item A punya flex-grow: 1; dan Item B punya flex-grow: 2;. Berapa lebar Item B?",
+              "options": [
+                "200px",
+                "300px",
+                "400px",
+                "450px"
+              ],
+              "correctIndex": 2,
+              "explanation": "Dengan flex-basis: 0, seluruh 600px menjadi ruang sisa yang dibagi 1 + 2 = 3 bagian. Item B mendapat 2/3 × 600px = 400px.",
+              "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 13,
+              "question": "Apa kepanjangan nilai shorthand flex: 1; dalam spesifikasi Flexbox modern?",
+              "options": [
+                "flex-grow: 1; flex-shrink: 0; flex-basis: auto;",
+                "flex-grow: 0; flex-shrink: 1; flex-basis: 100%;",
+                "flex-grow: 1; flex-shrink: 1; flex-basis: content;",
+                "flex-grow: 1; flex-shrink: 1; flex-basis: 0%;"
+              ],
+              "correctIndex": 3,
+              "explanation": "flex: 1 memperluas item untuk mengisi ruang sisa (grow: 1), mengizinkannya menyusut (shrink: 1), dan menyetel basis awal 0% agar pembagian ruang proporsional.",
+              "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 14,
+              "question": "Mengapa penggunaan properti order pada Flexbox perlu hati-hati dari sisi aksesibilitas?",
+              "options": [
+                "Karena properti order menyebabkan gambar di dalam flex item gagal dimuat",
+                "Karena nilai order negatif otomatis menghapus elemen tersebut dari DOM",
+                "Karena order mengubah tampilan visual di layar tanpa mengubah urutan navigasi keyboard (Tab) dan pembaca layar",
+                "Karena order hanya dapat dipakai pada elemen <button> dan <a>"
+              ],
+              "correctIndex": 2,
+              "explanation": "Screen reader dan tombol Tab mengikuti urutan asli HTML di DOM, bukan urutan visual order. Jika urutan visual bertolak belakang dengan DOM, pengguna keyboard bisa bingung.",
+              "sourceModuleId": "css-layout-inti-7"
+            },
+            {
+              "id": 15,
+              "question": "Pada sebuah kartu vertikal (display: flex; flex-direction: column; height: 100%;), trik mana yang paling bersih untuk mendorong tombol aksi selalu menempel di dasar kartu?",
+              "options": [
+                "Memberikan justify-content: flex-start; pada elemen tombol itu sendiri",
+                "Memberikan margin-top: auto; pada elemen tombol (atau footer kartu)",
+                "Memberikan flex-shrink: 0; pada judul kartu bagian atas",
+                "Mengubah flex-direction tombol menjadi column-reverse"
+              ],
+              "correctIndex": 1,
+              "explanation": "Di dalam flex container, margin: auto pada arah sumbu utama akan menyerap seluruh ruang kosong yang tersisa, sehingga margin-top: auto mendorong elemen ke dasar kontainer.",
+              "sourceModuleId": "css-layout-inti-4"
             }
           ]
         },
@@ -2161,6 +2432,136 @@
               "correctIndex": 0,
               "explanation": "place-items: center; adalah shorthand untuk align-items: center dan justify-items: center.",
               "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 6,
+              "question": "Pada kontainer grid selebar 1000px tanpa gap, jika ditulis grid-template-columns: 200px 1fr 3fr;, berapa lebar kolom kedua dan ketiga?",
+              "options": [
+                "Kolom kedua 250px dan kolom ketiga 750px",
+                "Kolom kedua 200px dan kolom ketiga 600px",
+                "Kolom kedua 300px dan kolom ketiga 500px",
+                "Kolom kedua 400px dan kolom ketiga 400px"
+              ],
+              "correctIndex": 1,
+              "explanation": "Setelah dikurangi kolom tetap 200px, sisa ruang bebas adalah 800px. Nilai 1fr + 3fr = 4 bagian, sehingga 1fr = 200px dan 3fr = 600px.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 7,
+              "question": "Manakah penulisan yang ringkas dan setara dengan grid-template-columns: 1fr 1fr 1fr 1fr;?",
+              "options": [
+                "grid-template-columns: loop(4, 1fr);",
+                "grid-template-columns: 4 * 1fr;",
+                "grid-template-columns: repeat(1fr, 4);",
+                "grid-template-columns: repeat(4, 1fr);"
+              ],
+              "correctIndex": 3,
+              "explanation": "Fungsi repeat(jumlah, ukuran) menerima jumlah pengulangan sebagai argumen pertama dan pola ukuran kolom sebagai argumen kedua.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 8,
+              "question": "Apa fungsi minmax(220px, 1fr) dalam deklarasi kolom CSS Grid?",
+              "options": [
+                "Mengunci lebar kolom tepat di 220px dan mengabaikan 1fr pada layar lebar",
+                "Menetapkan jumlah kolom minimum 220 buah dan maksimum 1 buah",
+                "Menentukan lebar kolom minimal 220px agar tidak terlalu sempit, tetapi dapat melebar hingga 1fr saat ruang tersedia",
+                "Memaksa tinggi baris selalu antara 220px sampai 100% tinggi viewport"
+              ],
+              "correctIndex": 2,
+              "explanation": "minmax(min, max) memberi batas bawah (220px) supaya kartu tetap terbaca dan batas atas fleksibel (1fr) agar mengisi sisa baris secara merata.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 9,
+              "question": "Apa perbedaan perilaku antara auto-fit dan auto-fill ketika jumlah kartu lebih sedikit daripada kapasitas satu baris?",
+              "options": [
+                "auto-fill melipat trek kosong menjadi 0px, sedangkan auto-fit membiarkannya terbuka",
+                "Keduanya selalu memusatkan satu kartu tepat di tengah layar secara otomatis",
+                "auto-fit melipat trek kosong sehingga item yang ada melebar mengisi baris, sedangkan auto-fill mempertahankan ruang trek kosong",
+                "auto-fit hanya bekerja pada baris (rows), sedangkan auto-fill hanya untuk kolom"
+              ],
+              "correctIndex": 2,
+              "explanation": "Saat ruang berlebih dan item sedikit, auto-fit meruntuhkan kolom kosong agar item yang ada meregang, sedangkan auto-fill tetap menyisakan kolom kosong sesuai ukuran minimumnya.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 10,
+              "question": "Pada properti grid-template-areas, simbol apa yang digunakan untuk menandai sel kosong (tidak ditempati area mana pun)?",
+              "options": [
+                "Tanda bintang (*)",
+                "Tanda pagar (#)",
+                "Kata kunci none di setiap sel",
+                "Tanda titik (.)"
+              ],
+              "correctIndex": 3,
+              "explanation": "Satu atau beberapa titik berurutan (misalnya \". sidebar main\") menandakan sel grid yang sengaja dibiarkan kosong dalam peta visual grid-template-areas.",
+              "sourceModuleId": "css-layout-lanjutan-5"
+            },
+            {
+              "id": 11,
+              "question": "Pada sebuah grid 4 kolom, apa efek deklarasi grid-column: 1 / -1; pada elemen header?",
+              "options": [
+                "Header hanya menempati satu kolom terakhir dari sisi kanan",
+                "Header disembunyikan dari grid dan diletakkan di luar kontainer",
+                "Header membentang penuh dari garis kolom pertama hingga garis kolom paling akhir",
+                "Header berpindah menjadi baris negatif di atas kontainer induk"
+              ],
+              "correctIndex": 2,
+              "explanation": "Nomor garis negatif -1 selalu merujuk ke garis ujung akhir grid, sehingga 1 / -1 membentangkan item selebar seluruh kolom tanpa perlu menghitung jumlah total garis.",
+              "sourceModuleId": "css-layout-lanjutan-4"
+            },
+            {
+              "id": 12,
+              "question": "Properti place-items: center; pada kontainer Grid merupakan shorthand dari dua properti berikut...",
+              "options": [
+                "justify-content dan align-content",
+                "align-items dan justify-items",
+                "grid-column dan grid-row",
+                "place-self dan justify-self"
+              ],
+              "correctIndex": 1,
+              "explanation": "place-items menggabungkan align-items (sumbu blok/vertikal) dan justify-items (sumbu inline/horizontal) untuk menyelaraskan konten di dalam setiap sel grid.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 13,
+              "question": "Dalam pendekatan Mobile-First CSS, bagaimana pola media query yang tepat untuk menambah gaya khusus layar tablet dan desktop?",
+              "options": [
+                "Menulis gaya desktop sebagai default lalu memakai @media (max-width: 768px)",
+                "Menghapus semua aturan layout default dan hanya memakai @media (orientation: landscape)",
+                "Memakai @media (device-width: 320px) untuk semua ukuran layar modern",
+                "Menulis gaya dasar untuk ponsel lalu menambahkan @media (min-width: 768px) secara bertahap"
+              ],
+              "correctIndex": 3,
+              "explanation": "Mobile-first memulai dari layout kolom tunggal yang ringan untuk ponsel, lalu memperkaya tata letak dengan breakpoint min-width saat layar makin lebar.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 14,
+              "question": "Bagaimana cara mendeklarasikan CSS Variable (Custom Property) secara global dan memakainya dengan nilai cadangan (fallback)?",
+              "options": [
+                "Deklarasi di html { $gap-utama: 16px; } lalu dipakai dengan gap: $gap-utama;",
+                "Deklarasi di * { var-gap: 16px; } lalu dipakai dengan gap: get(var-gap);",
+                "Deklarasi di :root { --gap-utama: 16px; } lalu dipakai dengan gap: var(--gap-utama, 12px);",
+                "Deklarasi di body { @gap-utama: 16px; } lalu dipakai dengan gap: attr(--gap-utama);"
+              ],
+              "correctIndex": 2,
+              "explanation": "Variabel CSS diawali tanda -- dan lazim didefinisikan di :root agar tersedia secara global, lalu dipanggil lewat var(--nama, fallback).",
+              "sourceModuleId": "css-layout-lanjutan-7"
+            },
+            {
+              "id": 15,
+              "question": "Manakah kombinasi pola hybrid CSS Grid dan Flexbox yang paling tepat untuk halaman dasbor modern?",
+              "options": [
+                "Memakai Flexbox untuk struktur sidebar-header-konten 2 dimensi, dan Grid untuk meratakan ikon di dalam tombol",
+                "Memakai CSS Grid untuk kerangka utama halaman (header, sidebar, area konten) dan Flexbox untuk menyelaraskan item di dalam navbar serta kartu",
+                "Menghindari pemakaian Flexbox sama sekali begitu display: grid aktif di halaman",
+                "Menumpuk display: grid; display: flex; pada elemen kontainer yang sama secara bersamaan"
+              ],
+              "correctIndex": 1,
+              "explanation": "Satu elemen hanya bisa memakai satu nilai display, namun Grid dan Flexbox saling melengkapi secara bersarang: Grid mengatur kerangka 2D halaman, sementara Flexbox mengatur isi komponen internal.",
+              "sourceModuleId": "css-layout-lanjutan-7"
             }
           ]
         }
@@ -2454,6 +2855,147 @@
       ],
       "sectionQuizzes": [
         {
+          "id": "js-quiz-pend",
+          "courseId": "fe-js-03",
+          "section": "PENDAHULUAN",
+          "title": "Kuis Pendahuluan: Pengenalan & Sintaks JavaScript",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "Dalam ekosistem pengembangan web front-end, apa peran utama JavaScript dibanding HTML dan CSS?",
+              "options": [
+                "Menyusun struktur semantik elemen seperti judul, paragraf, dan tabel",
+                "Mengatur tata letak grid, warna tema, serta animasi transisi CSS murni",
+                "Menghadirkan logika program, interaktivitas pengguna, dan manipulasi DOM secara dinamis",
+                "Menggantikan peran server web dalam menyimpan seluruh database pengguna secara permanen"
+              ],
+              "correctIndex": 2,
+              "explanation": "HTML bertugas sebagai struktur, CSS sebagai presentasi visual, dan JavaScript sebagai otak logika yang merespons aksi pengguna serta memproses data di browser.",
+              "sourceModuleId": "js-pend-1"
+            },
+            {
+              "id": 2,
+              "question": "Mengapa tag <script src=\"app.js\"></script> tanpa atribut tambahan sering diletakkan tepat sebelum tag penutup </body>?",
+              "options": [
+                "Agar browser selesai mem-parsing elemen HTML terlebih dahulu sebelum skrip mencoba memilihnya",
+                "Karena standar HTML5 melarang penulisan tag <script> di dalam bagian <head>",
+                "Agar browser tidak perlu mengunduh berkas app.js dari server",
+                "Karena kode JavaScript hanya bisa dieksekusi setelah seluruh file CSS dihapus"
+              ],
+              "correctIndex": 0,
+              "explanation": "Menaruh <script> sebelum </body> memastikan elemen DOM sudah terbentuk saat JS berjalan, sekaligus mencegah pemblokiran rendering halaman lebih awal.",
+              "sourceModuleId": "js-pend-2"
+            },
+            {
+              "id": 3,
+              "question": "Apa manfaat menambahkan atribut defer pada tag <script src=\"app.js\" defer></script> di dalam <head>?",
+              "options": [
+                "Skrip langsung menghentikan parsing HTML sampai file JS selesai dijalankan",
+                "Skrip hanya dijalankan jika pengguna mengeklik tombol di halaman",
+                "Atribut defer mengubah kode JavaScript menjadi berjalan di sisi server",
+                "Skrip diunduh paralel dengan parsing HTML, lalu dieksekusi terurut setelah HTML selesai di-parse"
+              ],
+              "correctIndex": 3,
+              "explanation": "Atribut defer memungkinkan pengunduhan skrip tanpa memblokir parser HTML, lalu mengeksekusinya secara berurutan tepat sebelum event DOMContentLoaded.",
+              "sourceModuleId": "js-pend-2"
+            },
+            {
+              "id": 4,
+              "question": "Apa fungsi utama perintah console.log() saat belajar atau mengembangkan aplikasi JavaScript?",
+              "options": [
+                "Menampilkan pop-up peringatan yang memaksa pengguna menekan tombol OK",
+                "Mencetak nilai variabel atau pesan diagnostik ke panel Console browser untuk debugging",
+                "Menyimpan data permanen ke penyimpanan lokal peramban",
+                "Menggantikan isi teks elemen <h1> secara otomatis pada halaman web"
+              ],
+              "correctIndex": 1,
+              "explanation": "console.log() mencetak informasi ke Developer Console tanpa mengganggu tampilan UI pengguna, sangat berguna untuk memeriksa alur program dan isi variabel.",
+              "sourceModuleId": "js-pend-3"
+            },
+            {
+              "id": 5,
+              "question": "Manakah sintaks komentar satu baris dan komentar multi-baris yang benar dalam JavaScript?",
+              "options": [
+                "# satu baris dan ''' multi-baris '''",
+                "<!-- satu baris --> dan /* multi-baris */",
+                "// satu baris dan /* multi-baris */",
+                "-- satu baris dan {{ multi-baris }}"
+              ],
+              "correctIndex": 2,
+              "explanation": "JavaScript memakai // untuk komentar satu baris dan /* ... */ untuk komentar beberapa baris; keduanya diabaikan oleh engine saat kode dijalankan.",
+              "sourceModuleId": "js-pend-4"
+            },
+            {
+              "id": 6,
+              "question": "JavaScript bersifat case-sensitive. Apa dampaknya terhadap penamaan variabel userName dan username?",
+              "options": [
+                "Keduanya dianggap sama sehingga mendeklarasikan keduanya memicu peringatan",
+                "Keduanya dianggap dua variabel yang berbeda karena perbedaan huruf kapital N",
+                "JavaScript otomatis mengubah semua nama variabel menjadi huruf kecil",
+                "Variabel dengan huruf kapital di tengah hanya boleh dipakai di dalam fungsi"
+              ],
+              "correctIndex": 1,
+              "explanation": "Karena case-sensitive, perbedaan satu huruf besar/kecil membuat userName dan username menjadi pengenal yang terpisah. Konvensi standar JS menggunakan camelCase.",
+              "sourceModuleId": "js-pend-4"
+            },
+            {
+              "id": 7,
+              "question": "Jenis error apa yang muncul di Console jika kamu memanggil console.log(totalHarga); padahal variabel totalHarga belum pernah dideklarasikan?",
+              "options": [
+                "SyntaxError",
+                "TypeError",
+                "ReferenceError",
+                "RangeError"
+              ],
+              "correctIndex": 2,
+              "explanation": "ReferenceError terjadi ketika JavaScript mencoba mengakses variabel atau pengenal yang tidak ada di cakupan (scope) saat ini.",
+              "sourceModuleId": "js-pend-5"
+            },
+            {
+              "id": 8,
+              "question": "Ketika kamu lupa menutup tanda kutip string atau kurang tanda kurung kurawal }, error jenis apa yang langsung dilaporkan parser sebelum kode berjalan?",
+              "options": [
+                "SyntaxError",
+                "ReferenceError",
+                "TypeError",
+                "NetworkError"
+              ],
+              "correctIndex": 0,
+              "explanation": "SyntaxError menandakan tata bahasa kode melanggar aturan penulisan JavaScript (misalnya tanda kurung atau kutip belum ditutup) sehingga kode gagal di-parse.",
+              "sourceModuleId": "js-pend-5"
+            },
+            {
+              "id": 9,
+              "question": "Kapan TypeError muncul saat menjalankan kode JavaScript?",
+              "options": [
+                "Saat nama file script eksternal salah ketik pada atribut src HTML",
+                "Saat melakukan operasi tidak valid terhadap tipe data, seperti mengubah nilai const atau memanggil angka sebagai fungsi",
+                "Saat lupa menambahkan komentar penjelasan di atas deklarasi fungsi",
+                "Saat baris kode tidak diakhiri dengan tanda titik koma (;)"
+              ],
+              "correctIndex": 1,
+              "explanation": "TypeError muncul ketika sebuah nilai bertipe tidak sesuai untuk operasi yang dilakukan, misalnya reassign variabel const atau memanggil (42)().",
+              "sourceModuleId": "js-pend-5"
+            },
+            {
+              "id": 10,
+              "question": "Apa hubungan antara ECMAScript dan JavaScript?",
+              "options": [
+                "ECMAScript adalah framework CSS yang wajib dipasang sebelum memakai JavaScript",
+                "ECMAScript adalah nama server khusus untuk menjalankan JavaScript di browser lama",
+                "Keduanya bahasa yang saling bertentangan dan tidak kompatibel satu sama lain",
+                "ECMAScript adalah spesifikasi standar resmi yang menjadi acuan fitur bahasa JavaScript modern (seperti ES6)"
+              ],
+              "correctIndex": 3,
+              "explanation": "ECMAScript (ES) adalah standar resmi yang mendefinisikan sintaks dan fitur bahasa inti JavaScript, seperti hadirnya let, const, dan arrow function di ES6.",
+              "sourceModuleId": "js-pend-1"
+            }
+          ]
+        },
+        {
           "id": "js-quiz-inti",
           "courseId": "fe-js-03",
           "section": "INTI",
@@ -2526,6 +3068,136 @@
               "correctIndex": 0,
               "explanation": "Arrow function menggunakan sintaks (parameter) => ekspresi atau blok { ... }.",
               "sourceModuleId": "js-inti-6"
+            },
+            {
+              "id": 6,
+              "question": "Mengapa penggunaan var tidak lagi direkomendasikan pada JavaScript modern dibanding let dan const?",
+              "options": [
+                "Karena var tidak bisa menyimpan tipe data angka dan string sekaligus",
+                "Karena var hanya mengenal function scope dan mengalami hoisting ke undefined, sehingga rentan bocor dari blok if/for",
+                "Karena var wajib diakhiri tanda titik koma sementara let dan const tidak",
+                "Karena var otomatis menghapus isi variabel setelah 5 detik"
+              ],
+              "correctIndex": 1,
+              "explanation": "Berbeda dengan let/const yang memiliki block scope aman di dalam { }, var bersifat function-scoped dan dapat diakses sebelum baris deklarasinya dengan nilai undefined.",
+              "sourceModuleId": "js-inti-1"
+            },
+            {
+              "id": 7,
+              "question": "Apa perbedaan utama antara nilai primitif undefined dan null di JavaScript?",
+              "options": [
+                "null hanya berlaku untuk angka 0, sedangkan undefined hanya untuk string kosong",
+                "typeof undefined mengembalikan 'object', sedangkan typeof null mengembalikan 'null'",
+                "Keduanya identik saat dibandingkan dengan operator strict equality (===)",
+                "undefined berarti variabel belum diisi nilai oleh sistem, sedangkan null adalah nilai kosong yang sengaja diberikan developer"
+              ],
+              "correctIndex": 3,
+              "explanation": "undefined umumnya muncul otomatis saat variabel dideklarasikan tanpa nilai awal, sedangkan null secara eksplisit menandakan ketiadaan objek atau nilai kosong yang disengaja.",
+              "sourceModuleId": "js-inti-2"
+            },
+            {
+              "id": 8,
+              "question": "Apa hasil evaluasi ekspresi ('10' == 10) dan ('10' === 10) secara berturut-turut?",
+              "options": [
+                "true dan true",
+                "false dan true",
+                "true dan false",
+                "false dan false"
+              ],
+              "correctIndex": 2,
+              "explanation": "Operator == melakukan konversi tipe implisit sehingga '10' disamakan dengan 10 (true), sedangkan === memeriksa nilai dan tipe data sekaligus (string vs number -> false).",
+              "sourceModuleId": "js-inti-3"
+            },
+            {
+              "id": 9,
+              "question": "Manakah cara penulisan Template Literals yang benar untuk menyisipkan perhitungan harga * jumlah?",
+              "options": [
+                "\"Total: ${harga * jumlah}\"",
+                "'Total: #{harga * jumlah}'",
+                "`Total: ${harga * jumlah}`",
+                "`Total: {{harga * jumlah}}`"
+              ],
+              "correctIndex": 2,
+              "explanation": "Template literals wajib menggunakan tanda backtick (`) dan interpolasi ${...}, yang dapat menampung variabel maupun ekspresi matematika langsung.",
+              "sourceModuleId": "js-inti-4"
+            },
+            {
+              "id": 10,
+              "question": "Jika nilai = 85, apa output dari: if (nilai >= 70) { console.log('B'); } else if (nilai >= 80) { console.log('A'); }?",
+              "options": [
+                "Mencetak 'A'",
+                "Mencetak 'B'",
+                "Mencetak 'B' lalu 'A'",
+                "Menghasilkan SyntaxError karena kondisi salah urutan"
+              ],
+              "correctIndex": 1,
+              "explanation": "Pada rantai if / else if, kondisi diperiksa dari atas ke bawah dan berhenti di cabang pertama yang bernilai true. Karena 85 >= 70 sudah true, blok 'B' dieksekusi dan 'A' dilewati.",
+              "sourceModuleId": "js-inti-5"
+            },
+            {
+              "id": 11,
+              "question": "Apa yang terjadi dalam pernyataan switch jika kamu lupa menulis kata kunci break; pada akhir sebuah case yang cocok?",
+              "options": [
+                "Program berhenti total dan melempar ReferenceError",
+                "Eksekusi terus mengalir menjalankan kode di case berikutnya (fall-through) meskipun tidak cocok",
+                "Nilai switch otomatis berubah menjadi undefined",
+                "Browser mengulang blok switch tersebut sebanyak dua kali"
+              ],
+              "correctIndex": 1,
+              "explanation": "Tanpa break;, JavaScript mengalami fall-through sehingga pernyataan di case-case di bawahnya ikut dijalankan sampai bertemu break atau akhir blok switch.",
+              "sourceModuleId": "js-inti-6"
+            },
+            {
+              "id": 12,
+              "question": "Mengapa perulangan while dapat memicu infinite loop (perulangan abadi) yang membuat tab browser macet?",
+              "options": [
+                "Jika jumlah iterasi perulangan while melebihi 10 kali",
+                "Jika di dalam perulangan while terdapat perintah console.log()",
+                "Jika kondisi awal while bernilai false sebelum blok dijalankan",
+                "Jika kondisi while selalu bernilai true dan tidak ada pembaruan variabel di dalam bloknya"
+              ],
+              "correctIndex": 3,
+              "explanation": "Perulangan while terus berjalan selama kondisinya true; jika variabel pengontrol tidak pernah diubah hingga kondisi menjadi false, loop tidak akan pernah berhenti.",
+              "sourceModuleId": "js-inti-7"
+            },
+            {
+              "id": 13,
+              "question": "Diberikan const skor = [0, 10];. Apa perbedaan hasil antara skor[0] || 100 dan skor[0] ?? 100?",
+              "options": [
+                "Keduanya menghasilkan 100 karena 0 dianggap kosong oleh kedua operator",
+                "skor[0] || 100 menghasilkan 100 (karena 0 falsy), sedangkan skor[0] ?? 100 menghasilkan 0",
+                "skor[0] || 100 menghasilkan 0, sedangkan skor[0] ?? 100 menghasilkan 100",
+                "Keduanya menghasilkan SyntaxError karena 0 tidak boleh dipakai bersama ??"
+              ],
+              "correctIndex": 1,
+              "explanation": "Operator || menganggap semua nilai falsy (termasuk 0, '', false) sebagai pemicu fallback. Nullish coalescing (??) hanya memakai nilai kanan jika sisi kiri null atau undefined.",
+              "sourceModuleId": "js-inti-3"
+            },
+            {
+              "id": 14,
+              "question": "Metode array mana yang tepat dipakai untuk mengambil elemen pertama yang memenuhi syarat tertentu tanpa harus mengembalikan seluruh array baru?",
+              "options": [
+                ".includes()",
+                ".find()",
+                ".slice()",
+                ".join()"
+              ],
+              "correctIndex": 1,
+              "explanation": ".find() mengembalikan elemen pertama yang callback-nya bernilai true (atau undefined jika tidak ada), berbeda dengan .filter() yang selalu mengembalikan array.",
+              "sourceModuleId": "js-inti-8"
+            },
+            {
+              "id": 15,
+              "question": "Diberikan const menu = ['Kopi', 'Teh', 'Susu', 'Jus'];. Apa nilai menu.includes('Teh') dan menu.slice(1, 3)?",
+              "options": [
+                "true dan ['Teh', 'Susu']",
+                "1 dan ['Teh', 'Susu', 'Jus']",
+                "true dan ['Kopi', 'Teh', 'Susu']",
+                "false dan ['Teh', 'Susu']"
+              ],
+              "correctIndex": 0,
+              "explanation": ".includes('Teh') memeriksa keberadaan nilai (true). .slice(1, 3) menyalin elemen mulai indeks 1 hingga sebelum indeks 3 (indeks 1 dan 2) tanpa mengubah array asli.",
+              "sourceModuleId": "js-inti-8"
             }
           ]
         },
@@ -2602,6 +3274,136 @@
               "correctIndex": 0,
               "explanation": ".filter() mengembalikan array baru berisi elemen yang callback-nya bernilai true.",
               "sourceModuleId": "js-lanjutan-1"
+            },
+            {
+              "id": 6,
+              "question": "Apa perbedaan penting antara arrow function const kali = (a, b) => a * b; dengan const kali = (a, b) => { a * b };?",
+              "options": [
+                "Keduanya sama-sama mengembalikan hasil perkalian a * b secara otomatis",
+                "Versi tanpa kurung kurawal melakukan implicit return hasil perkalian, sedangkan versi kurung kurawal tanpa return mengembalikan undefined",
+                "Versi kurung kurawal hanya berlaku untuk parameter berupa string",
+                "Versi tanpa kurung kurawal memicu SyntaxError pada JavaScript ES6"
+              ],
+              "correctIndex": 1,
+              "explanation": "Arrow function satu baris tanpa { } otomatis mengembalikan nilai ekspresinya (implicit return). Jika memakai blok { }, kata kunci return wajib ditulis eksplisit.",
+              "sourceModuleId": "js-lanjutan-2"
+            },
+            {
+              "id": 7,
+              "question": "Apa yang terjadi jika variabel const pesan = 'Rahasia'; dideklarasikan di dalam blok if (true) { ... }, lalu diakses di luar blok tersebut?",
+              "options": [
+                "Variabel pesan tetap terbaca dengan nilai 'Rahasia'",
+                "Variabel pesan bernilai undefined tanpa error",
+                "Muncul ReferenceError karena const dan let memiliki block scope",
+                "Variabel pesan otomatis dipindahkan ke Global Scope"
+              ],
+              "correctIndex": 2,
+              "explanation": "Variabel let dan const terkurung dalam block scope { }. Mengaksesnya di luar blok tempat ia dibuat akan memicu ReferenceError.",
+              "sourceModuleId": "js-lanjutan-3"
+            },
+            {
+              "id": 8,
+              "question": "Diberikan const kunci = 'kota'; dan const profil = { nama: 'Dina', kota: 'Bandung' };. Bagaimana cara mengakses nilai 'Bandung' secara dinamis lewat variabel kunci?",
+              "options": [
+                "profil.kunci",
+                "profil[kunci]",
+                "profil->kunci",
+                "profil('kota')"
+              ],
+              "correctIndex": 1,
+              "explanation": "Dot notation (profil.kunci) mencari properti bernama literal 'kunci', sedangkan bracket notation (profil[kunci]) mengevaluasi isi variabel kunci menjadi profil['kota'].",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 9,
+              "question": "Apa perbedaan hasil antara metode array .map() dan .forEach()?",
+              "options": [
+                ".forEach() mengubah ukuran panjang array, sedangkan .map() menghapus array lama",
+                ".map() hanya dapat dijalankan pada array string, sedangkan .forEach() untuk angka",
+                "Tidak ada perbedaan; keduanya mengembalikan array baru yang identik",
+                ".map() mengembalikan array baru hasil transformasi setiap elemen, sedangkan .forEach() selalu mengembalikan undefined"
+              ],
+              "correctIndex": 3,
+              "explanation": "Gunakan .map() saat ingin menghasilkan array baru yang setiap elemennya sudah diubah bentuknya, dan .forEach() saat hanya ingin menjalankan aksi sampingan tanpa nilai balik.",
+              "sourceModuleId": "js-lanjutan-5"
+            },
+            {
+              "id": 10,
+              "question": "Manakah kombinasi Object Destructuring dan Spread Operator (...) yang tepat untuk menyalin serta memperbarui objek user?",
+              "options": [
+                "const [ nama ] = user; dan const baru = { &&user, aktif: true };",
+                "const nama = ...user; dan const baru = [ ...user ];",
+                "const { nama } = user; dan const baru = { ...user, aktif: true };",
+                "const { nama } = ...user; dan const baru = Object(user + true);"
+              ],
+              "correctIndex": 2,
+              "explanation": "Destructuring { nama } = user mengekstrak properti berdasarkan nama key-nya, sedangkan { ...user, aktif: true } menyalin seluruh properti user ke objek baru dengan properti tambahan/terbaru.",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 11,
+              "question": "Apa perbedaan antara document.querySelector('.kartu') dan document.querySelectorAll('.kartu')?",
+              "options": [
+                "querySelector hanya mencari ID (#), sedangkan querySelectorAll hanya mencari nama tag",
+                "querySelectorAll otomatis mengubah semua elemen yang ditemukan menjadi array dengan .push()",
+                "querySelector mengembalikan seluruh dokumen HTML dalam bentuk string",
+                "querySelector mengembalikan elemen pertama yang cocok (atau null), sedangkan querySelectorAll mengembalikan NodeList berisi semua elemen yang cocok"
+              ],
+              "correctIndex": 3,
+              "explanation": "querySelector berhenti pada elemen pertama yang cocok dengan selector CSS, sedangkan querySelectorAll mengumpulkan semua kecocokan ke dalam NodeList.",
+              "sourceModuleId": "js-lanjutan-6"
+            },
+            {
+              "id": 12,
+              "question": "Di dalam callback addEventListener('click', (event) => { ... }), properti apa yang menunjuk langsung ke elemen DOM yang memicu event tersebut?",
+              "options": [
+                "event.preventDefault",
+                "event.target",
+                "event.querySelector",
+                "event.sourceId"
+              ],
+              "correctIndex": 1,
+              "explanation": "event.target menyimpan referensi elemen yang diklik atau berinteraksi dengan pengguna, berguna untuk membaca atribut atau teks elemen pemicu.",
+              "sourceModuleId": "js-lanjutan-7"
+            },
+            {
+              "id": 13,
+              "question": "Mengapa array atau objek JavaScript perlu dikonversi dengan JSON.stringify() sebelum disimpan ke localStorage?",
+              "options": [
+                "Karena localStorage hanya mampu menyimpan data dalam format string (teks)",
+                "Karena JSON.stringify() otomatis mengenkripsi data pengguna dengan algoritma SHA-256",
+                "Karena localStorage otomatis menghapus data bertipe objek setelah 1 menit",
+                "Karena browser melarang penyimpanan array di sisi klien tanpa JSON.stringify()"
+              ],
+              "correctIndex": 0,
+              "explanation": "Web Storage (localStorage) hanya menyimpan pasangan key-value bertipe string. Gunakan JSON.stringify() saat menyimpan dan JSON.parse() saat membacanya kembali.",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 14,
+              "question": "Dalam penggunaan async/await bersama fetch() untuk mengambil data JSON dari API, mengapa await perlu ditulis dua kali pada fetch() dan response.json()?",
+              "options": [
+                "Karena pemanggilan await pertama selalu dibatalkan secara otomatis oleh browser",
+                "Karena response.json() sebenarnya fungsi sinkron yang butuh penundaan manual",
+                "Karena baik fetch() maupun response.json() sama-sama mengembalikan Promise secara asinkron",
+                "Karena sintaks async mewajibkan minimal dua kata kunci await di setiap fungsi"
+              ],
+              "correctIndex": 2,
+              "explanation": "fetch(url) mengembalikan Promise<Response>, dan membaca serta mem-parsing body lewat response.json() juga proses asinkron yang mengembalikan Promise.",
+              "sourceModuleId": "js-lanjutan-8"
+            },
+            {
+              "id": 15,
+              "question": "Bagaimana cara terbaik menangani kegagalan jaringan atau Promise rejected saat menggunakan sintaks async/await?",
+              "options": [
+                "Mengganti kata kunci async menjadi sync agar error langsung terhenti",
+                "Menambahkan perintah break; setelah baris await",
+                "Mengubah seluruh variabel const menjadi var di dalam fungsi async",
+                "Membungkus proses await di dalam blok try { ... } catch (error) { ... }"
+              ],
+              "correctIndex": 3,
+              "explanation": "Blok try...catch menangkap error baik dari pengecualian runtime maupun Promise yang ditolak (rejected) saat di-await, sehingga aplikasi tidak crash diam-diam.",
+              "sourceModuleId": "js-lanjutan-8"
             }
           ]
         }

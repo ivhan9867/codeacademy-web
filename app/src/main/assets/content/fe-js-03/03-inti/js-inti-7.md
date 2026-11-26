@@ -1,7 +1,7 @@
 ---
 id: js-inti-7
 courseId: fe-js-03
-order: 15
+order: 17
 title: "Mengulang Tugas Otomatis: Perulangan for dan while"
 readingMinutes: 6
 section: INTI

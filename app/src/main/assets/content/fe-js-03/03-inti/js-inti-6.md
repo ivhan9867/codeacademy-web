@@ -1,7 +1,7 @@
 ---
 id: js-inti-6
 courseId: fe-js-03
-order: 14
+order: 16
 title: "Memilih Opsi Spesifik dengan Pernyataan switch"
 readingMinutes: 5
 section: INTI

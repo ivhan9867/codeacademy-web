@@ -1,7 +1,7 @@
 ---
 id: css-layout-eval-2
 courseId: fe-css-02
-order: 24
+order: 32
 title: "Rangkuman Panduan Cepat & Langkah Belajar Berikutnya"
 readingMinutes: 4
 section: EVALUASI

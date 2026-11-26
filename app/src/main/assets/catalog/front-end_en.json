@@ -2049,6 +2049,147 @@
       ],
       "sectionQuizzes": [
         {
+          "id": "css-layout-quiz-pend",
+          "courseId": "fe-css-02",
+          "section": "PENDAHULUAN",
+          "title": "Introduction Quiz: Modern Layout Foundations",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "In the HTML Normal Flow concept, what is the default behavior of block-level elements like <div> or <section>?",
+              "options": [
+                "They sit side by side horizontally according to their text width",
+                "They occupy a full line and push the following element below",
+                "They always float on the right side of the viewport without taking document space",
+                "They ignore width and height properties set via CSS"
+              ],
+              "correctIndex": 1,
+              "explanation": "Block elements take 100% of their parent container's width by default and always start on a new line below the previous element.",
+              "sourceModuleId": "css-layout-pend-2"
+            },
+            {
+              "id": 2,
+              "question": "Why are inline elements (such as <span>) not suitable to be used directly as side-by-side layout columns with fixed widths?",
+              "options": [
+                "Because inline elements cannot be given a background or text color",
+                "Because inline elements cannot be placed inside a <div> element",
+                "Because width, height, and top/bottom margins are ignored by the browser",
+                "Because inline elements always force the page to scroll horizontally"
+              ],
+              "correctIndex": 2,
+              "explanation": "Inline elements are only as wide as their content and ignore width, height, and vertical margins, making them unsuitable for structured columns.",
+              "sourceModuleId": "css-layout-pend-2"
+            },
+            {
+              "id": 3,
+              "question": "What is the main issue that occurs on a parent container when all of its child elements are given float: left;?",
+              "options": [
+                "The parent container's height shrinks to 0px (container collapsing)",
+                "All text inside the container automatically becomes right-aligned",
+                "The browser disables all padding and border rules on the page",
+                "Child elements become transparent and cannot be clicked by users"
+              ],
+              "correctIndex": 0,
+              "explanation": "Floated elements are removed from Normal Flow, so the parent container treats itself as empty and its height collapses to 0px without a clearfix technique.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 4,
+              "question": "In the default CSS Box Model (content-box), if an element has width: 200px, padding: 20px, and border: 5px solid, what is its total rendered width?",
+              "options": [
+                "200px",
+                "225px",
+                "245px",
+                "250px"
+              ],
+              "correctIndex": 3,
+              "explanation": "With box-sizing: content-box, total width = width (200) + left-right padding (20 + 20) + left-right border (5 + 5) = 250px.",
+              "sourceModuleId": "css-layout-pend-2"
+            },
+            {
+              "id": 5,
+              "question": "Why is setting box-sizing: border-box; strongly recommended when building modern layouts?",
+              "options": [
+                "So the browser automatically converts all inline elements into grid items",
+                "So padding and border are already included inside the specified width and height values",
+                "So margins between elements disappear automatically without rewriting them",
+                "So elements do not need media queries when opened on mobile screens"
+              ],
+              "correctIndex": 1,
+              "explanation": "With border-box, the width you declare (for example width: 300px) already includes content, padding, and border so cards do not overflow their container.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 6,
+              "question": "What was the actual original purpose of the CSS float property before it was misused to build multi-column layouts?",
+              "options": [
+                "Creating smooth transition animations for product cards",
+                "Centering a modal dialog vertically right in the middle of the screen",
+                "Wrapping article text around an image like a magazine layout",
+                "Controlling the stacking order of elements along the Z-axis using z-index"
+              ],
+              "correctIndex": 2,
+              "explanation": "The float property was originally designed for editorial effects like news text flowing beside a photo, not for full-page web architecture.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 7,
+              "question": "Why is relying on position: absolute to arrange an entire main page layout considered bad practice?",
+              "options": [
+                "Because elements risk colliding and overlapping when the screen size changes",
+                "Because position: absolute is only supported by older browsers",
+                "Because absolute elements cannot display text or images",
+                "Because position: absolute always forces the page to reload CSS"
+              ],
+              "correctIndex": 0,
+              "explanation": "Elements with position: absolute are removed from the document flow so they do not naturally push one another, causing content overlap across different screen sizes.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 8,
+              "question": "Which classic weakness is most noticeable in table-based (<table>) and float-based layout techniques in the responsive web era?",
+              "options": [
+                "They do not support background colors on columns",
+                "It is difficult to automatically equalize the height of adjacent columns with different text lengths",
+                "They cannot be combined with HTML5 semantic tags such as <header>",
+                "They can only display a maximum of two columns on a single web page"
+              ],
+              "correctIndex": 1,
+              "explanation": "With float techniques, each column's height depends on its own content, so making adjacent cards equal in height requires fragile extra workarounds.",
+              "sourceModuleId": "css-layout-pend-3"
+            },
+            {
+              "id": 9,
+              "question": "What is the fundamental difference between the roles of Flexbox and CSS Grid when combined on a modern web page?",
+              "options": [
+                "CSS Grid manages 2-dimensional macro structure, while Flexbox aligns 1-dimensional components",
+                "Flexbox is specifically for desktop views, while CSS Grid is specifically for mobile screens",
+                "CSS Grid is only used for paragraph text, while Flexbox is specifically for images",
+                "Flexbox replaces CSS Grid completely so the two must never be combined"
+              ],
+              "correctIndex": 0,
+              "explanation": "CSS Grid excels at the macro level (the page's row and column framework simultaneously), while Flexbox is ideal at the micro level for aligning contents inside a 1D component like a navbar or button.",
+              "sourceModuleId": "css-layout-pend-4"
+            },
+            {
+              "id": 10,
+              "question": "Why do modern CSS layouts (Flexbox and Grid) mark a shift from the era of hacks to true layout systems?",
+              "options": [
+                "Because both automatically rewrite HTML structure on the server side",
+                "Because both eliminate the need to use class selectors in CSS",
+                "Because both work without needing to define color or font properties",
+                "Because layouts are now declarative, aware of free space, and easy to adapt across screen sizes"
+              ],
+              "correctIndex": 3,
+              "explanation": "Flexbox and Grid are purpose-built for layout: elements remain in the document flow, distribute remaining space proportionally, and stay responsive without clearfix hacks.",
+              "sourceModuleId": "css-layout-pend-1"
+            }
+          ]
+        },
+        {
           "id": "css-layout-quiz-inti",
           "courseId": "fe-css-02",
           "section": "INTI",
@@ -2121,6 +2262,136 @@
               "correctIndex": 2,
               "explanation": "The gap property adds consistent spacing only between items, not on the outer edges.",
               "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 6,
+              "question": "If a flex container is given flex-direction: column;, in which directions do the Main Axis and Cross Axis run?",
+              "options": [
+                "Main Axis runs vertically (top to bottom) and Cross Axis runs horizontally (left to right)",
+                "Main Axis remains horizontal and Cross Axis remains vertical as the default",
+                "Both run vertically, causing align-items to stop working",
+                "Main Axis runs right to left and Cross Axis runs bottom to top"
+              ],
+              "correctIndex": 0,
+              "explanation": "Changing flex-direction to column rotates the Main Axis to vertical (top to bottom), which also rotates the Cross Axis to horizontal.",
+              "sourceModuleId": "css-layout-inti-2"
+            },
+            {
+              "id": 7,
+              "question": "What is the difference in output between justify-content: space-between; and justify-content: space-evenly;?",
+              "options": [
+                "space-between adds space at the container edges, whereas space-evenly does not",
+                "space-between pins the first and last items to the edges, whereas space-evenly makes all gaps including edges equal",
+                "space-evenly only works with flex-direction: column, whereas space-between only works with row",
+                "Both produce identical spacing as long as there are two or more flex items"
+              ],
+              "correctIndex": 1,
+              "explanation": "space-between removes outer edge spacing so end items touch the container boundary, whereas space-evenly makes edge gaps and inter-item gaps the exact same width.",
+              "sourceModuleId": "css-layout-inti-3"
+            },
+            {
+              "id": 8,
+              "question": "The default value of the align-items property on a flex container is...",
+              "options": [
+                "center",
+                "flex-start",
+                "stretch",
+                "baseline"
+              ],
+              "correctIndex": 2,
+              "explanation": "By default, align-items is set to stretch, which causes all flex items without a fixed height to automatically stretch across the container's Cross Axis height.",
+              "sourceModuleId": "css-layout-inti-4"
+            },
+            {
+              "id": 9,
+              "question": "When does the align-content property have a visual effect on a flex container?",
+              "options": [
+                "Whenever flex-grow is set to 0 on all direct children",
+                "Whenever the container has only a single row of loosely spaced flex items",
+                "Only when flex-direction is set to row-reverse with no width limit",
+                "Only when flex-wrap: wrap is active and items wrap onto more than one line"
+              ],
+              "correctIndex": 3,
+              "explanation": "align-content controls space distribution between lines along the Cross Axis, so it only takes effect when flex-wrap: wrap creates multiple lines.",
+              "sourceModuleId": "css-layout-inti-5"
+            },
+            {
+              "id": 10,
+              "question": "Why do items inside a flex container with flex-wrap: nowrap (default) often appear to shrink below their specified width on narrow screens?",
+              "options": [
+                "Because Flexbox ignores the width property and only reads min-height",
+                "Because flex-wrap: nowrap automatically converts px units into percentages",
+                "Because the default flex-shrink value is 1, allowing items to shrink to fit on one line",
+                "Because the browser forces gap to be negative when container space is full"
+              ],
+              "correctIndex": 2,
+              "explanation": "With the default nowrap and flex-shrink: 1 configuration, items shrink proportionally to prevent overflowing out of a single container line.",
+              "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 11,
+              "question": "If you write gap: 16px 24px; on a flex container, what does each number represent?",
+              "options": [
+                "16px for outer container margin and 24px for each item's internal padding",
+                "16px for horizontal item spacing and 24px for item border width",
+                "16px for row-gap (space between rows) and 24px for column-gap (space between columns)",
+                "16px for minimum item width and 24px for maximum item width"
+              ],
+              "correctIndex": 2,
+              "explanation": "The two-value gap shorthand follows row-gap then column-gap: 16px separates rows vertically and 24px separates columns horizontally.",
+              "sourceModuleId": "css-layout-inti-5"
+            },
+            {
+              "id": 12,
+              "question": "Inside a 600px-wide container with no gap, there are two items with flex-basis: 0;. Item A has flex-grow: 1; and Item B has flex-grow: 2;. What is Item B's width?",
+              "options": [
+                "200px",
+                "300px",
+                "400px",
+                "450px"
+              ],
+              "correctIndex": 2,
+              "explanation": "With flex-basis: 0, the entire 600px is free space divided into 1 + 2 = 3 parts. Item B gets 2/3 × 600px = 400px.",
+              "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 13,
+              "question": "What does the shorthand value flex: 1; expand to in the modern Flexbox specification?",
+              "options": [
+                "flex-grow: 1; flex-shrink: 0; flex-basis: auto;",
+                "flex-grow: 0; flex-shrink: 1; flex-basis: 100%;",
+                "flex-grow: 1; flex-shrink: 1; flex-basis: content;",
+                "flex-grow: 1; flex-shrink: 1; flex-basis: 0%;"
+              ],
+              "correctIndex": 3,
+              "explanation": "flex: 1 lets the item grow to fill remaining space (grow: 1), allows it to shrink (shrink: 1), and sets the initial basis to 0% for proportional space distribution.",
+              "sourceModuleId": "css-layout-inti-6"
+            },
+            {
+              "id": 14,
+              "question": "Why should the order property in Flexbox be used carefully from an accessibility standpoint?",
+              "options": [
+                "Because the order property causes images inside flex items to fail to load",
+                "Because negative order values automatically remove those elements from the DOM",
+                "Because order changes visual display on screen without changing keyboard navigation (Tab) and screen reader order",
+                "Because order can only be used on <button> and <a> elements"
+              ],
+              "correctIndex": 2,
+              "explanation": "Screen readers and the Tab key follow the original HTML order in the DOM, not the visual order. If visual order contradicts the DOM, keyboard users can get confused.",
+              "sourceModuleId": "css-layout-inti-7"
+            },
+            {
+              "id": 15,
+              "question": "On a vertical card (display: flex; flex-direction: column; height: 100%;), which trick is cleanest for keeping the action button pinned to the bottom of the card?",
+              "options": [
+                "Adding justify-content: flex-start; on the button element itself",
+                "Adding margin-top: auto; on the button element (or card footer)",
+                "Adding flex-shrink: 0; on the card's top title",
+                "Changing the button's flex-direction to column-reverse"
+              ],
+              "correctIndex": 1,
+              "explanation": "Inside a flex container, margin: auto along the main axis absorbs all remaining empty space, so margin-top: auto pushes the element to the bottom of the container.",
+              "sourceModuleId": "css-layout-inti-4"
             }
           ]
         },
@@ -2197,6 +2468,136 @@
               "correctIndex": 0,
               "explanation": "place-items: center; is shorthand for align-items: center and justify-items: center.",
               "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 6,
+              "question": "On a 1000px-wide grid container with no gap, if grid-template-columns: 200px 1fr 3fr; is declared, what are the widths of the second and third columns?",
+              "options": [
+                "Second column 250px and third column 750px",
+                "Second column 200px and third column 600px",
+                "Second column 300px and third column 500px",
+                "Second column 400px and third column 400px"
+              ],
+              "correctIndex": 1,
+              "explanation": "After subtracting the fixed 200px column, the remaining free space is 800px. Since 1fr + 3fr = 4 parts, 1fr = 200px and 3fr = 600px.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 7,
+              "question": "Which syntax is concise and equivalent to grid-template-columns: 1fr 1fr 1fr 1fr;?",
+              "options": [
+                "grid-template-columns: loop(4, 1fr);",
+                "grid-template-columns: 4 * 1fr;",
+                "grid-template-columns: repeat(1fr, 4);",
+                "grid-template-columns: repeat(4, 1fr);"
+              ],
+              "correctIndex": 3,
+              "explanation": "The repeat(count, size) function takes the repetition count as the first argument and the column track sizing pattern as the second argument.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 8,
+              "question": "What does minmax(220px, 1fr) do inside a CSS Grid column declaration?",
+              "options": [
+                "Locks the column width strictly at 220px and ignores 1fr on wide screens",
+                "Sets a minimum of 220 columns and a maximum of 1 column",
+                "Sets a minimum column width of 220px so it never gets too narrow, while allowing it to grow up to 1fr when space is available",
+                "Forces row height to stay between 220px and 100% of the viewport height"
+              ],
+              "correctIndex": 2,
+              "explanation": "minmax(min, max) sets a lower bound (220px) so cards remain readable and a flexible upper bound (1fr) to evenly fill the remaining row space.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 9,
+              "question": "What is the difference in behavior between auto-fit and auto-fill when there are fewer cards than a single row's capacity?",
+              "options": [
+                "auto-fill collapses empty tracks to 0px, whereas auto-fit leaves them open",
+                "Both always center a single card automatically in the middle of the screen",
+                "auto-fit collapses empty tracks so existing items stretch to fill the row, whereas auto-fill preserves empty track space",
+                "auto-fit only works on rows, whereas auto-fill only works on columns"
+              ],
+              "correctIndex": 2,
+              "explanation": "When there is extra space and few items, auto-fit collapses empty columns so existing items stretch, whereas auto-fill keeps empty columns at their minimum size.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 10,
+              "question": "In the grid-template-areas property, which symbol is used to mark an empty cell (occupied by no area)?",
+              "options": [
+                "An asterisk (*)",
+                "A hash symbol (#)",
+                "The keyword none in every cell",
+                "A period (.)"
+              ],
+              "correctIndex": 3,
+              "explanation": "One or more consecutive periods (for example \". sidebar main\") denote a grid cell intentionally left empty in the visual grid-template-areas map.",
+              "sourceModuleId": "css-layout-lanjutan-5"
+            },
+            {
+              "id": 11,
+              "question": "In a 4-column grid, what is the effect of grid-column: 1 / -1; on a header element?",
+              "options": [
+                "The header only occupies the last column on the right side",
+                "The header is hidden from the grid and placed outside the container",
+                "The header spans across from the first column line to the very last column line",
+                "The header moves into a negative row above the parent container"
+              ],
+              "correctIndex": 2,
+              "explanation": "Negative line number -1 always refers to the final end line of the grid, so 1 / -1 spans the item across all columns without needing to count total lines.",
+              "sourceModuleId": "css-layout-lanjutan-4"
+            },
+            {
+              "id": 12,
+              "question": "The place-items: center; property on a Grid container is shorthand for which two properties?",
+              "options": [
+                "justify-content and align-content",
+                "align-items and justify-items",
+                "grid-column and grid-row",
+                "place-self and justify-self"
+              ],
+              "correctIndex": 1,
+              "explanation": "place-items combines align-items (block/vertical axis) and justify-items (inline/horizontal axis) to align content inside each grid cell.",
+              "sourceModuleId": "css-layout-lanjutan-3"
+            },
+            {
+              "id": 13,
+              "question": "In a Mobile-First CSS approach, what is the proper media query pattern for adding tablet and desktop styles?",
+              "options": [
+                "Write desktop styles as the default and then use @media (max-width: 768px)",
+                "Remove all default layout rules and only use @media (orientation: landscape)",
+                "Use @media (device-width: 320px) for all modern screen sizes",
+                "Write base styles for mobile first and then progressively add @media (min-width: 768px)"
+              ],
+              "correctIndex": 3,
+              "explanation": "Mobile-first starts with a lightweight single-column layout for phones, then enhances the layout using min-width breakpoints as the screen gets wider.",
+              "sourceModuleId": "css-layout-lanjutan-6"
+            },
+            {
+              "id": 14,
+              "question": "How do you declare a CSS Variable (Custom Property) globally and use it with a fallback value?",
+              "options": [
+                "Declare in html { $gap-utama: 16px; } and use with gap: $gap-utama;",
+                "Declare in * { var-gap: 16px; } and use with gap: get(var-gap);",
+                "Declare in :root { --gap-utama: 16px; } and use with gap: var(--gap-utama, 12px);",
+                "Declare in body { @gap-utama: 16px; } and use with gap: attr(--gap-utama);"
+              ],
+              "correctIndex": 2,
+              "explanation": "CSS variables start with -- and are commonly defined in :root so they are globally available, then referenced via var(--name, fallback).",
+              "sourceModuleId": "css-layout-lanjutan-7"
+            },
+            {
+              "id": 15,
+              "question": "Which hybrid combination of CSS Grid and Flexbox is best suited for a modern dashboard page?",
+              "options": [
+                "Use Flexbox for the 2-dimensional sidebar-header-content structure, and Grid to align icons inside buttons",
+                "Use CSS Grid for the main page skeleton (header, sidebar, content area) and Flexbox to align items inside the navbar and cards",
+                "Avoid using Flexbox altogether once display: grid is active on the page",
+                "Stack display: grid; display: flex; on the same container element simultaneously"
+              ],
+              "correctIndex": 1,
+              "explanation": "A single element can only have one display value, but Grid and Flexbox complement each other when nested: Grid handles the 2D page skeleton, while Flexbox handles internal component contents.",
+              "sourceModuleId": "css-layout-lanjutan-7"
             }
           ]
         }
@@ -2526,6 +2927,147 @@
       ],
       "sectionQuizzes": [
         {
+          "id": "js-quiz-pend",
+          "courseId": "fe-js-03",
+          "section": "PENDAHULUAN",
+          "title": "Introduction Quiz: JavaScript Basics & Syntax",
+          "questionsPerAttempt": 5,
+          "passingPercent": 80,
+          "durationMinutes": 10,
+          "questionPool": [
+            {
+              "id": 1,
+              "question": "In the front-end web development ecosystem, what is JavaScript's primary role compared to HTML and CSS?",
+              "options": [
+                "Defining the semantic structure of elements like headings, paragraphs, and tables",
+                "Managing grid layouts, theme colors, and pure CSS transition animations",
+                "Providing program logic, user interactivity, and dynamic DOM manipulation",
+                "Replacing the web server to permanently store the entire user database"
+              ],
+              "correctIndex": 2,
+              "explanation": "HTML handles structure, CSS handles visual presentation, and JavaScript acts as the logic engine that responds to user actions and processes data in the browser.",
+              "sourceModuleId": "js-pend-1"
+            },
+            {
+              "id": 2,
+              "question": "Why is a <script src=\"app.js\"></script> tag without extra attributes often placed right before the closing </body> tag?",
+              "options": [
+                "So the browser finishes parsing HTML elements first before the script tries to select them",
+                "Because the HTML5 standard forbids placing <script> tags inside the <head> section",
+                "So the browser does not have to download app.js from the server",
+                "Because JavaScript code can only execute after all CSS files are removed"
+              ],
+              "correctIndex": 0,
+              "explanation": "Placing <script> before </body> ensures DOM elements are already built when JS runs, while also avoiding blocking initial page rendering.",
+              "sourceModuleId": "js-pend-2"
+            },
+            {
+              "id": 3,
+              "question": "What is the benefit of adding the defer attribute to <script src=\"app.js\" defer></script> inside <head>?",
+              "options": [
+                "The script immediately halts HTML parsing until the JS file finishes executing",
+                "The script only runs if the user clicks a button on the page",
+                "The defer attribute makes JavaScript code run on the server side",
+                "The script downloads in parallel with HTML parsing, then executes in order after HTML parsing completes"
+              ],
+              "correctIndex": 3,
+              "explanation": "The defer attribute allows scripts to download without blocking the HTML parser, then executes them in order right before the DOMContentLoaded event.",
+              "sourceModuleId": "js-pend-2"
+            },
+            {
+              "id": 4,
+              "question": "What is the primary purpose of the console.log() command when learning or building JavaScript apps?",
+              "options": [
+                "Displaying an alert pop-up that forces the user to click OK",
+                "Printing variable values or diagnostic messages to the browser Console panel for debugging",
+                "Saving permanent data into browser local storage",
+                "Automatically replacing the text content of the <h1> element on the web page"
+              ],
+              "correctIndex": 1,
+              "explanation": "console.log() prints information to the Developer Console without disrupting the user UI, which is very helpful for inspecting program flow and variable values.",
+              "sourceModuleId": "js-pend-3"
+            },
+            {
+              "id": 5,
+              "question": "Which is the correct syntax for single-line and multi-line comments in JavaScript?",
+              "options": [
+                "# single-line and ''' multi-line '''",
+                "<!-- single-line --> and /* multi-line */",
+                "// single-line and /* multi-line */",
+                "-- single-line and {{ multi-line }}"
+              ],
+              "correctIndex": 2,
+              "explanation": "JavaScript uses // for single-line comments and /* ... */ for multi-line comments; both are ignored by the engine when code runs.",
+              "sourceModuleId": "js-pend-4"
+            },
+            {
+              "id": 6,
+              "question": "JavaScript is case-sensitive. How does this affect naming variables userName and username?",
+              "options": [
+                "Both are treated as the same, so declaring both triggers a warning",
+                "They are treated as two distinct variables due to the uppercase N",
+                "JavaScript automatically converts all variable names to lowercase",
+                "Variables with an uppercase letter in the middle can only be used inside functions"
+              ],
+              "correctIndex": 1,
+              "explanation": "Because JavaScript is case-sensitive, a single uppercase/lowercase difference makes userName and username separate identifiers. Standard JS convention uses camelCase.",
+              "sourceModuleId": "js-pend-4"
+            },
+            {
+              "id": 7,
+              "question": "Which type of error appears in the Console if you call console.log(totalHarga); when the totalHarga variable has never been declared?",
+              "options": [
+                "SyntaxError",
+                "TypeError",
+                "ReferenceError",
+                "RangeError"
+              ],
+              "correctIndex": 2,
+              "explanation": "A ReferenceError occurs when JavaScript tries to access a variable or identifier that does not exist in the current scope.",
+              "sourceModuleId": "js-pend-5"
+            },
+            {
+              "id": 8,
+              "question": "When you forget to close a string quotation mark or miss a closing curly brace }, which error type does the parser report immediately before the code runs?",
+              "options": [
+                "SyntaxError",
+                "ReferenceError",
+                "TypeError",
+                "NetworkError"
+              ],
+              "correctIndex": 0,
+              "explanation": "A SyntaxError indicates the code grammar violates JavaScript syntax rules (such as an unclosed brace or quote), causing the code to fail parsing.",
+              "sourceModuleId": "js-pend-5"
+            },
+            {
+              "id": 9,
+              "question": "When does a TypeError occur while running JavaScript code?",
+              "options": [
+                "When an external script filename is misspelled in the HTML src attribute",
+                "When performing an invalid operation on a data type, such as reassigning a const or calling a number as a function",
+                "When forgetting to add an explanatory comment above a function declaration",
+                "When a line of code does not end with a semicolon (;)"
+              ],
+              "correctIndex": 1,
+              "explanation": "A TypeError occurs when a value has an inappropriate type for the operation attempted, such as reassigning a const variable or calling (42)().",
+              "sourceModuleId": "js-pend-5"
+            },
+            {
+              "id": 10,
+              "question": "What is the relationship between ECMAScript and JavaScript?",
+              "options": [
+                "ECMAScript is a CSS framework that must be installed before using JavaScript",
+                "ECMAScript is the name of a special server for running JavaScript in older browsers",
+                "They are conflicting languages that are incompatible with each other",
+                "ECMAScript is the official standard specification that defines modern JavaScript language features (such as ES6)"
+              ],
+              "correctIndex": 3,
+              "explanation": "ECMAScript (ES) is the official standard defining core JavaScript syntax and features, such as the introduction of let, const, and arrow functions in ES6.",
+              "sourceModuleId": "js-pend-1"
+            }
+          ]
+        },
+        {
           "id": "js-quiz-inti",
           "courseId": "fe-js-03",
           "section": "INTI",
@@ -2598,6 +3140,136 @@
               "correctIndex": 0,
               "explanation": "Arrow functions use the syntax (parameters) => expression or block { ... }.",
               "sourceModuleId": "js-inti-6"
+            },
+            {
+              "id": 6,
+              "question": "Why is using var no longer recommended in modern JavaScript compared to let and const?",
+              "options": [
+                "Because var cannot store numbers and strings at the same time",
+                "Because var only has function scope and is hoisted as undefined, making it prone to leaking out of if/for blocks",
+                "Because var requires a trailing semicolon while let and const do not",
+                "Because var automatically deletes variable contents after 5 seconds"
+              ],
+              "correctIndex": 1,
+              "explanation": "Unlike let/const which have safe block scope inside { }, var is function-scoped and can be accessed before its declaration line with a value of undefined.",
+              "sourceModuleId": "js-inti-1"
+            },
+            {
+              "id": 7,
+              "question": "What is the main difference between the primitive values undefined and null in JavaScript?",
+              "options": [
+                "null only applies to the number 0, whereas undefined only applies to empty strings",
+                "typeof undefined returns 'object', whereas typeof null returns 'null'",
+                "Both are identical when compared with the strict equality operator (===)",
+                "undefined means a variable has not been assigned a value yet by the system, whereas null is an empty value intentionally set by the developer"
+              ],
+              "correctIndex": 3,
+              "explanation": "undefined generally appears automatically when a variable is declared without an initial value, whereas null explicitly indicates the intentional absence of an object or value.",
+              "sourceModuleId": "js-inti-2"
+            },
+            {
+              "id": 8,
+              "question": "What are the evaluation results of ('10' == 10) and ('10' === 10), respectively?",
+              "options": [
+                "true and true",
+                "false and true",
+                "true and false",
+                "false and false"
+              ],
+              "correctIndex": 2,
+              "explanation": "The == operator performs implicit type coercion so '10' equals 10 (true), whereas === checks both value and data type (string vs number -> false).",
+              "sourceModuleId": "js-inti-3"
+            },
+            {
+              "id": 9,
+              "question": "Which is the correct Template Literals syntax to interpolate the calculation harga * jumlah?",
+              "options": [
+                "\"Total: ${harga * jumlah}\"",
+                "'Total: #{harga * jumlah}'",
+                "`Total: ${harga * jumlah}`",
+                "`Total: {{harga * jumlah}}`"
+              ],
+              "correctIndex": 2,
+              "explanation": "Template literals require backticks (`) and ${...} interpolation, which can directly hold variables or mathematical expressions.",
+              "sourceModuleId": "js-inti-4"
+            },
+            {
+              "id": 10,
+              "question": "If nilai = 85, what is the output of: if (nilai >= 70) { console.log('B'); } else if (nilai >= 80) { console.log('A'); }?",
+              "options": [
+                "Prints 'A'",
+                "Prints 'B'",
+                "Prints 'B' then 'A'",
+                "Produces a SyntaxError because the conditions are out of order"
+              ],
+              "correctIndex": 1,
+              "explanation": "In an if / else if chain, conditions are evaluated top to bottom and stop at the first branch that is true. Since 85 >= 70 is already true, the 'B' block runs and 'A' is skipped.",
+              "sourceModuleId": "js-inti-5"
+            },
+            {
+              "id": 11,
+              "question": "What happens in a switch statement if you forget to write the break; keyword at the end of a matching case?",
+              "options": [
+                "The program halts completely and throws a ReferenceError",
+                "Execution continues running code in subsequent cases (fall-through) even if they do not match",
+                "The switch value automatically turns into undefined",
+                "The browser repeats that switch block twice"
+              ],
+              "correctIndex": 1,
+              "explanation": "Without break;, JavaScript experiences fall-through so statements in the cases below also execute until a break or the end of the switch block is reached.",
+              "sourceModuleId": "js-inti-6"
+            },
+            {
+              "id": 12,
+              "question": "Why can a while loop trigger an infinite loop that freezes a browser tab?",
+              "options": [
+                "If the number of while loop iterations exceeds 10",
+                "If there is a console.log() statement inside the while loop",
+                "If the initial while condition is false before the block runs",
+                "If the while condition remains true and there is no variable update inside its block"
+              ],
+              "correctIndex": 3,
+              "explanation": "A while loop keeps running as long as its condition is true; if the control variable is never updated so the condition becomes false, the loop never terminates.",
+              "sourceModuleId": "js-inti-7"
+            },
+            {
+              "id": 13,
+              "question": "Given const skor = [0, 10];. What is the difference in result between skor[0] || 100 and skor[0] ?? 100?",
+              "options": [
+                "Both evaluate to 100 because 0 is considered empty by both operators",
+                "skor[0] || 100 evaluates to 100 (since 0 is falsy), whereas skor[0] ?? 100 evaluates to 0",
+                "skor[0] || 100 evaluates to 0, whereas skor[0] ?? 100 evaluates to 100",
+                "Both produce a SyntaxError because 0 cannot be used with ??"
+              ],
+              "correctIndex": 1,
+              "explanation": "The || operator treats all falsy values (including 0, '', false) as triggers for the fallback. Nullish coalescing (??) only uses the right-hand value when the left side is null or undefined.",
+              "sourceModuleId": "js-inti-3"
+            },
+            {
+              "id": 14,
+              "question": "Which array method is best for retrieving the first element that satisfies a given condition without returning a whole new array?",
+              "options": [
+                ".includes()",
+                ".find()",
+                ".slice()",
+                ".join()"
+              ],
+              "correctIndex": 1,
+              "explanation": ".find() returns the first element for which the callback returns true (or undefined if none matches), unlike .filter() which always returns an array.",
+              "sourceModuleId": "js-inti-8"
+            },
+            {
+              "id": 15,
+              "question": "Given const menu = ['Kopi', 'Teh', 'Susu', 'Jus'];. What are the values of menu.includes('Teh') and menu.slice(1, 3)?",
+              "options": [
+                "true and ['Teh', 'Susu']",
+                "1 and ['Teh', 'Susu', 'Jus']",
+                "true and ['Kopi', 'Teh', 'Susu']",
+                "false and ['Teh', 'Susu']"
+              ],
+              "correctIndex": 0,
+              "explanation": ".includes('Teh') checks if the value exists (true). .slice(1, 3) copies elements from index 1 up to before index 3 (indices 1 and 2) without mutating the original array.",
+              "sourceModuleId": "js-inti-8"
             }
           ]
         },
@@ -2674,6 +3346,136 @@
               "correctIndex": 0,
               "explanation": ".filter() returns a new array containing elements for which the callback returns true.",
               "sourceModuleId": "js-lanjutan-1"
+            },
+            {
+              "id": 6,
+              "question": "What is the key difference between the arrow functions const kali = (a, b) => a * b; and const kali = (a, b) => { a * b };?",
+              "options": [
+                "Both automatically return the product a * b",
+                "The version without curly braces performs an implicit return of the product, whereas the curly-brace version without return returns undefined",
+                "The curly-brace version only works for string parameters",
+                "The version without curly braces triggers a SyntaxError in ES6 JavaScript"
+              ],
+              "correctIndex": 1,
+              "explanation": "A single-line arrow function without { } automatically returns its expression value (implicit return). When using a { } block, the return keyword must be written explicitly.",
+              "sourceModuleId": "js-lanjutan-2"
+            },
+            {
+              "id": 7,
+              "question": "What happens if the variable const pesan = 'Rahasia'; is declared inside an if (true) { ... } block and then accessed outside that block?",
+              "options": [
+                "The pesan variable is still readable with the value 'Rahasia'",
+                "The pesan variable evaluates to undefined without any error",
+                "A ReferenceError is thrown because const and let have block scope",
+                "The pesan variable is automatically moved to Global Scope"
+              ],
+              "correctIndex": 2,
+              "explanation": "let and const variables are confined to their { } block scope. Accessing them outside the block where they were declared throws a ReferenceError.",
+              "sourceModuleId": "js-lanjutan-3"
+            },
+            {
+              "id": 8,
+              "question": "Given const kunci = 'kota'; and const profil = { nama: 'Dina', kota: 'Bandung' };. How do you dynamically access the value 'Bandung' using the kunci variable?",
+              "options": [
+                "profil.kunci",
+                "profil[kunci]",
+                "profil->kunci",
+                "profil('kota')"
+              ],
+              "correctIndex": 1,
+              "explanation": "Dot notation (profil.kunci) looks for a literal property named 'kunci', whereas bracket notation (profil[kunci]) evaluates the kunci variable to profil['kota'].",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 9,
+              "question": "What is the difference in return value between the array methods .map() and .forEach()?",
+              "options": [
+                ".forEach() changes the array length, whereas .map() deletes the old array",
+                ".map() only runs on string arrays, whereas .forEach() is for numbers",
+                "There is no difference; both return an identical new array",
+                ".map() returns a new array of transformed elements, whereas .forEach() always returns undefined"
+              ],
+              "correctIndex": 3,
+              "explanation": "Use .map() when you want to produce a new array with each element transformed, and .forEach() when you only want to run side effects without a return value.",
+              "sourceModuleId": "js-lanjutan-5"
+            },
+            {
+              "id": 10,
+              "question": "Which combination of Object Destructuring and Spread Operator (...) correctly extracts from and updates a user object?",
+              "options": [
+                "const [ nama ] = user; and const baru = { &&user, aktif: true };",
+                "const nama = ...user; and const baru = [ ...user ];",
+                "const { nama } = user; and const baru = { ...user, aktif: true };",
+                "const { nama } = ...user; and const baru = Object(user + true);"
+              ],
+              "correctIndex": 2,
+              "explanation": "Destructuring { nama } = user extracts properties by key name, while { ...user, aktif: true } copies all properties of user into a new object with the added/updated property.",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 11,
+              "question": "What is the difference between document.querySelector('.kartu') and document.querySelectorAll('.kartu')?",
+              "options": [
+                "querySelector only searches by ID (#), whereas querySelectorAll only searches by tag name",
+                "querySelectorAll automatically converts all matched elements into an array with .push()",
+                "querySelector returns the entire HTML document as a string",
+                "querySelector returns the first matching element (or null), whereas querySelectorAll returns a NodeList of all matching elements"
+              ],
+              "correctIndex": 3,
+              "explanation": "querySelector stops at the first element matching the CSS selector, whereas querySelectorAll collects all matches into a NodeList.",
+              "sourceModuleId": "js-lanjutan-6"
+            },
+            {
+              "id": 12,
+              "question": "Inside an addEventListener('click', (event) => { ... }) callback, which property points directly to the DOM element that triggered the event?",
+              "options": [
+                "event.preventDefault",
+                "event.target",
+                "event.querySelector",
+                "event.sourceId"
+              ],
+              "correctIndex": 1,
+              "explanation": "event.target stores a reference to the element clicked or interacted with by the user, useful for reading attributes or text from the triggering element.",
+              "sourceModuleId": "js-lanjutan-7"
+            },
+            {
+              "id": 13,
+              "question": "Why do JavaScript arrays or objects need to be converted with JSON.stringify() before being saved to localStorage?",
+              "options": [
+                "Because localStorage can only store data in string (text) format",
+                "Because JSON.stringify() automatically encrypts user data with SHA-256",
+                "Because localStorage automatically deletes object-typed data after 1 minute",
+                "Because browsers prohibit client-side array storage without JSON.stringify()"
+              ],
+              "correctIndex": 0,
+              "explanation": "Web Storage (localStorage) only stores string key-value pairs. Use JSON.stringify() when saving and JSON.parse() when reading data back.",
+              "sourceModuleId": "js-lanjutan-4"
+            },
+            {
+              "id": 14,
+              "question": "When using async/await with fetch() to retrieve JSON data from an API, why must await be written twice for fetch() and response.json()?",
+              "options": [
+                "Because the first await call is always canceled automatically by the browser",
+                "Because response.json() is actually a synchronous function that needs a manual delay",
+                "Because both fetch() and response.json() return Promises asynchronously",
+                "Because async syntax requires at least two await keywords in every function"
+              ],
+              "correctIndex": 2,
+              "explanation": "fetch(url) returns a Promise<Response>, and reading and parsing the body via response.json() is also an asynchronous operation that returns a Promise.",
+              "sourceModuleId": "js-lanjutan-8"
+            },
+            {
+              "id": 15,
+              "question": "What is the best way to handle network failures or rejected Promises when using async/await syntax?",
+              "options": [
+                "Change the async keyword to sync so errors stop immediately",
+                "Add a break; statement after the await line",
+                "Change all const variables to var inside the async function",
+                "Wrap the await operations inside a try { ... } catch (error) { ... } block"
+              ],
+              "correctIndex": 3,
+              "explanation": "A try...catch block catches both runtime exceptions and rejected Promises when awaited, preventing the app from failing silently.",
+              "sourceModuleId": "js-lanjutan-8"
             }
           ]
         }

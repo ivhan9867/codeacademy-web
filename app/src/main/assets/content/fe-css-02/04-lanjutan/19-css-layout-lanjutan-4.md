@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-4
 courseId: fe-css-02
-order: 19
+order: 23
 title: "Menempatkan Item Berdasarkan Jalur Garis (grid-column & grid-row)"
 readingMinutes: 6
 section: LANJUTAN
@@ -73,7 +73,14 @@ Namun, bagaimana jika kamu ingin membuat satu elemen yang lebih penting—sepert
 
 Kuncinya adalah mengarahkan elemen memakai nomor **Grid Lines (Garis Kisi)**!
 
-> **Ilustrasi Konsep:** Menempatkan Item Menggunakan grid-column dan grid-row Spanning
+```text
+grid-column: 1 / 3; (membentang dari garis kolom 1 ke 3)
++---------------------------+-------------+
+|       Featured (2 col)    |   Item 2    |
++-------------+-------------+-------------+
+|   Item 3    |   Item 4    |   Item 5    |
++-------------+-------------+-------------+
+```
 ## Sistem Penomoran Garis Kisi
 
 Jika kamu membuat 3 kolom:

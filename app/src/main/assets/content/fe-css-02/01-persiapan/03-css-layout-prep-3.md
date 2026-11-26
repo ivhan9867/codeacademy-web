@@ -66,7 +66,13 @@ playgroundTask: "Coba buka tab CSS di Playground, tambahkan baris 'display: flex
 ---
 Mempelajari tata letak (*layout*) tanpa visualisasi warna ibarat menyusun perabotan kamar dalam kegelapan. Sering kali kita bingung kenapa elemen bergeser ke bawah atau tidak mau membesar, padahal penyebabnya adalah batas kotak pembungkus yang tidak kelihatan.
 
-> **Ilustrasi Konsep:** Trik Visualisasi Batas Kontainer dengan Warna Terang
+```text
++--- .container (border: 2px dashed #1a6368) ---+
+|  +----------+  +----------+  +----------+     |
+|  |  Item 1  |  |  Item 2  |  |  Item 3  |     |
+|  +----------+  +----------+  +----------+     |
++-----------------------------------------------+
+```
 ## Trik Rahasia Pengembang: Warna Kontras & Garis Putus-Putus
 
 Sepanjang kelas ini, kita akan sering memakai teknik **debugging visual**:

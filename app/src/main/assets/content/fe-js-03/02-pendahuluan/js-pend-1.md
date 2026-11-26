@@ -1,7 +1,7 @@
 ---
 id: js-pend-1
 courseId: fe-js-03
-order: 4
+order: 6
 title: Apa Itu JavaScript? Otak di Balik Web Interaktif
 readingMinutes: 5
 section: PENDAHULUAN

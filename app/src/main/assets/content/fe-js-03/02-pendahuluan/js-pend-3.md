@@ -1,7 +1,7 @@
 ---
 id: js-pend-3
 courseId: fe-js-03
-order: 6
+order: 8
 title: "Jendela Pertama: Menampilkan Output dengan console.log()"
 readingMinutes: 5
 section: PENDAHULUAN

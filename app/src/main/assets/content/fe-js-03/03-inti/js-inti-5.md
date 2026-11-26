@@ -1,7 +1,7 @@
 ---
 id: js-inti-5
 courseId: fe-js-03
-order: 13
+order: 15
 title: "Mengambil Keputusan: Percabangan if, else if, dan else"
 readingMinutes: 6
 section: INTI
@@ -42,7 +42,13 @@ Program komputer tidak hanya menjalankan baris kode secara lurus dari atas ke ba
 
 Kemampuan memilih jalur ini disebut **Percabangan (Control Flow)**.
 
-> **Ilustrasi Konsep:** Alur Pengambilan Keputusan If Else
+```text
+        [ Kondisi: nilai >= 80? ]
+               /                     (Ya)        (Tidak)
+             /                   "Lulus Baik"    [ nilai >= 60? ]
+                         /                              (Ya)       (Tidak)
+                   "Lulus"     "Remedial"
+```
 ---
 
 ## 1. Percabangan Dasar: if dan else

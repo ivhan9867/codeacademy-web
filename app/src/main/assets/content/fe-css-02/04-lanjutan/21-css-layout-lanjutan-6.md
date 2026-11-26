@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-6
 courseId: fe-css-02
-order: 21
+order: 25
 title: "Grid Ajaib Tanpa Media Query: minmax() & auto-fit"
 readingMinutes: 6
 section: LANJUTAN
@@ -81,7 +81,12 @@ grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 
 Satu baris ini menggantikan seluruh aturan media query di atas secara otomatis!
 
-> **Ilustrasi Konsep:** Mantra Responsif Otomatis dengan repeat, auto-fit, dan minmax
+```text
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+Desktop (900px) : [Card][Card][Card][Card]
+Tablet  (520px) : [   Card   ][   Card   ]
+Mobile  (360px) : [         Card         ]
+```
 ## Membedah Mantra Baris Sakti
 
 Mari kita pecah menjadi 3 bagian:

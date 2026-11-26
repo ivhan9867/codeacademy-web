@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-3
 courseId: fe-css-02
-order: 18
+order: 22
 title: "Kekuatan Fraksi dan Pengulangan: Satuan fr & Fungsi repeat()"
 readingMinutes: 6
 section: LANJUTAN
@@ -68,7 +68,12 @@ Di masa lalu saat memakai persentase (`33.33%`), jika kamu menambahkan `gap: 20p
 
 CSS Grid menyelesaikan penderitaan ini dengan menciptakan satuan baru: **`fr` (Fractional Unit / Unit Fraksi)**.
 
-> **Ilustrasi Konsep:** Satuan fr dan Fungsi repeat() pada CSS Grid
+```text
+grid-template-columns: repeat(3, 1fr); gap: 16px;
++---------------+  +---------------+  +---------------+
+|      1fr      |  |      1fr      |  |      1fr      |
++---------------+  +---------------+  +---------------+
+```
 ## Apa itu Satuan `fr`?
 
 Satu unit `1fr` mewakili **"satu bagian dari sisa ruang kosong yang tersedia"**.

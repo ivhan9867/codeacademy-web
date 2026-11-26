@@ -361,7 +361,6 @@ fun CommunityScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .navigationBarsPadding()
                             .padding(horizontal = 16.dp, vertical = 10.dp)
                     ) {
                         val isProfileEmpty = userProfile == null && myEntryInTop50 == null
@@ -399,7 +398,7 @@ fun CommunityScreen(
                                     )
                                 } else {
                                     Text(
-                                        text = userProfile?.name ?: "Kamu",
+                                        text = userProfile?.name ?: stringResource(R.string.community_you_label),
                                         style = MaterialTheme.typography.bodyMedium,
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.onSurface,

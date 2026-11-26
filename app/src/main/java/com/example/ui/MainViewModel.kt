@@ -930,48 +930,49 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val decodeOpts = android.graphics.BitmapFactory.Options().apply {
                     inSampleSize = sampleSize
                 }
-                val bitmap = resolver.openInputStream(uri)?.use { stream ->
+                val rawBitmap = resolver.openInputStream(uri)?.use { stream ->
                     android.graphics.BitmapFactory.decodeStream(stream, null, decodeOpts)
                 } ?: return@withContext null
 
+                val rotationDegrees = try {
+                    resolver.openInputStream(uri)?.use { exifStream ->
+                        val exif = android.media.ExifInterface(exifStream)
+                        when (exif.getAttributeInt(
+                            android.media.ExifInterface.TAG_ORIENTATION,
+                            android.media.ExifInterface.ORIENTATION_NORMAL
+                        )) {
+                            android.media.ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+                            android.media.ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+                            android.media.ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+                            else -> 0f
+                        }
+                    } ?: 0f
+                } catch (_: Throwable) {
+                    0f
+                }
+
+                val uprightBitmap = if (rotationDegrees != 0f) {
+                    val matrix = android.graphics.Matrix().apply { postRotate(rotationDegrees) }
+                    val rotated = android.graphics.Bitmap.createBitmap(
+                        rawBitmap, 0, 0, rawBitmap.width, rawBitmap.height, matrix, true
+                    )
+                    if (rotated !== rawBitmap) rawBitmap.recycle()
+                    rotated
+                } else {
+                    rawBitmap
+                }
+
                 try {
                     val out = java.io.ByteArrayOutputStream()
-                    bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, out)
+                    uprightBitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 82, out)
                     out.toByteArray()
                 } finally {
-                    bitmap.recycle()
+                    uprightBitmap.recycle()
                 }
             } catch (e: Throwable) {
                 android.util.Log.w("MainViewModel", "Failed to compress attached image: ${e.message}")
                 null
             }
-        }
-
-    suspend fun translateModuleToEnglish(moduleId: String, markdown: String): String? =
-        kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-            if (markdown.isBlank()) return@withContext null
-            val safeId = moduleId.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-            val cacheDir = java.io.File(getApplication<Application>().cacheDir, "translated_modules/en")
-            val cacheFile = java.io.File(cacheDir, "$safeId.md")
-            try {
-                if (cacheFile.exists() && cacheFile.length() > 0L) {
-                    val cached = cacheFile.readText(Charsets.UTF_8)
-                    if (cached.isNotBlank()) return@withContext cached
-                }
-            } catch (_: Throwable) {
-                // Ignore corrupted cache and re-translate
-            }
-
-            val translated = aiService.translateMarkdownToEnglish(markdown)
-            if (!translated.isNullOrBlank()) {
-                try {
-                    cacheDir.mkdirs()
-                    cacheFile.writeText(translated, Charsets.UTF_8)
-                } catch (e: Throwable) {
-                    android.util.Log.w("MainViewModel", "Failed to cache translated module $moduleId: ${e.message}")
-                }
-            }
-            translated
         }
 
     fun clearAiChat() {

@@ -1,8 +1,11 @@
 package com.example.ui.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -145,7 +148,6 @@ fun SectionQuizResultScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsPadding()
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
@@ -206,23 +208,47 @@ fun SectionQuizResultScreen(
                             .padding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        val displayScore = if (isFocusViolation) 0 else attempt.scorePercent
+                        val sweepAngle = (displayScore.coerceIn(0, 100) / 100f) * 360f
                         Box(
-                            modifier = Modifier
-                                .size(72.dp)
-                                .clip(CircleShape)
-                                .background(cardColor.copy(alpha = 0.2f)),
+                            modifier = Modifier.size(116.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(
-                                imageVector = when {
-                                    isPassed -> Icons.Default.EmojiEvents
-                                    isFocusViolation -> Icons.Default.Close
-                                    else -> Icons.Default.Refresh
-                                },
-                                contentDescription = null,
-                                tint = cardColor,
-                                modifier = Modifier.size(40.dp)
-                            )
+                            Canvas(modifier = Modifier.fillMaxSize()) {
+                                val strokePx = 10.dp.toPx()
+                                drawArc(
+                                    color = cardColor.copy(alpha = 0.18f),
+                                    startAngle = -90f,
+                                    sweepAngle = 360f,
+                                    useCenter = false,
+                                    style = Stroke(width = strokePx, cap = StrokeCap.Round)
+                                )
+                                drawArc(
+                                    color = cardColor,
+                                    startAngle = -90f,
+                                    sweepAngle = sweepAngle,
+                                    useCenter = false,
+                                    style = Stroke(width = strokePx, cap = StrokeCap.Round)
+                                )
+                            }
+                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                Text(
+                                    text = "$displayScore%",
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = cardColor
+                                )
+                                Icon(
+                                    imageVector = when {
+                                        isPassed -> Icons.Default.EmojiEvents
+                                        isFocusViolation -> Icons.Default.Close
+                                        else -> Icons.Default.Refresh
+                                    },
+                                    contentDescription = null,
+                                    tint = cardColor,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
                         }
 
                         Spacer(modifier = Modifier.height(14.dp))

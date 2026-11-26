@@ -1,7 +1,7 @@
 ---
 id: css-layout-pend-4
 courseId: fe-css-02
-order: 7
+order: 9
 title: "Dua Pahlawan Modern: Flexbox dan Grid Bersatu"
 readingMinutes: 5
 section: PENDAHULUAN
@@ -14,7 +14,15 @@ Setelah merasakan betapa melelahkannya masa lalu, sekarang saatnya berkenalan de
 
 Banyak pemula salah mengira bahwa mereka harus memilih salah satu mazhab: *"Saya tim Flexbox"* atau *"Saya tim Grid"*. Padahal rahasia pengembang web profesional adalah: **Grid untuk Tata Letak Makro, Flexbox untuk Komponen Mikro**.
 
-> **Ilustrasi Konsep:** Struktur Halaman Web: Grid untuk Makro dan Flexbox untuk Mikro
+```text
++=================== CSS GRID (Makro) ====================+
+| [Flexbox Navbar: Logo           Home  Kelas  Profil]    |
++------------+--------------------------------------------+
+|  Sidebar   |  +--------+  +--------+  +--------+        |
+|  (Grid)    |  | Card 1 |  | Card 2 |  | Card 3 |        |
+|            |  +--------+  +--------+  +--------+        |
++------------+--------------------------------------------+
+```
 ## Level Makro: Arsitektur Utama Halaman (Tugas CSS Grid)
 
 Tata letak makro adalah kerangka besar yang membagi layar perangkatmu menjadi petak-petak fungsional:

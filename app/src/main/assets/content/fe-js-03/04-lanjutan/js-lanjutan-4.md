@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-4
 courseId: fe-js-03
-order: 20
+order: 24
 title: "Menggambarkan Objek Nyata: JavaScript Object Dasar"
 readingMinutes: 6
 section: LANJUTAN

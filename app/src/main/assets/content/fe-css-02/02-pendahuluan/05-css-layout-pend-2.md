@@ -1,7 +1,7 @@
 ---
 id: css-layout-pend-2
 courseId: fe-css-02
-order: 5
+order: 7
 title: "Kilas Balik Cepat: Normal Flow, Display, & Box Model"
 readingMinutes: 5
 section: PENDAHULUAN
@@ -79,7 +79,15 @@ Sebelum kita masuk ke keajaiban Flexbox dan Grid, mari segarkan kembali ingatanm
 
 Sistem alami ini disebut **Normal Flow (Aliran Normal)**.
 
-> **Ilustrasi Konsep:** Kilas Balik Box Model dan Aliran Normal Browser
+```text
++------------------ MARGIN ------------------+
+| +---------------- BORDER ----------------+ |
+| | +------------- PADDING --------------+ | |
+| | |           CONTENT AREA             | | |
+| | +------------------------------------+ | |
+| +----------------------------------------+ |
++--------------------------------------------+
+```
 ## 1. Dua Karakter Utama: Block vs Inline
 
 Secara default, elemen HTML terbagi ke dalam dua dunia tampilan (*display*):

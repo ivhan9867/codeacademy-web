@@ -6,21 +6,29 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isDefaultLecturerSuperAdmin() {
+      return isSignedIn()
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() == 'dosen@codeacademy.id';
+    }
+
     function hasValidEmail() {
       return isSignedIn()
         && request.auth.token.email != null
-        && request.auth.token.email_verified == true;
+        && (request.auth.token.email_verified == true || isDefaultLecturerSuperAdmin());
     }
 
     // Verified facilitator allowlist keyed by lowercase email
     function isFacilitator() {
-      return hasValidEmail()
-        && exists(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower()));
+      return isDefaultLecturerSuperAdmin()
+        || (hasValidEmail()
+            && exists(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower())));
     }
 
     function isSuperAdmin() {
-      return isFacilitator()
-        && get(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower())).data.get('accessRole', 'facilitator') == 'super_admin';
+      return isDefaultLecturerSuperAdmin()
+        || (isFacilitator()
+            && get(/databases/$(database)/documents/facilitators/$(request.auth.token.email.lower())).data.get('accessRole', 'facilitator') == 'super_admin');
     }
 
     function isNotBannedUser() {

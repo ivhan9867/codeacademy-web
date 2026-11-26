@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-5
 courseId: fe-css-02
-order: 12
+order: 14
 title: "Bungkus Rapi Baris Jamak: flex-wrap & gap"
 readingMinutes: 5
 section: INTI
@@ -72,7 +72,14 @@ Bahkan jika lebar layar mengecil (misalnya di smartphone), item flex akan terus 
 
 Untuk mengatasi hal ini, kita membutuhkan dua penyelamat: **`flex-wrap`** dan **`gap`**.
 
-> **Ilustrasi Konsep:** Penggunaan flex-wrap dan properti gap
+```text
+flex-wrap: wrap; gap: 12px;
++-----------------------------+
+| [Card 1]  [Card 2] [Card 3] |
+|                             | <-- gap: 12px
+| [Card 4]  [Card 5]          |
++-----------------------------+
+```
 ## Mengizinkan Baris Baru dengan `flex-wrap`
 
 Properti `flex-wrap` diletakkan pada kontainer induk untuk menentukan apakah item boleh turun ke baris berikutnya saat ruang habis:

@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-2
 courseId: fe-css-02
-order: 9
+order: 11
 title: "Arah Aliran: Mengendalikan flex-direction"
 readingMinutes: 6
 section: INTI
@@ -67,7 +67,15 @@ Untuk menguasai Flexbox, ada satu kunci rahasia yang harus selalu kamu bayangkan
 
 Arah sumbu ini dikendalikan oleh properti **`flex-direction`**.
 
-> **Ilustrasi Konsep:** Konsep Main Axis dan Cross Axis pada Flexbox
+```text
+flex-direction: row                flex-direction: column
+  Main Axis ------------>            Cross Axis -------->
+  +------+ +------+ +------+        | +--------+
+  |  1   | |  2   | |  3   |        v |   1    |
+  +------+ +------+ +------+      Main+--------+
+  | Cross Axis                    Axis|   2    |
+  v                                   +--------+
+```
 ## Dua Sumbu yang Berputar Bersama
 
 1. **Main Axis (Sumbu Utama)**:

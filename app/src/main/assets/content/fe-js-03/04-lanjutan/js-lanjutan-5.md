@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-5
 courseId: fe-js-03
-order: 21
+order: 25
 title: "Mengolah Koleksi Modern: Method forEach, map, dan filter"
 readingMinutes: 7
 section: LANJUTAN

@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-2
 courseId: fe-js-03
-order: 18
+order: 22
 title: "Gaya Modern: Arrow Function yang Ringkas"
 readingMinutes: 5
 section: LANJUTAN

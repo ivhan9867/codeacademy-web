@@ -30,7 +30,13 @@ object CourseCatalog {
         )
     )
 
-    private val dynamicModules = mutableMapOf<String, List<CourseModule>>()
+    private val dynamicModulesByLang = mutableMapOf<String, MutableMap<String, List<CourseModule>>>()
+    @Volatile
+    private var _activeLanguageCode: String = "id"
+
+    private fun normalizedLangKey(languageCode: String): String =
+        if (languageCode.lowercase() == "id") "id" else "en"
+
     private val _isAssetCoursesLoaded = MutableStateFlow(false)
     val isAssetCoursesLoaded: StateFlow<Boolean> = _isAssetCoursesLoaded.asStateFlow()
 
@@ -44,36 +50,47 @@ object CourseCatalog {
     private var _baseCourses: List<Course> = emptyList()
     private var _contentPaths: Map<String, String> = emptyMap()
 
-    fun setDynamicModules(courseId: String, modules: List<CourseModule>) {
-        synchronized(dynamicModules) {
-            dynamicModules[courseId] = modules
+    fun setDynamicModules(courseId: String, modules: List<CourseModule>, languageCode: String = _activeLanguageCode) {
+        val langKey = normalizedLangKey(languageCode)
+        synchronized(dynamicModulesByLang) {
+            val bucket = dynamicModulesByLang.getOrPut(langKey) { mutableMapOf() }
+            bucket[courseId] = modules
         }
+        GlossaryRegistry.clearCache()
         _coursesState.value = courses
     }
 
-    fun getDynamicModules(courseId: String): List<CourseModule> {
-        synchronized(dynamicModules) {
-            val existing = dynamicModules[courseId]
+    fun getDynamicModules(courseId: String, languageCode: String = _activeLanguageCode): List<CourseModule> {
+        val langKey = normalizedLangKey(languageCode)
+        synchronized(dynamicModulesByLang) {
+            val existing = dynamicModulesByLang[langKey]?.get(courseId)
             if (!existing.isNullOrEmpty()) {
                 return existing
             }
         }
-        val localLoaded = tryLoadFromLocalDirectory(courseId)
+        val localLoaded = tryLoadFromLocalDirectory(courseId, langKey)
         if (localLoaded.isNotEmpty()) {
-            synchronized(dynamicModules) {
-                dynamicModules[courseId] = localLoaded
+            synchronized(dynamicModulesByLang) {
+                val bucket = dynamicModulesByLang.getOrPut(langKey) { mutableMapOf() }
+                bucket[courseId] = localLoaded
             }
             return localLoaded
         }
         return emptyList()
     }
 
-    private fun tryLoadFromLocalDirectory(courseId: String): List<CourseModule> {
-        val candidates = listOf(
-            File("app/src/main/assets/content/$courseId"),
-            File("src/main/assets/content/$courseId"),
-            File("../app/src/main/assets/content/$courseId")
-        )
+    private fun tryLoadFromLocalDirectory(courseId: String, langKey: String = _activeLanguageCode): List<CourseModule> {
+        val folder = if (langKey == "en") "content_en" else "content"
+        val candidates = buildList {
+            add(File("app/src/main/assets/$folder/$courseId"))
+            add(File("src/main/assets/$folder/$courseId"))
+            add(File("../app/src/main/assets/$folder/$courseId"))
+            if (folder != "content") {
+                add(File("app/src/main/assets/content/$courseId"))
+                add(File("src/main/assets/content/$courseId"))
+                add(File("../app/src/main/assets/content/$courseId"))
+            }
+        }
         for (dir in candidates) {
             if (dir.exists() && dir.isDirectory) {
                 val loaded = CourseContentParser.loadCourseModulesFromDirectory(dir, courseId)
@@ -91,6 +108,7 @@ object CourseCatalog {
         }
         _baseCourses = catalogData.courses
         _contentPaths = catalogData.contentPaths
+        GlossaryRegistry.clearCache()
         _coursesState.value = courses
     }
 
@@ -98,6 +116,7 @@ object CourseCatalog {
      * Fast synchronous loader for the JSON catalog definitions.
      */
     fun loadCatalogSync(context: Context, languageCode: String = "id") {
+        _activeLanguageCode = normalizedLangKey(languageCode)
         try {
             val catalogData = CourseCatalogParser.loadCatalog(context, languageCode)
             if (catalogData.tracks.isNotEmpty() || catalogData.courses.isNotEmpty()) {
@@ -110,29 +129,35 @@ object CourseCatalog {
 
     /**
      * Suspended loader that reads JSON catalog definitions and loads
-     * markdown modules from assets/content/ for courses that declare contentPath.
+     * localized markdown modules from assets/content/ or assets/content_en/.
      */
     suspend fun loadAssetCourses(context: Context, languageCode: String = "id") = withContext(Dispatchers.IO) {
+        val langKey = normalizedLangKey(languageCode)
+        _activeLanguageCode = langKey
         try {
             val catalogData = CourseCatalogParser.loadCatalog(context, languageCode)
             if (catalogData.tracks.isNotEmpty() || catalogData.courses.isNotEmpty()) {
                 applyCatalogData(catalogData)
             }
 
-            // Load markdown modules for courses declaring contentPath (skip if already cached in memory)
+            // Load markdown modules for active language (skip if already cached for this language)
             for (course in _baseCourses) {
                 val contentPath = _contentPaths[course.id]
-                if (!contentPath.isNullOrBlank() && getDynamicModules(course.id).isEmpty()) {
-                    val modules = CourseContentParser.loadCourseModules(context, course.id)
+                val alreadyCached = synchronized(dynamicModulesByLang) {
+                    !dynamicModulesByLang[langKey]?.get(course.id).isNullOrEmpty()
+                }
+                if (!contentPath.isNullOrBlank() && !alreadyCached) {
+                    val modules = CourseContentParser.loadCourseModules(context, course.id, langKey)
                     if (modules.isNotEmpty()) {
-                        setDynamicModules(course.id, modules)
-                        Log.d("CourseCatalog", "Loaded ${modules.size} modules from assets into CourseCatalog for ${course.id}")
+                        setDynamicModules(course.id, modules, langKey)
+                        Log.d("CourseCatalog", "Loaded ${modules.size} modules ($langKey) from assets for ${course.id}")
                     }
                 }
             }
         } catch (e: Exception) {
             Log.e("CourseCatalog", "Failed to load asset modules: ${e.message}", e)
         } finally {
+            GlossaryRegistry.clearCache()
             _isAssetCoursesLoaded.value = true
             _coursesState.value = courses
         }

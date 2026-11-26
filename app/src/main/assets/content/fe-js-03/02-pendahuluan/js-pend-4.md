@@ -1,7 +1,7 @@
 ---
 id: js-pend-4
 courseId: fe-js-03
-order: 7
+order: 9
 title: "Menulis Kode yang Rapi: Komentar & Aturan Sintaks Dasar"
 readingMinutes: 4
 section: PENDAHULUAN

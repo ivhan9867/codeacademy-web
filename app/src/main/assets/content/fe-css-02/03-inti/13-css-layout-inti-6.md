@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-6
 courseId: fe-css-02
-order: 13
+order: 15
 title: "Fleksibilitas Item: flex-grow, flex-shrink, dan flex-basis"
 readingMinutes: 6
 section: INTI
@@ -73,7 +73,10 @@ Sejauh ini kita lebih banyak memberi perintah pada **Kontainer Induk**. Sekarang
 
 Kekuatan ini dikendalikan oleh tiga serangkai: **`flex-grow`**, **`flex-shrink`**, dan **`flex-basis`**.
 
-> **Ilustrasi Konsep:** Konsep flex-grow, flex-shrink, dan flex-basis
+```text
+Kontainer 600px (flex-grow):
+|[  flex: 1 (200px)  ]|[       flex: 2 (400px)       ]|
+```
 ## 1. `flex-basis`: Ukuran Awal Sebelum Fleksibel
 
 `flex-basis` adalah ukuran ideal awal suatu item sebelum sisa ruang kosong dibagikan.

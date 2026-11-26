@@ -1,6 +1,11 @@
 package com.example.ui.screens
 
+import android.content.Context
+import android.net.Uri
+import android.provider.OpenableColumns
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -11,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,16 +32,25 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.AssignmentTurnedIn
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.HourglassTop
 import androidx.compose.material.icons.filled.Link
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.RateReview
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.material.icons.filled.Science
+import androidx.compose.material.icons.filled.UploadFile
 import androidx.compose.material.icons.filled.WorkspacePremium
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import com.example.ui.components.CodeSandboxWebView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
+import java.util.zip.ZipInputStream
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -44,9 +59,11 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -157,16 +174,41 @@ fun FinalProjectSubmissionScreen(
         }
     }
 
-    val defaultPassFeedback = stringResource(R.string.final_project_simulator_default_pass_feedback)
-    val defaultRevFeedback = stringResource(R.string.final_project_simulator_default_rev_feedback)
-    var simulatedScore by remember { mutableIntStateOf(90) }
-    var simulatedFeedback by remember(defaultPassFeedback) { mutableStateOf(defaultPassFeedback) }
-    var isSimulatorExpanded by remember { mutableStateOf(false) }
+    var uploadedFileName by remember(submission?.courseId) { mutableStateOf<String?>(null) }
+    var uploadedFileSizeKb by remember(submission?.courseId) { mutableIntStateOf(0) }
+    var showPreviewDialog by remember { mutableStateOf(false) }
 
     val isEditable = status != ProjectSubmissionStatus.PENDING_REVIEW
     val toastDraftSaved = stringResource(R.string.final_project_toast_draft_saved)
     val toastCheckAllRubrics = stringResource(R.string.final_project_toast_check_all_rubrics)
     val toastSubmitted = stringResource(R.string.final_project_toast_submitted)
+    val toastUploadError = stringResource(R.string.final_project_upload_error)
+    val isUrlInvalid = projectUrl.isNotBlank() &&
+        !projectUrl.trim().startsWith("https://", ignoreCase = true) &&
+        !projectUrl.trim().startsWith("http://", ignoreCase = true)
+
+    val projectFilePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) {
+            coroutineScope.launch {
+                val result = readUploadedProjectFile(context, uri)
+                if (result != null) {
+                    val (fileName, sizeKb, extractedCode) = result
+                    workspaceCode = extractedCode
+                    uploadedFileName = fileName
+                    uploadedFileSizeKb = sizeKb
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.final_project_upload_success_format, fileName, sizeKb),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(context, toastUploadError, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -199,6 +241,87 @@ fun FinalProjectSubmissionScreen(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             )
+        },
+        bottomBar = {
+            if (isEditable) {
+                Surface(
+                    color = MaterialTheme.colorScheme.surface,
+                    tonalElevation = 4.dp,
+                    shadowElevation = 8.dp,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        OutlinedButton(
+                            onClick = {
+                                onSaveDraft(workspaceCode, projectUrl, studentNotes, checkedRubricIds)
+                                Toast.makeText(context, toastDraftSaved, Toast.LENGTH_SHORT).show()
+                            },
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 12.dp),
+                            modifier = Modifier.weight(0.95f)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Save,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = stringResource(R.string.final_project_btn_save_draft),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+                                val allRubricsChecked = spec.rubrics.all { it.id in checkedRubricIds }
+                                val hasContent = workspaceCode.isNotBlank() || projectUrl.isNotBlank()
+                                if (isUrlInvalid) {
+                                    Toast.makeText(context, context.getString(R.string.final_project_url_invalid), Toast.LENGTH_SHORT).show()
+                                } else if (!allRubricsChecked || !hasContent) {
+                                    Toast.makeText(context, toastCheckAllRubrics, Toast.LENGTH_SHORT).show()
+                                } else {
+                                    onSubmitProject(workspaceCode, projectUrl.trim(), studentNotes.trim(), checkedRubricIds)
+                                    Toast.makeText(context, toastSubmitted, Toast.LENGTH_SHORT).show()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
+                            shape = RoundedCornerShape(12.dp),
+                            contentPadding = PaddingValues(vertical = 12.dp, horizontal = 14.dp),
+                            modifier = Modifier
+                                .weight(1.35f)
+                                .testTag("final_project_submit_btn")
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.Send,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = if (status == ProjectSubmissionStatus.REVISION_REQUESTED) {
+                                    stringResource(R.string.final_project_btn_resubmit)
+                                } else {
+                                    stringResource(R.string.final_project_btn_submit)
+                                },
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                }
+            }
         },
         modifier = modifier
     ) { innerPadding ->
@@ -289,6 +412,56 @@ fun FinalProjectSubmissionScreen(
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
+
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        // 3-Step Visual Progress Stepper (Draft -> Pending Review -> Approved)
+                        val activeStep = when (status) {
+                            ProjectSubmissionStatus.APPROVED -> 2
+                            ProjectSubmissionStatus.PENDING_REVIEW -> 1
+                            else -> 0
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val stepLabels = listOf(
+                                stringResource(R.string.final_project_status_draft),
+                                stringResource(R.string.final_project_status_pending),
+                                stringResource(R.string.final_project_status_approved)
+                            )
+                            stepLabels.forEachIndexed { idx, label ->
+                                val isDone = idx <= activeStep
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(22.dp)
+                                            .clip(CircleShape)
+                                            .background(if (isDone) statusColor else MaterialTheme.colorScheme.surfaceVariant),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = "${idx + 1}",
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (isDone) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = label,
+                                        fontSize = 10.sp,
+                                        fontWeight = if (isDone) FontWeight.Bold else FontWeight.Normal,
+                                        color = if (isDone) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -328,6 +501,30 @@ fun FinalProjectSubmissionScreen(
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(999.dp),
+                                    color = TealPrimary.copy(alpha = 0.14f)
+                                ) {
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.CloudDone,
+                                            contentDescription = null,
+                                            tint = TealPrimary,
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = stringResource(R.string.final_project_cloud_sync_badge),
+                                            style = MaterialTheme.typography.labelSmall,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = TealPrimary
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -498,7 +695,33 @@ fun FinalProjectSubmissionScreen(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        val rubricTotal = spec.rubrics.size.coerceAtLeast(1)
+                        val rubricDone = spec.rubrics.count { it.id in checkedRubricIds }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            LinearProgressIndicator(
+                                progress = { rubricDone.toFloat() / rubricTotal.toFloat() },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(7.dp)
+                                    .clip(RoundedCornerShape(999.dp)),
+                                color = if (rubricDone == rubricTotal) SuccessGreen else TealPrimary,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                            Text(
+                                text = "$rubricDone/$rubricTotal",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = if (rubricDone == rubricTotal) SuccessGreen else TealPrimary
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
 
                         spec.rubrics.forEach { rubric ->
                             val isChecked = rubric.id in checkedRubricIds
@@ -644,23 +867,234 @@ fun FinalProjectSubmissionScreen(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        OutlinedTextField(
-                            value = workspaceCode,
-                            onValueChange = { workspaceCode = it },
-                            enabled = isEditable,
-                            placeholder = {
-                                Text(stringResource(R.string.final_project_code_placeholder))
+                        // Real File / ZIP Upload Zone
+                        Surface(
+                            onClick = {
+                                if (isEditable) {
+                                    projectFilePicker.launch(
+                                        arrayOf(
+                                            "text/html",
+                                            "text/css",
+                                            "text/javascript",
+                                            "application/javascript",
+                                            "application/zip",
+                                            "application/x-zip-compressed",
+                                            "text/plain",
+                                            "*/*"
+                                        )
+                                    )
+                                }
                             },
-                            textStyle = MaterialTheme.typography.bodySmall.copy(
-                                fontFamily = FontFamily.Monospace,
-                                lineHeight = 18.sp
-                            ),
-                            minLines = 8,
-                            maxLines = 18,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .testTag("final_project_code_input")
-                        )
+                            enabled = isEditable,
+                            shape = RoundedCornerShape(14.dp),
+                            color = TealPrimary.copy(alpha = 0.08f),
+                            border = BorderStroke(1.2.dp, TealPrimary.copy(alpha = 0.38f)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 14.dp, vertical = 12.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .background(TealPrimary.copy(alpha = 0.16f)),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.UploadFile,
+                                        contentDescription = null,
+                                        tint = TealPrimary,
+                                        modifier = Modifier.size(22.dp)
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = stringResource(R.string.final_project_upload_title),
+                                        style = MaterialTheme.typography.labelLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = stringResource(R.string.final_project_upload_subtitle),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 2
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Surface(
+                                    shape = RoundedCornerShape(8.dp),
+                                    color = TealPrimary
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.final_project_upload_btn),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                                    )
+                                }
+                            }
+                        }
+
+                        AnimatedVisibility(visible = uploadedFileName != null) {
+                            uploadedFileName?.let { fname ->
+                                Surface(
+                                    shape = RoundedCornerShape(10.dp),
+                                    color = SuccessGreen.copy(alpha = 0.12f),
+                                    border = BorderStroke(1.dp, SuccessGreen.copy(alpha = 0.35f)),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp)
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Default.Description,
+                                            contentDescription = null,
+                                            tint = SuccessGreen,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(
+                                            text = "$fname (${uploadedFileSizeKb} KB)",
+                                            style = MaterialTheme.typography.bodySmall,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = MaterialTheme.colorScheme.onSurface,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                        if (isEditable) {
+                                            IconButton(
+                                                onClick = {
+                                                    uploadedFileName = null
+                                                    uploadedFileSizeKb = 0
+                                                },
+                                                modifier = Modifier.size(26.dp)
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Close,
+                                                    contentDescription = stringResource(R.string.final_project_upload_remove_cd),
+                                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                    modifier = Modifier.size(16.dp)
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Dark IDE Code Container
+                        Surface(
+                            shape = RoundedCornerShape(14.dp),
+                            color = Color(0xFF0F172A),
+                            border = BorderStroke(1.dp, Color(0xFF334155)),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Column {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .background(Color(0xFF1E293B))
+                                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Row(
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Box(Modifier.size(9.dp).clip(CircleShape).background(Color(0xFFEF4444)))
+                                        Box(Modifier.size(9.dp).clip(CircleShape).background(Color(0xFFF59E0B)))
+                                        Box(Modifier.size(9.dp).clip(CircleShape).background(Color(0xFF10B981)))
+                                        Spacer(modifier = Modifier.width(4.dp))
+                                        Surface(
+                                            shape = RoundedCornerShape(6.dp),
+                                            color = Color(0xFF334155)
+                                        ) {
+                                            Text(
+                                                text = spec.language.uppercase(),
+                                                fontSize = 10.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color(0xFF94A3B8),
+                                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp)
+                                            )
+                                        }
+                                    }
+                                    Surface(
+                                        onClick = { showPreviewDialog = true },
+                                        shape = RoundedCornerShape(8.dp),
+                                        color = TealPrimary
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
+                                        ) {
+                                            Icon(
+                                                imageVector = Icons.Default.PlayArrow,
+                                                contentDescription = null,
+                                                tint = Color.White,
+                                                modifier = Modifier.size(14.dp)
+                                            )
+                                            Spacer(modifier = Modifier.width(3.dp))
+                                            Text(
+                                                text = stringResource(R.string.final_project_preview_btn),
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White
+                                            )
+                                        }
+                                    }
+                                }
+                                OutlinedTextField(
+                                    value = workspaceCode,
+                                    onValueChange = { workspaceCode = it },
+                                    enabled = isEditable,
+                                    placeholder = {
+                                        Text(
+                                            text = stringResource(R.string.final_project_code_placeholder),
+                                            color = Color(0xFF64748B)
+                                        )
+                                    },
+                                    textStyle = MaterialTheme.typography.bodySmall.copy(
+                                        fontFamily = FontFamily.Monospace,
+                                        lineHeight = 19.sp,
+                                        fontSize = 12.5.sp,
+                                        color = Color(0xFFE2E8F0)
+                                    ),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedContainerColor = Color(0xFF0F172A),
+                                        unfocusedContainerColor = Color(0xFF0F172A),
+                                        disabledContainerColor = Color(0xFF0F172A),
+                                        focusedBorderColor = Color.Transparent,
+                                        unfocusedBorderColor = Color.Transparent,
+                                        disabledBorderColor = Color.Transparent,
+                                        cursorColor = Color(0xFF38BDF8),
+                                        focusedTextColor = Color(0xFFE2E8F0),
+                                        unfocusedTextColor = Color(0xFFE2E8F0),
+                                        disabledTextColor = Color(0xFF94A3B8)
+                                    ),
+                                    minLines = 9,
+                                    maxLines = 20,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .testTag("final_project_code_input")
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -694,6 +1128,10 @@ fun FinalProjectSubmissionScreen(
                             onValueChange = { projectUrl = it },
                             enabled = isEditable,
                             singleLine = true,
+                            isError = isUrlInvalid,
+                            supportingText = if (isUrlInvalid) {
+                                { Text(stringResource(R.string.final_project_url_invalid)) }
+                            } else null,
                             placeholder = {
                                 Text(stringResource(R.string.final_project_url_placeholder))
                             },
@@ -727,216 +1165,145 @@ fun FinalProjectSubmissionScreen(
                 }
             }
 
-            // 7. Save Draft & Submit Buttons
-            item(key = "submission_action_buttons") {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            onSaveDraft(workspaceCode, projectUrl, studentNotes, checkedRubricIds)
-                            Toast.makeText(context, toastDraftSaved, Toast.LENGTH_SHORT).show()
-                        },
-                        enabled = isEditable,
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Save,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(stringResource(R.string.final_project_btn_save_draft))
-                    }
+        }
+    }
 
-                    Button(
-                        onClick = {
-                            val allRubricsChecked = spec.rubrics.all { it.id in checkedRubricIds }
-                            val hasContent = workspaceCode.isNotBlank() || projectUrl.isNotBlank()
-                            if (!allRubricsChecked || !hasContent) {
-                                Toast.makeText(context, toastCheckAllRubrics, Toast.LENGTH_SHORT).show()
-                            } else {
-                                onSubmitProject(workspaceCode, projectUrl, studentNotes, checkedRubricIds)
-                                Toast.makeText(context, toastSubmitted, Toast.LENGTH_SHORT).show()
-                            }
-                        },
-                        enabled = isEditable,
-                        colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
-                        shape = RoundedCornerShape(12.dp),
-                        modifier = Modifier
-                            .weight(1.3f)
-                            .testTag("final_project_submit_btn")
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.Send,
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(18.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(
-                            text = if (status == ProjectSubmissionStatus.REVISION_REQUESTED) {
-                                stringResource(R.string.final_project_btn_resubmit)
-                            } else {
-                                stringResource(R.string.final_project_btn_submit)
-                            },
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                }
-            }
-
-            // 8. Facilitator Review Section / Simulator Toggle (Debug-only)
-            if (com.example.BuildConfig.DEBUG) {
-                item(key = "facilitator_simulator_card") {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(18.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.55f)
-                    ),
-                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.35f))
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { isSimulatorExpanded = !isSimulatorExpanded }
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(34.dp)
-                                        .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Science,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.primary,
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                }
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Column {
-                                    Text(
-                                        text = stringResource(R.string.final_project_simulator_title),
-                                        style = MaterialTheme.typography.titleSmall,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
-                                    Text(
-                                        text = if (isSimulatorExpanded) "Ketuk untuk menutup simulasi" else "Ketuk untuk membuka pengujian offline",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = MaterialTheme.colorScheme.primary
-                                    )
-                                }
-                            }
-                            IconButton(onClick = { isSimulatorExpanded = !isSimulatorExpanded }) {
-                                Icon(
-                                    imageVector = if (isSimulatorExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-
-                        AnimatedVisibility(visible = isSimulatorExpanded) {
-                            Column(modifier = Modifier.padding(top = 10.dp)) {
-                                Text(
-                                    text = stringResource(R.string.final_project_simulator_desc),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-                                Text(
-                                    text = stringResource(R.string.final_project_simulator_score_label, simulatedScore),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.primary
-                                )
-                                Slider(
-                                    value = simulatedScore.toFloat(),
-                                    onValueChange = { simulatedScore = it.toInt().coerceIn(40, 100) },
-                                    valueRange = 40f..100f
-                                )
-
-                                OutlinedTextField(
-                                    value = simulatedFeedback,
-                                    onValueChange = { simulatedFeedback = it },
-                                    label = {
-                                        Text(stringResource(R.string.final_project_simulator_feedback_label))
-                                    },
-                                    minLines = 2,
-                                    maxLines = 4,
-                                    modifier = Modifier.fillMaxWidth()
-                                )
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                ) {
-                                    OutlinedButton(
-                                        onClick = {
-                                            val revScore = minOf(simulatedScore, spec.minPassingScore - 5)
-                                            val feedbackText = if (simulatedFeedback == defaultPassFeedback) {
-                                                defaultRevFeedback
-                                            } else {
-                                                simulatedFeedback
-                                            }
-                                            onSimulateFacilitatorReview(false, revScore, feedbackText) {}
-                                        },
-                                        shape = RoundedCornerShape(10.dp),
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .testTag("final_project_simulate_revision_btn")
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.final_project_simulator_btn_revision),
-                                            fontSize = 12.sp
-                                        )
-                                    }
-
-                                    Button(
-                                        onClick = {
-                                            val passScore = maxOf(simulatedScore, spec.minPassingScore)
-                                            onSimulateFacilitatorReview(true, passScore, simulatedFeedback) { _ ->
-                                                // Certificate is automatically generated and user can tap View Certificate
-                                            }
-                                        },
-                                        colors = ButtonDefaults.buttonColors(containerColor = SuccessGreen),
-                                        shape = RoundedCornerShape(10.dp),
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .testTag("final_project_simulate_approve_btn")
-                                    ) {
-                                        Text(
-                                            text = stringResource(R.string.final_project_simulator_btn_approve),
-                                            color = Color.White,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 12.sp
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    // Live Project Preview Dialog (renders student's HTML/CSS/JS before submission)
+    if (showPreviewDialog) {
+        val previewHtml = remember(workspaceCode) {
+            val trimmed = workspaceCode.trim()
+            if (trimmed.contains("<html", ignoreCase = true) || trimmed.contains("<body", ignoreCase = true) || trimmed.contains("<div", ignoreCase = true) || trimmed.contains("<header", ignoreCase = true)) {
+                trimmed
+            } else {
+                "<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{font-family:sans-serif;padding:16px;}</style></head><body><pre id=\"out\"></pre><script>try{ $trimmed }catch(e){document.getElementById('out').textContent=e.toString();}</script></body></html>"
             }
         }
+        Dialog(
+            onDismissRequest = { showPreviewDialog = false },
+            properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
+            Surface(
+                shape = RoundedCornerShape(20.dp),
+                color = MaterialTheme.colorScheme.surface,
+                modifier = Modifier
+                    .fillMaxWidth(0.94f)
+                    .fillMaxHeight(0.82f)
+            ) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
+                            .padding(horizontal = 16.dp, vertical = 10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(R.string.final_project_preview_title),
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold
+                        )
+                        IconButton(
+                            onClick = { showPreviewDialog = false },
+                            modifier = Modifier.size(32.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = stringResource(R.string.common_close)
+                            )
+                        }
+                    }
+                    CodeSandboxWebView(
+                        htmlCode = previewHtml,
+                        cssCode = "",
+                        jsCode = "",
+                        runTrigger = 1,
+                        onConsoleLog = {},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+private suspend fun readUploadedProjectFile(
+    context: Context,
+    uri: Uri
+): Triple<String, Int, String>? = withContext(Dispatchers.IO) {
+    val maxBytes = 250 * 1024 // 250 KB safe ceiling for Firestore document
+    val allowedExts = setOf("html", "htm", "css", "js", "json", "md", "txt")
+    try {
+        var displayName = "project_file"
+        context.contentResolver.query(uri, arrayOf(OpenableColumns.DISPLAY_NAME), null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (idx >= 0) {
+                    val name = cursor.getString(idx)
+                    if (!name.isNullOrBlank()) displayName = name
+                }
+            }
+        }
+
+        val isZip = displayName.endsWith(".zip", ignoreCase = true) ||
+            (context.contentResolver.getType(uri)?.contains("zip", ignoreCase = true) == true)
+
+        if (isZip) {
+            val merged = StringBuilder()
+            var totalBytes = 0
+            context.contentResolver.openInputStream(uri)?.use { raw ->
+                ZipInputStream(raw).use { zis ->
+                    var entry = zis.nextEntry
+                    while (entry != null) {
+                        val name = entry.name
+                        val ext = name.substringAfterLast('.', "").lowercase()
+                        val isSafe = !entry.isDirectory &&
+                            !name.contains("..") &&
+                            !name.startsWith("__MACOSX") &&
+                            !name.substringAfterLast('/').startsWith(".") &&
+                            ext in allowedExts
+                        if (isSafe && totalBytes < maxBytes) {
+                            val buf = ByteArrayOutputStream()
+                            val chunk = ByteArray(4096)
+                            var read = zis.read(chunk)
+                            while (read > 0 && totalBytes + buf.size() < maxBytes) {
+                                buf.write(chunk, 0, read)
+                                read = zis.read(chunk)
+                            }
+                            val fileText = buf.toString(Charsets.UTF_8.name()).trim()
+                            if (fileText.isNotEmpty()) {
+                                if (merged.isNotEmpty()) merged.append("\n\n")
+                                merged.append("<!-- ===== ").append(name).append(" ===== -->\n")
+                                merged.append(fileText)
+                                totalBytes += buf.size()
+                            }
+                        }
+                        zis.closeEntry()
+                        entry = zis.nextEntry
+                    }
+                }
+            }
+            val finalCode = merged.toString()
+            if (finalCode.isBlank()) return@withContext null
+            Triple(displayName, (totalBytes / 1024).coerceAtLeast(1), finalCode)
+        } else {
+            val buf = ByteArrayOutputStream()
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                val chunk = ByteArray(4096)
+                var read = input.read(chunk)
+                while (read > 0 && buf.size() < maxBytes) {
+                    buf.write(chunk, 0, read)
+                    read = input.read(chunk)
+                }
+            }
+            val text = buf.toString(Charsets.UTF_8.name())
+            if (text.isBlank()) return@withContext null
+            Triple(displayName, (buf.size() / 1024).coerceAtLeast(1), text)
+        }
+    } catch (_: Throwable) {
+        null
     }
 }
 

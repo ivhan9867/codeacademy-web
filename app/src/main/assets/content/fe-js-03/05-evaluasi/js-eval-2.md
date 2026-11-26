@@ -1,7 +1,7 @@
 ---
 id: js-eval-2
 courseId: fe-js-03
-order: 26
+order: 34
 title: "Rangkuman Fondasi JavaScript & Peta Perjalanan Selanjutnya"
 readingMinutes: 5
 section: EVALUASI

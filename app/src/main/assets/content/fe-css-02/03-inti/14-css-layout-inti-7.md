@@ -1,7 +1,7 @@
 ---
 id: css-layout-inti-7
 courseId: fe-css-02
-order: 14
+order: 16
 title: "Mengubah Urutan Tampilan dengan Properti order"
 readingMinutes: 5
 section: INTI
@@ -80,7 +80,10 @@ Pernahkah kamu menghadapi situasi di mana pada layar desktop sebuah gambar harus
 
 Dahulu kamu harus menulis ulang HTML atau menggunakan trik JavaScript. Di Flexbox, kamu cukup menggunakan satu properti sederhana: **`order`**.
 
-> **Ilustrasi Konsep:** Pengaturan Urutan Visual Elemen dengan Properti order
+```text
+Urutan HTML : [A (order:2)] [B (order:1)] [C (order:3)]
+Tampilan UI : [B (order:1)] [A (order:2)] [C (order:3)]
+```
 ## Bagaimana Properti `order` Bekerja?
 
 Secara default, setiap elemen anak flex memiliki nilai **`order: 0`**.

@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-1
 courseId: fe-js-03
-order: 17
+order: 21
 title: "Resep Reusable: Deklarasi Fungsi & Parameter"
 readingMinutes: 6
 section: LANJUTAN

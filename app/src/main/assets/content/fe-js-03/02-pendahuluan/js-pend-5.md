@@ -1,7 +1,7 @@
 ---
 id: js-pend-5
 courseId: fe-js-03
-order: 8
+order: 10
 title: "Bersahabat dengan Error: Cara Membaca Pesan Error di Console"
 readingMinutes: 5
 section: PENDAHULUAN

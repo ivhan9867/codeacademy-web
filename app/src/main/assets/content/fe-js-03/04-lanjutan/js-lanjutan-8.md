@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-8
 courseId: fe-js-03
-order: 24
+order: 28
 title: "Menunggu Tanpa Macet: Pengantar Singkat Promise & async/await"
 readingMinutes: 6
 section: LANJUTAN

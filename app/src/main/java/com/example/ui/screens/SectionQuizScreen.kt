@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,12 +18,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import java.util.Locale
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -289,7 +292,7 @@ fun SectionQuizScreen(
                             val minutes = secondsRemaining / 60
                             val seconds = secondsRemaining % 60
                             Text(
-                                text = String.format("%02d:%02d", minutes, seconds),
+                                text = String.format(Locale.US, "%02d:%02d", minutes, seconds),
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = timerColor
@@ -305,68 +308,45 @@ fun SectionQuizScreen(
         bottomBar = {
             Surface(
                 color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 8.dp,
+                tonalElevation = 3.dp,
+                shadowElevation = 6.dp,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsPadding()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    // Tombol Sebelumnya
                     OutlinedButton(
                         onClick = {
                             if (currentQuestionIndex > 0) currentQuestionIndex--
                         },
                         enabled = currentQuestionIndex > 0,
                         shape = RoundedCornerShape(12.dp),
-                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+                        contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
+                        modifier = Modifier.weight(0.45f)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(stringResource(R.string.section_quiz_btn_prev))
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(stringResource(R.string.section_quiz_btn_prev), fontWeight = FontWeight.SemiBold)
                     }
 
-                    // Question quick bubbles indicator
-                    Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        activeQuestions.indices.forEach { idx ->
-                            val qId = activeQuestions[idx].id
-                            val isAnswered = userAnswers.containsKey(qId)
-                            val isCurrent = idx == currentQuestionIndex
-                            Box(
-                                modifier = Modifier
-                                    .size(10.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        when {
-                                            isCurrent -> MaterialTheme.colorScheme.primary
-                                            isAnswered -> TealLight
-                                            else -> MaterialTheme.colorScheme.surfaceVariant
-                                        }
-                                    )
-                            )
-                        }
-                    }
-
-                    // Tombol Selanjutnya atau Kumpulkan
                     if (currentQuestionIndex < activeQuestions.size - 1) {
                         Button(
                             onClick = { currentQuestionIndex++ },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = TealPrimary
-                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
                             shape = RoundedCornerShape(12.dp),
-                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
+                            modifier = Modifier.weight(0.55f)
                         ) {
-                            Text(stringResource(R.string.section_quiz_btn_next), color = Color.White)
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(stringResource(R.string.section_quiz_btn_next), color = Color.White, fontWeight = FontWeight.Bold)
+                            Spacer(modifier = Modifier.width(6.dp))
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                 contentDescription = null,
@@ -377,11 +357,10 @@ fun SectionQuizScreen(
                     } else {
                         Button(
                             onClick = { showSubmitDialog = true },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = TealPrimary
-                            ),
+                            colors = ButtonDefaults.buttonColors(containerColor = TealPrimary),
                             shape = RoundedCornerShape(12.dp),
-                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp)
+                            contentPadding = PaddingValues(horizontal = 14.dp, vertical = 12.dp),
+                            modifier = Modifier.weight(0.55f)
                         ) {
                             Text(stringResource(R.string.section_quiz_btn_submit), color = Color.White, fontWeight = FontWeight.Bold)
                         }
@@ -390,18 +369,61 @@ fun SectionQuizScreen(
             }
         }
     ) { paddingValues ->
+        val animatedProgress by animateFloatAsState(targetValue = progressFraction, label = "secQuizProgress")
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // Linear Progress Indicator
             LinearProgressIndicator(
-                progress = { progressFraction },
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primary,
+                progress = { animatedProgress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp),
+                color = TealPrimary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant
             )
+
+            // Interactive Question Number Navigator
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 16.dp, vertical = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                itemsIndexed(activeQuestions, key = { idx, q -> "sec_nav_${q.id}_$idx" }) { idx, q ->
+                    val isAnswered = userAnswers.containsKey(q.id)
+                    val isCurrent = idx == currentQuestionIndex
+                    Surface(
+                        onClick = { currentQuestionIndex = idx },
+                        shape = RoundedCornerShape(10.dp),
+                        color = when {
+                            isCurrent -> TealPrimary
+                            isAnswered -> TealPrimary.copy(alpha = 0.16f)
+                            else -> MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f)
+                        },
+                        border = if (isCurrent) null else BorderStroke(
+                            1.dp,
+                            if (isAnswered) TealPrimary.copy(alpha = 0.4f) else MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                        ),
+                        modifier = Modifier.size(34.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "${idx + 1}",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = when {
+                                    isCurrent -> Color.White
+                                    isAnswered -> TealPrimary
+                                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
             LazyColumn(
                 modifier = Modifier

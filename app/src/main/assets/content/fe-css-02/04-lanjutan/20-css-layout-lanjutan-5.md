@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-5
 courseId: fe-css-02
-order: 20
+order: 24
 title: "Sketsa Tata Letak Visual dengan grid-template-areas"
 readingMinutes: 6
 section: LANJUTAN
@@ -78,7 +78,12 @@ Banyak desainer web menggambar denah kasar halaman di secarik kertas:
 
 Dengan `grid-template-areas`, kamu bisa menuliskan sketsa denah tersebut **langsung ke dalam kode CSS-mu** persis seperti gambar di atas!
 
-> **Ilustrasi Konsep:** Merancang Denah Halaman dengan grid-template-areas
+```text
+grid-template-areas:
+  "header  header"
+  "sidebar main  "
+  "footer  footer";
+```
 ## Dua Langkah Mudah Menerapkan Template Areas
 
 ### Langkah 1: Beri Nama Wilayah pada Elemen Anak

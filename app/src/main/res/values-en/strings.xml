@@ -1301,4 +1301,37 @@
     <string name="ai_tutor_default_image_prompt">Please analyze this code screenshot or error and explain how to fix or improve it.</string>
     <string name="materi_translating_en">Translating module to English...</string>
     <string name="materi_translated_badge">English (Cached)</string>
+
+    <!-- Deep QA & Real Upload Submission -->
+    <string name="progress_tab_active_format">In Progress (%1$d)</string>
+    <string name="progress_tab_completed_format">Completed (%1$d)</string>
+    <string name="progress_tab_all_tracks_format">All Tracks (%1$d)</string>
+    <string name="home_rec_foundation_desc">Start with semantic HTML structure and foundational CSS styling right on your phone.</string>
+    <string name="home_rec_css_desc">Master responsive layouts with Flexbox &amp; Grid through hands-on mobile practice.</string>
+    <string name="home_rec_js_desc">Bring web pages to life with ES6 JavaScript logic, DOM manipulation, and event listeners.</string>
+    <string name="help_email_subject_format">CodeAcademy Support &amp; Feedback v%1$s</string>
+    <string name="help_email_body_format">Hello CodeAcademy Team,\n\nI would like to share the following question / feedback / issue:\n\n[Write your message here]\n\nApp Info:\nVersion: %1$s</string>
+    <string name="help_email_chooser_title">Send email via…</string>
+    <string name="help_email_no_app">No email app was found on this device.</string>
+    <string name="playground_share_subject_python">CodeAcademy Python Code</string>
+    <string name="playground_share_subject_js">CodeAcademy JavaScript Code</string>
+    <string name="playground_share_subject_web">CodeAcademy Web Project</string>
+    <string name="final_project_upload_title">Upload Project File</string>
+    <string name="final_project_upload_subtitle">Pick a code file (.html, .css, .js) or a project archive (.zip) directly from your device.</string>
+    <string name="final_project_upload_btn">Choose File / ZIP</string>
+    <string name="final_project_upload_success_format">Loaded %1$s (%2$d KB)</string>
+    <string name="final_project_upload_error">Failed to read file. Please upload a valid .html, .css, .js, or .zip file (max 250 KB).</string>
+    <string name="final_project_upload_remove_cd">Remove uploaded file</string>
+    <string name="final_project_preview_btn">Preview</string>
+    <string name="final_project_preview_title">Live Project Preview</string>
+    <string name="final_project_url_invalid">URL must start with https:// or http://</string>
+    <string name="final_project_cloud_sync_badge">Synced Live to Facilitator Portal</string>
+
+    <!-- AI Tutor Camera Attachment -->
+    <string name="ai_tutor_attach_sheet_title">Attach Code / Error Image</string>
+    <string name="ai_tutor_attach_camera">Take Photo with Camera</string>
+    <string name="ai_tutor_attach_camera_desc">Capture a screen, notebook, or error message directly with your camera.</string>
+    <string name="ai_tutor_attach_gallery">Choose from Gallery</string>
+    <string name="ai_tutor_attach_gallery_desc">Upload a code screenshot or UI mockup saved on your phone.</string>
+    <string name="ai_tutor_camera_permission_denied">Camera permission is required to take a photo.</string>
 </resources>

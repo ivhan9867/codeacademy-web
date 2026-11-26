@@ -1,7 +1,7 @@
 ---
 id: js-eval-1
 courseId: fe-js-03
-order: 25
+order: 33
 title: "Proyek Mini: Membangun Aplikasi To-Do List Interaktif"
 readingMinutes: 8
 section: EVALUASI

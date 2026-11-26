@@ -1,7 +1,7 @@
 ---
 id: js-pend-2
 courseId: fe-js-03
-order: 5
+order: 7
 title: Menautkan JavaScript ke Dokumen HTML
 readingMinutes: 5
 section: PENDAHULUAN

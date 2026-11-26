@@ -1537,4 +1537,37 @@
     <string name="ai_tutor_default_image_prompt">请分析这张代码截图或错误信息，并解释如何修复或改进。</string>
     <string name="materi_translating_en">正在将模块翻译为英文...</string>
     <string name="materi_translated_badge">English (Cached)</string>
+
+    <!-- Deep QA & Real Upload Submission -->
+    <string name="progress_tab_active_format">学习中 (%1$d)</string>
+    <string name="progress_tab_completed_format">已完成 (%1$d)</string>
+    <string name="progress_tab_all_tracks_format">全部路线 (%1$d)</string>
+    <string name="home_rec_foundation_desc">在手机上直接从语义化 HTML 结构和基础 CSS 样式开始学习。</string>
+    <string name="home_rec_css_desc">通过即时移动端实操掌握 Flexbox 与 Grid 响应式布局。</string>
+    <string name="home_rec_js_desc">使用 ES6 JavaScript 逻辑、DOM 操作与事件监听让网页生动起来。</string>
+    <string name="help_email_subject_format">CodeAcademy 帮助与反馈 v%1$s</string>
+    <string name="help_email_body_format">CodeAcademy 团队您好，\n\n我想反馈以下问题 / 建议：\n\n[在此填写内容]\n\n应用信息：\n版本：%1$s</string>
+    <string name="help_email_chooser_title">选择邮件应用发送…</string>
+    <string name="help_email_no_app">此设备上未找到邮件应用。</string>
+    <string name="playground_share_subject_python">CodeAcademy Python 代码</string>
+    <string name="playground_share_subject_js">CodeAcademy JavaScript 代码</string>
+    <string name="playground_share_subject_web">CodeAcademy Web 项目</string>
+    <string name="final_project_upload_title">上传项目文件</string>
+    <string name="final_project_upload_subtitle">从设备直接选择代码文件（.html、.css、.js）或项目压缩包（.zip）。</string>
+    <string name="final_project_upload_btn">选择文件 / ZIP</string>
+    <string name="final_project_upload_success_format">已加载 %1$s (%2$d KB)</string>
+    <string name="final_project_upload_error">读取文件失败。请上传有效的 .html/.css/.js/.zip 文件（最大 250 KB）。</string>
+    <string name="final_project_upload_remove_cd">移除已上传文件</string>
+    <string name="final_project_preview_btn">预览</string>
+    <string name="final_project_preview_title">项目实时预览</string>
+    <string name="final_project_url_invalid">URL 必须以 https:// 或 http:// 开头</string>
+    <string name="final_project_cloud_sync_badge">已实时同步至导师审核门户</string>
+
+    <!-- AI Tutor Camera Attachment -->
+    <string name="ai_tutor_attach_sheet_title">附加代码或报错图片</string>
+    <string name="ai_tutor_attach_camera">使用相机拍照</string>
+    <string name="ai_tutor_attach_camera_desc">直接拍摄电脑屏幕、笔记或报错信息。</string>
+    <string name="ai_tutor_attach_gallery">从相册选择</string>
+    <string name="ai_tutor_attach_gallery_desc">上传手机中保存的代码截图或界面设计图。</string>
+    <string name="ai_tutor_camera_permission_denied">需要相机权限才能拍照。</string>
 </resources>

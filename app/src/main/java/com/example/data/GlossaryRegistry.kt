@@ -29,7 +29,10 @@ object GlossaryRegistry {
 
         val course = CourseCatalog.courses.find { it.id == courseId }
         val glossaryModule = course?.modules?.find { module ->
-            module.title.contains("Glosarium", ignoreCase = true) || module.id.contains("prep-7")
+            module.title.contains("Glosarium", ignoreCase = true) ||
+                module.title.contains("Glossary", ignoreCase = true) ||
+                module.id.contains("glossary", ignoreCase = true) ||
+                module.id.contains("prep-7")
         }
 
         if (glossaryModule != null && glossaryModule.content.isNotBlank()) {

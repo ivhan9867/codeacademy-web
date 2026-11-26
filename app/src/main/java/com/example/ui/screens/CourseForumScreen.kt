@@ -393,7 +393,6 @@ fun CourseForumScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsPadding()
                         .imePadding()
                 ) {
                     replyingToPost?.let { replyTarget ->

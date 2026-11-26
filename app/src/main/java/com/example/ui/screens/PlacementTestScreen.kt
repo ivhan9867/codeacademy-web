@@ -176,7 +176,7 @@ fun PlacementTestScreen(
 
     val minutes = remainingSeconds / 60
     val seconds = remainingSeconds % 60
-    val timerText = String.format("%02d:%02d", minutes, seconds)
+    val timerText = String.format(java.util.Locale.US, "%02d:%02d", minutes, seconds)
     val isTimerLow = remainingSeconds < 180 // < 3 menit
 
     // Dialog Konfirmasi Keluar
@@ -342,7 +342,6 @@ fun PlacementTestScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .navigationBarsPadding()
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically

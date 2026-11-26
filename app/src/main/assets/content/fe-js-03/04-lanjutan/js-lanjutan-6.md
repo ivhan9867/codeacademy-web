@@ -1,7 +1,7 @@
 ---
 id: js-lanjutan-6
 courseId: fe-js-03
-order: 22
+order: 26
 title: "Jembatan ke Halaman Web: Memilih Elemen dengan querySelector"
 readingMinutes: 6
 section: LANJUTAN
@@ -46,7 +46,15 @@ Selama ini, kita mengamati kerja JavaScript melalui panel Console. Sekarang saat
 
 Bagaimana cara JavaScript berinteraksi dengan tag HTML? Jawabannya adalah melalui **DOM (Document Object Model)**.
 
-> **Ilustrasi Konsep:** Hubungan JavaScript dan Pohon DOM
+```text
+document
+ └── <html>
+      ├── <head> (<title>)
+      └── <body>
+           ├── <h1 id="judul">Halo</h1>
+           └── <button class="btn">Klik</button>
+                 ^-- dipilih via document.querySelector(".btn")
+```
 ---
 
 ## Apa Itu DOM?

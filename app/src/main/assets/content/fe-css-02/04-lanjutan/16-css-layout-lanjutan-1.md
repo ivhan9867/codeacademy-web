@@ -1,7 +1,7 @@
 ---
 id: css-layout-lanjutan-1
 courseId: fe-css-02
-order: 16
+order: 20
 title: "Selamat Datang di Matriks: Konsep Dasar CSS Grid"
 readingMinutes: 6
 section: LANJUTAN
@@ -65,7 +65,15 @@ Jika Flexbox adalah raja tata letak **satu dimensi** (kamu memilih mengatur elem
 
 Dengan CSS Grid, kamu bisa mendikte posisi elemen pada **baris (*rows*) dan kolom (*columns*) secara bersamaan**.
 
-> **Ilustrasi Konsep:** Anatomi Elemen CSS Grid Dua Dimensi
+```text
+   Line 1       Line 2       Line 3       Line 4
+     |            |            |            |
+  ---+------------+------------+------------+--- Row Line 1
+     |  Cell 1,1  |  Cell 1,2  |  Cell 1,3  |
+  ---+------------+------------+------------+--- Row Line 2
+     |  Cell 2,1  |  Cell 2,2  |  Cell 2,3  |
+  ---+------------+------------+------------+--- Row Line 3
+```
 ## Anatomi Kosakata CSS Grid
 
 Agar kita bisa berbicara dalam bahasa yang sama, mari pahami 4 istilah penting di dunia Grid:

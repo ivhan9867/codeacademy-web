@@ -2399,108 +2399,80 @@ function attachAccessRequestModalListeners() {
       portalUrl
     };
 
-    const mailtoHref = `mailto:${ACCESS_REQUEST_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-      buildFormattedAccessEmailText(payload)
-    )}`;
+    const emailBody = buildFormattedAccessEmailText(payload);
+    const mailtoHref = `mailto:${ACCESS_REQUEST_RECIPIENT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
     const gmailWebHref = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
       ACCESS_REQUEST_RECIPIENT
-    )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(buildFormattedAccessEmailText(payload))}`;
-
-    const fields = {
-      _subject: subject,
-      _replyto: applicantEmail,
-      _template: "table",
-      _captcha: "false",
-      "ID Referensi": requestId,
-      "Peran Diajukan": selectedRole,
-      "Nama Pemohon": fullName,
-      "Email Didaftarkan": applicantEmail,
-      "Instansi / Jabatan": affiliation,
-      "Waktu Pengajuan": submittedAt,
-      "Catatan Pemohon": reason,
-      "URL Portal": portalUrl
-    };
+    )}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+    const isId = (window.CodeAcademyWebI18n?.getLang?.() || "en") === "id";
 
     if (btnSubmit) {
       btnSubmit.disabled = true;
-      btnSubmit.textContent = "Mengirim pengajuan...";
+      btnSubmit.textContent = isId ? "Menyimpan pengajuan..." : "Submitting request...";
     }
-    setFeedback("info", `Mengirim pengajuan akses (${escapeHtml(requestId)}) ke pengelola CodeAcademy...`);
+    setFeedback(
+      "info",
+      isId
+        ? `Menyimpan pengajuan akses (${escapeHtml(requestId)})...`
+        : `Saving access request (${escapeHtml(requestId)})...`
+    );
 
-    const submitViaHiddenIframe = () => {
-      let iframe = document.getElementById("caAccessHiddenFrame");
-      if (!iframe) {
-        iframe = document.createElement("iframe");
-        iframe.id = "caAccessHiddenFrame";
-        iframe.name = "caAccessHiddenFrame";
-        iframe.style.display = "none";
-        document.body.appendChild(iframe);
-      }
-      const hiddenForm = document.createElement("form");
-      hiddenForm.method = "POST";
-      hiddenForm.action = `https://formsubmit.co/${ACCESS_REQUEST_RECIPIENT}`;
-      hiddenForm.target = "caAccessHiddenFrame";
-      hiddenForm.style.display = "none";
-      Object.entries(fields).forEach(([k, v]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = k;
-        input.value = String(v);
-        hiddenForm.appendChild(input);
-      });
-      document.body.appendChild(hiddenForm);
-      hiddenForm.submit();
-      setTimeout(() => hiddenForm.remove(), 4000);
-    };
-
-    let delivered = false;
-    try {
-      const formData = new FormData();
-      Object.entries(fields).forEach(([k, v]) => formData.append(k, String(v)));
-      const response = await fetch(`https://formsubmit.co/ajax/${ACCESS_REQUEST_RECIPIENT}`, {
-        method: "POST",
-        body: formData
-      });
-      if (response.ok) {
-        delivered = true;
-      }
-    } catch (err) {
-      console.warn("[AccessRequest] FormData AJAX blocked, falling back to hidden form POST:", err);
-    }
-
-    if (!delivered) {
+    let savedToFirestore = false;
+    if (db) {
       try {
-        submitViaHiddenIframe();
-        delivered = true;
-      } catch (iframeErr) {
-        console.warn("[AccessRequest] Hidden iframe POST failed:", iframeErr);
+        await db.collection("access_requests").doc(requestId).set({
+          requestId,
+          name: fullName,
+          email: applicantEmail,
+          role: selectedRole,
+          affiliation,
+          reason,
+          portalUrl,
+          recipientEmail: ACCESS_REQUEST_RECIPIENT,
+          status: "PENDING",
+          createdAt: Date.now()
+        });
+        savedToFirestore = true;
+      } catch (fsErr) {
+        console.warn("[AccessRequest] Firestore save skipped:", fsErr?.code || fsErr?.message);
       }
     }
 
-    if (delivered) {
-      form.reset();
-      setFeedback(
-        "success",
-        `<strong>Pengajuan terkirim (${escapeHtml(requestId)}).</strong><br>` +
-          `Permintaan akses <strong>${escapeHtml(selectedRole)}</strong> untuk <strong>${escapeHtml(applicantEmail)}</strong> telah dikirim ke <strong>${ACCESS_REQUEST_RECIPIENT}</strong>.<br>` +
-          `<span style="display:inline-flex;gap:12px;margin-top:8px;flex-wrap:wrap;">` +
-          `<a href="${gmailWebHref}" target="_blank" rel="noopener" style="color:#0F766E;font-weight:700;text-decoration:underline;">Kirim cadangan via Gmail Web</a>` +
-          `<a href="${mailtoHref}" style="color:#334155;font-weight:600;text-decoration:underline;">Buka Aplikasi Email</a>` +
-          `</span>`
-      );
-      showToast(`Pengajuan akses ${requestId} berhasil dikirim.`);
-    } else {
-      setFeedback(
-        "error",
-        `Pengiriman otomatis sedang tidak tersedia. ` +
-          `<a href="${gmailWebHref}" target="_blank" rel="noopener" style="color:#0F766E;font-weight:700;text-decoration:underline;">Kirim lewat Gmail Web</a> atau ` +
-          `<a href="${mailtoHref}" style="color:#0F766E;font-weight:700;text-decoration:underline;">Aplikasi Email</a>.`
-      );
+    const statusLine = savedToFirestore
+      ? isId
+        ? `Tercatat di sistem CodeAcademy (${escapeHtml(requestId)}). Klik tombol di bawah untuk langsung mengirim email konfirmasi ke <strong>${ACCESS_REQUEST_RECIPIENT}</strong>:`
+        : `Recorded in CodeAcademy registry (${escapeHtml(requestId)}). Click below to send the formatted email directly to <strong>${ACCESS_REQUEST_RECIPIENT}</strong>:`
+      : isId
+        ? `Template pengajuan (${escapeHtml(requestId)}) siap dikirim ke <strong>${ACCESS_REQUEST_RECIPIENT}</strong>. Pilih metode pengiriman di bawah:`
+        : `Formatted request (${escapeHtml(requestId)}) is ready for <strong>${ACCESS_REQUEST_RECIPIENT}</strong>. Choose how to send below:`;
+
+    setFeedback(
+      "success",
+      `<strong>${isId ? "Pengajuan Siap Dikirim" : "Request Ready to Send"} (${escapeHtml(requestId)})</strong><br>` +
+        `${statusLine}` +
+        `<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">` +
+        `<a href="${gmailWebHref}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;padding:8px 13px;border-radius:9px;background:#181A1F;color:#FFFFFF;font-weight:700;font-size:12px;text-decoration:none;">${isId ? "Kirim via Gmail Web" : "Send via Gmail Web"}</a>` +
+        `<a href="${mailtoHref}" style="display:inline-flex;align-items:center;padding:8px 13px;border-radius:9px;border:1px solid #CBD5E1;background:#FFFFFF;color:#0F172A;font-weight:600;font-size:12px;text-decoration:none;">${isId ? "Aplikasi Email" : "Email App"}</a>` +
+        `<button type="button" id="btnCopyAccessReqText" style="display:inline-flex;align-items:center;padding:8px 13px;border-radius:9px;border:1px solid #CBD5E1;background:#FFFFFF;color:#0F766E;font-weight:700;font-size:12px;cursor:pointer;">${isId ? "Salin Isi Email" : "Copy Email Text"}</button>` +
+        `</div>`
+    );
+
+    const copyBtn = document.getElementById("btnCopyAccessReqText");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(`To: ${ACCESS_REQUEST_RECIPIENT}\nSubject: ${subject}\n\n${emailBody}`);
+          copyBtn.textContent = isId ? "Tersalin!" : "Copied!";
+          showToast(isId ? "Isi email pengajuan disalin." : "Access request email copied.");
+        } catch (_) {}
+      });
     }
+
+    showToast(isId ? `Pengajuan ${requestId} siap dikirim.` : `Request ${requestId} ready.`);
 
     if (btnSubmit) {
       btnSubmit.disabled = false;
-      btnSubmit.textContent = "Kirim Pengajuan Akses";
+      btnSubmit.textContent = isId ? "Kirim Pengajuan Akses" : "Submit Access Request";
     }
   });
 }

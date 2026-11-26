@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -57,30 +57,37 @@
 
       <!-- RIGHT LOGIN CARD -->
       <div class="auth-card">
-        <div class="auth-card-head">
-          <div class="auth-brand" aria-hidden="true">&gt;_</div>
-          <div>
-            <span class="auth-eyebrow">Portal Staff Terverifikasi</span>
-            <h2 id="authTitle">Masuk Portal Fasilitator</h2>
+        <div class="auth-card-head" style="justify-content: space-between;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div class="auth-brand" aria-hidden="true">&gt;_</div>
+            <div>
+              <span class="auth-eyebrow" data-i18n="auth_eyebrow">CODEACADEMY STAFF PORTAL</span>
+              <h2 id="authTitle" data-i18n="auth_h2">Sign in to Workspace</h2>
+            </div>
           </div>
+          <button type="button" class="lang-slide-toggle" role="switch" aria-label="Switch language EN / ID" aria-checked="false" data-lang="en">
+            <span class="lang-thumb" aria-hidden="true"></span>
+            <span class="lang-opt" data-code="en">EN</span>
+            <span class="lang-opt" data-code="id">ID</span>
+          </button>
         </div>
-        <p class="auth-desc">Gunakan akun Firebase Fasilitator atau Super Admin terdaftar untuk mengakses antrean review, forum, pengumuman, dan sertifikat.</p>
+        <p class="auth-desc" data-i18n="auth_desc">Use a registered Firebase Facilitator or Super Admin account to access the review queue, forum, announcements, and certificates.</p>
 
         <form id="authForm" class="auth-form-stack">
           <div class="auth-input-group">
-            <label for="emailInput">Email Fasilitator</label>
-            <input type="email" id="emailInput" class="auth-input" placeholder="fasilitator@domain.id" required autocomplete="email">
+            <label for="emailInput" data-i18n="auth_email_label">Staff Email</label>
+            <input type="email" id="emailInput" class="auth-input" placeholder="facilitator@domain.com" data-i18n-placeholder="auth_email_ph" required autocomplete="email">
           </div>
           <div class="auth-input-group">
-            <label for="passwordInput">Kata Sandi</label>
-            <input type="password" id="passwordInput" class="auth-input" placeholder="Masukkan kata sandi" required autocomplete="current-password">
+            <label for="passwordInput" data-i18n="auth_pass_label">Password</label>
+            <input type="password" id="passwordInput" class="auth-input" placeholder="Enter your password" data-i18n-placeholder="auth_pass_ph" required autocomplete="current-password">
           </div>
           <div id="authStatus" class="auth-status" aria-live="polite"></div>
-          <div id="authError" class="auth-error" role="alert">Login gagal. Periksa kembali kredensial Anda.</div>
-          <button type="submit" id="btnEmailLogin" class="btn-auth-submit">Masuk dengan Email</button>
+          <div id="authError" class="auth-error" role="alert">Login failed. Please check your credentials.</div>
+          <button type="submit" id="btnEmailLogin" class="btn-auth-submit" data-i18n="auth_submit">Sign in with Email</button>
         </form>
 
-        <div class="auth-divider">atau lanjutkan dengan</div>
+        <div class="auth-divider" data-i18n="auth_divider">or continue with</div>
 
         <button type="button" id="btnGoogleSignIn" class="btn-google-signin">
           <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
@@ -89,18 +96,18 @@
             <path fill="#FBBC05" d="M5.28 14.24c-.24-.72-.38-1.49-.38-2.24s.14-1.52.38-2.24V6.62H1.29C.47 8.24 0 10.06 0 12s.47 3.76 1.29 5.38l3.99-3.14Z"/>
             <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.99 3.14c.95-2.85 3.6-4.96 6.72-4.96Z"/>
           </svg>
-          Masuk dengan Google
+          <span data-i18n="auth_google">Sign in with Google</span>
         </button>
 
         <div class="auth-request-box">
           <div class="auth-request-copy">
-            <strong>Belum memiliki akses portal?</strong>
-            <span>Ajukan pendaftaran akun sebagai Admin atau Fasilitator CodeAcademy.</span>
+            <strong data-i18n="auth_req_title">Need portal access?</strong>
+            <span data-i18n="auth_req_desc">Submit an access request to join as an Admin or Facilitator.</span>
           </div>
-          <button type="button" id="btnOpenAccessRequest" class="btn-request-access">Ajukan Akses</button>
+          <button type="button" id="btnOpenAccessRequest" class="btn-request-access" data-i18n="auth_req_btn">Request Access</button>
         </div>
 
-        <a href="../index.html" class="auth-back">← Kembali ke beranda utama</a>
+        <a href="../index.html" class="auth-back" data-i18n="auth_back">← Back to main homepage</a>
       </div>
     </div>
   </div>
@@ -110,29 +117,29 @@
     <div class="access-modal-card">
       <div class="access-modal-head">
         <div>
-          <span class="auth-eyebrow">CODEACADEMY STAFF ACCESS</span>
-          <h3 id="accessModalTitle">Ajukan Akses Portal</h3>
+          <span class="auth-eyebrow" data-i18n="modal_eyebrow">CODEACADEMY STAFF ACCESS</span>
+          <h3 id="accessModalTitle" data-i18n="modal_h3">Request Portal Access</h3>
         </div>
-        <button type="button" id="btnCloseAccessRequest" class="access-modal-close" aria-label="Tutup">&times;</button>
+        <button type="button" id="btnCloseAccessRequest" class="access-modal-close" aria-label="Close">&times;</button>
       </div>
-      <p class="access-modal-desc">Isi formulir di bawah ini untuk mengajukan akses resmi. Permintaan akan dikirim langsung ke pengelola utama CodeAcademy untuk verifikasi.</p>
+      <p class="access-modal-desc" data-i18n="modal_desc">Fill out the form below to request official staff access. Your request is saved to the portal registry and prepared for email verification.</p>
 
       <form id="accessRequestForm" class="auth-form-stack">
         <div class="auth-input-group">
-          <label>Peran yang Diajukan</label>
-          <div class="role-choice-grid" role="radiogroup" aria-label="Pilih peran akses">
+          <label data-i18n="modal_role_label">Requested Role</label>
+          <div class="role-choice-grid" role="radiogroup" aria-label="Select role">
             <label class="role-choice-card">
-              <input type="radio" name="reqRole" value="Fasilitator" checked>
+              <input type="radio" name="reqRole" value="Facilitator" checked>
               <span class="role-choice-body">
-                <strong>Fasilitator</strong>
-                <small>Review proyek akhir, penilaian rubrik, dan moderasi forum peserta.</small>
+                <strong data-i18n="modal_role_fac_t">Facilitator</strong>
+                <small data-i18n="modal_role_fac_d">Review final projects, grade rubrics, and moderate student discussions.</small>
               </span>
             </label>
             <label class="role-choice-card">
               <input type="radio" name="reqRole" value="Admin (Super Admin)">
               <span class="role-choice-body">
-                <strong>Admin (Super Admin)</strong>
-                <small>Akses penuh penilaian, manajemen tim, peserta, dan pengumuman portal.</small>
+                <strong data-i18n="modal_role_adm_t">Admin (Super Admin)</strong>
+                <small data-i18n="modal_role_adm_d">Full access to grading, team management, users, and portal announcements.</small>
               </span>
             </label>
           </div>
@@ -140,30 +147,30 @@
 
         <div class="access-form-row">
           <div class="auth-input-group">
-            <label for="reqFullName">Nama Lengkap</label>
-            <input type="text" id="reqFullName" class="auth-input" placeholder="Nama lengkap & gelar (opsional)" required>
+            <label for="reqFullName" data-i18n="modal_name_label">Full Name</label>
+            <input type="text" id="reqFullName" class="auth-input" placeholder="Full name & title (optional)" data-i18n-placeholder="modal_name_ph" required>
           </div>
           <div class="auth-input-group">
-            <label for="reqEmail">Email yang Didaftarkan</label>
-            <input type="email" id="reqEmail" class="auth-input" placeholder="nama@domain.ac.id" required>
+            <label for="reqEmail" data-i18n="modal_email_label">Email to Register</label>
+            <input type="email" id="reqEmail" class="auth-input" placeholder="name@university.edu" data-i18n-placeholder="modal_email_ph" required>
           </div>
         </div>
 
         <div class="auth-input-group">
-          <label for="reqAffiliation">Instansi / Jabatan</label>
-          <input type="text" id="reqAffiliation" class="auth-input" placeholder="Contoh: Dosen Penguji — Teknik Informatika" required>
+          <label for="reqAffiliation" data-i18n="modal_aff_label">Institution / Position</label>
+          <input type="text" id="reqAffiliation" class="auth-input" placeholder="e.g. Lecturer — Informatics Engineering" data-i18n-placeholder="modal_aff_ph" required>
         </div>
 
         <div class="auth-input-group">
-          <label for="reqReason">Tujuan Pengajuan</label>
-          <textarea id="reqReason" class="auth-input access-textarea" rows="3" placeholder="Jelaskan singkat kebutuhan akses Anda pada portal CodeAcademy..." required></textarea>
+          <label for="reqReason" data-i18n="modal_reason_label">Purpose / Notes</label>
+          <textarea id="reqReason" class="auth-input access-textarea" rows="3" placeholder="Briefly explain your role or evaluation purpose on CodeAcademy..." data-i18n-placeholder="modal_reason_ph" required></textarea>
         </div>
 
         <div id="reqFeedback" class="req-feedback" aria-live="polite"></div>
 
         <div class="access-modal-actions">
-          <button type="button" id="btnCancelAccessRequest" class="btn-request-secondary">Batal</button>
-          <button type="submit" id="btnSubmitAccessRequest" class="btn-auth-submit" style="flex: 1;">Kirim Pengajuan Akses</button>
+          <button type="button" id="btnCancelAccessRequest" class="btn-request-secondary" data-i18n="modal_cancel">Cancel</button>
+          <button type="submit" id="btnSubmitAccessRequest" class="btn-auth-submit" style="flex: 1;" data-i18n="modal_submit">Submit Access Request</button>
         </div>
       </form>
     </div>
@@ -816,7 +823,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js?v=20261118-ban"></script>
-  <script src="app.js?v=20261118-ban"></script>
+  <script src="../firebase-config.js?v=20261126-i18n"></script>
+  <script src="../assets/web-i18n.js?v=20261126-i18n"></script>
+  <script src="app.js?v=20261126-i18n"></script>
 </body>
 </html>

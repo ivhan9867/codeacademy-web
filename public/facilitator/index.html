@@ -4,54 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com https://accounts.google.com https://*.firebaseapp.com;">
-  <title>CodeAcademy — Portal Fasilitator</title>
+  <title>CodeAcademy — Staff Portal</title>
   <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-  <link rel="stylesheet" href="style.css?v=20261118-ban">
+  <link rel="stylesheet" href="style.css?v=20261126-clean">
 </head>
-<body>
+<body data-i18n-title="fac_title">
 
-  <!-- AUTH OVERLAY (HUDDLY SCENIC BACKDROP + SPLIT SHELL) -->
+  <!-- AUTH OVERLAY (CLEAN SPLIT SHELL) -->
   <div id="authOverlay" class="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
     <div class="auth-huddly-frame">
       <!-- LEFT SHOWCASE PANEL -->
       <aside class="auth-showcase" aria-hidden="true">
         <div class="showcase-top-pill">
           <span class="showcase-dot"></span>
-          CodeAcademy Staff Workspace
+          <span data-i18n="showcase_pill">CodeAcademy Staff Workspace</span>
         </div>
-        <h2 class="showcase-heading">Kelola evaluasi proyek, forum kelas &amp; sertifikat dalam satu kendali.</h2>
-        <p class="showcase-copy">Dirancang untuk fasilitator dan admin agar peninjauan kode peserta, bimbingan diskusi, dan audit kelulusan berjalan cepat dan terstruktur.</p>
+        <h2 class="showcase-heading" data-i18n="showcase_heading">Manage project reviews, class forums &amp; certificates in one workspace.</h2>
 
-        <div class="showcase-spotlight-card">
-          <div class="showcase-card-top">
-            <span class="showcase-mini-badge">Live Workspace</span>
-            <span class="showcase-lime-pill">Rubrik 40 / 60</span>
-          </div>
-          <div class="showcase-card-title">Sinkronisasi Realtime ke Aplikasi Android</div>
-          <div class="showcase-avatars-row">
-            <div class="avatar-cluster">
-              <span class="av av-1">FA</span>
-              <span class="av av-2">SA</span>
-              <span class="av av-3">DV</span>
-              <span class="av av-4">+</span>
-            </div>
-            <span class="showcase-avatars-note">Fasilitator &amp; Super Admin</span>
-          </div>
-        </div>
+        <!-- Clean Editorial Vector Illustration -->
+        <div style="margin-top: auto; padding-top: 20px;">
+          <svg viewBox="0 0 420 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto; display: block;">
+            <!-- Subtle background grid card -->
+            <rect x="12" y="16" width="396" height="228" rx="20" fill="#FFFFFF" fill-opacity="0.72" stroke="#CBD5E1" stroke-width="1.2"/>
+            <!-- Main Editor Window -->
+            <rect x="28" y="34" width="242" height="154" rx="14" fill="#181A1F"/>
+            <circle cx="46" cy="50" r="4" fill="#EF4444"/>
+            <circle cx="60" cy="50" r="4" fill="#F59E0B"/>
+            <circle cx="74" cy="50" r="4" fill="#10B981"/>
+            <rect x="196" y="44" width="58" height="12" rx="6" fill="#2A2F3A"/>
+            <!-- Code Lines -->
+            <rect x="44" y="72" width="74" height="7" rx="3.5" fill="#2DD4BF"/>
+            <rect x="126" y="72" width="48" height="7" rx="3.5" fill="#64748B"/>
+            <rect x="56" y="90" width="118" height="7" rx="3.5" fill="#E2E8F0" fill-opacity="0.85"/>
+            <rect x="56" y="108" width="92" height="7" rx="3.5" fill="#38BDF8"/>
+            <rect x="156" y="108" width="54" height="7" rx="3.5" fill="#94A3B8"/>
+            <rect x="56" y="126" width="136" height="7" rx="3.5" fill="#E2E8F0" fill-opacity="0.65"/>
+            <rect x="44" y="144" width="64" height="7" rx="3.5" fill="#2DD4BF"/>
+            <!-- Status pill inside editor -->
+            <rect x="44" y="162" width="88" height="14" rx="7" fill="#0F766E" fill-opacity="0.35"/>
+            <circle cx="54" cy="169" r="3" fill="#2DD4BF"/>
+            <rect x="63" y="166.5" width="56" height="5" rx="2.5" fill="#CCFBF1"/>
 
-        <div class="showcase-metrics">
-          <div class="showcase-metric-pill">
-            <strong>Live Preview</strong>
-            <span>Sandbox HTML/CSS/JS</span>
-          </div>
-          <div class="showcase-metric-pill">
-            <strong>Pin Terverifikasi</strong>
-            <span>Moderasi Forum Kelas</span>
-          </div>
-          <div class="showcase-metric-pill">
-            <strong>Registri CC-</strong>
-            <span>Audit Sertifikat Publik</span>
-          </div>
+            <!-- Floating Rubric / Score Card -->
+            <rect x="252" y="54" width="142" height="114" rx="14" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="1.4"/>
+            <rect x="268" y="70" width="52" height="12" rx="6" fill="#CCFBF1"/>
+            <rect x="276" y="74" width="36" height="4" rx="2" fill="#0F766E"/>
+            <!-- Score Ring -->
+            <circle cx="358" cy="96" r="20" stroke="#E2E8F0" stroke-width="5"/>
+            <path d="M358 76 A20 20 0 1 1 340.5 106" stroke="#0F766E" stroke-width="5" stroke-linecap="round"/>
+            <text x="358" y="100" text-anchor="middle" fill="#0F172A" font-family="system-ui, sans-serif" font-size="11" font-weight="800">94</text>
+            <!-- Rubric Bars -->
+            <rect x="268" y="96" width="56" height="6" rx="3" fill="#0F172A" fill-opacity="0.8"/>
+            <rect x="268" y="110" width="46" height="5" rx="2.5" fill="#94A3B8"/>
+            <rect x="268" y="132" width="110" height="7" rx="3.5" fill="#E2E8F0"/>
+            <rect x="268" y="132" width="88" height="7" rx="3.5" fill="#0F766E"/>
+            <rect x="268" y="147" width="110" height="7" rx="3.5" fill="#E2E8F0"/>
+            <rect x="268" y="147" width="98" height="7" rx="3.5" fill="#3B82F6"/>
+
+            <!-- Bottom Certificate Verification Strip -->
+            <rect x="28" y="198" width="366" height="34" rx="11" fill="#F8FAFC" stroke="#E2E8F0" stroke-width="1.2"/>
+            <circle cx="48" cy="215" r="9" fill="#0F766E"/>
+            <path d="M44 215 L47 218 L52.5 212.5" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="66" y="210" width="108" height="5.5" rx="2.75" fill="#0F172A"/>
+            <rect x="66" y="219" width="74" height="4.5" rx="2.25" fill="#94A3B8"/>
+            <rect x="314" y="207" width="66" height="16" rx="8" fill="#181A1F"/>
+            <rect x="326" y="213" width="42" height="4" rx="2" fill="#FFFFFF"/>
+          </svg>
         </div>
       </aside>
 
@@ -194,45 +212,50 @@
         </div>
 
         <!-- CENTER FLOATING PILL CAPSULE NAV -->
-        <nav class="capsule-nav" role="tablist" aria-label="Navigasi Portal Fasilitator">
+        <nav class="capsule-nav" role="tablist" aria-label="Staff Portal Navigation">
           <button type="button" class="view-tab capsule-tab active" data-view="submissions" role="tab" aria-selected="true">
-            <span>Proyek</span>
+            <span data-i18n="tab_projects">Projects</span>
             <span class="tab-count" id="submissionsPendingBadge">0</span>
           </button>
           <button type="button" class="view-tab capsule-tab" data-view="forum" role="tab" aria-selected="false">
-            <span>Forum</span>
+            <span data-i18n="tab_forum">Forum</span>
             <span class="tab-count" id="forumTotalBadge">0</span>
           </button>
           <button type="button" class="view-tab capsule-tab" data-view="announcements" role="tab" aria-selected="false">
-            <span>Pengumuman</span>
+            <span data-i18n="tab_announcements">Announcements</span>
             <span class="tab-count" id="announcementsTotalBadge">0</span>
           </button>
 
           <span class="capsule-divider" data-admin-only="true" style="display: none;" aria-hidden="true"></span>
 
           <button type="button" class="view-tab capsule-tab admin-tab" data-view="certificates" data-admin-only="true" style="display: none;" role="tab" aria-selected="false">
-            <span>Sertifikat</span>
+            <span data-i18n="tab_certificates">Certificates</span>
             <span class="tab-count" id="certTotalBadge">0</span>
           </button>
           <button type="button" class="view-tab capsule-tab admin-tab" data-view="team" data-admin-only="true" style="display: none;" role="tab" aria-selected="false">
-            <span>Tim</span>
+            <span data-i18n="tab_team">Team</span>
             <span class="tab-count" id="teamTotalBadge">0</span>
           </button>
           <button type="button" class="view-tab capsule-tab admin-tab" data-view="analytics" data-admin-only="true" style="display: none;" role="tab" aria-selected="false">
-            <span>Analitik</span>
+            <span data-i18n="tab_analytics">Analytics</span>
             <span class="tab-count" id="studentsTotalBadge">0</span>
           </button>
         </nav>
 
         <!-- RIGHT ACTIONS -->
         <div class="nav-actions">
-          <a href="../verify.html" class="nav-link-pill" title="Buka Portal Verifikasi Sertifikat">Verifikasi</a>
-          <a href="../docs/Manual_Book_CodeAcademy.html" class="nav-link-pill" title="Buka Manual Book">Manual</a>
+          <a href="../verify.html" class="nav-link-pill" data-i18n="nav_verify_short">Verify</a>
+          <a href="../docs/Manual_Book_CodeAcademy.html" class="nav-link-pill" data-i18n="nav_manual">Manual</a>
+          <button type="button" class="lang-slide-toggle" role="switch" aria-label="Switch language EN / ID" aria-checked="false" data-lang="en">
+            <span class="lang-thumb" aria-hidden="true"></span>
+            <span class="lang-opt" data-code="en">EN</span>
+            <span class="lang-opt" data-code="id">ID</span>
+          </button>
           <span id="roleBadge" class="role-badge" style="display: none;"></span>
-          <button type="button" id="facilitatorIdentityChip" class="facilitator-pill facilitator-pill-btn" title="Edit Profil Fasilitator" style="display: none;"></button>
-          <button id="btnLogout" class="btn-logout" type="button" title="Keluar dari Portal">
+          <button type="button" id="facilitatorIdentityChip" class="facilitator-pill facilitator-pill-btn" style="display: none;"></button>
+          <button id="btnLogout" class="btn-logout" type="button">
             <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            <span>Keluar</span>
+            <span data-i18n="nav_logout">Sign out</span>
           </button>
         </div>
       </div>
@@ -242,27 +265,27 @@
     <main class="workspace-shell">
       <div class="workspace-content">
 
-        <!-- GREETING & CONTEXT HEADER -->
+        <!-- CONTEXT HEADER (CLEAN, NO FILLER) -->
         <section class="page-header">
           <div class="page-header-copy">
             <div class="greeting-row">
-              <span class="page-eyebrow" id="pageEyebrow">Evaluasi Proyek Akhir</span>
-              <span class="greeting-chip" id="huddlyGreetingTitle">Selamat datang di Portal Staff</span>
+              <span class="page-eyebrow" id="pageEyebrow" data-i18n="hdr_eyebrow">Final Project Evaluation</span>
+              <span class="greeting-chip" id="huddlyGreetingTitle" style="display:none;"></span>
             </div>
-            <h1 id="pageTitle">Antrean Penilaian Peserta</h1>
-            <p id="pageSubtitle">Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik (40% Kuis + 60% Proyek), dan terbitkan sertifikat.</p>
+            <h1 id="pageTitle" data-i18n="hdr_title">Review Queue</h1>
+            <p id="pageSubtitle" data-i18n="hdr_sub">Inspect code submissions, score rubrics, and issue verified certificates.</p>
           </div>
           <div class="page-header-actions">
-            <button type="button" id="btnQuickForumUnanswered" class="btn-ghost-pill">
-              Forum Belum Dijawab
+            <button type="button" id="btnQuickForumUnanswered" class="btn-ghost-pill" data-i18n="btn_unanswered_forum">
+              Unanswered Forum
             </button>
-            <button type="button" id="btnQuickNewAnnouncement" class="btn-obsidian-pill">
-              + Buat Pengumuman
+            <button type="button" id="btnQuickNewAnnouncement" class="btn-obsidian-pill" data-i18n="btn_new_announcement">
+              + New Announcement
             </button>
           </div>
         </section>
 
-        <!-- VIEW 1: SUBMISSIONS (HUDDLY 2-COLUMN BENTO) -->
+        <!-- VIEW 1: SUBMISSIONS -->
         <div id="submissionsView">
           <div class="bento-workspace-grid">
 
@@ -272,19 +295,19 @@
               <!-- HERO SPOTLIGHT CARD -->
               <section class="huddly-spotlight" id="huddlySpotlightCard">
                 <div class="spotlight-top-row">
-                  <span class="spotlight-kicker" id="huddlySpotlightBadge">Antrean Prioritas Berikutnya</span>
-                  <span class="spotlight-pill">Rubrik 40/60 • Live Sandbox</span>
+                  <span class="spotlight-kicker" id="huddlySpotlightBadge" data-i18n="spot_kicker">Next Priority Review</span>
+                  <span class="spotlight-pill" data-i18n="spot_pill">40/60 Rubric • Live Sandbox</span>
                 </div>
                 <div class="spotlight-body">
                   <div>
-                    <h2 class="spotlight-title" id="huddlySpotlightTitle">Memuat antrean proyek akhir...</h2>
-                    <p class="spotlight-meta" id="huddlySpotlightMeta">Menyiapkan daftar peserta yang siap dievaluasi.</p>
+                    <h2 class="spotlight-title" id="huddlySpotlightTitle" data-i18n="spot_loading">Loading submission queue...</h2>
+                    <p class="spotlight-meta" id="huddlySpotlightMeta"></p>
                   </div>
                 </div>
                 <div class="spotlight-footer">
                   <div class="spotlight-avatars" id="huddlySpotlightAvatars" aria-hidden="true"></div>
-                  <button type="button" id="btnSpotlightReview" class="btn-lime">
-                    Mulai Review →
+                  <button type="button" id="btnSpotlightReview" class="btn-lime" data-i18n="spot_cta">
+                    Start Review →
                   </button>
                 </div>
               </section>
@@ -293,8 +316,8 @@
               <section class="stats-grid">
                 <div class="stat-card">
                   <div class="stat-top">
-                    <span class="stat-label">Total Pengajuan</span>
-                    <span class="stat-pill neutral">Semua</span>
+                    <span class="stat-label" data-i18n="stat_total">Total Submissions</span>
+                    <span class="stat-pill neutral" data-i18n="filter_all">All</span>
                   </div>
                   <div class="stat-bottom">
                     <h3 id="statTotal">0</h3>
@@ -306,8 +329,8 @@
 
                 <div class="stat-card">
                   <div class="stat-top">
-                    <span class="stat-label">Menunggu Review</span>
-                    <span class="stat-pill lime">Prioritas</span>
+                    <span class="stat-label" data-i18n="stat_pending">Pending Review</span>
+                    <span class="stat-pill lime" data-i18n="stat_priority">Priority</span>
                   </div>
                   <div class="stat-bottom">
                     <h3 id="statPending">0</h3>
@@ -319,8 +342,8 @@
 
                 <div class="stat-card">
                   <div class="stat-top">
-                    <span class="stat-label">Perlu Revisi</span>
-                    <span class="stat-pill warn">Tindak lanjut</span>
+                    <span class="stat-label" data-i18n="stat_revision">Revision Requested</span>
+                    <span class="stat-pill warn" data-i18n="stat_followup">Follow-up</span>
                   </div>
                   <div class="stat-bottom">
                     <h3 id="statRevision">0</h3>
@@ -332,8 +355,8 @@
 
                 <div class="stat-card">
                   <div class="stat-top">
-                    <span class="stat-label">Disetujui</span>
-                    <span class="stat-pill ok">Sertifikat</span>
+                    <span class="stat-label" data-i18n="stat_approved">Approved</span>
+                    <span class="stat-pill ok" data-i18n="stat_certified">Certified</span>
                   </div>
                   <div class="stat-bottom">
                     <h3 id="statApproved">0</h3>
@@ -348,22 +371,22 @@
               <section class="control-bar">
                 <div class="search-box">
                   <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                  <input type="text" id="searchInput" aria-label="Cari peserta, email, atau modul" placeholder="Cari nama peserta, email, atau modul...">
+                  <input type="text" id="searchInput" aria-label="Search student, email, or course" placeholder="Search student, email, or course..." data-i18n-placeholder="search_ph">
                 </div>
 
                 <div class="filters-group">
-                  <select id="courseFilter" class="select-filter" aria-label="Filter kursus pengajuan">
-                    <option value="all">Semua Kursus</option>
-                    <option value="fe-web-foundation-00">Fondasi Web: Dari Nol ke Baris Kode Pertama</option>
-                    <option value="fe-css-02">CSS Layout Modern: Flexbox &amp; Grid</option>
+                  <select id="courseFilter" class="select-filter" aria-label="Filter course">
+                    <option value="all" data-i18n="filter_all_courses">All Courses</option>
+                    <option value="fe-web-foundation-00">Web Foundation: From Zero to First Code</option>
+                    <option value="fe-css-02">Modern CSS Layout: Flexbox &amp; Grid</option>
                     <option value="fe-js-03">JavaScript Fundamentals</option>
                   </select>
 
                   <div class="pill-group" role="group" aria-label="Filter status">
-                    <button type="button" class="btn-filter-pill active" data-status="all">Semua</button>
-                    <button type="button" class="btn-filter-pill" data-status="PENDING_REVIEW">Pending</button>
-                    <button type="button" class="btn-filter-pill" data-status="REVISION_REQUESTED">Revisi</button>
-                    <button type="button" class="btn-filter-pill" data-status="APPROVED">Approved</button>
+                    <button type="button" class="btn-filter-pill active" data-status="all" data-i18n="filter_all">All</button>
+                    <button type="button" class="btn-filter-pill" data-status="PENDING_REVIEW" data-i18n="filter_pending">Pending</button>
+                    <button type="button" class="btn-filter-pill" data-status="REVISION_REQUESTED" data-i18n="filter_revision">Revision</button>
+                    <button type="button" class="btn-filter-pill" data-status="APPROVED" data-i18n="filter_approved">Approved</button>
                   </div>
                 </div>
               </section>
@@ -374,19 +397,19 @@
                   <table>
                     <thead>
                       <tr>
-                        <th>Peserta</th>
-                        <th>Modul Kursus</th>
-                        <th>Skor Kuis</th>
-                        <th>Status</th>
-                        <th>Dikirim</th>
-                        <th>Percobaan</th>
-                        <th style="text-align: right;">Aksi</th>
+                        <th data-i18n="th_student">Student</th>
+                        <th data-i18n="th_course">Course</th>
+                        <th data-i18n="th_quiz">Quiz</th>
+                        <th data-i18n="th_status">Status</th>
+                        <th data-i18n="th_submitted">Submitted</th>
+                        <th data-i18n="th_attempts">Attempt</th>
+                        <th style="text-align: right;" data-i18n="th_action">Action</th>
                       </tr>
                     </thead>
                     <tbody id="submissionsTableBody">
                       <tr>
-                        <td colspan="7" style="text-align: center; padding: 48px; color: var(--muted);">
-                          Memuat data pengajuan proyek...
+                        <td colspan="7" style="text-align: center; padding: 48px; color: var(--muted);" data-i18n="table_loading">
+                          Loading submissions...
                         </td>
                       </tr>
                     </tbody>
@@ -397,27 +420,27 @@
             </div>
 
             <!-- RIGHT COMPANION RAIL -->
-            <aside class="bento-side-rail" aria-label="Ringkasan Aktivitas dan Aksi Cepat">
+            <aside class="bento-side-rail" aria-label="Activity Summary">
 
               <!-- HIGHLIGHTS CARD -->
               <section class="huddly-rail-card">
                 <div class="rail-card-header">
-                  <h3>Highlights Kelas</h3>
-                  <button type="button" class="rail-link-btn" data-jump-view="forum">Lihat semua</button>
+                  <h3 data-i18n="rail_highlights">Class Activity</h3>
+                  <button type="button" class="rail-link-btn" data-jump-view="forum" data-i18n="rail_see_all">View all</button>
                 </div>
                 <div id="huddlyHighlightsList" class="rail-list">
-                  <div class="rail-empty">Memuat aktivitas forum &amp; pengumuman terbaru...</div>
+                  <div class="rail-empty" data-i18n="rail_loading">Loading recent activity...</div>
                 </div>
               </section>
 
               <!-- ACTION ITEMS CHECKLIST -->
               <section class="huddly-rail-card">
                 <div class="rail-card-header">
-                  <h3>Action Items</h3>
+                  <h3 data-i18n="rail_actions">Action Items</h3>
                   <span class="rail-badge">Live</span>
                 </div>
                 <div id="huddlyActionItems" class="action-items-list">
-                  <div class="rail-empty">Menghitung tugas fasilitator...</div>
+                  <div class="rail-empty" data-i18n="rail_tasks_loading">Loading tasks...</div>
                 </div>
               </section>
 

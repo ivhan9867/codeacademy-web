@@ -14,6 +14,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.tasks.await
+import org.json.JSONArray
 import java.util.UUID
 
 data class PublicUserProfile(
@@ -51,6 +52,11 @@ data class CloudAnnouncement(
     val createdAt: Long = System.currentTimeMillis()
 )
 
+data class SubmissionQueueInfo(
+    val position: Int,
+    val totalPending: Int
+)
+
 class FirestoreForumAndLeaderboardService(
     private val customFirestore: FirebaseFirestore? = null
 ) {
@@ -59,6 +65,7 @@ class FirestoreForumAndLeaderboardService(
         const val FORUM_COLLECTION = "forum_posts"
         const val USERS_COLLECTION = "users"
         const val PROJECT_SUBMISSIONS_COLLECTION = "project_submissions"
+        const val SUBMISSION_RATINGS_COLLECTION = "submission_ratings"
         const val CERTIFICATES_COLLECTION = "certificates"
         const val ANNOUNCEMENTS_COLLECTION = "announcements"
         const val DEFAULT_PAGE_SIZE = 20L
@@ -757,6 +764,15 @@ class FirestoreForumAndLeaderboardService(
         val facilitatorFeedback = doc.getString("facilitatorFeedback")
         val facilitatorScore = doc.getLong("facilitatorScore")?.toInt()
         val rubricScoresJson = doc.getString("rubricScoresJson") ?: "{}"
+        val studentRating = doc.getLong("studentRating")?.toInt()
+        val studentRatingComment = doc.getString("studentRatingComment") ?: ""
+        val rawTags = doc.get("studentRatingTags") as? List<*>
+        val studentRatingTagsJson = if (rawTags != null) {
+            JSONArray(rawTags.mapNotNull { it?.toString()?.takeIf { s -> s.isNotBlank() } }).toString()
+        } else {
+            doc.getString("studentRatingTagsJson") ?: "[]"
+        }
+        val ratedAt = doc.getLong("ratedAt")
 
         return ProjectSubmissionEntity(
             accountId = accountId,
@@ -777,8 +793,112 @@ class FirestoreForumAndLeaderboardService(
             facilitatorName = facilitatorName,
             facilitatorFeedback = facilitatorFeedback,
             facilitatorScore = facilitatorScore,
-            rubricScoresJson = rubricScoresJson
+            rubricScoresJson = rubricScoresJson,
+            studentRating = studentRating,
+            studentRatingComment = studentRatingComment,
+            studentRatingTagsJson = studentRatingTagsJson,
+            ratedAt = ratedAt
         )
+    }
+
+    suspend fun fetchPendingQueuePosition(
+        accountId: Long,
+        courseId: String,
+        submittedAt: Long
+    ): SubmissionQueueInfo? {
+        val firestore = getFirestore() ?: return null
+        return try {
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val myDocId = buildSubmissionDocId(accountId, courseId, firebaseUid)
+            val snap = firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
+                .whereEqualTo("status", "PENDING_REVIEW")
+                .get()
+                .await()
+            if (snap.isEmpty) return null
+            val sorted = snap.documents.sortedBy { it.getLong("submittedAt") ?: Long.MAX_VALUE }
+            val idx = sorted.indexOfFirst { doc ->
+                doc.id == myDocId ||
+                    (doc.getLong("accountId") == accountId && doc.getString("courseId") == courseId)
+            }
+            val total = sorted.size.coerceAtLeast(1)
+            val position = if (idx >= 0) {
+                idx + 1
+            } else {
+                val earlier = sorted.count { (it.getLong("submittedAt") ?: 0L) <= submittedAt }
+                (earlier + 1).coerceAtMost(total + 1)
+            }
+            SubmissionQueueInfo(
+                position = position,
+                totalPending = maxOf(total, position)
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "Error fetching pending queue position: ${e.message}")
+            null
+        }
+    }
+
+    suspend fun submitProjectReviewRating(
+        submission: ProjectSubmissionEntity,
+        rating: Int,
+        comment: String,
+        tags: List<String>,
+        ratedAt: Long = System.currentTimeMillis()
+    ): Result<Unit> {
+        val firestore = getFirestore() ?: return Result.failure(IllegalStateException("Firestore tidak tersedia"))
+        return try {
+            val firebaseUid = tryEnsureAnonymousOrCurrentUid()
+            val docId = buildSubmissionDocId(submission.accountId, submission.courseId, firebaseUid)
+            val clampedRating = rating.coerceIn(1, 5)
+            val trimmedComment = comment.trim().take(280)
+
+            // 1. Patch rating fields on the approved project_submissions doc
+            val subPatch = mapOf(
+                "studentRating" to clampedRating,
+                "studentRatingComment" to trimmedComment,
+                "studentRatingTags" to tags,
+                "ratedAt" to ratedAt,
+                "updatedAt" to ratedAt
+            )
+            runCatching {
+                firestore.collection(PROJECT_SUBMISSIONS_COLLECTION)
+                    .document(docId)
+                    .update(subPatch)
+                    .await()
+            }.onFailure { err ->
+                Log.w(TAG, "Could not patch project_submissions rating fields: ${err.message}")
+            }
+
+            // 2. Upsert dedicated submission_ratings doc for Facilitator & Super Admin analytics
+            val ratingDoc = mutableMapOf<String, Any?>(
+                "ratingId" to docId,
+                "submissionId" to submission.submissionId,
+                "submissionDocId" to docId,
+                "accountId" to submission.accountId,
+                "courseId" to submission.courseId,
+                "courseTitle" to submission.courseTitle,
+                "studentName" to submission.studentName,
+                "studentEmail" to submission.studentEmail,
+                "facilitatorName" to (submission.facilitatorName ?: ""),
+                "facilitatorScore" to (submission.facilitatorScore ?: 0),
+                "rating" to clampedRating,
+                "comment" to trimmedComment,
+                "tags" to tags,
+                "ratedAt" to ratedAt,
+                "updatedAt" to ratedAt
+            )
+            if (!firebaseUid.isNullOrBlank()) {
+                ratingDoc["firebaseUid"] = firebaseUid
+            }
+            firestore.collection(SUBMISSION_RATINGS_COLLECTION)
+                .document(docId)
+                .set(ratingDoc, SetOptions.merge())
+                .await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.w(TAG, "Error submitting project review rating: ${e.message}")
+            Result.failure(e)
+        }
     }
 
     // ==========================================

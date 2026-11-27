@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com https://accounts.google.com https://*.firebaseapp.com;">
   <title>CodeAcademy — Staff Portal</title>
   <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-  <link rel="stylesheet" href="style.css?v=20261127-i18n-layout">
+  <link rel="stylesheet" href="style.css?v=20261127-ratings">
 </head>
 <body data-i18n-title="fac_title">
 
@@ -446,6 +446,17 @@
                 </div>
               </section>
 
+              <!-- STUDENT REVIEW RATINGS SUMMARY -->
+              <section class="huddly-rail-card" id="railRatingsCard">
+                <div class="rail-card-header">
+                  <h3 data-i18n="rail_ratings_title">Student Review Ratings</h3>
+                  <span class="rating-rail-score" id="railRatingsAvg">★ —</span>
+                </div>
+                <div id="railRatingsList" class="rating-feed-list">
+                  <div class="rail-empty" data-i18n="rail_ratings_empty">No student review ratings yet.</div>
+                </div>
+              </section>
+
               <!-- QUICK ASK / BROADCAST WIDGET -->
               <section class="huddly-quick-ask">
                 <div class="quick-ask-badge" data-i18n="quick_badge">Quick Shortcuts</div>
@@ -605,6 +616,18 @@
           <section class="panel-card" style="margin-top: 18px;">
             <div class="panel-head-row">
               <div>
+                <h3 data-i18n="ana_ratings_title">Recent Student Review Ratings</h3>
+                <p style="font-size: 12.5px; color: var(--muted); margin-top: 3px;" data-i18n="ana_ratings_sub">Post-approval feedback submitted by graduates from the Android app.</p>
+              </div>
+              <span class="rating-rail-score" id="analyticsRatingsBadge">★ —</span>
+            </div>
+            <div id="analyticsRatingsFeed" class="analytics-ratings-grid">
+              <div class="rail-empty" data-i18n="ana_ratings_empty">No student ratings submitted yet.</div>
+            </div>
+          </section>
+          <section class="panel-card" style="margin-top: 18px;">
+            <div class="panel-head-row">
+              <div>
                 <h3 data-i18n="ana_dir_title">Student Directory, Grade Report &amp; Account Control</h3>
                 <p style="font-size: 12.5px; color: var(--muted); margin-top: 3px;" data-i18n="ana_dir_sub">Search learners, inspect custom profiles, and suspend (Ban) or restore (Unban) Android app account access.</p>
               </div>
@@ -756,6 +779,18 @@
               </div>
               <textarea id="facilitatorFeedback" class="feedback-input" aria-label="Facilitator feedback notes" placeholder="Write clear review notes for the student (displayed automatically in their Android app)..." data-i18n-placeholder="rev_fb_ph"></textarea>
             </div>
+
+            <div class="review-section modal-rating-card" id="modalStudentRatingSection" style="display: none;">
+              <div class="section-header-row" style="margin-bottom: 8px;">
+                <h4>
+                  <span style="color: #D97706;">★</span>
+                  <span data-i18n="rev_student_rating_title">Student Review Rating</span>
+                </h4>
+                <span class="rating-star-pill" id="modalStudentRatingStars">★ 5/5</span>
+              </div>
+              <div id="modalStudentRatingTags" class="rating-tags-row"></div>
+              <p id="modalStudentRatingComment" class="modal-rating-comment"></p>
+            </div>
           </div>
         </div>
       </div>
@@ -848,8 +883,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js?v=20261127-i18n-layout"></script>
-  <script src="../assets/web-i18n.js?v=20261127-i18n-layout"></script>
-  <script src="app.js?v=20261127-i18n-layout"></script>
+  <script src="../firebase-config.js?v=20261127-ratings"></script>
+  <script src="../assets/web-i18n.js?v=20261127-ratings"></script>
+  <script src="app.js?v=20261127-ratings"></script>
 </body>
 </html>

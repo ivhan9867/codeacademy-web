@@ -324,7 +324,11 @@ data class ProjectSubmissionEntity(
     val facilitatorName: String? = null,
     val facilitatorFeedback: String? = null,
     val facilitatorScore: Int? = null,
-    val rubricScoresJson: String = "{}"
+    val rubricScoresJson: String = "{}",
+    val studentRating: Int? = null,
+    val studentRatingComment: String = "",
+    val studentRatingTagsJson: String = "[]",
+    val ratedAt: Long? = null
 )
 
 

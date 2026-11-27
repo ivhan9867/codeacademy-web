@@ -277,7 +277,14 @@
       ban_chip_4: "Suspicious Activity",
       ban_reason_label: "Suspension Reason (Shown to Student in App)",
       ban_reason_ph: "Explain why the account is being suspended so the learner understands the violation...",
-      ban_btn_confirm: "Suspend Account Now"
+      ban_btn_confirm: "Suspend Account Now",
+      // Student Review Ratings
+      rail_ratings_title: "Student Review Ratings",
+      rail_ratings_empty: "No student review ratings yet.",
+      rev_student_rating_title: "Student Review Rating",
+      ana_ratings_title: "Recent Student Review Ratings",
+      ana_ratings_sub: "Post-approval feedback submitted by graduates from the Android app.",
+      ana_ratings_empty: "No student ratings submitted yet."
     },
     id: {
       nav_portal: "Portal",
@@ -540,7 +547,14 @@
       ban_chip_4: "Aktivitas Mencurigakan",
       ban_reason_label: "Alasan Pembekuan (Ditampilkan ke User di Aplikasi)",
       ban_reason_ph: "Tuliskan alasan pembekuan akun agar peserta mengetahui penyebabnya...",
-      ban_btn_confirm: "Bekukan Akun Sekarang"
+      ban_btn_confirm: "Bekukan Akun Sekarang",
+      // Rating Review Siswa
+      rail_ratings_title: "Rating Review Siswa",
+      rail_ratings_empty: "Belum ada rating review dari siswa.",
+      rev_student_rating_title: "Rating Review dari Siswa",
+      ana_ratings_title: "Rating Review Siswa Terbaru",
+      ana_ratings_sub: "Umpan balik pasca-persetujuan yang dikirim lulusan dari aplikasi Android.",
+      ana_ratings_empty: "Belum ada rating yang dikirim siswa."
     }
   };
 

@@ -606,23 +606,33 @@ class CodeAcademyRepository(
 
     suspend fun handleRemoteSubmissionUpdate(remote: ProjectSubmissionEntity) = withContext(Dispatchers.IO) {
         val local = projectSubmissionDao.getSubmissionOnce(remote.accountId, remote.courseId)
-        projectSubmissionDao.upsertSubmission(remote)
+        val merged = if (remote.studentRating == null && local?.studentRating != null) {
+            remote.copy(
+                studentRating = local.studentRating,
+                studentRatingComment = local.studentRatingComment,
+                studentRatingTagsJson = local.studentRatingTagsJson,
+                ratedAt = local.ratedAt
+            )
+        } else {
+            remote
+        }
+        projectSubmissionDao.upsertSubmission(merged)
         val oldStatus = local?.let { ProjectSubmissionStatus.fromString(it.status) }
-        val newStatus = ProjectSubmissionStatus.fromString(remote.status)
+        val newStatus = ProjectSubmissionStatus.fromString(merged.status)
 
         if (oldStatus != newStatus) {
-            val course = getCourseById(remote.courseId) ?: return@withContext
+            val course = getCourseById(merged.courseId) ?: return@withContext
             if (newStatus == ProjectSubmissionStatus.APPROVED) {
                 addXp(course.finalProject?.xpReward ?: 100, "Lulus Proyek Akhir ${course.title}")
-                val facScore = remote.facilitatorScore ?: 85
-                val certScore = CourseUnlockUtils.computeFinalCertificateScore(remote.finalQuizScore, facScore)
-                val preferredCertId = firestoreService.fetchPreferredCertIdForSubmission(remote.accountId, remote.courseId)
-                issueCourseCertificate(remote.accountId, course, remote.studentName, certScore, preferredCertId)
+                val facScore = merged.facilitatorScore ?: 85
+                val certScore = CourseUnlockUtils.computeFinalCertificateScore(merged.finalQuizScore, facScore)
+                val preferredCertId = firestoreService.fetchPreferredCertIdForSubmission(merged.accountId, merged.courseId)
+                issueCourseCertificate(merged.accountId, course, merged.studentName, certScore, preferredCertId)
             } else if (newStatus == ProjectSubmissionStatus.REVISION_REQUESTED) {
                 notifDao.insertNotification(
                     NotificationEntity(
                         UUID.randomUUID().toString(),
-                        remote.accountId,
+                        merged.accountId,
                         getLocalizedString(R.string.notif_project_revision_title),
                         getLocalizedString(R.string.notif_project_revision_msg_format, course.title),
                         "SYSTEM",
@@ -631,6 +641,48 @@ class CodeAcademyRepository(
                 )
             }
         }
+    }
+
+    suspend fun getSubmissionQueueInfo(
+        courseId: String,
+        submittedAt: Long
+    ): com.example.data.remote.SubmissionQueueInfo? = withContext(Dispatchers.IO) {
+        val accountId = getActiveAccountId()
+        firestoreService.fetchPendingQueuePosition(accountId, courseId, submittedAt)
+    }
+
+    suspend fun submitProjectReviewRating(
+        courseId: String,
+        rating: Int,
+        comment: String,
+        tags: List<String>
+    ): Result<ProjectSubmissionEntity> = withContext(Dispatchers.IO) {
+        val accountId = getActiveAccountId()
+        val existing = projectSubmissionDao.getSubmissionOnce(accountId, courseId)
+            ?: return@withContext Result.failure(IllegalStateException("Submission not found"))
+        val clamped = rating.coerceIn(1, 5)
+        val trimmedComment = comment.trim().take(280)
+        val cleanTags = tags.map { it.trim() }.filter { it.isNotEmpty() }.distinct()
+        val ratedAt = System.currentTimeMillis()
+        val updated = existing.copy(
+            studentRating = clamped,
+            studentRatingComment = trimmedComment,
+            studentRatingTagsJson = JSONArray(cleanTags).toString(),
+            ratedAt = ratedAt
+        )
+        projectSubmissionDao.upsertSubmission(updated)
+        try {
+            firestoreService.submitProjectReviewRating(
+                submission = updated,
+                rating = clamped,
+                comment = trimmedComment,
+                tags = cleanTags,
+                ratedAt = ratedAt
+            )
+        } catch (e: Throwable) {
+            android.util.Log.w("CodeAcademyRepo", "Project rating saved locally; cloud sync deferred: ${e.message}")
+        }
+        Result.success(updated)
     }
 
     suspend fun simulateFacilitatorReview(

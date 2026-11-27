@@ -87,7 +87,29 @@ service cloud.firestore {
         && request.resource.data.get('facilitatorFeedback', null) == resource.data.get('facilitatorFeedback', null)
         && request.resource.data.get('feedback', null) == resource.data.get('feedback', null);
 
+      // Owning student may attach a post-approval review rating (1-5) without altering evaluation fields
+      allow update: if isNotBannedUser()
+        && resource.data.status == 'APPROVED'
+        && (!('firebaseUid' in resource.data) || resource.data.firebaseUid == request.auth.uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['studentRating', 'studentRatingComment', 'studentRatingTags', 'ratedAt', 'updatedAt'])
+        && request.resource.data.studentRating is int
+        && request.resource.data.studentRating >= 1
+        && request.resource.data.studentRating <= 5;
+
       allow delete: if isFacilitator();
+    }
+
+    // Student Post-Approval Review Ratings (visible to Facilitators & Super Admins)
+    match /submission_ratings/{ratingId} {
+      allow read: if isSignedIn();
+      allow create, update: if isNotBannedUser()
+        && request.resource.data.firebaseUid == request.auth.uid
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.get('comment', '') is string
+        && request.resource.data.get('comment', '').size() <= 500;
+      allow delete: if isSuperAdmin();
     }
 
     // Course Forum Posts & Replies

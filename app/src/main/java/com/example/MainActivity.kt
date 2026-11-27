@@ -1399,6 +1399,18 @@ fun CodeAcademyApp(
                         onAttachRealtimeListener = {
                             viewModel.attachProjectSubmissionListener(course.id)
                         },
+                        onFetchQueueInfo = { submittedAt ->
+                            viewModel.getSubmissionQueueInfo(course.id, submittedAt)
+                        },
+                        onSubmitRating = { rating, comment, tags, onDone ->
+                            viewModel.submitProjectReviewRating(
+                                courseId = course.id,
+                                rating = rating,
+                                comment = comment,
+                                tags = tags,
+                                onResult = { onDone() }
+                            )
+                        },
                         onViewCertificate = {
                             val cert = certificates.find { it.courseId == course.id }
                             if (cert != null) {

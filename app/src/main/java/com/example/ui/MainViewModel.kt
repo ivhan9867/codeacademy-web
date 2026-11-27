@@ -765,6 +765,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         )
     }
 
+    suspend fun getSubmissionQueueInfo(
+        courseId: String,
+        submittedAt: Long
+    ): com.example.data.remote.SubmissionQueueInfo? {
+        return repo.getSubmissionQueueInfo(courseId, submittedAt)
+    }
+
+    fun submitProjectReviewRating(
+        courseId: String,
+        rating: Int,
+        comment: String,
+        tags: List<String>,
+        onResult: (Result<ProjectSubmissionEntity>) -> Unit = {}
+    ) {
+        viewModelScope.launch {
+            val res = repo.submitProjectReviewRating(courseId, rating, comment, tags)
+            onResult(res)
+        }
+    }
+
     fun getSectionQuizAttempts(quizId: String): Flow<List<SectionQuizAttemptEntity>> {
         return repo.getSectionQuizAttempts(quizId)
     }

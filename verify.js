@@ -52,6 +52,31 @@ document.addEventListener("DOMContentLoaded", () => {
       renderVerifiedRecord(lastVerifiedRecord, lastVerifiedId);
     }
   });
+
+  const btnPrint = document.getElementById("btnPrintCert");
+  if (btnPrint) {
+    btnPrint.addEventListener("click", () => window.print());
+  }
+
+  const btnCopyLink = document.getElementById("btnCopyVerifyLink");
+  if (btnCopyLink) {
+    btnCopyLink.addEventListener("click", async () => {
+      const id = lastVerifiedId || document.getElementById("resCertId")?.textContent?.trim() || "";
+      const url = id
+        ? `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(id)}`
+        : window.location.href;
+      try {
+        await navigator.clipboard.writeText(url);
+        const orig = vT("verify_btn_copy_link");
+        btnCopyLink.textContent = vT("verify_copied_link");
+        setTimeout(() => {
+          btnCopyLink.textContent = orig;
+        }, 2200);
+      } catch (_) {
+        window.prompt("Copy link:", url);
+      }
+    });
+  }
 });
 
 function renderVerifiedRecord(record, id) {

@@ -284,7 +284,13 @@
       rev_student_rating_title: "Student Review Rating",
       ana_ratings_title: "Recent Student Review Ratings",
       ana_ratings_sub: "Post-approval feedback submitted by graduates from the Android app.",
-      ana_ratings_empty: "No student ratings submitted yet."
+      ana_ratings_empty: "No student ratings submitted yet.",
+      // Cosmic Certificate Verify
+      verify_cosmic_eyebrow: "CODEACADEMY • CELESTIAL CREDENTIAL",
+      verify_cosmic_title: "CERTIFICATE OF COMPLETION",
+      verify_btn_print: "Print / Save PDF",
+      verify_btn_copy_link: "Copy Link",
+      verify_copied_link: "Verification link copied!"
     },
     id: {
       nav_portal: "Portal",
@@ -554,7 +560,13 @@
       rev_student_rating_title: "Rating Review dari Siswa",
       ana_ratings_title: "Rating Review Siswa Terbaru",
       ana_ratings_sub: "Umpan balik pasca-persetujuan yang dikirim lulusan dari aplikasi Android.",
-      ana_ratings_empty: "Belum ada rating yang dikirim siswa."
+      ana_ratings_empty: "Belum ada rating yang dikirim siswa.",
+      // Sertifikat Antariksa Verify
+      verify_cosmic_eyebrow: "CODEACADEMY • KREDENSIAL ANTARIKSA",
+      verify_cosmic_title: "SERTIFIKAT KELULUSAN",
+      verify_btn_print: "Cetak / Simpan PDF",
+      verify_btn_copy_link: "Salin Tautan",
+      verify_copied_link: "Tautan verifikasi disalin!"
     }
   };
 

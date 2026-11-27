@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://www.gstatic.com https://apis.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; frame-src 'self' https://*.firebaseapp.com https://accounts.google.com https://apis.google.com; connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://www.gstatic.com https://accounts.google.com https://*.firebaseapp.com;">
   <title>CodeAcademy — Staff Portal</title>
   <link rel="icon" type="image/svg+xml" href="../assets/logo.svg">
-  <link rel="stylesheet" href="style.css?v=20261127-ratings">
+  <link rel="stylesheet" href="style.css?v=20261127-queue-clean">
 </head>
 <body data-i18n-title="fac_title">
 
@@ -385,11 +385,12 @@
                   </select>
 
                   <div class="pill-group" role="group" aria-label="Filter status">
-                    <button type="button" class="btn-filter-pill active" data-status="all" data-i18n="filter_all">All</button>
-                    <button type="button" class="btn-filter-pill" data-status="PENDING_REVIEW" data-i18n="filter_pending">Pending</button>
-                    <button type="button" class="btn-filter-pill" data-status="REVISION_REQUESTED" data-i18n="filter_revision">Revision</button>
-                    <button type="button" class="btn-filter-pill" data-status="APPROVED" data-i18n="filter_approved">Approved</button>
+                    <button type="button" class="btn-filter-pill active" data-status="PENDING_REVIEW"><span data-i18n="filter_pending">Pending</span> <span class="pill-count" id="pillCountPending">0</span></button>
+                    <button type="button" class="btn-filter-pill" data-status="REVISION_REQUESTED"><span data-i18n="filter_revision">Revision</span> <span class="pill-count" id="pillCountRevision">0</span></button>
+                    <button type="button" class="btn-filter-pill" data-status="APPROVED"><span data-i18n="filter_approved">Approved</span> <span class="pill-count" id="pillCountApproved">0</span></button>
+                    <button type="button" class="btn-filter-pill" data-status="all"><span data-i18n="filter_all">All</span> <span class="pill-count" id="pillCountAll">0</span></button>
                   </div>
+                  <button type="button" id="btnClearApproved" class="btn-danger-ghost" style="display: none;" data-i18n="btn_clear_approved">Clear Approved</button>
                 </div>
               </section>
 
@@ -883,8 +884,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-  <script src="../firebase-config.js?v=20261127-ratings"></script>
-  <script src="../assets/web-i18n.js?v=20261127-ratings"></script>
-  <script src="app.js?v=20261127-ratings"></script>
+  <script src="../firebase-config.js?v=20261127-queue-clean"></script>
+  <script src="../assets/web-i18n.js?v=20261127-queue-clean"></script>
+  <script src="app.js?v=20261127-queue-clean"></script>
 </body>
 </html>

@@ -290,7 +290,9 @@
       verify_cosmic_title: "CERTIFICATE OF COMPLETION",
       verify_btn_print: "Print / Save PDF",
       verify_btn_copy_link: "Copy Link",
-      verify_copied_link: "Verification link copied!"
+      verify_copied_link: "Verification link copied!",
+      // Queue Cleanup
+      btn_clear_approved: "Clear Approved"
     },
     id: {
       nav_portal: "Portal",
@@ -566,7 +568,9 @@
       verify_cosmic_title: "SERTIFIKAT KELULUSAN",
       verify_btn_print: "Cetak / Simpan PDF",
       verify_btn_copy_link: "Salin Tautan",
-      verify_copied_link: "Tautan verifikasi disalin!"
+      verify_copied_link: "Tautan verifikasi disalin!",
+      // Bersihkan Antrean
+      btn_clear_approved: "Bersihkan Lulus"
     }
   };
 

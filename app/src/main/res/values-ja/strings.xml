@@ -1675,4 +1675,22 @@
     <string name="sub_rating_btn_skip">あとで</string>
     <string name="sub_rating_toast_saved">ありがとうございます！評価を保存しました。</string>
     <string name="sub_rating_toast_pick_star">1つ以上の星を選択してください。</string>
+
+    <!-- Cosmic Observatory Certificate Redesign -->
+    <string name="cert_cosmic_eyebrow">CODEACADEMY • コスミック認定証</string>
+    <string name="cert_cosmic_subtitle">公式修了ディプロマ</string>
+    <string name="cert_cosmic_pred_distinction">最優秀</string>
+    <string name="cert_cosmic_pred_very_good">優秀</string>
+    <string name="cert_cosmic_pred_good">良好</string>
+    <string name="cert_cosmic_btn_save_png">HD PNG保存</string>
+    <string name="cert_cosmic_btn_fullscreen">全画面表示</string>
+    <string name="cert_cosmic_btn_copy_id">IDをコピー</string>
+    <string name="cert_cosmic_saved_toast">高画質証明書をギャラリーに保存しました (Pictures/CodeAcademy)</string>
+    <string name="cert_cosmic_save_err_toast">証明書画像の保存に失敗しました</string>
+    <string name="cert_cosmic_issuer_role">カリキュラム責任者・講師</string>
+    <string name="cert_cosmic_issuer_name">CodeAcademy アカデミック委員会</string>
+    <string name="cert_cosmic_verify_footer">クラウド認証済み • CodeAcademy 公式レジストリ</string>
+    <string name="cert_cosmic_share_text_format">🚀 %1$s 修了証明書 — %2$s (スコア %3$d%%)
+認定ID: %4$s
+CodeAcademy公式ポータルで検証 (verify.html?id=%4$s)</string>
 </resources>

@@ -1675,4 +1675,22 @@
     <string name="sub_rating_btn_skip">以后再说</string>
     <string name="sub_rating_toast_saved">感谢！您的评审评分已保存。</string>
     <string name="sub_rating_toast_pick_star">请先选择至少 1 颗星。</string>
+
+    <!-- Cosmic Observatory Certificate Redesign -->
+    <string name="cert_cosmic_eyebrow">CODEACADEMY • 星际荣誉认证</string>
+    <string name="cert_cosmic_subtitle">官方结业证书</string>
+    <string name="cert_cosmic_pred_distinction">荣誉优异</string>
+    <string name="cert_cosmic_pred_very_good">表现优秀</string>
+    <string name="cert_cosmic_pred_good">合格通过</string>
+    <string name="cert_cosmic_btn_save_png">保存高清PNG</string>
+    <string name="cert_cosmic_btn_fullscreen">全屏预览</string>
+    <string name="cert_cosmic_btn_copy_id">复制编号</string>
+    <string name="cert_cosmic_saved_toast">高清证书已保存至相册 (Pictures/CodeAcademy)</string>
+    <string name="cert_cosmic_save_err_toast">保存证书图片失败</string>
+    <string name="cert_cosmic_issuer_role">课程总监与评审导师</string>
+    <string name="cert_cosmic_issuer_name">CodeAcademy 学术委员会</string>
+    <string name="cert_cosmic_verify_footer">云端认证 • CodeAcademy 官方验证库</string>
+    <string name="cert_cosmic_share_text_format">🚀 %1$s 结业证书 — %2$s (成绩 %3$d%%)
+认证编号: %4$s
+前往 CodeAcademy 验证门户核验 (verify.html?id=%4$s)</string>
 </resources>

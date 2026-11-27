@@ -3,4 +3,7 @@
     <cache-path
         name="ai_camera_images"
         path="ai_camera/" />
+    <cache-path
+        name="certificates"
+        path="certificates/" />
 </paths>

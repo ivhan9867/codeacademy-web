@@ -1439,4 +1439,22 @@
     <string name="sub_rating_btn_skip">Nanti Saja</string>
     <string name="sub_rating_toast_saved">Terima kasih! Rating penilaianmu sudah tersimpan.</string>
     <string name="sub_rating_toast_pick_star">Pilih minimal 1 bintang terlebih dahulu.</string>
+
+    <!-- Cosmic Observatory Certificate Redesign -->
+    <string name="cert_cosmic_eyebrow">CODEACADEMY • KREDENSIAL ANTARIKSA</string>
+    <string name="cert_cosmic_subtitle">PENGHARGAAN KELULUSAN RESMI</string>
+    <string name="cert_cosmic_pred_distinction">Dengan Pujian</string>
+    <string name="cert_cosmic_pred_very_good">Sangat Memuaskan</string>
+    <string name="cert_cosmic_pred_good">Memuaskan</string>
+    <string name="cert_cosmic_btn_save_png">Simpan PNG HD</string>
+    <string name="cert_cosmic_btn_fullscreen">Layar Penuh</string>
+    <string name="cert_cosmic_btn_copy_id">Salin ID</string>
+    <string name="cert_cosmic_saved_toast">Sertifikat HD disimpan ke Galeri (Pictures/CodeAcademy)</string>
+    <string name="cert_cosmic_save_err_toast">Gagal menyimpan gambar sertifikat</string>
+    <string name="cert_cosmic_issuer_role">Direktur Kurikulum &amp; Fasilitator</string>
+    <string name="cert_cosmic_issuer_name">Tim Akademik CodeAcademy</string>
+    <string name="cert_cosmic_verify_footer">Terverifikasi Cloud • Portal Verifikasi Resmi CodeAcademy</string>
+    <string name="cert_cosmic_share_text_format">🚀 Sertifikat Kelulusan %1$s atas nama %2$s (Skor %3$d%%)
+ID Kredensial: %4$s
+Verifikasi keaslian di Portal CodeAcademy (verify.html?id=%4$s)</string>
 </resources>

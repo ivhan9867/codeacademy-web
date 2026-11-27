@@ -1439,4 +1439,22 @@
     <string name="sub_rating_btn_skip">Maybe Later</string>
     <string name="sub_rating_toast_saved">Thank you! Your review rating has been saved.</string>
     <string name="sub_rating_toast_pick_star">Please select at least 1 star first.</string>
+
+    <!-- Cosmic Observatory Certificate Redesign -->
+    <string name="cert_cosmic_eyebrow">CODEACADEMY • CELESTIAL CREDENTIAL</string>
+    <string name="cert_cosmic_subtitle">OFFICIAL GRADUATION DIPLOMA</string>
+    <string name="cert_cosmic_pred_distinction">With Distinction</string>
+    <string name="cert_cosmic_pred_very_good">Very Satisfactory</string>
+    <string name="cert_cosmic_pred_good">Satisfactory</string>
+    <string name="cert_cosmic_btn_save_png">Save HD PNG</string>
+    <string name="cert_cosmic_btn_fullscreen">Fullscreen</string>
+    <string name="cert_cosmic_btn_copy_id">Copy ID</string>
+    <string name="cert_cosmic_saved_toast">HD certificate saved to Gallery (Pictures/CodeAcademy)</string>
+    <string name="cert_cosmic_save_err_toast">Failed to save certificate image</string>
+    <string name="cert_cosmic_issuer_role">Curriculum Director &amp; Facilitator</string>
+    <string name="cert_cosmic_issuer_name">CodeAcademy Academic Board</string>
+    <string name="cert_cosmic_verify_footer">Cloud Verified • Official CodeAcademy Registry</string>
+    <string name="cert_cosmic_share_text_format">🚀 Graduation Certificate for %1$s awarded to %2$s (Score %3$d%%)
+Credential ID: %4$s
+Verify authenticity on CodeAcademy Portal (verify.html?id=%4$s)</string>
 </resources>

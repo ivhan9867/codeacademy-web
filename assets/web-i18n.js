@@ -63,13 +63,14 @@
       feat_6_d: "Every issued certificate carries a unique publicly verifiable ID.",
       footer_copy: "© 2026 CodeAcademy Mobile — Mobile Application Development Final Project",
       footer_manual: "Application manual",
-      // Verify Page (verify.html)
+      // Verify Page (verify.html + verify.js)
       verify_title: "Verify Certificate — CodeAcademy",
       verify_h1: "Verify certificate authenticity",
       verify_lead:
         "Enter the credential ID printed on the certificate (format CC-yyyyMMxxxx-xxxxxx). The portal checks directly against CodeAcademy's Firestore registry.",
       verify_label: "Credential ID",
       verify_btn: "Check ID",
+      verify_checking: "Checking...",
       verify_status_ok: "Authentic certificate registered in Firestore",
       verify_what: "Completed the full curriculum and final project evaluation on CodeAcademy.",
       verify_dt_id: "Credential ID",
@@ -78,15 +79,22 @@
       verify_dt_date: "Issued On",
       verify_dt_fac: "Reviewer",
       verify_dt_status: "Status",
-      verify_reg_src: "Registered in Firestore database",
+      verify_reg_src: "Officially registered in CodeAcademy Firestore",
+      verify_pred_distinction: "With Distinction",
+      verify_pred_very_good: "Very Satisfactory",
+      verify_pred_good: "Satisfactory",
       verify_not_found_t: "ID not found",
       verify_not_found_d:
         "Double-check the spelling. Official CodeAcademy IDs start with CC- (e.g. CC-2026110101-A9K3P2) and only pass if recorded in Firestore.",
+      verify_not_found_db:
+        "Certificate ID was not found in Firestore. Make sure the ID starting with CC- matches the certificate in the app.",
+      verify_network_err:
+        "A network or permission error occurred while checking Firestore ({msg}).",
       verify_side_h2: "How to verify",
       verify_step_1: "Find the credential ID starting with CC- on the Android app's digital certificate.",
       verify_step_2: "Type the ID exactly as shown, then click Check ID.",
       verify_step_3: "Match the recipient name, course title, and final score returned from the database.",
-      // Facilitator Auth & Access Request (facilitator/index.html)
+      // Facilitator Auth & Access Request
       fac_title: "Facilitator & Admin Portal — CodeAcademy",
       auth_eyebrow: "CODEACADEMY STAFF PORTAL",
       auth_h2: "Sign in to Workspace",
@@ -125,6 +133,7 @@
       // Showcase & Portal Workspace (EN)
       showcase_pill: "CodeAcademy Staff Workspace",
       showcase_heading: "Manage project reviews, class forums & certificates in one workspace.",
+      brand_portal_tag: "Staff Portal",
       tab_projects: "Projects",
       tab_forum: "Forum",
       tab_announcements: "Announcements",
@@ -151,6 +160,9 @@
       stat_certified: "Certified",
       search_ph: "Search student, email, or course...",
       filter_all_courses: "All Courses",
+      course_opt_html: "Web Foundation: From Zero to First Code",
+      course_opt_css: "Modern CSS Layout: Flexbox & Grid",
+      course_opt_js: "JavaScript Fundamentals",
       filter_all: "All",
       filter_pending: "Pending",
       filter_revision: "Revision",
@@ -167,7 +179,105 @@
       rail_see_all: "View all",
       rail_loading: "Loading recent activity...",
       rail_actions: "Action Items",
-      rail_tasks_loading: "Loading tasks..."
+      rail_tasks_loading: "Loading tasks...",
+      // Right Rail Quick Broadcast
+      quick_badge: "Quick Shortcuts",
+      quick_title: "Draft an Announcement or Open Forum",
+      quick_chip_1: "Live Review Schedule",
+      quick_chip_2: "Semantic HTML Tips",
+      quick_input_ph: "Type a quick announcement idea...",
+      // View 2: Forum
+      forum_search_ph: "Search questions, student name, or thread content...",
+      forum_unanswered_pill: "Unanswered by Facilitator",
+      forum_compose_title: "Create New Topic as Facilitator",
+      forum_compose_ph: "Write study tips, lesson clarifications, or discussion prompts for students...",
+      forum_btn_post: "Post Topic",
+      forum_loading: "Loading class discussions...",
+      // View 3: Announcements
+      ann_card_title: "Publish Announcement to Android App",
+      ann_card_sub: "Students will receive this announcement directly in the app's Notifications tab.",
+      ann_title_label: "Announcement Title",
+      ann_title_ph: "e.g. Weekly Final Project Live Review Schedule",
+      ann_course_label: "Course Scope",
+      ann_course_all: "All Courses / General",
+      ann_body_label: "Announcement Message",
+      ann_body_ph: "Write important updates, schedule reminders, or project instructions for students...",
+      ann_btn_publish: "Publish Announcement",
+      ann_empty: "No announcements published yet.",
+      // View 4: Certificates
+      cert_search_ph: "Search certificate ID (CC-...), student name, or course...",
+      cert_btn_csv: "Export CSV",
+      cert_loading: "Loading issued certificates...",
+      // View 5: Team (Super Admin)
+      team_card_title: "Add / Update Staff Team Member",
+      team_email_ph: "Staff Google email (e.g. mentor@gmail.com)",
+      team_name_ph: "Display name (e.g. Alex Rivera)",
+      team_role_fac: "Facilitator",
+      team_role_admin: "Super Admin",
+      team_btn_save: "Save Member",
+      th_team_name: "Name & Email",
+      th_team_role: "Access Role",
+      th_team_spec: "Specialization",
+      th_team_action: "Actions",
+      team_loading: "Loading team directory...",
+      // View 6: Analytics & Student Directory (Super Admin)
+      ana_dir_title: "Student Directory, Grade Report & Account Control",
+      ana_dir_sub: "Search learners, inspect custom profiles, and suspend (Ban) or restore (Unban) Android app account access.",
+      ana_btn_csv: "Download CSV Report",
+      ana_search_ph: "Search student name, email, or developer persona...",
+      ana_filter_all: "All",
+      ana_filter_active: "Active",
+      ana_filter_banned: "Suspended",
+      th_stu_name: "Student & Email",
+      th_stu_persona: "Persona & XP",
+      th_stu_level: "Level & Streak",
+      th_stu_status: "Account Status",
+      th_stu_control: "Controls",
+      ana_loading: "Loading student directory...",
+      // Review Modal
+      rev_info_title: "Student Info & Notes",
+      rev_email_prefix: "Email:",
+      rev_notes_empty: "No additional notes provided by the student.",
+      rev_ext_url: "Open External Project Link ↗",
+      rev_code_title: "Workspace Code & Live Preview",
+      rev_tab_code: "Source Code",
+      rev_tab_preview: "Live Preview",
+      rev_rubric_title: "WebDev Curriculum Grading Rubric",
+      rev_fac_name_label: "Reviewer Display Name",
+      rev_score_title: "Project Score & Final Certificate Grade",
+      rev_score_formula_pre: "Final Grade = 40% App Quiz (",
+      rev_score_formula_mid: ") + 60% Facilitator Project Review →",
+      rev_score_label: "Project Score",
+      rev_fb_title: "Facilitator Feedback & Notes",
+      rev_tag_1: "Clean & semantic structure",
+      rev_tag_2: "Great responsiveness",
+      rev_tag_3: "Improve semantic tags",
+      rev_tag_4: "Add DOM interaction",
+      rev_fb_ph: "Write clear review notes for the student (displayed automatically in their Android app)...",
+      rev_btn_cancel: "Cancel",
+      rev_btn_revision: "Request Revision",
+      rev_btn_approve: "Approve & Issue",
+      // Profile Modal
+      prof_title: "Staff Profile",
+      prof_sub: "Customize your display name & specialization shown in Forums and Announcements.",
+      prof_name_label: "Display Name",
+      prof_name_ph: "e.g. Ivhan — Lead Web Mentor",
+      prof_role_label: "Role / Specialization",
+      prof_role_ph: "e.g. Front-End & JavaScript Facilitator",
+      prof_bio_label: "Short Bio",
+      prof_bio_ph: "Write a brief introduction or your active office hours...",
+      prof_btn_save: "Save Profile",
+      // Ban User Modal
+      ban_title: "Suspend Student Account",
+      ban_sub: "A suspended account is immediately locked to a notice screen when signing in or using the Android app.",
+      ban_quick_label: "Quick Reason Presets",
+      ban_chip_1: "Forum Spam",
+      ban_chip_2: "Project Plagiarism",
+      ban_chip_3: "Inappropriate Language",
+      ban_chip_4: "Suspicious Activity",
+      ban_reason_label: "Suspension Reason (Shown to Student in App)",
+      ban_reason_ph: "Explain why the account is being suspended so the learner understands the violation...",
+      ban_btn_confirm: "Suspend Account Now"
     },
     id: {
       nav_portal: "Portal",
@@ -234,6 +344,7 @@
         "Masukkan ID kredensial yang tercetak di sertifikat (format CC-yyyyMMxxxx-xxxxxx). Portal memeriksa langsung ke basis data Firestore CodeAcademy.",
       verify_label: "ID kredensial",
       verify_btn: "Periksa ID",
+      verify_checking: "Memeriksa...",
       verify_status_ok: "Sertifikat asli dan terdaftar di Firestore",
       verify_what: "Menyelesaikan seluruh kurikulum dan evaluasi proyek akhir CodeAcademy.",
       verify_dt_id: "ID Kredensial",
@@ -242,10 +353,17 @@
       verify_dt_date: "Diterbitkan",
       verify_dt_fac: "Penilai",
       verify_dt_status: "Status",
-      verify_reg_src: "Terdaftar di basis data Firestore",
+      verify_reg_src: "Terdaftar resmi di Firestore CodeAcademy",
+      verify_pred_distinction: "Dengan Pujian",
+      verify_pred_very_good: "Sangat Memuaskan",
+      verify_pred_good: "Memuaskan",
       verify_not_found_t: "ID tidak ditemukan",
       verify_not_found_d:
         "Periksa kembali penulisannya. Format ID resmi sertifikat CodeAcademy diawali CC- (misalnya CC-2026110101-A9K3P2) dan hanya lolos jika tercatat di Firestore.",
+      verify_not_found_db:
+        "ID sertifikat tidak ditemukan di basis data Firestore. Pastikan ID berawalan CC- diketik persis seperti yang tercetak di aplikasi.",
+      verify_network_err:
+        "Terjadi kendala jaringan atau izin saat memeriksa basis data Firestore ({msg}).",
       verify_side_h2: "Cara memeriksa",
       verify_step_1: "Cari ID kredensial berawalan CC- di sertifikat digital aplikasi Android.",
       verify_step_2: "Ketik ID tersebut persis seperti tertulis, lalu pilih Periksa ID.",
@@ -285,9 +403,9 @@
       modal_reason_ph: "Jelaskan singkat kebutuhan akses Anda pada portal CodeAcademy...",
       modal_cancel: "Batal",
       modal_submit: "Kirim Pengajuan Akses",
-      // Showcase & Portal Workspace (ID)
       showcase_pill: "CodeAcademy Staff Workspace",
       showcase_heading: "Kelola evaluasi proyek, forum kelas & sertifikat dalam satu kendali.",
+      brand_portal_tag: "Portal Staf",
       tab_projects: "Proyek",
       tab_forum: "Forum",
       tab_announcements: "Pengumuman",
@@ -314,10 +432,13 @@
       stat_certified: "Sertifikat",
       search_ph: "Cari nama peserta, email, atau kursus...",
       filter_all_courses: "Semua Kursus",
+      course_opt_html: "Fondasi Web: Dari Nol ke Baris Kode Pertama",
+      course_opt_css: "CSS Layout Modern: Flexbox & Grid",
+      course_opt_js: "JavaScript Fundamentals",
       filter_all: "Semua",
       filter_pending: "Pending",
       filter_revision: "Revisi",
-      filter_approved: "Approved",
+      filter_approved: "Disetujui",
       th_student: "Peserta",
       th_course: "Kursus",
       th_quiz: "Kuis",
@@ -330,7 +451,96 @@
       rail_see_all: "Lihat semua",
       rail_loading: "Memuat aktivitas terbaru...",
       rail_actions: "Daftar Tugas",
-      rail_tasks_loading: "Memuat tugas..."
+      rail_tasks_loading: "Memuat tugas...",
+      quick_badge: "Pintasan Cepat",
+      quick_title: "Siapkan Pengumuman atau Buka Forum",
+      quick_chip_1: "Jadwal Live Review",
+      quick_chip_2: "Tips Semantik HTML",
+      quick_input_ph: "Ketik ide pengumuman cepat...",
+      forum_search_ph: "Cari pertanyaan, nama peserta, atau isi diskusi...",
+      forum_unanswered_pill: "Belum Dijawab Fasilitator",
+      forum_compose_title: "Buat Topik Baru sebagai Fasilitator",
+      forum_compose_ph: "Tulis tips belajar, klarifikasi materi, atau bahasan diskusi untuk peserta kelas...",
+      forum_btn_post: "Kirim Topik",
+      forum_loading: "Memuat diskusi kelas...",
+      ann_card_title: "Terbitkan Pengumuman ke Aplikasi Android",
+      ann_card_sub: "Peserta akan melihat pengumuman ini di layar Notifikasi aplikasi.",
+      ann_title_label: "Judul Pengumuman",
+      ann_title_ph: "Contoh: Jadwal Live Review Proyek Akhir",
+      ann_course_label: "Cakupan Kursus",
+      ann_course_all: "Semua Kelas / Umum",
+      ann_body_label: "Isi Pengumuman",
+      ann_body_ph: "Tulis pengumuman penting, pembaruan jadwal, atau arahan tugas untuk seluruh peserta...",
+      ann_btn_publish: "Terbitkan Pengumuman",
+      ann_empty: "Belum ada pengumuman diterbitkan.",
+      cert_search_ph: "Cari ID sertifikat (CC-...), nama peserta, atau kursus...",
+      cert_btn_csv: "Unduh CSV",
+      cert_loading: "Memuat daftar sertifikat terbit...",
+      team_card_title: "Tambah / Perbarui Anggota Tim Fasilitator",
+      team_email_ph: "Email Google fasilitator (mis. mentor@gmail.com)",
+      team_name_ph: "Nama tampilan (mis. Budi Santoso)",
+      team_role_fac: "Fasilitator",
+      team_role_admin: "Super Admin",
+      team_btn_save: "Simpan Anggota",
+      th_team_name: "Nama & Email",
+      th_team_role: "Peran Akses",
+      th_team_spec: "Spesialisasi",
+      th_team_action: "Aksi",
+      team_loading: "Memuat daftar tim...",
+      ana_dir_title: "Direktori Siswa, Laporan Nilai & Kontrol Akun",
+      ana_dir_sub: "Super Admin dapat mencari peserta, memeriksa profil kustom, serta membekukan (Ban) atau mengaktifkan kembali (Unban) akses akun di aplikasi Android.",
+      ana_btn_csv: "Unduh Laporan CSV",
+      ana_search_ph: "Cari nama, email, atau persona developer siswa...",
+      ana_filter_all: "Semua",
+      ana_filter_active: "Aktif",
+      ana_filter_banned: "Dibekukan",
+      th_stu_name: "Siswa & Email",
+      th_stu_persona: "Persona & XP",
+      th_stu_level: "Level & Streak",
+      th_stu_status: "Status Akun",
+      th_stu_control: "Kontrol",
+      ana_loading: "Memuat data siswa...",
+      rev_info_title: "Informasi & Catatan Peserta",
+      rev_email_prefix: "Email:",
+      rev_notes_empty: "Tidak ada catatan khusus dari peserta.",
+      rev_ext_url: "Buka Tautan Proyek Eksternal ↗",
+      rev_code_title: "Kode Workspace & Live Preview",
+      rev_tab_code: "Kode Sumber",
+      rev_tab_preview: "Live Preview",
+      rev_rubric_title: "Rubrik Penilaian Kurikulum WebDev",
+      rev_fac_name_label: "Nama Fasilitator Penilai",
+      rev_score_title: "Skor Proyek & Nilai Akhir Sertifikat",
+      rev_score_formula_pre: "Nilai Akhir = 40% Kuis Aplikasi (",
+      rev_score_formula_mid: ") + 60% Penilaian Proyek Fasilitator →",
+      rev_score_label: "Skor Proyek",
+      rev_fb_title: "Catatan & Umpan Balik Fasilitator",
+      rev_tag_1: "Struktur rapi & semantik",
+      rev_tag_2: "Responsif baik",
+      rev_tag_3: "Perbaiki tag semantik",
+      rev_tag_4: "Lengkapi interaksi DOM",
+      rev_fb_ph: "Tulis catatan evaluasi untuk peserta (tampil otomatis di aplikasi Android peserta)...",
+      rev_btn_cancel: "Batal",
+      rev_btn_revision: "Minta Revisi",
+      rev_btn_approve: "Setujui & Terbitkan",
+      prof_title: "Profil Fasilitator",
+      prof_sub: "Sesuaikan nama tampilan & peran Anda di Forum dan Pengumuman.",
+      prof_name_label: "Nama Tampilan Fasilitator",
+      prof_name_ph: "Mis. Ivhan — Lead Web Mentor",
+      prof_role_label: "Peran / Spesialisasi",
+      prof_role_ph: "Mis. Front-End & JavaScript Facilitator",
+      prof_bio_label: "Bio Singkat",
+      prof_bio_ph: "Tuliskan info singkat atau jam aktif Anda...",
+      prof_btn_save: "Simpan Profil",
+      ban_title: "Bekukan Akun Peserta",
+      ban_sub: "Akun yang dibekukan akan langsung terkunci ke layar peringatan saat login atau memakai aplikasi Android.",
+      ban_quick_label: "Pilih Alasan Cepat",
+      ban_chip_1: "Spam Forum",
+      ban_chip_2: "Plagiarisme Proyek",
+      ban_chip_3: "Bahasa Tidak Pantas",
+      ban_chip_4: "Aktivitas Mencurigakan",
+      ban_reason_label: "Alasan Pembekuan (Ditampilkan ke User di Aplikasi)",
+      ban_reason_ph: "Tuliskan alasan pembekuan akun agar peserta mengetahui penyebabnya...",
+      ban_btn_confirm: "Bekukan Akun Sekarang"
     }
   };
 
@@ -339,7 +549,19 @@
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved === "id" || saved === "en") return saved;
     } catch (_) {}
-    return "en"; // Default: English
+    return "en";
+  }
+
+  function t(key, vars) {
+    const active = getLang();
+    const dict = DICT[active] || DICT.en;
+    let text = dict[key] !== undefined ? dict[key] : (DICT.en[key] !== undefined ? DICT.en[key] : key);
+    if (vars && typeof vars === "object") {
+      Object.keys(vars).forEach((k) => {
+        text = text.replace(new RegExp("\\{" + k + "\\}", "g"), String(vars[k]));
+      });
+    }
+    return text;
   }
 
   function applyLang(lang) {
@@ -357,18 +579,20 @@
 
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
-      if (dict[key]) el.textContent = dict[key];
+      if (dict[key] !== undefined) el.textContent = dict[key];
     });
 
     document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
       const key = el.getAttribute("data-i18n-placeholder");
-      if (dict[key]) el.setAttribute("placeholder", dict[key]);
+      if (dict[key] !== undefined) el.setAttribute("placeholder", dict[key]);
     });
 
     document.querySelectorAll(".lang-slide-toggle").forEach((toggle) => {
       toggle.setAttribute("data-lang", active);
       toggle.setAttribute("aria-checked", active === "id" ? "true" : "false");
     });
+
+    window.dispatchEvent(new CustomEvent("ca-lang-change", { detail: { lang: active } }));
   }
 
   function init() {
@@ -383,7 +607,7 @@
     });
   }
 
-  window.CodeAcademyWebI18n = { getLang, applyLang };
+  window.CodeAcademyWebI18n = { getLang, applyLang, t, DICT };
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

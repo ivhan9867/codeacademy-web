@@ -4,6 +4,16 @@
 // ==========================================
 
 let verifyDb = null;
+let lastVerifiedRecord = null;
+let lastVerifiedId = "";
+
+function vLang() {
+  return window.CodeAcademyWebI18n ? window.CodeAcademyWebI18n.getLang() : "en";
+}
+
+function vT(key, vars) {
+  return window.CodeAcademyWebI18n ? window.CodeAcademyWebI18n.t(key, vars) : key;
+}
 
 function initVerifyFirebase() {
   const cfg = window.CODEACADEMY_FIREBASE_CONFIG || window.firebaseConfig;
@@ -36,7 +46,35 @@ document.addEventListener("DOMContentLoaded", () => {
     input.value = id;
     verifyCert(id);
   });
+
+  window.addEventListener("ca-lang-change", () => {
+    if (lastVerifiedRecord) {
+      renderVerifiedRecord(lastVerifiedRecord, lastVerifiedId);
+    }
+  });
 });
+
+function renderVerifiedRecord(record, id) {
+  const fallbackName = vLang() === "id" ? "PESERTA" : "STUDENT";
+  const fallbackFac = vLang() === "id" ? "Tim Fasilitator CodeAcademy" : "CodeAcademy Facilitator Team";
+  document.getElementById("resRecipientName").textContent = (record.userName || fallbackName).toUpperCase();
+  document.getElementById("resCertId").textContent = record.certId || id;
+  document.getElementById("resCourseTitle").textContent = record.courseTitle || record.courseId || "-";
+
+  const finalScore = Number(record.finalScore) || 0;
+  const predicate =
+    finalScore >= 90
+      ? vT("verify_pred_distinction")
+      : finalScore >= 80
+        ? vT("verify_pred_very_good")
+        : vT("verify_pred_good");
+  document.getElementById("resScore").textContent = `${finalScore}/100 (${predicate})`;
+
+  document.getElementById("resDate").textContent = formatIssuedDate(record.issuedAt);
+  document.getElementById("resFacilitator").textContent = record.facilitatorName || fallbackFac;
+  document.getElementById("resStatusBadge").textContent = vT("verify_status_ok");
+  document.getElementById("resRegistrySource").textContent = vT("verify_reg_src");
+}
 
 async function verifyCert(rawId) {
   const id = (rawId || "").trim().toUpperCase();
@@ -48,7 +86,7 @@ async function verifyCert(rawId) {
   if (!id) return;
 
   submitBtn.disabled = true;
-  submitBtn.textContent = "Memeriksa...";
+  submitBtn.textContent = vT("verify_checking");
 
   try {
     let record = null;
@@ -61,41 +99,27 @@ async function verifyCert(rawId) {
     }
 
     if (record) {
+      lastVerifiedRecord = record;
+      lastVerifiedId = id;
       notFoundCard.classList.remove("show");
-      document.getElementById("resRecipientName").textContent = (record.userName || "PESERTA").toUpperCase();
-      document.getElementById("resCertId").textContent = record.certId || id;
-      document.getElementById("resCourseTitle").textContent = record.courseTitle || record.courseId || "-";
-
-      const finalScore = Number(record.finalScore) || 0;
-      const predicate =
-        finalScore >= 90
-          ? "Dengan Pujian"
-          : finalScore >= 80
-            ? "Sangat Memuaskan"
-            : "Memuaskan";
-      document.getElementById("resScore").textContent = `${finalScore}/100 (${predicate})`;
-
-      document.getElementById("resDate").textContent = formatIssuedDate(record.issuedAt);
-      document.getElementById("resFacilitator").textContent = record.facilitatorName || "Tim Fasilitator CodeAcademy";
-      document.getElementById("resStatusBadge").textContent = "Sertifikat asli dan terdaftar di Firestore";
-      document.getElementById("resRegistrySource").textContent = "Terdaftar resmi di Firestore CodeAcademy";
-
+      renderVerifiedRecord(record, id);
       resultCard.classList.add("show");
     } else {
+      lastVerifiedRecord = null;
+      lastVerifiedId = "";
       resultCard.classList.remove("show");
-      notFoundHint.textContent =
-        "ID sertifikat tidak ditemukan di basis data Firestore. Pastikan ID berawalan CC- diketik persis seperti yang tercetak di aplikasi.";
+      notFoundHint.textContent = vT("verify_not_found_db");
       notFoundCard.classList.add("show");
     }
   } catch (err) {
     console.error("Verify lookup error:", err);
+    lastVerifiedRecord = null;
     resultCard.classList.remove("show");
-    notFoundHint.textContent =
-      "Terjadi kendala jaringan atau izin saat memeriksa basis data Firestore (" + (err.message || "error") + ").";
+    notFoundHint.textContent = vT("verify_network_err", { msg: err.message || "error" });
     notFoundCard.classList.add("show");
   } finally {
     submitBtn.disabled = false;
-    submitBtn.textContent = "Periksa ID";
+    submitBtn.textContent = vT("verify_btn");
   }
 }
 
@@ -103,7 +127,8 @@ function formatIssuedDate(ts) {
   if (!ts) return "-";
   const d = new Date(ts);
   if (isNaN(d.getTime())) return "-";
-  return d.toLocaleDateString("id-ID", {
+  const locale = vLang() === "id" ? "id-ID" : "en-US";
+  return d.toLocaleDateString(locale, {
     day: "numeric",
     month: "long",
     year: "numeric"

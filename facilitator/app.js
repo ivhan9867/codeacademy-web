@@ -1,23 +1,61 @@
 // ==========================================
-// CodeAcademy - Portal Fasilitator App Logic
-// Sinkronisasi Real-time Firestore & Firebase Auth
+// CodeAcademy - Staff Portal App Logic
+// Real-time Firestore Sync & Firebase Auth
 // ==========================================
 
-const COURSE_LABELS = {
+function isIndonesian() {
+  return window.CodeAcademyWebI18n ? window.CodeAcademyWebI18n.getLang() === "id" : false;
+}
+
+function L(enText, idText) {
+  return isIndonesian() ? idText : enText;
+}
+
+const COURSE_LABELS_EN = {
+  "fe-web-foundation-00": "Web Foundation: From Zero to First Code",
+  "fe-css-02": "Modern CSS Layout: Flexbox & Grid",
+  "fe-js-03": "JavaScript Fundamentals",
+  "web-html-01": "Web Foundation & Semantic HTML5",
+  "web-css-01": "Modern CSS3 & Flexbox/Grid",
+  "web-js-01": "JavaScript ES6 & DOM"
+};
+
+const COURSE_LABELS_ID = {
   "fe-web-foundation-00": "Fondasi Web: Dari Nol ke Baris Kode Pertama",
   "fe-css-02": "CSS Layout Modern: Flexbox & Grid",
   "fe-js-03": "JavaScript Fundamentals",
-  // Legacy fallback aliases (jika ada dokumen lama)
   "web-html-01": "Fondasi Web & HTML5 Semantik",
   "web-css-01": "CSS3 Modern & Flexbox/Grid",
   "web-js-01": "JavaScript ES6 & DOM"
 };
 
 function getCourseLabel(courseId) {
-  return COURSE_LABELS[courseId] || courseId || "Kursus WebDev";
+  const map = isIndonesian() ? COURSE_LABELS_ID : COURSE_LABELS_EN;
+  return map[courseId] || courseId || L("WebDev Course", "Kursus WebDev");
 }
 
-const RUBRICS_BY_COURSE = {
+const RUBRICS_BY_COURSE_EN = {
+  "fe-web-foundation-00": [
+    { id: "semantik", title: "Semantic HTML5 Structure", desc: "Uses header, nav, main, section, and footer with clear document hierarchy.", weight: 30 },
+    { id: "aksesibilitas", title: "Accessibility & Metadata", desc: "Includes proper title, meta viewport, form labels, and image alt attributes.", weight: 25 },
+    { id: "styling", title: "Visual Presentation & Readability", desc: "Legible typography, solid color contrast, and well-proportioned spacing.", weight: 25 },
+    { id: "clean", title: "Code Cleanliness & Validity", desc: "Properly closed tags, consistent indentation, and no deprecated elements.", weight: 20 }
+  ],
+  "fe-css-02": [
+    { id: "layout", title: "Flexbox & CSS Grid Mastery", desc: "Builds modern row/column layouts cleanly without float or table hacks.", weight: 35 },
+    { id: "responsif", title: "Responsive Design (Mobile-First)", desc: "Layout adapts smoothly across mobile and desktop viewports.", weight: 25 },
+    { id: "tokens", title: "CSS Custom Properties & Consistency", desc: "Uses color/spacing custom properties with consistent visual rhythm.", weight: 20 },
+    { id: "polish", title: "Visual Polish, Hover States & Clean CSS", desc: "Smooth interactions, accessible contrast, and organized stylesheet structure.", weight: 20 }
+  ],
+  "fe-js-03": [
+    { id: "dom", title: "DOM Manipulation & Event Listeners", desc: "Dynamically updates page elements in response to user interactions.", weight: 35 },
+    { id: "logika", title: "Program Logic & Input Validation", desc: "Conditionals, functions, and empty/invalid input handling work accurately.", weight: 30 },
+    { id: "state", title: "Data Management (Arrays & Objects)", desc: "Clean data handling with modern array methods (map, filter, find).", weight: 20 },
+    { id: "clean", title: "Code Clarity & Zero Runtime Errors", desc: "Readable code that executes cleanly with no Console errors.", weight: 15 }
+  ]
+};
+
+const RUBRICS_BY_COURSE_ID = {
   "fe-web-foundation-00": [
     { id: "semantik", title: "Struktur HTML5 Semantik", desc: "Memakai header, nav, main, section, dan footer dengan hierarki yang jelas.", weight: 30 },
     { id: "aksesibilitas", title: "Aksesibilitas & Metadata", desc: "Memiliki tag title, meta viewport, label form, dan atribut alt gambar yang tepat.", weight: 25 },
@@ -39,7 +77,8 @@ const RUBRICS_BY_COURSE = {
 };
 
 function getRubricsForCourse(courseId) {
-  return RUBRICS_BY_COURSE[courseId] || RUBRICS_BY_COURSE["fe-web-foundation-00"];
+  const bank = isIndonesian() ? RUBRICS_BY_COURSE_ID : RUBRICS_BY_COURSE_EN;
+  return bank[courseId] || bank["fe-web-foundation-00"];
 }
 
 // ==========================================
@@ -108,16 +147,16 @@ function updateHuddlyGreeting(displayName) {
   const greetingEl = document.getElementById("huddlyGreetingTitle");
   if (!greetingEl) return;
   const hour = new Date().getHours();
-  let timeGreeting = "Selamat malam";
-  if (hour >= 4 && hour < 11) timeGreeting = "Selamat pagi";
-  else if (hour >= 11 && hour < 15) timeGreeting = "Selamat siang";
-  else if (hour >= 15 && hour < 18) timeGreeting = "Selamat sore";
-  const shortName = (displayName || "Fasilitator").trim().split("—")[0].trim();
+  let timeGreeting = L("Good evening", "Selamat malam");
+  if (hour >= 4 && hour < 12) timeGreeting = L("Good morning", "Selamat pagi");
+  else if (hour >= 12 && hour < 15) timeGreeting = L("Good afternoon", "Selamat siang");
+  else if (hour >= 15 && hour < 18) timeGreeting = L("Good afternoon", "Selamat sore");
+  const shortName = (displayName || L("Facilitator", "Fasilitator")).trim().split("—")[0].trim();
   greetingEl.textContent = `${timeGreeting}, ${shortName}`;
 }
 
 function applyFacilitatorProfileToUi(displayName, role = "") {
-  const cleanName = (displayName || "Fasilitator CodeAcademy").trim();
+  const cleanName = (displayName || L("CodeAcademy Facilitator", "Fasilitator CodeAcademy")).trim();
   if (currentFacilitatorUser) {
     currentFacilitatorUser.displayName = cleanName;
     currentFacilitatorUser.role = role;
@@ -140,7 +179,7 @@ function applyRoleAccessUi(accessRole) {
   });
   const roleBadge = document.getElementById("roleBadge");
   if (roleBadge) {
-    roleBadge.textContent = isAdmin ? "👑 Super Admin" : "🎓 Fasilitator";
+    roleBadge.textContent = isAdmin ? "👑 Super Admin" : L("🎓 Facilitator", "🎓 Fasilitator");
     roleBadge.className = `role-badge ${isAdmin ? "super-admin" : "facilitator"}`;
     roleBadge.style.display = "inline-flex";
   }
@@ -313,7 +352,7 @@ async function verifyAndEnterFacilitatorSession(user) {
     });
 
     if (!email) {
-      const msg = "Akun tidak memiliki alamat email yang valid.";
+      const msg = L("Account does not have a valid email address.", "Akun tidak memiliki alamat email yang valid.");
       setAuthStatus("");
       showAuthError(msg);
       await auth.signOut();
@@ -321,14 +360,14 @@ async function verifyAndEnterFacilitatorSession(user) {
     }
 
     try {
-      setAuthStatus(`Akun terautentikasi (${email}). Menyegarkan token sesi...`);
+      setAuthStatus(L(`Authenticated (${email}). Refreshing session token...`, `Akun terautentikasi (${email}). Menyegarkan token sesi...`));
       try {
         await user.getIdToken(true);
       } catch (tokErr) {
         console.warn("[FacilitatorAuth] getIdToken(true) warning:", tokErr?.code || tokErr?.message);
       }
 
-      setAuthStatus(`Memverifikasi izin fasilitator di Firestore: facilitators/${email}...`);
+      setAuthStatus(L(`Verifying staff access in Firestore: facilitators/${email}...`, `Memverifikasi izin fasilitator di Firestore: facilitators/${email}...`));
       console.log(`[FacilitatorAuth] Reading Firestore allowlist: facilitators/${email}`);
       let allowDoc;
       try {
@@ -343,7 +382,10 @@ async function verifyAndEnterFacilitatorSession(user) {
       });
 
       if (!allowDoc.exists) {
-        const msg = `Akses ditolak: dokumen Firestore facilitators/${email} tidak ditemukan. Gunakan tombol "Ajukan Akses" di bawah form login untuk mendaftarkan email Anda.`;
+        const msg = L(
+          `Access denied: Firestore document facilitators/${email} was not found. Use the "Request Access" button below to register your email.`,
+          `Akses ditolak: dokumen Firestore facilitators/${email} tidak ditemukan. Gunakan tombol "Ajukan Akses" di bawah form login untuk mendaftarkan email Anda.`
+        );
         setAuthStatus("");
         showAuthError(msg);
         await auth.signOut();
@@ -356,7 +398,7 @@ async function verifyAndEnterFacilitatorSession(user) {
 
       const profileData = allowDoc.data() || {};
       const savedLocal = loadSavedFacilitatorProfile();
-      const resolvedDisplayName = savedLocal.name || profileData.name || user.displayName || "Fasilitator CodeAcademy";
+      const resolvedDisplayName = savedLocal.name || profileData.name || user.displayName || L("CodeAcademy Facilitator", "Fasilitator CodeAcademy");
       const resolvedRole = savedLocal.role || profileData.role || "";
       const accessRole = profileData.accessRole === "super_admin" ? "super_admin" : "facilitator";
       currentFacilitatorUser = {
@@ -388,12 +430,15 @@ async function verifyAndEnterFacilitatorSession(user) {
 
       renderAllViews();
       startRealtimeListeners();
-      showToast(`Masuk sebagai ${email}`);
+      showToast(L(`Signed in as ${email}`, `Masuk sebagai ${email}`));
     } catch (err) {
       console.error("[FacilitatorAuth] Verify facilitator failed:", err.code, err.message, err);
       setAuthStatus("");
       showAuthError(
-        "Gagal memverifikasi izin fasilitator (" + (err.code || err.message || "permission-denied") + "). Pastikan Firestore Rules terbaru sudah di-Publish."
+        L(
+          `Failed to verify staff permissions (${err.code || err.message || "permission-denied"}). Please ensure the latest Firestore Rules are published.`,
+          `Gagal memverifikasi izin fasilitator (${err.code || err.message || "permission-denied"}). Pastikan Firestore Rules terbaru sudah di-Publish.`
+        )
       );
       await auth.signOut();
     } finally {
@@ -418,7 +463,7 @@ function startRealtimeListeners() {
       },
       (error) => {
         console.error("Submissions listener error:", error);
-        showToast("Gagal sinkronisasi submission: " + error.message);
+        showToast(L("Failed to sync submissions: ", "Gagal sinkronisasi submission: ") + error.message);
       }
     );
 
@@ -432,7 +477,7 @@ function startRealtimeListeners() {
       },
       (error) => {
         console.error("Forum listener error:", error);
-        showToast("Gagal memuat forum: " + error.message);
+        showToast(L("Failed to load forum: ", "Gagal memuat forum: ") + error.message);
       }
     );
 
@@ -553,7 +598,7 @@ function attachEventListeners() {
   authForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!auth) {
-      showAuthError("Firebase Auth tidak tersedia. Muat ulang halaman dan coba lagi.");
+      showAuthError(L("Firebase Auth is unavailable. Please reload the page and try again.", "Firebase Auth tidak tersedia. Muat ulang halaman dan coba lagi."));
       return;
     }
     authError.classList.remove("show");
@@ -563,20 +608,33 @@ function attachEventListeners() {
       await auth.signInWithEmailAndPassword(email, password);
     } catch (err) {
       console.error("Email sign-in error:", err);
-      showAuthError("Gagal masuk: " + (err.message || err.code));
+      showAuthError(L("Sign-in failed: ", "Gagal masuk: ") + (err.message || err.code));
     }
   });
 
   attachAccessRequestModalListeners();
 
+  // Live re-render dynamic views when EN | ID toggle changes
+  window.addEventListener("ca-lang-change", () => {
+    switchView(activeView || "submissions");
+    if (currentFacilitatorUser) {
+      updateHuddlyGreeting(currentFacilitatorUser.displayName);
+      applyRoleAccessUi(currentAccessRole);
+    }
+    renderAllViews();
+    if (currentSubmission && reviewModal.classList.contains("open")) {
+      openReviewModal(currentSubmission.id);
+    }
+  });
+
   btnGoogleSignIn.addEventListener("click", async () => {
     console.log("[FacilitatorAuth] Google Sign-In clicked");
     if (!auth) {
-      showAuthError("Firebase Auth tidak tersedia. Muat ulang halaman dan coba lagi.");
+      showAuthError(L("Firebase Auth is unavailable. Please reload the page and try again.", "Firebase Auth tidak tersedia. Muat ulang halaman dan coba lagi."));
       return;
     }
     authError.classList.remove("show");
-    setAuthStatus("Membuka popup login Google...");
+    setAuthStatus(L("Opening Google sign-in popup...", "Membuka popup login Google..."));
     try {
       await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       const provider = new firebase.auth.GoogleAuthProvider();
@@ -590,13 +648,19 @@ function attachEventListeners() {
       console.error("[FacilitatorAuth] Google sign-in error:", err.code, err.message);
       setAuthStatus("");
       if (err.code === "auth/popup-blocked") {
-        showAuthError("Popup login Google diblokir oleh browser. Izinkan popup untuk localhost di ikon gembok/address bar browser lalu klik lagi, atau gunakan Email & Kata Sandi.");
+        showAuthError(L(
+          "Google sign-in popup was blocked by your browser. Allow popups in the address bar and click again, or sign in with Email & Password.",
+          "Popup login Google diblokir oleh browser. Izinkan popup di address bar browser lalu klik lagi, atau gunakan Email & Kata Sandi."
+        ));
       } else if (err.code === "auth/popup-closed-by-user") {
-        showAuthError("Jendela login Google ditutup sebelum selesai.");
+        showAuthError(L("Google sign-in window was closed before finishing.", "Jendela login Google ditutup sebelum selesai."));
       } else if (err.code === "auth/unauthorized-domain") {
-        showAuthError(`Domain "${window.location.hostname}" belum ditambahkan di Firebase Console → Authentication → Settings → Authorized domains.`);
+        showAuthError(L(
+          `Domain "${window.location.hostname}" is not added in Firebase Console → Authentication → Settings → Authorized domains.`,
+          `Domain "${window.location.hostname}" belum ditambahkan di Firebase Console → Authentication → Settings → Authorized domains.`
+        ));
       } else {
-        showAuthError("Login Google gagal (" + (err.code || "error") + "): " + (err.message || err.code));
+        showAuthError(L("Google sign-in failed", "Login Google gagal") + " (" + (err.code || "error") + "): " + (err.message || err.code));
       }
     }
   });
@@ -748,7 +812,7 @@ function attachEventListeners() {
     const newRole = (profileRoleInput?.value || "").trim();
     const newBio = (profileBioInput?.value || "").trim();
     if (newName.length < 2) {
-      showToast("Nama fasilitator minimal 2 karakter.");
+      showToast(L("Display name must be at least 2 characters.", "Nama fasilitator minimal 2 karakter."));
       return;
     }
     const nextProfile = { name: newName, role: newRole, bio: newBio, updatedAt: Date.now() };
@@ -771,7 +835,7 @@ function attachEventListeners() {
       }
     }
     closeProfileModal();
-    showToast("Profil fasilitator berhasil diperbarui.");
+    showToast(L("Staff profile updated.", "Profil fasilitator berhasil diperbarui."));
   });
 
   // Huddly Quick Shortcuts & Companion Rail
@@ -795,10 +859,13 @@ function attachEventListeners() {
     });
   });
 
-  document.querySelectorAll(".quick-chip-btn[data-quick-prompt]").forEach((chip) => {
+  document.querySelectorAll(".quick-chip-btn").forEach((chip) => {
     chip.addEventListener("click", () => {
       const quickInput = document.getElementById("huddlyQuickInput");
-      if (quickInput) quickInput.value = chip.dataset.quickPrompt || "";
+      const promptText = isIndonesian()
+        ? (chip.dataset.quickPromptId || chip.dataset.quickPrompt || "")
+        : (chip.dataset.quickPromptEn || chip.dataset.quickPrompt || "");
+      if (quickInput) quickInput.value = promptText;
       quickInput?.focus();
     });
   });
@@ -824,7 +891,7 @@ function attachEventListeners() {
     const name = (nameEl?.value || "").trim();
     const accessRole = roleEl?.value === "super_admin" ? "super_admin" : "facilitator";
     if (!email.includes("@")) {
-      showToast("Masukkan alamat email Google yang valid.");
+      showToast(L("Enter a valid Google email address.", "Masukkan alamat email Google yang valid."));
       return;
     }
     const payload = {
@@ -838,9 +905,9 @@ function attachEventListeners() {
         await db.collection("facilitators").doc(email).set(payload, { merge: true });
         if (emailEl) emailEl.value = "";
         if (nameEl) nameEl.value = "";
-        showToast(`Anggota ${email} disimpan sebagai ${accessRole}.`);
+        showToast(L(`Saved ${email} as ${accessRole}.`, `Anggota ${email} disimpan sebagai ${accessRole}.`));
       } catch (err) {
-        showToast("Gagal menyimpan anggota: " + err.message);
+        showToast(L("Failed to save member: ", "Gagal menyimpan anggota: ") + err.message);
       }
     } else {
       const idx = facilitatorsList.findIndex((f) => f.email === email);
@@ -849,7 +916,7 @@ function attachEventListeners() {
       if (emailEl) emailEl.value = "";
       if (nameEl) nameEl.value = "";
       renderTeam();
-      showToast(`Anggota ${email} ditambahkan (Mode Demo).`);
+      showToast(L(`Added ${email} (Offline Mode).`, `Anggota ${email} ditambahkan (Mode Demo).`));
     }
   });
 
@@ -857,16 +924,19 @@ function attachEventListeners() {
     const promoteBtn = e.target.closest("[data-action='promote-team']");
     if (promoteBtn && promoteBtn.dataset.email) {
       if (currentAccessRole !== "super_admin") {
-        showToast("Hanya Super Admin yang dapat menaikkan peran tim.");
+        showToast(L("Only Super Admins can promote team members.", "Hanya Super Admin yang dapat menaikkan peran tim."));
         return;
       }
       const email = promoteBtn.dataset.email;
       const target = facilitatorsList.find((f) => f.email === email);
       if (target?.accessRole === "super_admin") {
-        showToast("Akun ini sudah berstatus Super Admin.");
+        showToast(L("This account is already a Super Admin.", "Akun ini sudah berstatus Super Admin."));
         return;
       }
-      if (!confirm(`Naikkan peran ${target?.name || email} (${email}) menjadi Super Admin? Sesama Super Admin tidak dapat diturunkan kembali.`)) {
+      if (!confirm(L(
+        `Promote ${target?.name || email} (${email}) to Super Admin? Fellow Super Admins cannot be demoted later.`,
+        `Naikkan peran ${target?.name || email} (${email}) menjadi Super Admin? Sesama Super Admin tidak dapat diturunkan kembali.`
+      ))) {
         return;
       }
       if (isFirebaseReady && db) {
@@ -875,9 +945,9 @@ function attachEventListeners() {
             accessRole: "super_admin",
             updatedAt: Date.now()
           });
-          showToast(`${target?.name || email} berhasil dinaikkan menjadi Super Admin.`);
+          showToast(L(`${target?.name || email} promoted to Super Admin.`, `${target?.name || email} berhasil dinaikkan menjadi Super Admin.`));
         } catch (err) {
-          showToast("Gagal menaikkan peran: " + err.message);
+          showToast(L("Failed to promote role: ", "Gagal menaikkan peran: ") + err.message);
         }
       }
       return;
@@ -887,29 +957,32 @@ function attachEventListeners() {
     if (!delBtn || !delBtn.dataset.email) return;
     const email = delBtn.dataset.email;
     if (email === currentFacilitatorUser?.email) {
-      showToast("Tidak dapat menghapus akun sendiri.");
+      showToast(L("You cannot remove your own account.", "Tidak dapat menghapus akun sendiri."));
       return;
     }
     const target = facilitatorsList.find((f) => f.email === email);
     if (target?.accessRole === "super_admin") {
-      showToast("Sesama Super Admin dilindungi dan tidak dapat diturunkan atau dihapus.");
+      showToast(L("Fellow Super Admins are protected and cannot be demoted or removed.", "Sesama Super Admin dilindungi dan tidak dapat diturunkan atau dihapus."));
       return;
     }
-    if (!confirm(`Hapus akses portal untuk ${email}?`)) return;
+    if (!confirm(L(`Revoke portal access for ${email}?`, `Hapus akses portal untuk ${email}?`))) return;
     if (isFirebaseReady && db) {
       try {
         await db.collection("facilitators").doc(email).delete();
-        showToast(`Akses ${email} dihapus.`);
+        showToast(L(`Access revoked for ${email}.`, `Akses ${email} dihapus.`));
       } catch (err) {
-        showToast("Gagal menghapus anggota: " + err.message);
+        showToast(L("Failed to remove member: ", "Gagal menghapus anggota: ") + err.message);
       }
     }
   });
 
   document.getElementById("btnExportCertCsv")?.addEventListener("click", () => {
     downloadCsv(
-      "codeacademy-sertifikat.csv",
-      ["Cert ID", "Nama", "Email", "Kursus", "Skor Akhir", "Diterbitkan"],
+      L("codeacademy-certificates.csv", "codeacademy-sertifikat.csv"),
+      L(
+        ["Cert ID", "Name", "Email", "Course", "Final Score", "Issued At"],
+        ["Cert ID", "Nama", "Email", "Kursus", "Skor Akhir", "Diterbitkan"]
+      ),
       certificates.map((c) => [c.certId, c.userName, c.userEmail, getCourseLabel(c.courseId), c.finalScore ?? c.scorePercent ?? "", formatDate(c.issuedAt)])
     );
   });
@@ -919,27 +992,30 @@ function attachEventListeners() {
     if (!revokeBtn || !revokeBtn.dataset.certId) return;
     if (currentAccessRole !== "super_admin") return;
     const certId = revokeBtn.dataset.certId;
-    if (!confirm(`Cabut dan hapus sertifikat ${certId} secara permanen?`)) return;
+    if (!confirm(L(`Permanently revoke and delete certificate ${certId}?`, `Cabut dan hapus sertifikat ${certId} secara permanen?`))) return;
     if (isFirebaseReady && db) {
       try {
         await db.collection("certificates").doc(certId).delete();
-        showToast(`Sertifikat ${certId} dicabut.`);
+        showToast(L(`Certificate ${certId} revoked.`, `Sertifikat ${certId} dicabut.`));
       } catch (err) {
-        showToast("Gagal mencabut sertifikat: " + err.message);
+        showToast(L("Failed to revoke certificate: ", "Gagal mencabut sertifikat: ") + err.message);
       }
     } else {
       certificates = certificates.filter((c) => c.certId !== certId);
       renderCertificates();
       renderAnalytics();
-      showToast(`Sertifikat ${certId} dicabut (Mode Demo).`);
+      showToast(L(`Certificate ${certId} revoked (Offline Mode).`, `Sertifikat ${certId} dicabut (Mode Demo).`));
     }
   });
 
   document.getElementById("btnExportGradesCsv")?.addEventListener("click", () => {
     downloadCsv(
-      "codeacademy-nilai-proyek.csv",
-      ["Nama", "Email", "Kursus", "Status", "Skor Akhir", "Fasilitator"],
-      submissions.map((s) => [s.userName, s.userEmail, getCourseLabel(s.courseId), s.status, s.finalScore ?? "", s.facilitatorName || ""])
+      L("codeacademy-project-grades.csv", "codeacademy-nilai-proyek.csv"),
+      L(
+        ["Name", "Email", "Course", "Status", "Final Score", "Reviewer"],
+        ["Nama", "Email", "Kursus", "Status", "Skor Akhir", "Fasilitator"]
+      ),
+      submissions.map((s) => [s.studentName || s.userName || "", s.studentEmail || s.userEmail || "", getCourseLabel(s.courseId), s.status, s.finalScore ?? s.facilitatorScore ?? "", s.facilitatorName || ""])
     );
   });
 
@@ -954,9 +1030,12 @@ function attachEventListeners() {
   document.getElementById("btnCloseBanModal")?.addEventListener("click", closeBanModal);
   document.getElementById("btnCancelBanModal")?.addEventListener("click", closeBanModal);
 
-  document.querySelectorAll(".ban-chip-btn[data-ban-reason]").forEach((chip) => {
+  document.querySelectorAll(".ban-chip-btn").forEach((chip) => {
     chip.addEventListener("click", () => {
-      if (banReasonInput) banReasonInput.value = chip.dataset.banReason || "";
+      const reasonTxt = isIndonesian()
+        ? (chip.dataset.banReasonId || chip.dataset.banReason || "")
+        : (chip.dataset.banReasonEn || chip.dataset.banReason || "");
+      if (banReasonInput) banReasonInput.value = reasonTxt;
       banReasonInput?.focus();
     });
   });
@@ -982,7 +1061,7 @@ function attachEventListeners() {
       banTargetUserId = target.id;
       const nameEl = document.getElementById("banTargetName");
       const emailEl = document.getElementById("banTargetEmail");
-      if (nameEl) nameEl.textContent = target.name || "Siswa";
+      if (nameEl) nameEl.textContent = target.name || L("Student", "Siswa");
       if (emailEl) emailEl.textContent = target.email || `UID: ${target.id}`;
       if (banReasonInput) banReasonInput.value = target.banReason || "";
       if (banModal) banModal.hidden = false;
@@ -993,7 +1072,7 @@ function attachEventListeners() {
     if (unbanBtn && unbanBtn.dataset.uid) {
       const uid = unbanBtn.dataset.uid;
       const target = studentUsersList.find((u) => u.id === uid);
-      if (!confirm(`Cabut pembekuan akun untuk ${target?.name || uid}?`)) return;
+      if (!confirm(L(`Restore account access for ${target?.name || uid}?`, `Cabut pembekuan akun untuk ${target?.name || uid}?`))) return;
       if (isFirebaseReady && db) {
         try {
           await db.collection("users").doc(uid).set({
@@ -1003,16 +1082,16 @@ function attachEventListeners() {
             bannedBy: "",
             unbannedAt: Date.now()
           }, { merge: true });
-          showToast(`Akses akun ${target?.name || uid} diaktifkan kembali.`);
+          showToast(L(`Account ${target?.name || uid} restored.`, `Akses akun ${target?.name || uid} diaktifkan kembali.`));
         } catch (err) {
-          showToast("Gagal mencabut ban: " + err.message);
+          showToast(L("Failed to restore account: ", "Gagal mencabut ban: ") + err.message);
         }
       } else {
         studentUsersList = studentUsersList.map((u) =>
           u.id === uid ? { ...u, isBanned: false, banReason: "", bannedAt: null } : u
         );
         renderAnalytics();
-        showToast(`Akun ${target?.name || uid} diaktifkan kembali (Mode Demo).`);
+        showToast(L(`Account ${target?.name || uid} restored (Offline Mode).`, `Akun ${target?.name || uid} diaktifkan kembali (Mode Demo).`));
       }
     }
   });
@@ -1021,7 +1100,7 @@ function attachEventListeners() {
     if (currentAccessRole !== "super_admin" || !banTargetUserId) return;
     const reason = (banReasonInput?.value || "").trim();
     if (reason.length < 5) {
-      showToast("Tuliskan alasan pembekuan minimal 5 karakter.");
+      showToast(L("Please enter a suspension reason (at least 5 characters).", "Tuliskan alasan pembekuan minimal 5 karakter."));
       return;
     }
     const uid = banTargetUserId;
@@ -1037,9 +1116,9 @@ function attachEventListeners() {
       try {
         await db.collection("users").doc(uid).set(banPayload, { merge: true });
         closeBanModal();
-        showToast(`Akun ${target?.name || uid} berhasil dibekukan.`);
+        showToast(L(`Account ${target?.name || uid} has been suspended.`, `Akun ${target?.name || uid} berhasil dibekukan.`));
       } catch (err) {
-        showToast("Gagal membekukan akun: " + err.message);
+        showToast(L("Failed to suspend account: ", "Gagal membekukan akun: ") + err.message);
       }
     } else {
       studentUsersList = studentUsersList.map((u) =>
@@ -1047,7 +1126,7 @@ function attachEventListeners() {
       );
       closeBanModal();
       renderAnalytics();
-      showToast(`Akun ${target?.name || uid} dibekukan (Mode Demo).`);
+      showToast(L(`Account ${target?.name || uid} suspended (Offline Mode).`, `Akun ${target?.name || uid} dibekukan (Mode Demo).`));
     }
   });
 
@@ -1123,8 +1202,10 @@ function attachEventListeners() {
   // Quick Feedback Tags
   feedbackTags.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const txt = btn.dataset.text || "";
-      if (!facilitatorFeedback.value.includes(txt)) {
+      const txt = isIndonesian()
+        ? (btn.dataset.textId || btn.dataset.text || "")
+        : (btn.dataset.textEn || btn.dataset.text || "");
+      if (txt && !facilitatorFeedback.value.includes(txt)) {
         facilitatorFeedback.value = (facilitatorFeedback.value ? facilitatorFeedback.value + "\n" : "") + txt;
       }
     });
@@ -1156,29 +1237,47 @@ function switchView(view) {
   if (analyticsView) analyticsView.style.display = view === "analytics" ? "block" : "none";
 
   if (view === "submissions") {
-    pageEyebrow.textContent = "Evaluasi Proyek Akhir";
-    pageTitle.textContent = "Antrean Penilaian Peserta";
-    pageSubtitle.textContent = "Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik (40% Kuis + 60% Proyek), dan terbitkan sertifikat.";
+    pageEyebrow.textContent = L("Final Project Evaluation", "Evaluasi Proyek Akhir");
+    pageTitle.textContent = L("Review Queue", "Antrean Penilaian Peserta");
+    pageSubtitle.textContent = L(
+      "Inspect workspace code, test live previews, grade rubrics (40% Quiz + 60% Project), and issue verified certificates.",
+      "Tinjau kode workspace, cek pratinjau langsung, beri skor rubrik (40% Kuis + 60% Proyek), dan terbitkan sertifikat."
+    );
   } else if (view === "forum") {
-    pageEyebrow.textContent = "Moderasi & Bimbingan";
-    pageTitle.textContent = "Forum Diskusi Kelas";
-    pageSubtitle.textContent = "Jawab pertanyaan peserta secara real-time dengan lencana Fasilitator, pin jawaban terverifikasi, atau balas spesifik.";
+    pageEyebrow.textContent = L("Moderation & Mentoring", "Moderasi & Bimbingan");
+    pageTitle.textContent = L("Class Discussion Forum", "Forum Diskusi Kelas");
+    pageSubtitle.textContent = L(
+      "Answer learner questions in real time with a Facilitator badge, pin verified solutions, or reply directly.",
+      "Jawab pertanyaan peserta secara real-time dengan lencana Fasilitator, pin jawaban terverifikasi, atau balas spesifik."
+    );
   } else if (view === "announcements") {
-    pageEyebrow.textContent = "Broadcast Informasi";
-    pageTitle.textContent = "Pengumuman Kelas ke Aplikasi";
-    pageSubtitle.textContent = "Terbitkan pengumuman penting yang langsung muncul di tab Notifikasi seluruh peserta Android.";
+    pageEyebrow.textContent = L("Broadcast Center", "Broadcast Informasi");
+    pageTitle.textContent = L("Class Announcements", "Pengumuman Kelas ke Aplikasi");
+    pageSubtitle.textContent = L(
+      "Publish announcements that appear immediately in every learner's Android Notifications tab.",
+      "Terbitkan pengumuman penting yang langsung muncul di tab Notifikasi seluruh peserta Android."
+    );
   } else if (view === "certificates") {
-    pageEyebrow.textContent = "Panel Super Admin · Registri Kelulusan";
-    pageTitle.textContent = "Sertifikat & Audit Kelulusan";
-    pageSubtitle.textContent = "Pantau sertifikat berformat CC-... yang terverifikasi secara publik di Portal Verifikasi atau ekspor CSV.";
+    pageEyebrow.textContent = L("Super Admin · Graduation Registry", "Panel Super Admin · Registri Kelulusan");
+    pageTitle.textContent = L("Certificates & Graduation Audit", "Sertifikat & Audit Kelulusan");
+    pageSubtitle.textContent = L(
+      "Track issued CC-... credentials verified publicly on the Verification Portal or export CSV.",
+      "Pantau sertifikat berformat CC-... yang terverifikasi secara publik di Portal Verifikasi atau ekspor CSV."
+    );
   } else if (view === "team") {
-    pageEyebrow.textContent = "Panel Super Admin · Manajemen Akses";
-    pageTitle.textContent = "Tim Fasilitator & Admin";
-    pageSubtitle.textContent = "Kelola daftar email Google yang diizinkan mengakses Portal Staff dan atur perannya.";
+    pageEyebrow.textContent = L("Super Admin · Access Management", "Panel Super Admin · Manajemen Akses");
+    pageTitle.textContent = L("Facilitator & Admin Team", "Tim Fasilitator & Admin");
+    pageSubtitle.textContent = L(
+      "Manage authorized Google emails for the Staff Portal and configure team roles.",
+      "Kelola daftar email Google yang diizinkan mengakses Portal Staff dan atur perannya."
+    );
   } else if (view === "analytics") {
-    pageEyebrow.textContent = "Panel Super Admin · Analitik Global";
-    pageTitle.textContent = "Ringkasan Platform & Direktori Siswa";
-    pageSubtitle.textContent = "Pantau statistik kelulusan, keaktifan forum, progres siswa, dan unduh laporan CSV.";
+    pageEyebrow.textContent = L("Super Admin · Platform Analytics", "Panel Super Admin · Analitik Global");
+    pageTitle.textContent = L("Platform Overview & Student Directory", "Ringkasan Platform & Direktori Siswa");
+    pageSubtitle.textContent = L(
+      "Monitor pass rates, forum resolution, learner progress, account status, and export CSV grade reports.",
+      "Pantau statistik kelulusan, keaktifan forum, progres siswa, dan unduh laporan CSV."
+    );
   }
 }
 
@@ -1224,28 +1323,35 @@ function renderHuddlyDashboardMeta() {
   if (titleEl && metaEl && avatarsEl && spotlightBtn) {
     if (pendingList.length > 0) {
       const topSub = pendingList[0];
-      const studentName = topSub.studentName || topSub.userName || "Peserta";
+      const studentName = topSub.studentName || topSub.userName || L("Student", "Peserta");
       const courseName = topSub.courseTitle || getCourseLabel(topSub.courseId);
-      if (badgeEl) badgeEl.textContent = `${pendingList.length} Antrean Menunggu Review`;
+      const attemptNum = Number(topSub.attemptNumber ?? topSub.attemptCount) || 1;
+      if (badgeEl) badgeEl.textContent = L(`${pendingList.length} Pending Review`, `${pendingList.length} Antrean Menunggu Review`);
       titleEl.textContent = `${studentName} — ${courseName}`;
-      metaEl.textContent = `Skor Kuis ${Number(topSub.finalQuizScore) || 0}/100 • Dikirim ${formatDate(topSub.submittedAt)} • Percobaan ke-${Number(topSub.attemptNumber ?? topSub.attemptCount) || 1}`;
+      metaEl.textContent = L(
+        `Quiz Score ${Number(topSub.finalQuizScore) || 0}/100 • Submitted ${formatDate(topSub.submittedAt)} • Attempt #${attemptNum}`,
+        `Skor Kuis ${Number(topSub.finalQuizScore) || 0}/100 • Dikirim ${formatDate(topSub.submittedAt)} • Percobaan ke-${attemptNum}`
+      );
       const avatarClasses = ["av-1", "av-2", "av-3", "av-4"];
       const sampleAvatars = pendingList.slice(0, 3).map((s, idx) => {
-        const init = getStudentInitials(s.studentName || s.userName || "Peserta");
+        const init = getStudentInitials(s.studentName || s.userName || "S");
         return `<span class="av ${avatarClasses[idx % 4]}">${escapeHtml(init)}</span>`;
       });
       if (pendingList.length > 3) {
         sampleAvatars.push(`<span class="av av-4">+${pendingList.length - 3}</span>`);
       }
-      avatarsEl.innerHTML = `${sampleAvatars.join("")}<span class="av-note">${pendingList.length} proyek siap dinilai</span>`;
-      spotlightBtn.textContent = "Mulai Review →";
+      avatarsEl.innerHTML = `${sampleAvatars.join("")}<span class="av-note">${L(`${pendingList.length} project(s) ready to grade`, `${pendingList.length} proyek siap dinilai`)}</span>`;
+      spotlightBtn.textContent = L("Start Review →", "Mulai Review →");
       spotlightBtn.onclick = () => openReviewModal(topSub.id);
     } else {
-      if (badgeEl) badgeEl.textContent = "Antrean Bersih";
-      titleEl.textContent = "Semua Proyek Akhir Sudah Ditinjau";
-      metaEl.textContent = `${submissions.length} total pengajuan tersimpan. Pantau forum diskusi atau buat pengumuman baru untuk kelas.`;
-      avatarsEl.innerHTML = `<span class="av av-1">✓</span><span class="av-note">0 proyek tertunda saat ini</span>`;
-      spotlightBtn.textContent = "Buka Forum Kelas →";
+      if (badgeEl) badgeEl.textContent = L("Queue Clear", "Antrean Bersih");
+      titleEl.textContent = L("All Final Projects Reviewed", "Semua Proyek Akhir Sudah Ditinjau");
+      metaEl.textContent = L(
+        `${submissions.length} total submissions recorded. Check class discussions or publish a new announcement.`,
+        `${submissions.length} total pengajuan tersimpan. Pantau forum diskusi atau buat pengumuman baru untuk kelas.`
+      );
+      avatarsEl.innerHTML = `<span class="av av-1">✓</span><span class="av-note">${L("0 pending submissions right now", "0 proyek tertunda saat ini")}</span>`;
+      spotlightBtn.textContent = L("Open Class Forum →", "Buka Forum Kelas →");
       spotlightBtn.onclick = () => switchView("forum");
     }
   }
@@ -1261,7 +1367,7 @@ function renderHuddlyDashboardMeta() {
         <button type="button" class="rail-item" data-rail-view="announcements">
           <span class="rail-item-avatar">AN</span>
           <span>
-            <span class="rail-item-title">${escapeHtml(ann.title || "Pengumuman Kelas")}</span>
+            <span class="rail-item-title">${escapeHtml(ann.title || L("Class Announcement", "Pengumuman Kelas"))}</span>
             <span class="rail-item-sub">${escapeHtml((ann.message || ann.body || "").slice(0, 68))}</span>
           </span>
         </button>
@@ -1269,12 +1375,12 @@ function renderHuddlyDashboardMeta() {
     });
 
     roots.forEach((t) => {
-      const init = getStudentInitials(t.authorName || "P");
+      const init = getStudentInitials(t.authorName || "S");
       itemsHtml.push(`
         <button type="button" class="rail-item" data-rail-view="forum">
           <span class="rail-item-avatar">${escapeHtml(init)}</span>
           <span>
-            <span class="rail-item-title">${escapeHtml(t.authorName || "Peserta")} · Forum</span>
+            <span class="rail-item-title">${escapeHtml(t.authorName || L("Student", "Peserta"))} · Forum</span>
             <span class="rail-item-sub">${escapeHtml((t.content || "").slice(0, 70))}</span>
           </span>
         </button>
@@ -1283,7 +1389,7 @@ function renderHuddlyDashboardMeta() {
 
     highlightsEl.innerHTML = itemsHtml.length > 0
       ? itemsHtml.join("")
-      : '<div class="rail-empty">Belum ada aktivitas forum atau pengumuman terbaru.</div>';
+      : `<div class="rail-empty">${L("No recent forum or announcement activity yet.", "Belum ada aktivitas forum atau pengumuman terbaru.")}</div>`;
 
     highlightsEl.querySelectorAll("[data-rail-view]").forEach((btn) => {
       btn.addEventListener("click", () => switchView(btn.dataset.railView));
@@ -1306,16 +1412,16 @@ function renderHuddlyDashboardMeta() {
 
     actionEl.innerHTML = `
       <button type="button" class="action-row-btn" data-action-jump="pending">
-        <span class="action-row-left"><span class="action-dot pending"></span>Review proyek menunggu</span>
-        <span class="action-pill ${pendingList.length > 0 ? "urgent" : ""}">${pendingList.length} proyek</span>
+        <span class="action-row-left"><span class="action-dot pending"></span>${L("Pending project reviews", "Review proyek menunggu")}</span>
+        <span class="action-pill ${pendingList.length > 0 ? "urgent" : ""}">${pendingList.length} ${L("projects", "proyek")}</span>
       </button>
       <button type="button" class="action-row-btn" data-action-jump="forum">
-        <span class="action-row-left"><span class="action-dot forum"></span>Pertanyaan forum belum dijawab</span>
-        <span class="action-pill ${unansweredCount > 0 ? "urgent" : ""}">${unansweredCount} topik</span>
+        <span class="action-row-left"><span class="action-dot forum"></span>${L("Unanswered forum questions", "Pertanyaan forum belum dijawab")}</span>
+        <span class="action-pill ${unansweredCount > 0 ? "urgent" : ""}">${unansweredCount} ${L("topics", "topik")}</span>
       </button>
       <button type="button" class="action-row-btn" data-action-jump="revision">
-        <span class="action-row-left"><span class="action-dot revision"></span>Peserta dalam status revisi</span>
-        <span class="action-pill">${revisionList.length} revisi</span>
+        <span class="action-row-left"><span class="action-dot revision"></span>${L("Students awaiting revision", "Peserta dalam status revisi")}</span>
+        <span class="action-pill">${revisionList.length} ${L("revisions", "revisi")}</span>
       </button>
     `;
 
@@ -1364,8 +1470,8 @@ function renderTable() {
             <div class="empty-state-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
             </div>
-            <h4>Tidak ada pengajuan proyek ditemukan</h4>
-            <p>Ubah filter pencarian atau tunggu peserta mengirimkan proyek dari aplikasi Android.</p>
+            <h4>${L("No project submissions found", "Tidak ada pengajuan proyek ditemukan")}</h4>
+            <p>${L("Adjust your search filters or wait for learners to submit projects from the Android app.", "Ubah filter pencarian atau tunggu peserta mengirimkan proyek dari aplikasi Android.")}</p>
           </div>
         </td>
       </tr>
@@ -1381,7 +1487,7 @@ function renderTable() {
       const badgeLabel = getStatusLabel(s.status);
       const dateStr = formatDate(s.submittedAt);
       const courseName = s.courseTitle || getCourseLabel(s.courseId);
-      const studentName = s.studentName || s.userName || "Peserta";
+      const studentName = s.studentName || s.userName || L("Student", "Peserta");
       const studentEmail = s.studentEmail || s.userEmail || s.accountId || "-";
       const attempt = Number(s.attemptNumber ?? s.attemptCount) || 1;
       const isPendingTop = (s.status || "").toUpperCase() === "PENDING_REVIEW" && !highlightedTopPending;
@@ -1404,11 +1510,11 @@ function renderTable() {
         <td>
           <span class="status-badge ${badgeClass}">${badgeLabel}</span>
         </td>
-        <td style="font-size: 12.5px; color: var(--muted);">${escapeHtml(dateStr)}</td>
-        <td style="font-size: 12.5px; color: var(--muted);">Ke-${attempt}</td>
+        <td style="font-size: 12.5px; color: var(--muted); white-space: nowrap;">${escapeHtml(dateStr)}</td>
+        <td style="font-size: 12.5px; color: var(--muted); white-space: nowrap;">${L(`#${attempt}`, `Ke-${attempt}`)}</td>
         <td style="text-align: right;">
           <button type="button" class="btn-review" data-action="open-review" data-id="${escapeHtml(s.id)}">
-            ${s.status === "PENDING_REVIEW" ? "Nilai Sekarang" : "Lihat / Ubah"}
+            ${s.status === "PENDING_REVIEW" ? L("Grade Now", "Nilai Sekarang") : L("Inspect / Edit", "Lihat / Ubah")}
           </button>
         </td>
       </tr>
@@ -1428,9 +1534,9 @@ function getStatusBadgeClass(status) {
 
 function getStatusLabel(status) {
   const st = (status || "").toUpperCase();
-  if (st === "PENDING_REVIEW") return "Menunggu Review";
-  if (st === "REVISION_REQUESTED") return "Perlu Revisi";
-  if (st === "APPROVED") return "Disetujui";
+  if (st === "PENDING_REVIEW") return L("Pending Review", "Menunggu Review");
+  if (st === "REVISION_REQUESTED") return L("Revision Requested", "Perlu Revisi");
+  if (st === "APPROVED") return L("Approved", "Disetujui");
   return st || "-";
 }
 
@@ -1441,7 +1547,7 @@ function renderTeam() {
   const tbody = document.getElementById("teamTableBody");
   if (!tbody) return;
   if (facilitatorsList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty-row">Belum ada data tim fasilitator.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-row">${L("No staff team members recorded yet.", "Belum ada data tim fasilitator.")}</td></tr>`;
     return;
   }
   tbody.innerHTML = facilitatorsList
@@ -1449,15 +1555,15 @@ function renderTeam() {
       const isAdmin = m.accessRole === "super_admin";
       const isSelf = m.email === currentFacilitatorUser?.email;
       const actionsHtml = isAdmin
-        ? `<span class="team-protected-pill">${isSelf ? "Akun Anda (Super Admin)" : "Super Admin (Dilindungi)"}</span>`
+        ? `<span class="team-protected-pill">${isSelf ? L("Your Account (Super Admin)", "Akun Anda (Super Admin)") : L("Super Admin (Protected)", "Super Admin (Dilindungi)")}</span>`
         : `<div class="team-actions-row">
-             <button type="button" class="btn-promote-ghost" data-action="promote-team" data-email="${escapeHtml(m.email)}">⬆ Jadikan Super Admin</button>
-             <button type="button" class="btn-danger-ghost" data-action="remove-team" data-email="${escapeHtml(m.email)}">Cabut Akses</button>
+             <button type="button" class="btn-promote-ghost" data-action="promote-team" data-email="${escapeHtml(m.email)}">${L("⬆ Promote to Super Admin", "⬆ Jadikan Super Admin")}</button>
+             <button type="button" class="btn-danger-ghost" data-action="remove-team" data-email="${escapeHtml(m.email)}">${L("Revoke Access", "Cabut Akses")}</button>
            </div>`;
       return `
         <tr>
           <td><strong>${escapeHtml(m.name || m.email)}</strong><div style="font-size:12px;color:var(--muted);">${escapeHtml(m.email)}</div></td>
-          <td><span class="role-badge ${isAdmin ? "super-admin" : "facilitator"}">${isAdmin ? "👑 Super Admin" : "🎓 Fasilitator"}</span></td>
+          <td><span class="role-badge ${isAdmin ? "super-admin" : "facilitator"}">${isAdmin ? "👑 Super Admin" : L("🎓 Facilitator", "🎓 Fasilitator")}</span></td>
           <td>${escapeHtml(m.role || "-")}</td>
           <td>${actionsHtml}</td>
         </tr>
@@ -1477,10 +1583,54 @@ function renderAnalytics() {
     const rootsCount = forumPosts.filter((p) => !p.replyToPostId && !p.rootThreadId).length;
     const verifiedThreads = new Set(forumPosts.filter((p) => p.isVerifiedAnswer === true).map((p) => p.rootThreadId || p.replyToPostId || p.postId)).size;
     cardsEl.innerHTML = `
-      <div class="stat-card"><div class="stat-info"><p>Rasio Lulus Proyek</p><h3>${passRate}%</h3></div></div>
-      <div class="stat-card"><div class="stat-info"><p>Topik Forum Terverifikasi</p><h3>${verifiedThreads} / ${rootsCount}</h3></div></div>
-      <div class="stat-card"><div class="stat-info"><p>Total Sertifikat Terbit</p><h3>${certificates.length}</h3></div></div>
-      <div class="stat-card"><div class="stat-info"><p>Siswa Cloud (${bannedCount} Ban)</p><h3>${studentUsersList.length}</h3></div></div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">${L("Project Pass Rate", "Rasio Lulus Proyek")}</span>
+          <span class="stat-pill ok">${L("Approved", "Lulus")}</span>
+        </div>
+        <div class="stat-bottom">
+          <h3>${passRate}%</h3>
+          <div class="stat-icon approved" aria-hidden="true">
+            <svg class="i" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">${L("Verified Forum Topics", "Topik Forum Terverifikasi")}</span>
+          <span class="stat-pill neutral">Forum</span>
+        </div>
+        <div class="stat-bottom">
+          <h3>${verifiedThreads} / ${rootsCount}</h3>
+          <div class="stat-icon all" aria-hidden="true">
+            <svg class="i" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">${L("Issued Certificates", "Total Sertifikat Terbit")}</span>
+          <span class="stat-pill lime">CC-ID</span>
+        </div>
+        <div class="stat-bottom">
+          <h3>${certificates.length}</h3>
+          <div class="stat-icon pending" aria-hidden="true">
+            <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">${L("Cloud Students", "Siswa Cloud")}</span>
+          <span class="stat-pill ${bannedCount > 0 ? "warn" : "neutral"}">${bannedCount} ${L("Suspended", "Ban")}</span>
+        </div>
+        <div class="stat-bottom">
+          <h3>${studentUsersList.length}</h3>
+          <div class="stat-icon ${bannedCount > 0 ? "revision" : "all"}" aria-hidden="true">
+            <svg class="i" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+        </div>
+      </div>
     `;
   }
   const tbody = document.getElementById("studentsTableBody");
@@ -1502,7 +1652,7 @@ function renderAnalytics() {
   });
 
   if (filteredStudents.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" class="empty-row">Tidak ada data siswa yang sesuai filter.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-row">${L("No matching student records found.", "Tidak ada data siswa yang sesuai filter.")}</td></tr>`;
     return;
   }
   tbody.innerHTML = filteredStudents
@@ -1512,21 +1662,21 @@ function renderAnalytics() {
       const persona = u.headlineTitle ? `<span class="persona-tag-mini">${escapeHtml(u.headlineTitle)}</span><br>` : "";
       const emailLine = u.email ? escapeHtml(u.email) : `UID: ${escapeHtml(u.id || "-")}`;
       const statusHtml = isBanned
-        ? `<span class="ban-status-pill banned">⛔ Dibekukan</span>${u.banReason ? `<div class="ban-reason-note">${escapeHtml(u.banReason)}</div>` : ""}`
-        : `<span class="ban-status-pill active">● Aktif</span>`;
+        ? `<span class="ban-status-pill banned">${L("⛔ Suspended", "⛔ Dibekukan")}</span>${u.banReason ? `<div class="ban-reason-note">${escapeHtml(u.banReason)}</div>` : ""}`
+        : `<span class="ban-status-pill active">${L("● Active", "● Aktif")}</span>`;
       const actionBtn = isBanned
-        ? `<button type="button" class="btn-unban-user" data-action="unban-user" data-uid="${escapeHtml(u.id)}">Cabut Ban</button>`
-        : `<button type="button" class="btn-danger-ghost" data-action="open-ban" data-uid="${escapeHtml(u.id)}">Bekukan</button>`;
+        ? `<button type="button" class="btn-unban-user" data-action="unban-user" data-uid="${escapeHtml(u.id)}">${L("Unban", "Cabut Ban")}</button>`
+        : `<button type="button" class="btn-danger-ghost" data-action="open-ban" data-uid="${escapeHtml(u.id)}">${L("Suspend", "Bekukan")}</button>`;
       return `
       <tr>
         <td>
-          <strong>${escapeHtml(u.name || "Siswa")}</strong>
+          <strong>${escapeHtml(u.name || L("Student", "Siswa"))}</strong>
           <div style="font-size:12px;color:var(--muted);">${emailLine}</div>
         </td>
         <td>${persona}<strong>${Number(u.totalXp) || 0} XP</strong></td>
-        <td>Lv.${Number(u.level) || 1} • 🔥 ${Number(u.currentStreak) || 0}h</td>
+        <td style="white-space: nowrap;">Lv.${Number(u.level) || 1} • 🔥 ${Number(u.currentStreak) || 0}${L("d", "h")}</td>
         <td>${statusHtml}</td>
-        <td style="text-align:right;">${actionBtn}</td>
+        <td style="text-align:right; white-space: nowrap;">${actionBtn}</td>
       </tr>
     `;
     })
@@ -1554,14 +1704,14 @@ function openReviewModal(submissionId) {
   currentSubmission = submissions.find((s) => s.id === submissionId);
   if (!currentSubmission) return;
 
-  const studentName = currentSubmission.studentName || currentSubmission.userName || "Peserta";
+  const studentName = currentSubmission.studentName || currentSubmission.userName || L("Student", "Peserta");
   const studentEmail = currentSubmission.studentEmail || currentSubmission.userEmail || currentSubmission.accountId || "-";
   modalStudentName.textContent = studentName;
   const courseName = currentSubmission.courseTitle || getCourseLabel(currentSubmission.courseId);
   modalCourseTitle.textContent = `${courseName} • ID: ${currentSubmission.id}`;
   modalStudentEmail.textContent = studentEmail;
   modalStudentNotes.textContent =
-    currentSubmission.studentNotes || currentSubmission.projectNotes || "Tidak ada catatan khusus dari peserta.";
+    currentSubmission.studentNotes || currentSubmission.projectNotes || L("No additional notes provided by the student.", "Tidak ada catatan khusus dari peserta.");
 
   const safeProjectUrl = sanitizeExternalUrl(currentSubmission.projectUrl);
   if (safeProjectUrl) {
@@ -1572,7 +1722,7 @@ function openReviewModal(submissionId) {
     btnProjectUrl.style.display = "none";
   }
 
-  const code = currentSubmission.workspaceCode || "<!-- Tidak ada kode HTML/CSS/JS yang dilampirkan -->";
+  const code = currentSubmission.workspaceCode || L("<!-- No HTML/CSS/JS code attached -->", "<!-- Tidak ada kode HTML/CSS/JS yang dilampirkan -->");
   modalWorkspaceCode.textContent = code;
 
   // Inject strict CSP into sandboxed iframe srcdoc
@@ -1664,16 +1814,19 @@ async function executeReview(newStatus) {
   const projScore = Math.max(0, Math.min(100, parseInt(scoreSlider.value || "0", 10) || 0));
   const finalScore = recalculateFinalScore();
   const feedback = facilitatorFeedback.value.trim();
-  const facName = facilitatorNameInput.value.trim() || "Tim Fasilitator CodeAcademy";
+  const facName = facilitatorNameInput.value.trim() || L("CodeAcademy Facilitator Team", "Tim Fasilitator CodeAcademy");
 
   if (newStatus === "REVISION_REQUESTED" && feedback.length < 5) {
-    alert("Mohon tuliskan catatan evaluasi yang jelas agar peserta mengetahui hal yang harus diperbaiki.");
+    alert(L("Please write clear revision notes so the student knows what to improve.", "Mohon tuliskan catatan evaluasi yang jelas agar peserta mengetahui hal yang harus diperbaiki."));
     facilitatorFeedback.focus();
     return;
   }
 
   if (newStatus === "APPROVED" && finalScore < 70) {
-    alert(`Nilai Akhir saat ini ${finalScore}/100 (minimal 70 untuk lulus & menerbitkan sertifikat). Tingkatkan skor proyek atau minta revisi.`);
+    alert(L(
+      `Current Final Score is ${finalScore}/100 (minimum 70 required to pass & issue a certificate). Raise the project score or request revision.`,
+      `Nilai Akhir saat ini ${finalScore}/100 (minimal 70 untuk lulus & menerbitkan sertifikat). Tingkatkan skor proyek atau minta revisi.`
+    ));
     return;
   }
 
@@ -1687,7 +1840,7 @@ async function executeReview(newStatus) {
 
   const finalFeedbackText =
     feedback ||
-    (newStatus === "APPROVED" ? "Proyek memenuhi standar kelulusan CodeAcademy." : "");
+    (newStatus === "APPROVED" ? L("Project meets CodeAcademy graduation standards.", "Proyek memenuhi standar kelulusan CodeAcademy.") : "");
   const payload = {
     status: newStatus,
     facilitatorScore: projScore,
@@ -1752,14 +1905,14 @@ async function executeReview(newStatus) {
 
     const msg =
       newStatus === "APPROVED"
-        ? `Proyek ${studentName} Disetujui! Sertifikat ${certId} diterbitkan.`
-        : `Permintaan Revisi dikirim ke ${studentName}.`;
+        ? L(`Approved ${studentName}'s project! Certificate ${certId} issued.`, `Proyek ${studentName} Disetujui! Sertifikat ${certId} diterbitkan.`)
+        : L(`Revision request sent to ${studentName}.`, `Permintaan Revisi dikirim ke ${studentName}.`);
 
     closeReviewModal();
     showToast(msg);
   } catch (err) {
     console.error("Failed to save review:", err);
-    showToast("Gagal menyimpan evaluasi: " + err.message);
+    showToast(L("Failed to save evaluation: ", "Gagal menyimpan evaluasi: ") + err.message);
   } finally {
     btnApprove.disabled = false;
     btnRequestRevision.disabled = false;
@@ -1767,7 +1920,7 @@ async function executeReview(newStatus) {
 }
 
 // ==========================================
-// FORUM DISKUSI VIEW & MODERATION
+// FORUM DISCUSSION VIEW & MODERATION
 // ==========================================
 function renderForum() {
   const roots = forumPosts.filter((p) => !p.replyToPostId && !p.rootThreadId);
@@ -1803,8 +1956,8 @@ function renderForum() {
         <div class="empty-state-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
-        <h4>${forumOnlyUnanswered ? "Semua Pertanyaan Sudah Terjawab" : "Belum Ada Diskusi"}</h4>
-        <p>${forumOnlyUnanswered ? "Semua pertanyaan diskusi sudah mendapat jawaban Fasilitator." : "Belum ada topik diskusi yang sesuai dengan filter ini."}</p>
+        <h4>${forumOnlyUnanswered ? L("All Questions Answered", "Semua Pertanyaan Sudah Terjawab") : L("No Discussions Yet", "Belum Ada Diskusi")}</h4>
+        <p>${forumOnlyUnanswered ? L("Every discussion topic has received a Facilitator reply.", "Semua pertanyaan diskusi sudah mendapat jawaban Fasilitator.") : L("No discussion threads match your current filter.", "Belum ada topik diskusi yang sesuai dengan filter ini.")}</p>
       </div>
     `;
     return;
@@ -1815,19 +1968,19 @@ function renderForum() {
       const replies = (repliesByRoot.get(thread.postId) || [])
         .slice()
         .sort((a, b) => ((b.isVerifiedAnswer ? 1 : 0) - (a.isVerifiedAnswer ? 1 : 0)) || (a.timestamp - b.timestamp));
-      const initial = (thread.authorName || "P").trim().charAt(0).toUpperCase();
+      const initial = (thread.authorName || "S").trim().charAt(0).toUpperCase();
       const courseName = getCourseLabel(thread.courseId);
       const hasVerifiedAnswer = replies.some((r) => r.isVerifiedAnswer === true);
 
       const repliesHtml = replies
         .map((r) => {
-          const rInitial = (r.authorName || "P").trim().charAt(0).toUpperCase();
+          const rInitial = (r.authorName || "S").trim().charAt(0).toUpperCase();
           const rIsMentor = r.authorIsMentor === true || r.isMentor === true;
           const rIsVerified = r.isVerifiedAnswer === true;
           const rIsHelpful = r.isHelpful === true;
           const hasSpecificQuote = Boolean(r.replyToAuthorName && r.replyToPostId && r.replyToPostId !== thread.postId);
           const quoteHtml = hasSpecificQuote
-            ? `<div class="forum-reply-quote">Membalas <strong>@${escapeHtml(r.replyToAuthorName)}</strong>${r.replyToContentSnippet ? `: “${escapeHtml(r.replyToContentSnippet)}”` : ""}</div>`
+            ? `<div class="forum-reply-quote">${L("Replying to", "Membalas")} <strong>@${escapeHtml(r.replyToAuthorName)}</strong>${r.replyToContentSnippet ? `: “${escapeHtml(r.replyToContentSnippet)}”` : ""}</div>`
             : "";
           return `
         <div class="forum-reply-card ${rIsMentor ? "mentor" : ""} ${rIsVerified ? "verified" : ""}">
@@ -1835,18 +1988,18 @@ function renderForum() {
             <div class="forum-author-meta">
               <div class="forum-avatar ${rIsMentor ? "mentor" : ""}" style="width:26px;height:26px;font-size:11px;">${escapeHtml(rInitial)}</div>
               <div>
-                <strong style="font-size:13px;">${escapeHtml(r.authorName || "Peserta")}</strong>
-                ${rIsMentor ? '<span class="forum-mentor-badge">Fasilitator</span>' : ""}
-                ${rIsVerified ? '<span class="forum-verified-badge">✓ Jawaban Terverifikasi</span>' : ""}
-                ${rIsHelpful ? '<span class="forum-helpful-badge">💡 Membantu</span>' : ""}
+                <strong style="font-size:13px;">${escapeHtml(r.authorName || L("Student", "Peserta"))}</strong>
+                ${rIsMentor ? `<span class="forum-mentor-badge">${L("Facilitator", "Fasilitator")}</span>` : ""}
+                ${rIsVerified ? `<span class="forum-verified-badge">${L("✓ Verified Answer", "✓ Jawaban Terverifikasi")}</span>` : ""}
+                ${rIsHelpful ? `<span class="forum-helpful-badge">${L("💡 Helpful", "💡 Membantu")}</span>` : ""}
                 <span style="font-size:11.5px; color:var(--muted); margin-left:6px;">${escapeHtml(formatDate(r.timestamp))}</span>
               </div>
             </div>
             <div class="forum-reply-actions">
-              <button type="button" class="btn-action-chip ${rIsVerified ? "active-verified" : ""}" data-action="toggle-verified" data-post-id="${escapeHtml(r.postId)}" title="Pin sebagai Jawaban Terverifikasi Fasilitator">${rIsVerified ? "✓ Terpin" : "📌 Pin"}</button>
-              <button type="button" class="btn-action-chip ${rIsHelpful ? "active-helpful" : ""}" data-action="toggle-helpful" data-post-id="${escapeHtml(r.postId)}" title="Tandai jawaban membantu">💡</button>
-              <button type="button" class="btn-reply-ghost" data-action="target-reply" data-thread-id="${escapeHtml(thread.postId)}" data-post-id="${escapeHtml(r.postId)}">Balas</button>
-              <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(r.postId)}">Hapus</button>
+              <button type="button" class="btn-action-chip ${rIsVerified ? "active-verified" : ""}" data-action="toggle-verified" data-post-id="${escapeHtml(r.postId)}" title="${L("Pin as Facilitator Verified Answer", "Pin sebagai Jawaban Terverifikasi Fasilitator")}">${rIsVerified ? L("✓ Pinned", "✓ Terpin") : "📌 Pin"}</button>
+              <button type="button" class="btn-action-chip ${rIsHelpful ? "active-helpful" : ""}" data-action="toggle-helpful" data-post-id="${escapeHtml(r.postId)}" title="${L("Mark answer as helpful", "Tandai jawaban membantu")}">💡</button>
+              <button type="button" class="btn-reply-ghost" data-action="target-reply" data-thread-id="${escapeHtml(thread.postId)}" data-post-id="${escapeHtml(r.postId)}">${L("Reply", "Balas")}</button>
+              <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(r.postId)}">${L("Delete", "Hapus")}</button>
             </div>
           </div>
           ${quoteHtml}
@@ -1860,34 +2013,34 @@ function renderForum() {
       const activeTarget = activeReplyTargetByThread.get(thread.postId);
       const targetBarHtml = activeTarget
         ? `<div class="forum-reply-target-bar">
-            <span>Membalas <strong>@${escapeHtml(activeTarget.authorName)}</strong>${activeTarget.contentSnippet ? `: “${escapeHtml(activeTarget.contentSnippet)}”` : ""}</span>
-            <button type="button" class="forum-reply-target-clear" data-action="clear-reply-target" data-thread-id="${escapeHtml(thread.postId)}" aria-label="Batal balas spesifik">×</button>
+            <span>${L("Replying to", "Membalas")} <strong>@${escapeHtml(activeTarget.authorName)}</strong>${activeTarget.contentSnippet ? `: “${escapeHtml(activeTarget.contentSnippet)}”` : ""}</span>
+            <button type="button" class="forum-reply-target-clear" data-action="clear-reply-target" data-thread-id="${escapeHtml(thread.postId)}" aria-label="${L("Cancel targeted reply", "Batal balas spesifik")}">×</button>
           </div>`
         : "";
       const replyPlaceholder = activeTarget
-        ? `Balas @${activeTarget.authorName}...`
-        : "Balas sebagai Fasilitator (muncul langsung di aplikasi)...";
+        ? L(`Reply to @${activeTarget.authorName}...`, `Balas @${activeTarget.authorName}...`)
+        : L("Reply as Facilitator (appears immediately in the app)...", "Balas sebagai Fasilitator (muncul langsung di aplikasi)...");
       return `
       <article class="forum-thread-card">
         <div class="forum-post-head">
           <div class="forum-author-meta">
             <div class="forum-avatar ${tIsMentor ? "mentor" : ""}">${escapeHtml(initial)}</div>
             <div>
-              <strong>${escapeHtml(thread.authorName || "Peserta")}</strong>
-              ${tIsMentor ? '<span class="forum-mentor-badge">Fasilitator</span>' : `<span style="font-size:11.5px;color:var(--muted);">• Lv.${Number(thread.authorLevel) || 1}</span>`}
+              <strong>${escapeHtml(thread.authorName || L("Student", "Peserta"))}</strong>
+              ${tIsMentor ? `<span class="forum-mentor-badge">${L("Facilitator", "Fasilitator")}</span>` : `<span style="font-size:11.5px;color:var(--muted);">• Lv.${Number(thread.authorLevel) || 1}</span>`}
               <span class="forum-course-pill">${escapeHtml(courseName)}</span>
-              ${hasVerifiedAnswer ? '<span class="forum-resolved-pill">✓ Terjawab</span>' : ""}
-              <div style="font-size:12px; color:var(--muted);">${escapeHtml(formatDate(thread.timestamp))} • ${Number(thread.likeCount) || 0} suka • ${replies.length} balasan</div>
+              ${hasVerifiedAnswer ? `<span class="forum-resolved-pill">${L("✓ Resolved", "✓ Terjawab")}</span>` : ""}
+              <div style="font-size:12px; color:var(--muted);">${escapeHtml(formatDate(thread.timestamp))} • ${Number(thread.likeCount) || 0} ${L("likes", "suka")} • ${replies.length} ${L("replies", "balasan")}</div>
             </div>
           </div>
-          <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(thread.postId)}">Hapus Thread</button>
+          <button type="button" class="btn-danger-ghost" data-action="delete-post" data-post-id="${escapeHtml(thread.postId)}">${L("Delete Thread", "Hapus Thread")}</button>
         </div>
         <div class="forum-post-body">${escapeHtml(thread.content || "")}</div>
         ${replies.length > 0 ? `<div class="forum-replies-wrap">${repliesHtml}</div>` : ""}
         ${targetBarHtml}
         <form class="forum-reply-form" data-action="reply-thread" data-thread-id="${escapeHtml(thread.postId)}">
           <input type="text" placeholder="${escapeHtml(replyPlaceholder)}" required>
-          <button type="submit" class="btn-primary-solid">Balas</button>
+          <button type="submit" class="btn-primary-solid">${L("Reply", "Balas")}</button>
         </form>
       </article>
     `;
@@ -1900,11 +2053,11 @@ async function createFacilitatorTopic() {
   const content = (forumNewPostInput.value || "").trim();
   const courseId = forumNewPostCourse.value || "fe-web-foundation-00";
   if (content.length < 4) {
-    showToast("Tulis isi topik diskusi minimal 4 karakter.");
+    showToast(L("Please write at least 4 characters for the topic.", "Tulis isi topik diskusi minimal 4 karakter."));
     return;
   }
 
-  const facName = facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || "Tim Fasilitator CodeAcademy";
+  const facName = facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || L("CodeAcademy Facilitator Team", "Tim Fasilitator CodeAcademy");
   const postId = "fac_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
   const uid = currentFacilitatorUser?.uid || "facilitator_web";
 
@@ -1932,16 +2085,16 @@ async function createFacilitatorTopic() {
     try {
       await db.collection("forum_posts").doc(postId).set(docData);
       forumNewPostInput.value = "";
-      showToast("Topik fasilitator berhasil diterbitkan ke aplikasi.");
+      showToast(L("Facilitator topic published to the app.", "Topik fasilitator berhasil diterbitkan ke aplikasi."));
     } catch (err) {
       console.error("Create topic error:", err);
-      showToast("Gagal membuat topik: " + err.message);
+      showToast(L("Failed to create topic: ", "Gagal membuat topik: ") + err.message);
     }
   } else {
     forumPosts.unshift(docData);
     forumNewPostInput.value = "";
     renderForum();
-    showToast("Topik ditambahkan (Mode Demo Offline).");
+    showToast(L("Topic added (Offline Mode).", "Topik ditambahkan (Mode Demo Offline)."));
   }
 }
 
@@ -1954,7 +2107,7 @@ async function replyToThread(form) {
   const root = forumPosts.find((p) => p.postId === rootPostId);
   if (!root) return;
 
-  const facName = facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || "Tim Fasilitator CodeAcademy";
+  const facName = facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || L("CodeAcademy Facilitator Team", "Tim Fasilitator CodeAcademy");
   const postId = "fac_reply_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
   const uid = currentFacilitatorUser?.uid || "facilitator_web";
   const customTarget = activeReplyTargetByThread.get(rootPostId);
@@ -1977,7 +2130,7 @@ async function replyToThread(form) {
     likeCount: 0,
     likedByAccountIds: [],
     replyToPostId: resolvedTarget.postId,
-    replyToAuthorName: resolvedTarget.authorName || "Peserta",
+    replyToAuthorName: resolvedTarget.authorName || L("Student", "Peserta"),
     replyToContentSnippet: (resolvedTarget.content || resolvedTarget.contentSnippet || "").slice(0, 80),
     rootThreadId: root.rootThreadId || root.postId
   };
@@ -1987,17 +2140,17 @@ async function replyToThread(form) {
       await db.collection("forum_posts").doc(postId).set(replyDoc);
       activeReplyTargetByThread.delete(rootPostId);
       input.value = "";
-      showToast("Balasan fasilitator terkirim.");
+      showToast(L("Facilitator reply sent.", "Balasan fasilitator terkirim."));
     } catch (err) {
       console.error("Reply thread error:", err);
-      showToast("Gagal mengirim balasan: " + err.message);
+      showToast(L("Failed to send reply: ", "Gagal mengirim balasan: ") + err.message);
     }
   } else {
     activeReplyTargetByThread.delete(rootPostId);
     forumPosts.push(replyDoc);
     input.value = "";
     renderForum();
-    showToast("Balasan ditambahkan (Mode Demo Offline).");
+    showToast(L("Reply added (Offline Mode).", "Balasan ditambahkan (Mode Demo Offline)."));
   }
 }
 
@@ -2010,28 +2163,27 @@ async function toggleForumPostFlag(postId, field) {
       await db.collection("forum_posts").doc(postId).update({ [field]: nextVal });
       showToast(
         field === "isVerifiedAnswer"
-          ? (nextVal ? "Jawaban dipin & ditandai Terverifikasi Fasilitator." : "Pin jawaban terverifikasi dilepas.")
-          : (nextVal ? "Ditandai sebagai Jawaban Membantu." : "Tanda Membantu dilepas.")
+          ? (nextVal ? L("Pinned as Facilitator Verified Answer.", "Jawaban dipin & ditandai Terverifikasi Fasilitator.") : L("Verified answer pin removed.", "Pin jawaban terverifikasi dilepas."))
+          : (nextVal ? L("Marked as Helpful Answer.", "Ditandai sebagai Jawaban Membantu.") : L("Helpful badge removed.", "Tanda Membantu dilepas."))
       );
     } catch (err) {
       console.error("Toggle forum flag error:", err);
-      showToast("Gagal memperbarui status jawaban: " + err.message);
+      showToast(L("Failed to update answer status: ", "Gagal memperbarui status jawaban: ") + err.message);
     }
   } else {
     target[field] = nextVal;
     renderForum();
     showToast(
       field === "isVerifiedAnswer"
-        ? (nextVal ? "Jawaban dipin (Mode Demo Offline)." : "Pin dilepas (Mode Demo Offline).")
-        : (nextVal ? "Ditandai Membantu (Mode Demo Offline)." : "Tanda Membantu dilepas (Mode Demo Offline).")
+        ? (nextVal ? L("Answer pinned (Offline Mode).", "Jawaban dipin (Mode Demo Offline).") : L("Pin removed (Offline Mode).", "Pin dilepas (Mode Demo Offline)."))
+        : (nextVal ? L("Marked Helpful (Offline Mode).", "Ditandai Membantu (Mode Demo Offline).") : L("Helpful badge removed (Offline Mode).", "Tanda Membantu dilepas (Mode Demo Offline)."))
     );
   }
 }
 
 async function deleteForumPost(postId) {
-  if (!confirm("Hapus postingan/thread diskusi ini secara permanen?")) return;
+  if (!confirm(L("Permanently delete this discussion post/thread?", "Hapus postingan/thread diskusi ini secara permanen?"))) return;
 
-  // Kumpulkan target dan seluruh balasan turunannya secara rekursif
   const toDeleteIds = new Set([postId]);
   let expanded = true;
   while (expanded) {
@@ -2056,15 +2208,15 @@ async function deleteForumPost(postId) {
         });
         await batch.commit();
       }
-      showToast(`Postingan (${ids.length} item) berhasil dihapus.`);
+      showToast(L(`Deleted ${ids.length} post(s).`, `Postingan (${ids.length} item) berhasil dihapus.`));
     } catch (err) {
       console.error("Delete post error:", err);
-      showToast("Gagal menghapus: " + err.message);
+      showToast(L("Failed to delete: ", "Gagal menghapus: ") + err.message);
     }
   } else {
     forumPosts = forumPosts.filter((p) => !toDeleteIds.has(p.postId));
     renderForum();
-    showToast("Postingan dihapus (Mode Demo Offline).");
+    showToast(L("Post deleted (Offline Mode).", "Postingan dihapus (Mode Demo Offline)."));
   }
 }
 
@@ -2081,8 +2233,8 @@ function renderAnnouncements() {
         <div class="empty-state-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </div>
-        <h4>Belum Ada Pengumuman</h4>
-        <p>Terbitkan pengumuman di atas agar langsung muncul di layar Notifikasi peserta Android.</p>
+        <h4>${L("No Announcements Yet", "Belum Ada Pengumuman")}</h4>
+        <p>${L("Publish an announcement above to deliver it straight to learners' Android Notifications.", "Terbitkan pengumuman di atas agar langsung muncul di layar Notifikasi peserta Android.")}</p>
       </div>
     `;
     return;
@@ -2090,21 +2242,21 @@ function renderAnnouncements() {
 
   announcementsList.innerHTML = announcements
     .map((ann) => {
-      const courseLabel = ann.courseId && ann.courseId !== "all" ? getCourseLabel(ann.courseId) : "Semua Kelas / Umum";
+      const courseLabel = ann.courseId && ann.courseId !== "all" ? getCourseLabel(ann.courseId) : L("All Courses / General", "Semua Kelas / Umum");
       const annText = ann.message || ann.body || "";
       return `
       <article class="announcement-item">
         <div style="flex: 1; min-width: 240px;">
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
-            <strong style="font-size:15px; color:var(--ink);">${escapeHtml(ann.title || "Pengumuman")}</strong>
+            <strong style="font-size:15px; color:var(--ink);">${escapeHtml(ann.title || L("Announcement", "Pengumuman"))}</strong>
             <span class="forum-course-pill">${escapeHtml(courseLabel)}</span>
           </div>
           <p style="font-size:13.5px; color:var(--ink); line-height:1.5; white-space:pre-wrap;">${escapeHtml(annText)}</p>
           <div style="font-size:12px; color:var(--muted); margin-top:8px;">
-            Oleh ${escapeHtml(ann.authorName || "Fasilitator")} • ${escapeHtml(formatDate(ann.createdAt))}
+            ${L("By", "Oleh")} ${escapeHtml(ann.authorName || L("Facilitator", "Fasilitator"))} • ${escapeHtml(formatDate(ann.createdAt))}
           </div>
         </div>
-        <button type="button" class="btn-danger-ghost" data-action="delete-announcement" data-id="${escapeHtml(ann.id)}">Hapus</button>
+        <button type="button" class="btn-danger-ghost" data-action="delete-announcement" data-id="${escapeHtml(ann.id)}">${L("Delete", "Hapus")}</button>
       </article>
     `;
     })
@@ -2118,7 +2270,7 @@ async function publishAnnouncement() {
   const courseId = announcementCourseSelect.value || "all";
 
   if (title.length < 3 || body.length < 5) {
-    showToast("Isi judul dan pesan pengumuman dengan lengkap.");
+    showToast(L("Please fill in both announcement title and message.", "Isi judul dan pesan pengumuman dengan lengkap."));
     return;
   }
 
@@ -2129,8 +2281,8 @@ async function publishAnnouncement() {
     message: body,
     body,
     courseId,
-    courseTitle: courseId === "all" ? "Semua Kelas / Umum" : getCourseLabel(courseId),
-    authorName: facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || "Tim Fasilitator CodeAcademy",
+    courseTitle: courseId === "all" ? L("All Courses / General", "Semua Kelas / Umum") : getCourseLabel(courseId),
+    authorName: facilitatorNameInput.value.trim() || currentFacilitatorUser?.displayName || L("CodeAcademy Facilitator Team", "Tim Fasilitator CodeAcademy"),
     authorEmail: currentFacilitatorUser?.email || "",
     firebaseUid: currentFacilitatorUser?.uid || "",
     createdAt: Date.now()
@@ -2141,34 +2293,34 @@ async function publishAnnouncement() {
       await db.collection("announcements").doc(annId).set(docData);
       announcementTitleInput.value = "";
       announcementBodyInput.value = "";
-      showToast("Pengumuman berhasil diterbitkan ke aplikasi Android.");
+      showToast(L("Announcement published to the Android app.", "Pengumuman berhasil diterbitkan ke aplikasi Android."));
     } catch (err) {
       console.error("Publish announcement error:", err);
-      showToast("Gagal menerbitkan pengumuman: " + err.message);
+      showToast(L("Failed to publish announcement: ", "Gagal menerbitkan pengumuman: ") + err.message);
     }
   } else {
     announcements.unshift(docData);
     announcementTitleInput.value = "";
     announcementBodyInput.value = "";
     renderAnnouncements();
-    showToast("Pengumuman ditambahkan (Mode Demo Offline).");
+    showToast(L("Announcement added (Offline Mode).", "Pengumuman ditambahkan (Mode Demo Offline)."));
   }
 }
 
 async function deleteAnnouncement(id) {
-  if (!confirm("Hapus pengumuman ini?")) return;
+  if (!confirm(L("Delete this announcement?", "Hapus pengumuman ini?"))) return;
   if (isFirebaseReady && db) {
     try {
       await db.collection("announcements").doc(id).delete();
-      showToast("Pengumuman dihapus.");
+      showToast(L("Announcement deleted.", "Pengumuman dihapus."));
     } catch (err) {
       console.error("Delete announcement error:", err);
-      showToast("Gagal menghapus pengumuman: " + err.message);
+      showToast(L("Failed to delete announcement: ", "Gagal menghapus pengumuman: ") + err.message);
     }
   } else {
     announcements = announcements.filter((a) => a.id !== id);
     renderAnnouncements();
-    showToast("Pengumuman dihapus (Mode Demo Offline).");
+    showToast(L("Announcement deleted (Offline Mode).", "Pengumuman dihapus (Mode Demo Offline)."));
   }
 }
 
@@ -2196,8 +2348,8 @@ function renderCertificates() {
         <div class="empty-state-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
         </div>
-        <h4>Belum Ada Sertifikat Terbit</h4>
-        <p>Sertifikat resmi berawalan CC- akan otomatis muncul di sini saat proyek akhir peserta disetujui.</p>
+        <h4>${L("No Certificates Issued Yet", "Belum Ada Sertifikat Terbit")}</h4>
+        <p>${L("Official CC- credentials appear here automatically once a student's final project is approved.", "Sertifikat resmi berawalan CC- akan otomatis muncul di sini saat proyek akhir peserta disetujui.")}</p>
       </div>
     `;
     return;
@@ -2212,18 +2364,18 @@ function renderCertificates() {
         <div style="flex:1; min-width:240px;">
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px;">
             <span class="cert-id-badge">${escapeHtml(c.certId || "-")}</span>
-            <strong style="font-size:15px; color:var(--ink);">${escapeHtml(c.userName || "Peserta")}</strong>
+            <strong style="font-size:15px; color:var(--ink);">${escapeHtml(c.userName || L("Student", "Peserta"))}</strong>
           </div>
           <div style="font-size:13.5px; color:var(--ink); font-weight:600;">${escapeHtml(courseName)}</div>
           <div style="font-size:12px; color:var(--muted); margin-top:4px;">
-            Nilai Akhir: <strong>${Number(c.finalScore) || 0}/100</strong> (Kuis ${Number(c.quizScore) || 0} • Proyek ${Number(c.facilitatorScore) || 0}) • Terbit ${escapeHtml(formatDate(c.issuedAt))}
+            ${L("Final Score", "Nilai Akhir")}: <strong>${Number(c.finalScore) || 0}/100</strong> (${L("Quiz", "Kuis")} ${Number(c.quizScore) || 0} • ${L("Project", "Proyek")} ${Number(c.facilitatorScore) || 0}) • ${L("Issued", "Terbit")} ${escapeHtml(formatDate(c.issuedAt))}
           </div>
         </div>
         <div class="forum-reply-actions">
           <a href="${verifyHref}" target="_blank" rel="noopener noreferrer" class="btn-review" style="text-decoration:none;">
-            Buka Halaman Verifikasi ↗
+            ${L("Open Verification Page ↗", "Buka Halaman Verifikasi ↗")}
           </a>
-          ${currentAccessRole === "super_admin" ? `<button type="button" class="btn-danger-ghost" data-action="revoke-cert" data-cert-id="${escapeHtml(c.certId || "")}">Cabut</button>` : ""}
+          ${currentAccessRole === "super_admin" ? `<button type="button" class="btn-danger-ghost" data-action="revoke-cert" data-cert-id="${escapeHtml(c.certId || "")}">${L("Revoke", "Cabut")}</button>` : ""}
         </div>
       </article>
     `;
@@ -2280,7 +2432,7 @@ function formatDate(timestamp) {
   if (!timestamp) return "-";
   const d = new Date(timestamp);
   if (isNaN(d.getTime())) return "-";
-  return d.toLocaleDateString("id-ID", {
+  return d.toLocaleDateString(isIndonesian() ? "id-ID" : "en-US", {
     day: "numeric",
     month: "short",
     year: "numeric",

@@ -1,129 +1,153 @@
-# CodeAcademy Mobile Web Development Learning App
+<p align="center">
+  <img src="docs/assets/readme-mobile-hero.svg" alt="CodeAcademy Mobile — Native Android Web Development Learning Platform" width="100%" />
+</p>
 
-Aplikasi Android native berbasis **Kotlin & Jetpack Compose** untuk belajar Front-End Web Development (HTML, CSS, dan JavaScript) secara terstruktur, interaktif, dan *offline-first*.
+<p align="center">
+  <img src="https://img.shields.io/badge/Kotlin-2.2.10-0F766E?style=flat-square&logo=kotlin&logoColor=white" alt="Kotlin" />
+  <img src="https://img.shields.io/badge/Jetpack_Compose-Material_3-0B132B?style=flat-square&logo=jetpackcompose&logoColor=2DD4BF" alt="Jetpack Compose" />
+  <img src="https://img.shields.io/badge/Android-API_24%E2%80%9336-1E293B?style=flat-square&logo=android&logoColor=3DDC84" alt="Android SDK" />
+  <img src="https://img.shields.io/badge/Room-Offline--First_v17-1E293B?style=flat-square" alt="Room Offline-First" />
+  <img src="https://img.shields.io/badge/Localization-ID_%C2%B7_EN_%C2%B7_JA_%C2%B7_ZH-1E293B?style=flat-square" alt="4 Languages" />
+</p>
+
+**CodeAcademy Mobile** is a native Android learning application built with **Kotlin** and **Jetpack Compose** for mastering Front-End Web Development (**HTML5**, **CSS3**, and **JavaScript**) through structured bilingual modules, an integrated mobile Playground IDE, rubric-reviewed capstone projects, and verifiable digital certificates.
+
+Companion web ecosystem (Facilitator & Super Admin Portal + Public Certificate Verification): [**`codeacademy-web`**](https://github.com/ivhan9867/codeacademy-web)
 
 ---
 
-## Ringkasan Fitur
+## Ecosystem Architecture
 
-- **Kurikulum Front-End Terstruktur (156 Modul Markdown)**
-  - `fe-web-foundation-00` — Fondasi Web: Dari Nol ke Baris Kode Pertama (106 modul)
-  - `fe-css-02` — CSS Layout Modern: Flexbox & Grid (24 modul)
-  - `fe-js-03` — JavaScript Fundamentals (26 modul)
-  - Dilengkapi 9 kuis per bagian (*Section Quiz*), 3 ujian akhir, 3 proyek akhir beserta rubrik penilaian, dan *Cheat Sheet* per kelas.
-- **Interactive Code Playground**
-  - Editor kode mobile dengan nomor baris, dukungan HTML/CSS/JavaScript, live preview via `WebView`, konsol JavaScript *headless*, serta verifikasi aturan kode otomatis langsung dari modul belajar.
-- **AI Tutor "Codi" (Multimodal & Context-Aware)**
-  - Memahami konteks kelas, modul yang sedang dibaca, dan draf kode Playground pengguna.
-  - Mendukung lampiran gambar/screenshot kode atau error (kompresi otomatis di background + *full-screen pinch-to-zoom preview*).
-  - Arsitektur *dual-engine*: Direct Gemini REST API (`gemini-flash-lite-latest` → `gemini-3.5-flash-lite` → `gemini-3.1-flash-lite`) dengan *auto-retry* dan fallback ke Firebase AI SDK serta respons offline lokal.
-- **Lokalisasi Menyeluruh (ID / EN / JA / ZH)**
-  - Antarmuka mendukung 4 bahasa dengan paritas 1.186 string resource yang dijaga oleh unit test.
-  - Katalog kursus dua bahasa (`front-end.json` dan `front-end_en.json`) dengan *hot-switch* tanpa restart, ditambah terjemahan Markdown modul on-demand yang disimpan di cache lokal perangkat.
-- **Gamifikasi, Komunitas & Sertifikat**
-  - Sistem XP, 10 level, *streak* harian, misi harian, *Daily 1-Minute Code Challenge*, 12 lencana, dan sertifikat kelulusan yang dapat diverifikasi.
-  - Forum diskusi per kelas, papan peringkat (*Leaderboard*), dan profil publik yang dapat dikustomisasi (tema banner, avatar, frame, *headline*, *skill tags*, dan badge staf/fasilitator).
+```mermaid
+flowchart LR
+    A["CodeAcademy Mobile<br/>(Kotlin · Compose · Room v17)"] <-->|Real-Time Sync| F["Firebase<br/>(Auth · Firestore · Rules)"]
+    A <-->|Context & Vision| AI["AI Tutor Engine<br/>(Gemini REST + Fallback)"]
+    F <-->|Live Queue & Registry| W["CodeAcademy Web Portal<br/>(Staff Review · Verify Portal)"]
+```
+
+---
+
+## Core Capabilities
+
+### Structured Front-End Curriculum
+Full offline-first Markdown curriculum available natively in **Indonesian** and **English** (100% content parity across 172 lessons per language):
+
+| Course ID | Track | Modules | Section Quizzes | Final Exam | Final Project |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `fe-web-foundation-00` | Web Foundation: From Zero to First Code | 106 | 5 (110 Qs) | 20 Qs | Portfolio Web Page |
+| `fe-css-02` | Modern CSS Layout: Flexbox & Grid | 32 | 3 (40 Qs) | 16 Qs | Responsive Layout System |
+| `fe-js-03` | JavaScript Fundamentals | 34 | 3 (40 Qs) | 20 Qs | Interactive DOM App |
+
+Each course also includes a dedicated **Glossary**, **Cheat Sheet**, and rule-based interactive coding missions.
+
+### Mobile Playground IDE
+- Two-tier mobile editor with `index.html`, `style.css`, and `script.js` tabs, quick code-symbol bar, and line numbers.
+- Live `WebView` sandbox preview and headless JavaScript console.
+- Collapsible mission panel that validates student code against lesson rules directly inside the editor.
+
+### Multi-Screen Capstone Submission & Rating Flow
+- **3-Step Compose Wizard**: *Brief & Self-Check Rubric* → *Code Editor & File/ZIP Upload* → *Repository Link, Notes & Readiness Check*.
+- **Animated Waiting & Live Queue Screen**: Real-time Firestore queue position (`Queue #N of M`) with manual refresh and live code preview.
+- **Dedicated Revision & Approval Screens**: Clear facilitator feedback callouts, combined `40% Quiz + 60% Project` final grade breakdown, and one-tap certificate access.
+- **Post-Approval Review Rating**: Interactive 1–5 star rating, aspect chips, and optional comment synced to the Staff Portal.
+
+### Cosmic Observatory Digital Certificates
+- Animated deep-space & champagne-gold diploma screen with fullscreen landscape preview.
+- Native **1920×1200 HD PNG** renderer supporting **Save to Gallery** (`MediaStore`) and **Image Share** (`FileProvider`).
+- Unique `CC-yyyyMMxxxx-xxxxxx` credential IDs verifiable publicly via the Web Verification Portal.
+
+### Multimodal AI Tutor, Localization & Community
+- **Context-Aware AI Tutor**: Understands the active course, lesson, and Playground draft, with image/screenshot attachment support and resilient fallback handling.
+- **4-Language Interface**: Symmetric localization across **Indonesian (`ID`)**, **English (`EN`)**, **Japanese (`JA`)**, and **Chinese (`ZH`)** (`1,326` string keys per locale).
+- **Gamification & Social**: XP, levels, daily streaks, daily missions, 1-minute code challenges, leaderboard, per-course discussion forums, and customizable public profiles.
 
 ---
 
 ## Tech Stack
 
-| Layer | Teknologi |
-| --- | --- |
-| Bahasa & Build | Kotlin `2.2.10`, Android Gradle Plugin `9.1.1`, KSP `2.3.6`, Java 11 |
-| UI & Navigasi | Jetpack Compose (BOM `2024.09.00`), Material 3, Navigation Compose `2.8.9`, Coil `2.7.0` |
-| Penyimpanan Lokal | Room `2.7.0` (*offline-first*, migrasi hingga v16), DataStore Preferences `1.1.7` |
-| Backend & Auth | Firebase BoM `34.17.0` (Auth, Credential Manager Google Sign-In, Firestore, App Check, Firebase AI), Retrofit + OkHttp + Moshi |
-| Pengujian | JUnit 4, Robolectric `4.16.1`, Roborazzi `1.59.0`, Coroutines Test |
-| Target SDK | `minSdk 24` · `targetSdk 36` · `compileSdk 36.1` |
+| Layer | Technologies |
+| :--- | :--- |
+| Language & Build | Kotlin `2.2.10`, Android Gradle Plugin `9.1.1`, KSP `2.3.6`, Java 11 |
+| UI & Navigation | Jetpack Compose (BOM `2024.09.00`), Material 3, Navigation Compose `2.8.9`, Coil `2.7.0` |
+| Local Persistence | Room `2.7.0` (schema v17 with full migrations), DataStore Preferences `1.1.7` |
+| Cloud & Networking | Firebase BoM `34.17.0` (Auth, Firestore, App Check, Firebase AI), Credential Manager, Retrofit + OkHttp + Moshi |
+| Testing | JUnit 4, Robolectric `4.16.1`, Roborazzi `1.59.0`, Coroutines Test |
+| SDK Targets | `minSdk 24` · `targetSdk 36` · `compileSdk 36.1` |
 
 ---
 
-## Struktur Proyek
+## Project Structure
 
 ```text
-app/src/main/
-├── assets/
-│   ├── catalog/
-│   │   ├── front-end.json          # Katalog kursus, kuis, & cheat sheet (ID)
-│   │   └── front-end_en.json       # Katalog kursus, kuis, proyek akhir & cheat sheet (EN)
-│   └── content/
-│       ├── fe-web-foundation-00/   # 106 modul Markdown
-│       ├── fe-css-02/              # 24 modul Markdown
-│       └── fe-js-03/               # 26 modul Markdown
-├── java/com/example/
-│   ├── ai/                         # GeminiTutorService (REST + Firebase AI + Vision + Translate)
-│   ├── data/
-│   │   ├── local/                  # Room entities, DAO, migrasi DB, SessionManager
-│   │   ├── models/                 # Model domain (Course, Module, Quiz, ChatMessage, dll.)
-│   │   ├── remote/                 # Sinkronisasi Firestore & client remote
-│   │   └── util/                   # CourseUnlockUtils, CourseSectionUtils, verifikasi kode
-│   ├── ui/
-│   │   ├── components/             # MarkdownView, CodeBlockView, CodeSandboxWebView, Mascot
-│   │   ├── screens/                # Home, Courses, Materi, Playground, AiTutor, Forum, Profile, dll.
-│   │   └── theme/                  # Material 3 light/dark theme & tipografi
-│   └── util/localization/          # AppLanguage, DataLabelMappings, helper lokalisasi
-└── res/
-    ├── values/strings.xml          # Bahasa Indonesia (default)
-    ├── values-en/strings.xml       # English
-    ├── values-ja/strings.xml       # 日本語
-    └── values-zh/strings.xml       # 中文
+.
+├── app/src/main/
+│   ├── assets/
+│   │   ├── catalog/               # Bilingual course catalogs (ID & EN)
+│   │   ├── content/               # 172 Markdown lessons (ID)
+│   │   └── content_en/            # 172 Markdown lessons (EN)
+│   ├── java/com/example/
+│   │   ├── ai/                    # Multimodal AI tutor & translation services
+│   │   ├── data/                  # Room entities/DAOs, repositories, Firestore sync
+│   │   ├── ui/                    # Compose screens, components, themes
+│   │   └── util/                  # Localization, unlock rules, HD certificate exporter
+│   └── res/                       # 4-language strings.xml & FileProvider paths
+├── firestore.rules                # Role-based Firestore security rules
+└── public/                        # Companion Web Portal source (published to codeacademy-web)
 ```
 
 ---
 
-## Cara Menjalankan Secara Lokal
+## Local Development Setup
 
-### Prasyarat
-- **Android Studio** (Meerkat / Narwhal atau lebih baru) dengan JDK 17+ untuk Gradle daemon.
-- Android SDK 36 terpasang.
-- API key **Google Gemini** dari [Google AI Studio](https://aistudio.google.com/apikey).
+### Prerequisites
+- **Android Studio** (Meerkat / Narwhal or newer) with **JDK 17+**
+- **Android SDK 36**
+- Optional: A **Google Gemini API key** and your own **Firebase project** (`google-services.json`) for cloud sync and AI features.
 
-### Langkah Setup
+### Quick Start
 
-1. **Clone repository**
+1. **Clone the repository**
    ```bash
    git clone https://github.com/ivhan9867/PRJ-MobileCodeAcademy.git
    cd PRJ-MobileCodeAcademy
    ```
 
-2. **Konfigurasi environment**
-   Salin `.env.example` menjadi `.env` di root proyek, lalu isi API key Gemini Anda:
+2. **Configure environment variables**
+   Copy `.env.example` to `.env` in the repository root and supply your own key:
    ```dotenv
-   GEMINI_API_KEY=your_gemini_api_key_here
+   GEMINI_API_KEY=your_api_key_here
    ```
-   > File `.env` dibaca otomatis saat build oleh `secrets-gradle-plugin` ke `BuildConfig.GEMINI_API_KEY` dan diabaikan oleh `.gitignore`.
+   > `.env` is ignored by Git and injected into `BuildConfig` at build time.
 
-3. **Konfigurasi Firebase (opsional untuk fitur Cloud Sync & Google Sign-In)**
-   Pastikan `app/google-services.json` sudah sesuai dengan project Firebase Anda. Tanpa konfigurasi cloud, mode lokal (*offline-first* Room) dan AI Tutor via `.env` tetap berjalan normal.
+3. **Firebase setup (optional for offline mode)**
+   Place your project's `google-services.json` inside `app/` and deploy `firestore.rules` via Firebase Console to enable real-time sync, submissions, forums, and certificate verification. Without cloud setup, offline Room storage works out of the box.
 
-4. **Build & Jalankan**
-   - Buka folder proyek di Android Studio, tunggu Gradle sync selesai, lalu jalankan konfigurasi `app` ke emulator atau perangkat Android (API 24+).
-   - Atau lewat terminal:
-     ```bash
-     ./gradlew assembleDebug
-     ```
+4. **Build & run**
+   ```bash
+   ./gradlew assembleDebug
+   ```
 
 ---
 
-## Pengujian (Unit Tests)
-
-Beberapa suite unit test utama yang dapat dijalankan langsung lewat Gradle:
+## Verification & Unit Tests
 
 ```bash
-# Cek paritas 4 bahasa & format placeholder strings.xml
+# Compile Kotlin sources
+./gradlew :app:compileDebugKotlin
+
+# Verify 4-language strings.xml parity and format specifiers
 ./gradlew testDebugUnitTest --tests "com.example.StringParityAndFormatTest"
 
-# Cek parser katalog kursus & lokalisasi
+# Verify course catalog parser and localization mappings
 ./gradlew testDebugUnitTest --tests "com.example.CourseCatalogParserTest" --tests "com.example.DataLabelMappingsTest"
 
-# Cek prompt AI Tutor & aturan bebas hardcoded string
-./gradlew testDebugUnitTest --tests "com.example.GeminiTutorPromptTest" --tests "com.example.ActiveTreeHardcodedStringCheckTest"
+# Verify hardcoded string guardrails
+./gradlew testDebugUnitTest --tests "com.example.ActiveTreeHardcodedStringCheckTest"
 ```
 
 ---
 
-## Catatan Keamanan
-
-- Jangan pernah meng-commit `.env`, `local.properties`, keystore release (`*.jks`), atau kredensial pribadi ke repository publik.
-- Untuk build rilis (`assembleRelease`), konfigurasikan environment variable `KEYSTORE_PATH`, `STORE_PASSWORD`, `KEY_PASSWORD`, dan `KEY_ALIAS` sesuai konfigurasi di `app/build.gradle.kts`.
+## Security & Privacy Notes
+- Never commit `.env`, `local.properties`, release keystores (`*.jks`), or personal credentials.
+- Release signing reads `KEYSTORE_PATH`, `STORE_PASSWORD`, `KEY_PASSWORD`, and `KEY_ALIAS` from environment variables.
+- Firestore write access is enforced server-side via role-based rules in `firestore.rules`.

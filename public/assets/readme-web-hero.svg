@@ -1,0 +1,87 @@
+<svg width="1200" height="300" viewBox="0 0 1200 300" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="CodeAcademy Web Portal — Staff Review Workspace &amp; Certificate Verification">
+  <defs>
+    <linearGradient id="webBg" x1="0" y1="0" x2="1200" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#07111F"/>
+      <stop offset="55%" stop-color="#0D222B"/>
+      <stop offset="100%" stop-color="#10363B"/>
+    </linearGradient>
+    <radialGradient id="webGlowA" cx="80%" cy="46%" r="44%">
+      <stop offset="0%" stop-color="#2DD4BF" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="webGlowB" cx="70%" cy="18%" r="30%">
+      <stop offset="0%" stop-color="#F5D77F" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#F5D77F" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="webLine" x1="0" y1="0" x2="290" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F5D77F"/>
+      <stop offset="60%" stop-color="#2DD4BF"/>
+      <stop offset="100%" stop-color="#2DD4BF" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="webGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#94A3B8" fill-opacity="0.14"/>
+    </pattern>
+    <clipPath id="webClip">
+      <rect width="1200" height="300" rx="20"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#webClip)">
+    <rect width="1200" height="300" fill="url(#webBg)"/>
+    <rect width="1200" height="300" fill="url(#webGrid)"/>
+    <rect width="1200" height="300" fill="url(#webGlowA)"/>
+    <rect width="1200" height="300" fill="url(#webGlowB)"/>
+
+    <!-- Minimalist Portal Preview Illustration (Right Side) -->
+    <g transform="translate(812, 54)">
+      <!-- Main Review Console Card -->
+      <rect x="0" y="0" width="320" height="192" rx="16" fill="#0B132B" fill-opacity="0.88" stroke="#334155" stroke-width="1.2"/>
+      <rect x="16" y="18" width="74" height="10" rx="5" fill="#2DD4BF" fill-opacity="0.35"/>
+      <rect x="242" y="16" width="62" height="16" rx="8" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-opacity="0.45"/>
+      <circle cx="253" cy="24" r="3" fill="#10B981">
+        <animate attributeName="opacity" values="0.4;1;0.4" dur="2.4s" repeatCount="indefinite"/>
+      </circle>
+      <rect x="261" y="21.5" width="33" height="5" rx="2.5" fill="#A7F3D0"/>
+
+      <!-- Rubric & Queue Bars -->
+      <rect x="16" y="48" width="168" height="62" rx="10" fill="#111C38" stroke="#1E293B"/>
+      <rect x="28" y="60" width="84" height="6" rx="3" fill="#E2E8F0" fill-opacity="0.85"/>
+      <rect x="28" y="74" width="140" height="6" rx="3" fill="#1E293B"/>
+      <rect x="28" y="74" width="112" height="6" rx="3" fill="#2DD4BF"/>
+      <rect x="28" y="88" width="140" height="6" rx="3" fill="#1E293B"/>
+      <rect x="28" y="88" width="94" height="6" rx="3" fill="#F5D77F"/>
+
+      <!-- Certificate Seal Mini Card -->
+      <rect x="196" y="48" width="108" height="62" rx="10" fill="#111C38" stroke="#F5D77F" stroke-opacity="0.4"/>
+      <circle cx="250" cy="79" r="19" stroke="#F5D77F" stroke-opacity="0.7" stroke-width="1.2"/>
+      <circle cx="250" cy="79" r="24" stroke="#F5D77F" stroke-opacity="0.22" stroke-width="1" stroke-dasharray="3 4">
+        <animateTransform attributeName="transform" type="rotate" from="0 250 79" to="360 250 79" dur="36s" repeatCount="indefinite"/>
+      </circle>
+      <path d="M250 67 L252.6 76.4 L262 79 L252.6 81.6 L250 91 L247.4 81.6 L238 79 L247.4 76.4 Z" fill="#FEF3C7"/>
+
+      <!-- Bottom Verification Strip -->
+      <rect x="16" y="124" width="288" height="50" rx="10" fill="#0F172A" stroke="#1E293B"/>
+      <rect x="28" y="138" width="118" height="6" rx="3" fill="#38BDF8" fill-opacity="0.8"/>
+      <rect x="28" y="152" width="176" height="5" rx="2.5" fill="#64748B"/>
+      <rect x="234" y="137" width="58" height="22" rx="11" fill="#F5D77F"/>
+      <rect x="247" y="146" width="32" height="4" rx="2" fill="#0B132B"/>
+    </g>
+
+    <!-- Left Brand Copy -->
+    <g transform="translate(64, 62)">
+      <rect x="0" y="0" width="250" height="28" rx="14" fill="#F5D77F" fill-opacity="0.14" stroke="#F5D77F" stroke-opacity="0.38" stroke-width="1"/>
+      <circle cx="16" cy="14" r="4" fill="#F5D77F">
+        <animate attributeName="opacity" values="0.45;1;0.45" dur="2.6s" repeatCount="indefinite"/>
+      </circle>
+      <text x="29" y="18.5" fill="#FEF3C7" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11.5" font-weight="600" letter-spacing="1.2">STAFF PORTAL · VERIFY · EN / ID</text>
+
+      <text x="0" y="88" fill="#F8FAFC" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="48" font-weight="800" letter-spacing="-1">CodeAcademy Web</text>
+      <rect x="0" y="106" width="290" height="2.5" rx="1.25" fill="url(#webLine)"/>
+
+      <text x="0" y="140" fill="#CBD5E1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="400">Real-time Facilitator &amp; Super Admin grading workspace paired with</text>
+      <text x="0" y="166" fill="#CBD5E1" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="400">a public Firestore certificate verification portal and bilingual UI.</text>
+    </g>
+
+    <rect x="0.75" y="0.75" width="1198.5" height="298.5" rx="19.25" stroke="#334155" stroke-opacity="0.7" stroke-width="1.5"/>
+  </g>
+</svg>

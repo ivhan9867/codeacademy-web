@@ -3066,3 +3066,65 @@ tbody tr.row-priority-lime:hover {
   line-height: 1.55;
   margin: 8px 0 0;
 }
+
+/* Queue Pill Counts & Row Cleanup Actions */
+.btn-filter-pill .pill-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 4px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 800;
+  background: rgba(15, 23, 42, 0.08);
+  color: inherit;
+}
+
+.btn-filter-pill.active .pill-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+
+.table-row-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.btn-icon-delete {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.btn-icon-delete svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-icon-delete:hover {
+  background: var(--revision-bg);
+  color: var(--revision);
+  border-color: var(--revision-line);
+}
+
+.empty-quick-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}

@@ -107,7 +107,7 @@ let submissionRatings = [];
 
 let activeView = "submissions";
 let currentSubmission = null;
-let filterStatus = "all";
+let filterStatus = "PENDING_REVIEW";
 let filterCourse = "all";
 let searchQuery = "";
 let forumFilterCourse = "all";
@@ -726,11 +726,41 @@ function attachEventListeners() {
     });
   });
 
-  // Event delegation for Submissions Table Review button
+  // Event delegation for Submissions Table Review & Delete buttons
   submissionsTableBody.addEventListener("click", (e) => {
+    const delBtn = e.target.closest("[data-action='delete-submission']");
+    if (delBtn && delBtn.dataset.id) {
+      deleteSubmissionRecord(delBtn.dataset.id);
+      return;
+    }
+    const jumpBtn = e.target.closest("[data-action='jump-status']");
+    if (jumpBtn && jumpBtn.dataset.status) {
+      setSubmissionStatusFilter(jumpBtn.dataset.status);
+      return;
+    }
     const btn = e.target.closest("[data-action='open-review']");
     if (btn && btn.dataset.id) {
       openReviewModal(btn.dataset.id);
+    }
+  });
+
+  const btnClearApproved = document.getElementById("btnClearApproved");
+  if (btnClearApproved) {
+    btnClearApproved.addEventListener("click", () => clearApprovedSubmissions());
+  }
+
+  // Clickable stat cards jump directly to corresponding submission status tab
+  const statCardStatusMap = [
+    ["statTotal", "all"],
+    ["statPending", "PENDING_REVIEW"],
+    ["statRevision", "REVISION_REQUESTED"],
+    ["statApproved", "APPROVED"]
+  ];
+  statCardStatusMap.forEach(([id, statusKey]) => {
+    const card = document.getElementById(id)?.closest(".stat-card");
+    if (card) {
+      card.style.cursor = "pointer";
+      card.addEventListener("click", () => setSubmissionStatusFilter(statusKey));
     }
   });
 
@@ -1322,6 +1352,79 @@ function updateStats() {
   statRevision.textContent = String(revision);
   statApproved.textContent = String(approved);
   submissionsPendingBadge.textContent = String(pending);
+
+  const cPending = document.getElementById("pillCountPending");
+  const cRevision = document.getElementById("pillCountRevision");
+  const cApproved = document.getElementById("pillCountApproved");
+  const cAll = document.getElementById("pillCountAll");
+  if (cPending) cPending.textContent = String(pending);
+  if (cRevision) cRevision.textContent = String(revision);
+  if (cApproved) cApproved.textContent = String(approved);
+  if (cAll) cAll.textContent = String(total);
+}
+
+function setSubmissionStatusFilter(targetStatus) {
+  filterStatus = targetStatus;
+  filterPills.forEach((p) => p.classList.toggle("active", p.dataset.status === targetStatus));
+  renderTable();
+}
+
+async function deleteSubmissionRecord(id) {
+  const target = submissions.find((s) => s.id === id);
+  const studentLabel = target ? (target.studentName || target.userName || id) : id;
+  const ok = confirm(
+    L(
+      `Remove ${studentLabel}'s submission from the queue list? (Issued certificates in the Certificates registry will remain intact.)`,
+      `Hapus pengajuan proyek milik ${studentLabel} dari daftar submissions? (Sertifikat yang sudah terbit di menu Sertifikat tetap aman.)`
+    )
+  );
+  if (!ok) return;
+
+  if (isFirebaseReady && db) {
+    try {
+      await db.collection("project_submissions").doc(id).delete();
+      showToast(L("Submission removed from queue.", "Pengajuan berhasil dihapus dari daftar."));
+    } catch (err) {
+      console.error("Delete submission error:", err);
+      showToast(L("Failed to delete submission: ", "Gagal menghapus pengajuan: ") + err.message);
+    }
+  } else {
+    submissions = submissions.filter((s) => s.id !== id);
+    updateStats();
+    renderTable();
+    showToast(L("Submission removed (Offline Mode).", "Pengajuan dihapus (Mode Demo Offline)."));
+  }
+}
+
+async function clearApprovedSubmissions() {
+  const approvedItems = submissions.filter((s) => (s.status || "").toUpperCase() === "APPROVED");
+  if (approvedItems.length === 0) return;
+  const ok = confirm(
+    L(
+      `Clean up all ${approvedItems.length} approved submission(s) from the submissions list? Issued certificates and student ratings will remain preserved.`,
+      `Bersihkan semua ${approvedItems.length} pengajuan berstatus Lulus dari daftar submissions? Sertifikat yang sudah terbit dan rating siswa tetap tersimpan aman.`
+    )
+  );
+  if (!ok) return;
+
+  if (isFirebaseReady && db) {
+    try {
+      const batch = db.batch();
+      approvedItems.forEach((item) => {
+        batch.delete(db.collection("project_submissions").doc(item.id));
+      });
+      await batch.commit();
+      showToast(L(`Cleaned up ${approvedItems.length} approved submission(s).`, `${approvedItems.length} pengajuan lulus berhasil dibersihkan.`));
+    } catch (err) {
+      console.error("Clear approved submissions error:", err);
+      showToast(L("Failed to clean up approved submissions: ", "Gagal membersihkan pengajuan lulus: ") + err.message);
+    }
+  } else {
+    submissions = submissions.filter((s) => (s.status || "").toUpperCase() !== "APPROVED");
+    updateStats();
+    renderTable();
+    showToast(L("Approved submissions cleared (Offline Mode).", "Pengajuan lulus dibersihkan (Mode Offline)."));
+  }
 }
 
 function getStudentInitials(name) {
@@ -1466,6 +1569,12 @@ function renderHuddlyDashboardMeta() {
 }
 
 function renderTable() {
+  const btnClearApproved = document.getElementById("btnClearApproved");
+  const approvedTotal = submissions.filter((s) => (s.status || "").toUpperCase() === "APPROVED").length;
+  if (btnClearApproved) {
+    btnClearApproved.style.display = filterStatus === "APPROVED" && approvedTotal > 0 ? "inline-flex" : "none";
+  }
+
   const filtered = submissions.filter((s) => {
     const st = (s.status || "").toUpperCase();
     const matchStatus = filterStatus === "all" || st === filterStatus;
@@ -1483,15 +1592,37 @@ function renderTable() {
   });
 
   if (filtered.length === 0) {
+    const revCount = submissions.filter((s) => (s.status || "").toUpperCase() === "REVISION_REQUESTED").length;
+    const isPendingEmpty = filterStatus === "PENDING_REVIEW" && !searchQuery && filterCourse === "all";
+    const emptyTitle = isPendingEmpty
+      ? L("Review queue is all clear!", "Antrean review sudah bersih!")
+      : L("No project submissions found", "Tidak ada pengajuan proyek ditemukan");
+    const emptyDesc = isPendingEmpty
+      ? L(
+          "Reviewed projects automatically move out of this queue into Revision or Approved so it never piles up.",
+          "Proyek yang sudah dinilai otomatis berpindah dari antrean aktif ke tab Revisi atau Disetujui agar tidak menumpuk."
+        )
+      : L(
+          "Adjust your search filters or wait for learners to submit projects from the Android app.",
+          "Ubah filter pencarian atau tunggu peserta mengirimkan proyek dari aplikasi Android."
+        );
+    const emptyQuickLinks = isPendingEmpty && (revCount > 0 || approvedTotal > 0)
+      ? `<div class="empty-quick-actions">
+           ${revCount > 0 ? `<button type="button" class="btn-review" data-action="jump-status" data-status="REVISION_REQUESTED">${L(`View Revision (${revCount})`, `Lihat Revisi (${revCount})`)}</button>` : ""}
+           ${approvedTotal > 0 ? `<button type="button" class="btn-review" data-action="jump-status" data-status="APPROVED">${L(`View Approved (${approvedTotal})`, `Lihat Disetujui (${approvedTotal})`)}</button>` : ""}
+         </div>`
+      : "";
+
     submissionsTableBody.innerHTML = `
       <tr>
         <td colspan="7">
           <div class="empty-state">
             <div class="empty-state-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <h4>${L("No project submissions found", "Tidak ada pengajuan proyek ditemukan")}</h4>
-            <p>${L("Adjust your search filters or wait for learners to submit projects from the Android app.", "Ubah filter pencarian atau tunggu peserta mengirimkan proyek dari aplikasi Android.")}</p>
+            <h4>${emptyTitle}</h4>
+            <p>${emptyDesc}</p>
+            ${emptyQuickLinks}
           </div>
         </td>
       </tr>
@@ -1514,7 +1645,8 @@ function renderTable() {
       const ratingPillHtml = ratingInfo
         ? `<span class="rating-star-pill" title="${escapeHtml(ratingInfo.comment || "")}">★ ${Number(ratingInfo.rating)}/5</span>`
         : "";
-      const isPendingTop = (s.status || "").toUpperCase() === "PENDING_REVIEW" && !highlightedTopPending;
+      const isPending = (s.status || "").toUpperCase() === "PENDING_REVIEW";
+      const isPendingTop = isPending && !highlightedTopPending;
       if (isPendingTop) highlightedTopPending = true;
 
       return `
@@ -1540,9 +1672,14 @@ function renderTable() {
         <td style="font-size: 12.5px; color: var(--muted); white-space: nowrap;">${escapeHtml(dateStr)}</td>
         <td style="font-size: 12.5px; color: var(--muted); white-space: nowrap;">${L(`#${attempt}`, `Ke-${attempt}`)}</td>
         <td style="text-align: right;">
-          <button type="button" class="btn-review" data-action="open-review" data-id="${escapeHtml(s.id)}">
-            ${s.status === "PENDING_REVIEW" ? L("Grade Now", "Nilai Sekarang") : L("Inspect / Edit", "Lihat / Ubah")}
-          </button>
+          <div class="table-row-actions">
+            <button type="button" class="btn-review" data-action="open-review" data-id="${escapeHtml(s.id)}">
+              ${isPending ? L("Grade Now", "Nilai Sekarang") : L("Inspect / Edit", "Lihat / Ubah")}
+            </button>
+            <button type="button" class="btn-icon-delete" data-action="delete-submission" data-id="${escapeHtml(s.id)}" title="${L("Remove from submissions list", "Hapus dari daftar submissions")}" aria-label="${L("Remove from submissions list", "Hapus dari daftar submissions")}">
+              <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            </button>
+          </div>
         </td>
       </tr>
     `;

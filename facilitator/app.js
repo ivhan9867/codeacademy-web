@@ -95,6 +95,7 @@ let unsubAnnouncements = null;
 let unsubCertificates = null;
 let unsubTeam = null;
 let unsubStudents = null;
+let unsubRatings = null;
 
 let submissions = [];
 let forumPosts = [];
@@ -102,6 +103,7 @@ let announcements = [];
 let certificates = [];
 let facilitatorsList = [];
 let studentUsersList = [];
+let submissionRatings = [];
 
 let activeView = "submissions";
 let currentSubmission = null;
@@ -507,6 +509,21 @@ function startRealtimeListeners() {
       }
     );
 
+  unsubRatings = db
+    .collection("submission_ratings")
+    .orderBy("ratedAt", "desc")
+    .onSnapshot(
+      (snapshot) => {
+        submissionRatings = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        renderTable();
+        renderRatingsSummary();
+        renderAnalytics();
+      },
+      (error) => {
+        console.error("Ratings listener error:", error);
+      }
+    );
+
   if (currentAccessRole === "super_admin") {
     unsubTeam = db.collection("facilitators").onSnapshot(
       (snapshot) => {
@@ -534,12 +551,14 @@ function stopRealtimeListeners() {
   if (typeof unsubCertificates === "function") unsubCertificates();
   if (typeof unsubTeam === "function") unsubTeam();
   if (typeof unsubStudents === "function") unsubStudents();
+  if (typeof unsubRatings === "function") unsubRatings();
   unsubSubmissions = null;
   unsubForum = null;
   unsubAnnouncements = null;
   unsubCertificates = null;
   unsubTeam = null;
   unsubStudents = null;
+  unsubRatings = null;
 }
 
 function renderAllViews() {
@@ -551,6 +570,7 @@ function renderAllViews() {
   renderTeam();
   renderAnalytics();
   renderHuddlyDashboardMeta();
+  renderRatingsSummary();
 }
 
 function showAuthOverlay(preserveError = false) {
@@ -1490,6 +1510,10 @@ function renderTable() {
       const studentName = s.studentName || s.userName || L("Student", "Peserta");
       const studentEmail = s.studentEmail || s.userEmail || s.accountId || "-";
       const attempt = Number(s.attemptNumber ?? s.attemptCount) || 1;
+      const ratingInfo = getRatingForSubmission(s);
+      const ratingPillHtml = ratingInfo
+        ? `<span class="rating-star-pill" title="${escapeHtml(ratingInfo.comment || "")}">★ ${Number(ratingInfo.rating)}/5</span>`
+        : "";
       const isPendingTop = (s.status || "").toUpperCase() === "PENDING_REVIEW" && !highlightedTopPending;
       if (isPendingTop) highlightedTopPending = true;
 
@@ -1508,7 +1532,10 @@ function renderTable() {
           <strong>${Number(s.finalQuizScore) || 0}</strong>/100
         </td>
         <td>
-          <span class="status-badge ${badgeClass}">${badgeLabel}</span>
+          <div class="status-cell-stack">
+            <span class="status-badge ${badgeClass}">${badgeLabel}</span>
+            ${ratingPillHtml}
+          </div>
         </td>
         <td style="font-size: 12.5px; color: var(--muted); white-space: nowrap;">${escapeHtml(dateStr)}</td>
         <td style="font-size: 12.5px; color: var(--muted); white-space: nowrap;">${L(`#${attempt}`, `Ke-${attempt}`)}</td>
@@ -1631,8 +1658,28 @@ function renderAnalytics() {
           </div>
         </div>
       </div>
+      ${(() => {
+        const ratings = getAllNormalizedRatings();
+        const avg = ratings.length
+          ? (ratings.reduce((acc, r) => acc + r.rating, 0) / ratings.length).toFixed(1)
+          : "—";
+        return `
+      <div class="stat-card">
+        <div class="stat-top">
+          <span class="stat-label">${L("Review Satisfaction", "Kepuasan Review")}</span>
+          <span class="stat-pill ok">${ratings.length} ${L("Ratings", "Rating")}</span>
+        </div>
+        <div class="stat-bottom">
+          <h3>★ ${avg}</h3>
+          <div class="stat-icon approved" aria-hidden="true">
+            <svg class="i" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+        </div>
+      </div>`;
+      })()}
     `;
   }
+  renderRatingsSummary();
   const tbody = document.getElementById("studentsTableBody");
   if (!tbody) return;
   const searchTerm = (document.getElementById("studentSearchInput")?.value || "").trim().toLowerCase();
@@ -1781,7 +1828,189 @@ function openReviewModal(submissionId) {
     facilitatorNameInput.value = currentFacilitatorUser.displayName;
   }
 
+  // Populate post-approval Student Review Rating section if student rated this review
+  const modalRatingSection = document.getElementById("modalStudentRatingSection");
+  const modalRatingStars = document.getElementById("modalStudentRatingStars");
+  const modalRatingTags = document.getElementById("modalStudentRatingTags");
+  const modalRatingComment = document.getElementById("modalStudentRatingComment");
+  if (modalRatingSection) {
+    const ratingInfo = getRatingForSubmission(currentSubmission);
+    if (ratingInfo) {
+      modalRatingSection.style.display = "block";
+      if (modalRatingStars) {
+        modalRatingStars.textContent = `${"★".repeat(ratingInfo.rating)}${"☆".repeat(5 - ratingInfo.rating)} ${ratingInfo.rating}/5`;
+      }
+      if (modalRatingTags) {
+        modalRatingTags.innerHTML = (ratingInfo.tags || [])
+          .map((tag) => `<span class="rating-tag-chip">${escapeHtml(getRatingTagLabel(tag))}</span>`)
+          .join("");
+      }
+      if (modalRatingComment) {
+        modalRatingComment.textContent = ratingInfo.comment
+          ? `"${ratingInfo.comment}"`
+          : L("Student submitted a star rating without an additional comment.", "Siswa memberikan rating bintang tanpa komentar tambahan.");
+      }
+    } else {
+      modalRatingSection.style.display = "none";
+    }
+  }
+
   reviewModal.classList.add("open");
+}
+
+// ==========================================
+// STUDENT REVIEW RATINGS HELPERS & RENDERER
+// ==========================================
+function getRatingTagLabel(key) {
+  const map = {
+    clear_feedback: L("Clear Feedback", "Umpan Balik Jelas"),
+    fast_review: L("Fast Review", "Respons Cepat"),
+    constructive_tips: L("Constructive Tips", "Saran Konstruktif"),
+    fair_grading: L("Fair Grading", "Penilaian Adil"),
+    very_motivating: L("Very Motivating", "Sangat Memotivasi")
+  };
+  return map[key] || key;
+}
+
+function normalizeRatingTags(raw) {
+  if (Array.isArray(raw)) return raw.filter(Boolean).map(String);
+  if (typeof raw === "string" && raw.trim().startsWith("[")) {
+    try {
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter(Boolean).map(String) : [];
+    } catch (_) {
+      return [];
+    }
+  }
+  return [];
+}
+
+function getAllNormalizedRatings() {
+  const byKey = new Map();
+  submissionRatings.forEach((r) => {
+    const score = Number(r.rating);
+    if (!score || score < 1 || score > 5) return;
+    const key = r.submissionDocId || r.submissionId || r.id;
+    byKey.set(key, {
+      id: r.id || key,
+      submissionId: r.submissionId || key,
+      submissionDocId: r.submissionDocId || r.id || key,
+      studentName: r.studentName || L("Student", "Peserta"),
+      courseId: r.courseId || "",
+      courseTitle: r.courseTitle || getCourseLabel(r.courseId),
+      facilitatorName: r.facilitatorName || "",
+      rating: Math.max(1, Math.min(5, Math.round(score))),
+      comment: (r.comment || "").trim(),
+      tags: normalizeRatingTags(r.tags),
+      ratedAt: Number(r.ratedAt) || 0
+    });
+  });
+
+  submissions.forEach((s) => {
+    const score = Number(s.studentRating);
+    if (!score || score < 1 || score > 5) return;
+    const key = s.id || s.submissionId;
+    if (!byKey.has(key) && (!s.submissionId || !byKey.has(s.submissionId))) {
+      byKey.set(key, {
+        id: key,
+        submissionId: s.submissionId || key,
+        submissionDocId: s.id || key,
+        studentName: s.studentName || s.userName || L("Student", "Peserta"),
+        courseId: s.courseId || "",
+        courseTitle: s.courseTitle || getCourseLabel(s.courseId),
+        facilitatorName: s.facilitatorName || "",
+        rating: Math.max(1, Math.min(5, Math.round(score))),
+        comment: (s.studentRatingComment || "").trim(),
+        tags: normalizeRatingTags(s.studentRatingTags || s.studentRatingTagsJson),
+        ratedAt: Number(s.ratedAt) || 0
+      });
+    }
+  });
+
+  return Array.from(byKey.values()).sort((a, b) => (b.ratedAt || 0) - (a.ratedAt || 0));
+}
+
+function getRatingForSubmission(sub) {
+  if (!sub) return null;
+  const direct = Number(sub.studentRating);
+  if (direct >= 1 && direct <= 5) {
+    return {
+      rating: Math.round(direct),
+      comment: (sub.studentRatingComment || "").trim(),
+      tags: normalizeRatingTags(sub.studentRatingTags || sub.studentRatingTagsJson),
+      ratedAt: Number(sub.ratedAt) || 0
+    };
+  }
+  const match = submissionRatings.find(
+    (r) =>
+      (r.submissionDocId && r.submissionDocId === sub.id) ||
+      (r.submissionId && sub.submissionId && r.submissionId === sub.submissionId) ||
+      r.id === sub.id
+  );
+  if (match && Number(match.rating) >= 1 && Number(match.rating) <= 5) {
+    return {
+      rating: Math.round(Number(match.rating)),
+      comment: (match.comment || "").trim(),
+      tags: normalizeRatingTags(match.tags),
+      ratedAt: Number(match.ratedAt) || 0
+    };
+  }
+  return null;
+}
+
+function renderRatingsSummary() {
+  const ratings = getAllNormalizedRatings();
+  const avgText = ratings.length
+    ? `★ ${(ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length).toFixed(1)} (${ratings.length})`
+    : "★ —";
+
+  const railAvgEl = document.getElementById("railRatingsAvg");
+  const railListEl = document.getElementById("railRatingsList");
+  const anaBadgeEl = document.getElementById("analyticsRatingsBadge");
+  const anaFeedEl = document.getElementById("analyticsRatingsFeed");
+
+  if (railAvgEl) railAvgEl.textContent = avgText;
+  if (anaBadgeEl) anaBadgeEl.textContent = avgText;
+
+  const renderCardHtml = (r) => {
+    const tagsHtml = (r.tags || [])
+      .slice(0, 3)
+      .map((t) => `<span class="rating-tag-chip">${escapeHtml(getRatingTagLabel(t))}</span>`)
+      .join("");
+    const commentHtml = r.comment
+      ? `<p class="rating-feed-comment">"${escapeHtml(r.comment)}"</p>`
+      : "";
+    const metaParts = [r.courseTitle || getCourseLabel(r.courseId)];
+    if (r.facilitatorName) metaParts.push(r.facilitatorName);
+    if (r.ratedAt) metaParts.push(formatDate(r.ratedAt));
+    return `
+      <article class="rating-feed-item">
+        <div class="rating-feed-top">
+          <span class="rating-feed-student">${escapeHtml(r.studentName)}</span>
+          <span class="rating-star-pill">★ ${r.rating}/5</span>
+        </div>
+        <div class="rating-feed-meta">${escapeHtml(metaParts.join(" • "))}</div>
+        ${tagsHtml ? `<div class="rating-tags-row">${tagsHtml}</div>` : ""}
+        ${commentHtml}
+      </article>
+    `;
+  };
+
+  if (railListEl) {
+    if (ratings.length === 0) {
+      railListEl.innerHTML = `<div class="rail-empty">${L("No student review ratings yet.", "Belum ada rating review dari siswa.")}</div>`;
+    } else {
+      railListEl.innerHTML = ratings.slice(0, 4).map(renderCardHtml).join("");
+    }
+  }
+
+  if (anaFeedEl) {
+    if (ratings.length === 0) {
+      anaFeedEl.innerHTML = `<div class="rail-empty">${L("No student ratings submitted yet.", "Belum ada rating yang dikirim siswa.")}</div>`;
+    } else {
+      anaFeedEl.innerHTML = ratings.slice(0, 12).map(renderCardHtml).join("");
+    }
+  }
 }
 
 function closeReviewModal() {
